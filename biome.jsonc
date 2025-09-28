@@ -1,0 +1,95 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
+  "vcs": {
+    "enabled": false,
+    "clientKind": "git",
+    "useIgnoreFile": false,
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": ["**", "!dist", "!src/routeTree.gen.ts"],
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "lineWidth": 80,
+    "indentWidth": 2,
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "noStaticElementInteractions": "off",
+        "useKeyWithClickEvents": "off",
+        "noAutofocus": "off",
+        // TODO: remove when ready
+        "useValidAnchor": "warn",
+        // TODO: remove when ready
+        "noSvgWithoutTitle": "warn",
+      },
+      "correctness": {
+        "useUniqueElementIds": "off",
+        "noUnusedImports": { "fix": "safe", "level": "error" },
+        // TODO: remove when ready
+        "useExhaustiveDependencies": "warn",
+        // TODO: remove when ready
+        "noSwitchDeclarations": "warn",
+      },
+      "suspicious": {
+        "noUnknownAtRules": "off",
+        // TODO: remove when ready
+        "noArrayIndexKey": "warn",
+        // TODO: remove when ready
+        "noAssignInExpressions": "warn",
+        // TODO: remove when ready
+        "noImplicitAnyLet": "warn",
+      },
+      "style": {
+        "useImportType": {
+          "level": "error",
+          "options": { "style": "separatedType" },
+        },
+      },
+      "nursery": {
+        "useSortedClasses": {
+          "level": "error",
+          "fix": "safe",
+          "options": {
+            "attributes": ["className"],
+            "functions": ["cn, cva, tv"],
+          },
+        },
+      },
+    },
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+    },
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              { "type": false, "source": [":BUN:", ":NODE:"] },
+              ":BLANK_LINE:",
+              {
+                "type": false,
+                "source": [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:"],
+              },
+              ":BLANK_LINE:",
+              { "type": false, "source": ["**"] },
+              ":BLANK_LINE:",
+              { "type": true },
+            ],
+          },
+        },
+      },
+    },
+  },
+}

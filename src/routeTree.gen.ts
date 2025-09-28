@@ -8,14 +8,14 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './app/__root'
-import { Route as DiscordRouteImport } from './app/discord'
-import { Route as IndexRouteImport } from './app/index'
-import { Route as ApiTestTemporalRouteImport } from './app/api/test-temporal'
-import { Route as ApiSendEmailRouteImport } from './app/api/send-email'
-import { Route as ApiExecuteWorkflowRouteImport } from './app/api/execute-workflow'
-import { Route as ApiDiscordActionRouteImport } from './app/api/discord-action'
-import { Route as ApiBrowserAlertRouteImport } from './app/api/browser-alert'
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as DiscordRouteImport } from './routes/discord'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiTestTemporalRouteImport } from './routes/api/test-temporal'
+import { Route as ApiSendEmailRouteImport } from './routes/api/send-email'
+import { Route as ApiExecuteWorkflowRouteImport } from './routes/api/execute-workflow'
+import { Route as ApiDiscordActionRouteImport } from './routes/api/discord-action'
+import { Route as ApiBrowserAlertRouteImport } from './routes/api/browser-alert'
 
 const DiscordRoute = DiscordRouteImport.update({
   id: '/discord',
