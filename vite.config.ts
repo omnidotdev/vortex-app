@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
-import tailwindcss from "@tailwindcss/vite";
+// import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   server: {
@@ -10,11 +10,10 @@ export default defineConfig({
     allowedHosts: ["vortex.omni.dev"],
   },
   plugins: [
-    tailwindcss(),
+    // tailwindcss(),
     // Enables Vite to resolve imports using path aliases.
     tsconfigPaths(),
     tanstackStart(),
     viteReact(),
-    tanstackStart({ target: "node-server" }),
   ],
 });
