@@ -3,7 +3,7 @@ load("ext://dotenv", "dotenv")
 
 dotenv(fn=".env.local")
 
-project_name = "runa-api"
+project_name = "vortex-app"
 
 local_resource(
     "install-deps-%s" % project_name,
