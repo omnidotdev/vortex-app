@@ -16,8 +16,6 @@ import { Route as ApiSendEmailRouteImport } from './routes/api/send-email'
 import { Route as ApiExecuteWorkflowRouteImport } from './routes/api/execute-workflow'
 import { Route as PublicPricingRouteImport } from './routes/_public/pricing'
 import { Route as AuthWorkspacesIndexRouteImport } from './routes/_auth/workspaces/index'
-import { Route as ApiWebhooksRegisterRouteImport } from './routes/api/webhooks/register'
-import { Route as ApiWebhooksSplatRouteImport } from './routes/api/webhooks/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AuthWorkspacesWorkspaceSlugIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/index'
 import { Route as AuthWorkspacesWorkspaceSlugSettingsRouteImport } from './routes/_auth/workspaces/$workspaceSlug/settings'
@@ -59,16 +57,6 @@ const AuthWorkspacesIndexRoute = AuthWorkspacesIndexRouteImport.update({
   id: '/workspaces/',
   path: '/workspaces/',
   getParentRoute: () => AuthRoute,
-} as any)
-const ApiWebhooksRegisterRoute = ApiWebhooksRegisterRouteImport.update({
-  id: '/api/webhooks/register',
-  path: '/api/webhooks/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiWebhooksSplatRoute = ApiWebhooksSplatRouteImport.update({
-  id: '/api/webhooks/$',
-  path: '/api/webhooks/$',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
@@ -124,8 +112,6 @@ export interface FileRoutesByFullPath {
   '/api/send-email': typeof ApiSendEmailRoute
   '/': typeof PublicIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/webhooks/$': typeof ApiWebhooksSplatRoute
-  '/api/webhooks/register': typeof ApiWebhooksRegisterRoute
   '/workspaces': typeof AuthWorkspacesIndexRoute
   '/workspaces/$workspaceSlug/settings': typeof AuthWorkspacesWorkspaceSlugSettingsRoute
   '/workspaces/$workspaceSlug': typeof AuthWorkspacesWorkspaceSlugIndexRoute
@@ -141,8 +127,6 @@ export interface FileRoutesByTo {
   '/api/send-email': typeof ApiSendEmailRoute
   '/': typeof PublicIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/webhooks/$': typeof ApiWebhooksSplatRoute
-  '/api/webhooks/register': typeof ApiWebhooksRegisterRoute
   '/workspaces': typeof AuthWorkspacesIndexRoute
   '/workspaces/$workspaceSlug/settings': typeof AuthWorkspacesWorkspaceSlugSettingsRoute
   '/workspaces/$workspaceSlug': typeof AuthWorkspacesWorkspaceSlugIndexRoute
@@ -161,8 +145,6 @@ export interface FileRoutesById {
   '/api/send-email': typeof ApiSendEmailRoute
   '/_public/': typeof PublicIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/api/webhooks/$': typeof ApiWebhooksSplatRoute
-  '/api/webhooks/register': typeof ApiWebhooksRegisterRoute
   '/_auth/workspaces/': typeof AuthWorkspacesIndexRoute
   '/_auth/workspaces/$workspaceSlug/settings': typeof AuthWorkspacesWorkspaceSlugSettingsRoute
   '/_auth/workspaces/$workspaceSlug/': typeof AuthWorkspacesWorkspaceSlugIndexRoute
@@ -180,8 +162,6 @@ export interface FileRouteTypes {
     | '/api/send-email'
     | '/'
     | '/api/auth/$'
-    | '/api/webhooks/$'
-    | '/api/webhooks/register'
     | '/workspaces'
     | '/workspaces/$workspaceSlug/settings'
     | '/workspaces/$workspaceSlug'
@@ -197,8 +177,6 @@ export interface FileRouteTypes {
     | '/api/send-email'
     | '/'
     | '/api/auth/$'
-    | '/api/webhooks/$'
-    | '/api/webhooks/register'
     | '/workspaces'
     | '/workspaces/$workspaceSlug/settings'
     | '/workspaces/$workspaceSlug'
@@ -216,8 +194,6 @@ export interface FileRouteTypes {
     | '/api/send-email'
     | '/_public/'
     | '/api/auth/$'
-    | '/api/webhooks/$'
-    | '/api/webhooks/register'
     | '/_auth/workspaces/'
     | '/_auth/workspaces/$workspaceSlug/settings'
     | '/_auth/workspaces/$workspaceSlug/'
@@ -234,8 +210,6 @@ export interface RootRouteChildren {
   ApiExecuteWorkflowRoute: typeof ApiExecuteWorkflowRoute
   ApiSendEmailRoute: typeof ApiSendEmailRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
-  ApiWebhooksSplatRoute: typeof ApiWebhooksSplatRoute
-  ApiWebhooksRegisterRoute: typeof ApiWebhooksRegisterRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -288,20 +262,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/workspaces'
       preLoaderRoute: typeof AuthWorkspacesIndexRouteImport
       parentRoute: typeof AuthRoute
-    }
-    '/api/webhooks/register': {
-      id: '/api/webhooks/register'
-      path: '/api/webhooks/register'
-      fullPath: '/api/webhooks/register'
-      preLoaderRoute: typeof ApiWebhooksRegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/webhooks/$': {
-      id: '/api/webhooks/$'
-      path: '/api/webhooks/$'
-      fullPath: '/api/webhooks/$'
-      preLoaderRoute: typeof ApiWebhooksSplatRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -411,8 +371,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiExecuteWorkflowRoute: ApiExecuteWorkflowRoute,
   ApiSendEmailRoute: ApiSendEmailRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
-  ApiWebhooksSplatRoute: ApiWebhooksSplatRoute,
-  ApiWebhooksRegisterRoute: ApiWebhooksRegisterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
