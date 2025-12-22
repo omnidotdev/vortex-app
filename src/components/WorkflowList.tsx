@@ -1,59 +1,58 @@
-import React from 'react'
-import { useAuth } from '@/contexts/AuthContext'
-import { useWorkflowOperations } from '@/hooks/useWorkflows'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Loader2, Plus, Edit, Trash2, Play } from 'lucide-react'
-import { toast } from 'sonner'
+import React from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Plus, Edit, Trash2, Play } from "lucide-react";
+
+interface Workflow {
+  id: string;
+  name: string;
+  description?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
 
 interface WorkflowListProps {
-  onCreateClick?: () => void
-  onEditClick?: (workflowId: string) => void
-  onExecuteClick?: (workflowId: string) => void
+  workflows?: Workflow[];
+  isLoading?: boolean;
+  onCreateClick?: () => void;
+  onEditClick?: (workflowId: string) => void;
+  onExecuteClick?: (workflowId: string) => void;
+  onDeleteClick?: (workflowId: string) => void;
 }
 
 export function WorkflowList({
+  workflows = [],
+  isLoading = false,
   onCreateClick,
   onEditClick,
-  onExecuteClick
+  onExecuteClick,
+  onDeleteClick,
 }: WorkflowListProps) {
-  const { user } = useAuth()
-
-  const {
-    workflows,
-    isLoading,
-    error,
-    deleteWorkflow,
-    isDeleting,
-  } = useWorkflowOperations(user?.id || '')
-
   const handleDelete = (workflowId: string, workflowName: string) => {
-    if (window.confirm(`Are you sure you want to delete "${workflowName}"? This action cannot be undone.`)) {
-      deleteWorkflow(workflowId)
+    if (
+      window.confirm(
+        `Are you sure you want to delete "${workflowName}"? This action cannot be undone.`,
+      )
+    ) {
+      onDeleteClick?.(workflowId);
     }
-  }
+  };
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
         <span className="ml-2 text-lg">Loading workflows...</span>
       </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="p-8 text-center">
-        <div className="text-red-600 mb-4">
-          Failed to load workflows: {error.message}
-        </div>
-        <Button onClick={() => window.location.reload()}>
-          Retry
-        </Button>
-      </div>
-    )
+    );
   }
 
   return (
@@ -89,7 +88,10 @@ export function WorkflowList({
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {workflows.map((workflow) => (
-            <Card key={workflow.id} className="hover:shadow-md transition-shadow">
+            <Card
+              key={workflow.id}
+              className="hover:shadow-md transition-shadow"
+            >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
@@ -109,8 +111,12 @@ export function WorkflowList({
               <CardContent className="space-y-4">
                 {/* Workflow Stats */}
                 <div className="text-sm text-muted-foreground">
-                  <p>Created: {new Date(workflow.createdAt).toLocaleDateString()}</p>
-                  <p>Updated: {new Date(workflow.updatedAt).toLocaleDateString()}</p>
+                  <p>
+                    Created: {new Date(workflow.createdAt).toLocaleDateString()}
+                  </p>
+                  <p>
+                    Updated: {new Date(workflow.updatedAt).toLocaleDateString()}
+                  </p>
                 </div>
 
                 {/* Actions */}
@@ -140,14 +146,9 @@ export function WorkflowList({
                     size="sm"
                     variant="destructive"
                     onClick={() => handleDelete(workflow.id, workflow.name)}
-                    disabled={isDeleting}
                     className="gap-1"
                   >
-                    {isDeleting ? (
-                      <Loader2 className="h-3 w-3 animate-spin" />
-                    ) : (
-                      <Trash2 className="h-3 w-3" />
-                    )}
+                    <Trash2 className="h-3 w-3" />
                   </Button>
                 </div>
               </CardContent>
@@ -156,7 +157,7 @@ export function WorkflowList({
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default WorkflowList
+export default WorkflowList;

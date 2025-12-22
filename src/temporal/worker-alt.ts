@@ -34,11 +34,10 @@ async function run() {
     console.log("🔄 Trying fallback with bundled workflows...");
 
     try {
-      const workflows = await import("./workflows");
-      console.log("📋 Loaded workflows:", Object.keys(workflows));
+      console.log("📋 Using workflowsPath for fallback worker");
 
       const fallbackWorker = await Worker.create({
-        workflows,
+        workflowsPath: resolve(__dirname, "./workflows.ts"),
         activities,
         taskQueue: "vortex",
         debugMode: true,

@@ -1,13 +1,18 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.10/schema.json",
   "vcs": {
-    "enabled": false,
+    "enabled": true,
     "clientKind": "git",
-    "useIgnoreFile": false,
+    "useIgnoreFile": true,
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**", "!dist", "!src/routeTree.gen.ts"],
+    "includes": ["**", "!!**/generated", "!!src/routeTree.gen.ts"],
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true,
+    },
   },
   "formatter": {
     "enabled": true,
@@ -20,36 +25,18 @@
     "rules": {
       "recommended": true,
       "a11y": {
+        "useSemanticElements": "off",
         "noStaticElementInteractions": "off",
         "useKeyWithClickEvents": "off",
         "noAutofocus": "off",
-        // TODO: remove when ready
         "useValidAnchor": "warn",
-        // TODO: remove when ready
         "noSvgWithoutTitle": "warn",
       },
       "correctness": {
         "useUniqueElementIds": "off",
-        "noUnusedImports": { "fix": "safe", "level": "error" },
-        // TODO: remove when ready
+        "noUnusedImports": { "fix": "safe", "options": {}, "level": "error" },
         "useExhaustiveDependencies": "warn",
-        // TODO: remove when ready
         "noSwitchDeclarations": "warn",
-      },
-      "suspicious": {
-        "noUnknownAtRules": "off",
-        // TODO: remove when ready
-        "noArrayIndexKey": "warn",
-        // TODO: remove when ready
-        "noAssignInExpressions": "warn",
-        // TODO: remove when ready
-        "noImplicitAnyLet": "warn",
-      },
-      "style": {
-        "useImportType": {
-          "level": "error",
-          "options": { "style": "separatedType" },
-        },
       },
       "nursery": {
         "useSortedClasses": {
@@ -61,20 +48,37 @@
           },
         },
       },
-    },
-  },
-  "javascript": {
-    "formatter": {
-      "quoteStyle": "double",
+      "style": {
+        "noNonNullAssertion": "off",
+        "useSingleVarDeclarator": "off",
+        "useImportType": {
+          "level": "error",
+          "options": { "style": "separatedType" },
+        },
+      },
+      "suspicious": {
+        "noUnknownAtRules": "off",
+        "noArrayIndexKey": "warn",
+        "noAssignInExpressions": "warn",
+        "noImplicitAnyLet": "warn",
+        "noNonNullAssertedOptionalChain": "off",
+        "useIterableCallbackReturn": "off",
+        "noConsole": {
+          "level": "error",
+          "options": {
+            "allow": ["error", "warn"],
+          },
+        },
+      },
     },
   },
   "assist": {
-    "enabled": true,
     "actions": {
       "source": {
         "organizeImports": {
           "level": "on",
           "options": {
+            "identifierOrder": "lexicographic",
             "groups": [
               { "type": false, "source": [":BUN:", ":NODE:"] },
               ":BLANK_LINE:",

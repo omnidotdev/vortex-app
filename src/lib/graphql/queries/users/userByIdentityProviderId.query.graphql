@@ -1,0 +1,9 @@
+query UserByIdentityProviderId($identityProviderId: UUID!) {
+  userByIdentityProviderId(identityProviderId: $identityProviderId) {
+    rowId
+    email
+    name
+    avatarUrl
+    createdAt
+  }
+}

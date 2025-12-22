@@ -1,0 +1,121 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+
+import workflowsOptions from "@/lib/options/workflows.options";
+
+export const Route = createFileRoute(
+  "/_auth/workspaces/$workspaceSlug/workflows/",
+)({
+  loader: async ({ context: { queryClient, workspaceBySlug } }) => {
+    if (!workspaceBySlug) throw notFound();
+
+    await queryClient.ensureQueryData(
+      workflowsOptions({ workspaceId: workspaceBySlug.rowId }),
+    );
+
+    return { workspaceId: workspaceBySlug.rowId };
+  },
+  component: WorkflowsPage,
+});
+
+/**
+ * Workflows list page.
+ */
+function WorkflowsPage() {
+  const { workspaceSlug } = Route.useParams();
+  const { workspaceId } = Route.useLoaderData();
+
+  const { data: workflows } = useSuspenseQuery({
+    ...workflowsOptions({ workspaceId }),
+    select: (data) => data?.workflows?.nodes ?? [],
+  });
+
+  return (
+    <div className="p-8">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Workflows</h1>
+        <Link
+          to="/workspaces/$workspaceSlug/workflows/new"
+          params={{ workspaceSlug }}
+          className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+        >
+          Create Workflow
+        </Link>
+      </div>
+
+      {workflows.length === 0 ? (
+        <div className="mt-16 text-center">
+          <div className="mx-auto h-16 w-16 rounded-full bg-muted" />
+          <h3 className="mt-4 text-lg font-semibold">No workflows yet</h3>
+          <p className="mt-2 text-muted-foreground">
+            Create your first workflow to start automating.
+          </p>
+          <Link
+            to="/workspaces/$workspaceSlug/workflows/new"
+            params={{ workspaceSlug }}
+            className="mt-4 inline-block rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90"
+          >
+            Create Workflow
+          </Link>
+        </div>
+      ) : (
+        <div className="mt-8">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b text-left text-sm text-muted-foreground">
+                <th className="pb-3 font-medium">Name</th>
+                <th className="pb-3 font-medium">Trigger</th>
+                <th className="pb-3 font-medium">Status</th>
+                <th className="pb-3 font-medium">Last Run</th>
+                <th className="pb-3 font-medium" />
+              </tr>
+            </thead>
+            <tbody>
+              {workflows.map((workflow) => (
+                <tr key={workflow.rowId} className="border-b">
+                  <td className="py-4">
+                    <Link
+                      to="/workspaces/$workspaceSlug/workflows/$workflowId"
+                      params={{ workspaceSlug, workflowId: workflow.rowId }}
+                      className="font-medium hover:underline"
+                    >
+                      {workflow.name}
+                    </Link>
+                  </td>
+                  <td className="py-4 text-sm">{workflow.triggerType}</td>
+                  <td className="py-4">
+                    <span
+                      className={`inline-flex rounded-full px-2 py-1 text-xs ${
+                        workflow.isActive
+                          ? "bg-green-100 text-green-700"
+                          : "bg-gray-100 text-gray-700"
+                      }`}
+                    >
+                      {workflow.isActive ? "Active" : "Inactive"}
+                    </span>
+                  </td>
+                  <td className="py-4 text-sm text-muted-foreground">
+                    {workflow.workflowRuns.nodes[0]?.createdAt
+                      ? new Date(
+                          workflow.workflowRuns.nodes[0].createdAt,
+                        ).toLocaleString()
+                      : "Never"}
+                  </td>
+                  <td className="py-4 text-right">
+                    <Link
+                      to="/workspaces/$workspaceSlug/workflows/$workflowId"
+                      params={{ workspaceSlug, workflowId: workflow.rowId }}
+                      className="text-sm text-primary hover:underline"
+                    >
+                      Edit
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}

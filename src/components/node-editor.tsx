@@ -54,59 +54,31 @@ export function NodeEditor({
           ...(node.data.config || {}),
           // Add specific config fields based on node type
           ...(node.type === NodeTypes.TRIGGER
-            ? node.data.integrationId === "discord"
+            ? { event: formData.get("event") }
+            : node.data.label === "HTTP Call"
               ? {
-                  channelId: formData.get("channelId"),
-                  guildId: formData.get("guildId"),
-                  limit: parseInt(formData.get("limit") as string) || 50,
+                  url: formData.get("url"),
+                  method: httpMethod,
+                  body: (() => {
+                    const bodyText = formData.get("body") as string;
+                    if (!bodyText?.trim()) return undefined;
+                    try {
+                      return JSON.parse(bodyText);
+                    } catch {
+                      return bodyText; // Use as string if JSON parsing fails
+                    }
+                  })(),
+                  headers: (() => {
+                    const headersText = formData.get("headers") as string;
+                    if (!headersText?.trim()) return {};
+                    try {
+                      return JSON.parse(headersText);
+                    } catch {
+                      return {}; // Default to empty object if JSON parsing fails
+                    }
+                  })(),
                 }
-              : { event: formData.get("event") }
-            : node.data.integrationId === "discord"
-              ? (() => {
-                  const baseConfig = {
-                    channelId: formData.get("channelId"),
-                    guildId: formData.get("guildId"),
-                    message: formData.get("message"),
-                    webhookUrl: formData.get("webhookUrl"),
-                    content: formData.get("content"),
-                    userId: formData.get("userId"),
-                    roleId: formData.get("roleId"),
-                    name: formData.get("name"),
-                    roleName: formData.get("roleName"),
-                    reason: formData.get("reason"),
-                    search: formData.get("search"),
-                  };
-                  // Only include non-empty values
-                  return Object.fromEntries(
-                    Object.entries(baseConfig).filter(
-                      ([_, value]) => value && value !== "",
-                    ),
-                  );
-                })()
-              : node.data.label === "HTTP Call"
-                ? {
-                    url: formData.get("url"),
-                    method: httpMethod,
-                    body: (() => {
-                      const bodyText = formData.get("body") as string;
-                      if (!bodyText?.trim()) return undefined;
-                      try {
-                        return JSON.parse(bodyText);
-                      } catch {
-                        return bodyText; // Use as string if JSON parsing fails
-                      }
-                    })(),
-                    headers: (() => {
-                      const headersText = formData.get("headers") as string;
-                      if (!headersText?.trim()) return {};
-                      try {
-                        return JSON.parse(headersText);
-                      } catch {
-                        return {}; // Default to empty object if JSON parsing fails
-                      }
-                    })(),
-                  }
-                : { action: formData.get("action") }),
+              : { action: formData.get("action") }),
         },
       };
       onUpdate(node.id, data);
@@ -119,7 +91,7 @@ export function NodeEditor({
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-[400px]">
+      <SheetContent className="w-100">
         <SheetHeader>
           <SheetTitle>Edit {node.data.label}</SheetTitle>
           <SheetDescription>
@@ -148,255 +120,7 @@ export function NodeEditor({
             />
           </div>
 
-          {/* Discord Integration Fields */}
-          {node.data.integrationId === "discord" && (
-            <>
-              {node.data.label === "New Message" && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="channelId">Channel ID</Label>
-                    <Input
-                      id="channelId"
-                      name="channelId"
-                      defaultValue={node.data.config?.channelId}
-                      placeholder="123456789012345678"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="limit">Message Limit</Label>
-                    <Input
-                      id="limit"
-                      name="limit"
-                      type="number"
-                      defaultValue={node.data.config?.limit || 50}
-                      placeholder="50"
-                    />
-                  </div>
-                </>
-              )}
-
-              {node.data.label === "New Member" && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="guildId">Guild ID</Label>
-                    <Input
-                      id="guildId"
-                      name="guildId"
-                      defaultValue={node.data.config?.guildId}
-                      placeholder="123456789012345678"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="limit">Member Limit</Label>
-                    <Input
-                      id="limit"
-                      name="limit"
-                      type="number"
-                      defaultValue={node.data.config?.limit || 50}
-                      placeholder="50"
-                    />
-                  </div>
-                </>
-              )}
-
-              {node.data.label === "Send Message" && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="channelId">Channel ID</Label>
-                    <Input
-                      id="channelId"
-                      name="channelId"
-                      defaultValue={node.data.config?.channelId}
-                      placeholder="123456789012345678"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="message">Message</Label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      defaultValue={node.data.config?.message}
-                      placeholder="Hello from Vortex!"
-                      required
-                    />
-                  </div>
-                </>
-              )}
-
-              {node.data.label === "Send Webhook Message" && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="webhookUrl">Webhook URL</Label>
-                    <Input
-                      id="webhookUrl"
-                      name="webhookUrl"
-                      defaultValue={node.data.config?.webhookUrl}
-                      placeholder="https://discord.com/api/webhooks/..."
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="content">Content</Label>
-                    <Textarea
-                      id="content"
-                      name="content"
-                      defaultValue={node.data.config?.content}
-                      placeholder="Message content"
-                      required
-                    />
-                  </div>
-                </>
-              )}
-
-              {(node.data.label === "Add Role" ||
-                node.data.label === "Remove Role") && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="guildId">Guild ID</Label>
-                    <Input
-                      id="guildId"
-                      name="guildId"
-                      defaultValue={node.data.config?.guildId}
-                      placeholder="123456789012345678"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="userId">User ID</Label>
-                    <Input
-                      id="userId"
-                      name="userId"
-                      defaultValue={node.data.config?.userId}
-                      placeholder="123456789012345678"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="roleId">Role ID</Label>
-                    <Input
-                      id="roleId"
-                      name="roleId"
-                      defaultValue={node.data.config?.roleId}
-                      placeholder="123456789012345678"
-                      required
-                    />
-                  </div>
-                </>
-              )}
-
-              {node.data.label === "Create Channel" && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="guildId">Guild ID</Label>
-                    <Input
-                      id="guildId"
-                      name="guildId"
-                      defaultValue={node.data.config?.guildId}
-                      placeholder="123456789012345678"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Channel Name</Label>
-                    <Input
-                      id="name"
-                      name="name"
-                      defaultValue={node.data.config?.name}
-                      placeholder="new-channel"
-                      required
-                    />
-                  </div>
-                </>
-              )}
-
-              {node.data.label === "Create Role" && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="guildId">Guild ID</Label>
-                    <Input
-                      id="guildId"
-                      name="guildId"
-                      defaultValue={node.data.config?.guildId}
-                      placeholder="123456789012345678"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="roleName">Role Name</Label>
-                    <Input
-                      id="roleName"
-                      name="roleName"
-                      defaultValue={node.data.config?.roleName}
-                      placeholder="New Role"
-                      required
-                    />
-                  </div>
-                </>
-              )}
-
-              {node.data.label === "Ban Member" && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="guildId">Guild ID</Label>
-                    <Input
-                      id="guildId"
-                      name="guildId"
-                      defaultValue={node.data.config?.guildId}
-                      placeholder="123456789012345678"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="userId">User ID</Label>
-                    <Input
-                      id="userId"
-                      name="userId"
-                      defaultValue={node.data.config?.userId}
-                      placeholder="123456789012345678"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="reason">Reason (Optional)</Label>
-                    <Input
-                      id="reason"
-                      name="reason"
-                      defaultValue={node.data.config?.reason}
-                      placeholder="Violated server rules"
-                    />
-                  </div>
-                </>
-              )}
-
-              {node.data.label === "List Members" && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="guildId">Guild ID</Label>
-                    <Input
-                      id="guildId"
-                      name="guildId"
-                      defaultValue={node.data.config?.guildId}
-                      placeholder="123456789012345678"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="search">Search Query</Label>
-                    <Input
-                      id="search"
-                      name="search"
-                      defaultValue={node.data.config?.search}
-                      placeholder="username"
-                      required
-                    />
-                  </div>
-                </>
-              )}
-            </>
-          )}
-
-          {node.type === NodeTypes.TRIGGER && !node.data.integrationId && (
+          {node.type === NodeTypes.TRIGGER && (
             <div className="space-y-2">
               <Label htmlFor="event">Event Name</Label>
               <Input

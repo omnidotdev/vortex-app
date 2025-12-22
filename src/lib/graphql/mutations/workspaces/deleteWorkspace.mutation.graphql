@@ -1,0 +1,7 @@
+mutation DeleteWorkspace($input: DeleteWorkspaceInput!) {
+  deleteWorkspace(input: $input) {
+    workspace {
+      rowId
+    }
+  }
+}

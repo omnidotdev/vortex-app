@@ -1,0 +1,22 @@
+query WorkspaceUsers(
+  $workspaceId: UUID!
+  $filter: WorkspaceUserFilter
+  $orderBy: [WorkspaceUserOrderBy!] = [CREATED_AT_ASC]
+) {
+  workspaceUsers(
+    condition: { workspaceId: $workspaceId }
+    filter: $filter
+    orderBy: $orderBy
+  ) {
+    nodes {
+      role
+      createdAt
+      user {
+        rowId
+        name
+        email
+        avatarUrl
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+query Plugins($workspaceId: UUID!, $limit: Int) {
+  plugins(
+    condition: { workspaceId: $workspaceId }
+    orderBy: NAME_ASC
+    first: $limit
+  ) {
+    nodes {
+      rowId
+      name
+      version
+      manifest
+      wasmUrl
+      isEnabled
+      createdAt
+      updatedAt
+    }
+    totalCount
+  }
+}

@@ -34,7 +34,7 @@ import { DebugPane } from "@/components/debug-pane";
 import { UserProfile } from "@/components/UserProfile";
 import { toast } from "sonner";
 import { NodeTypes } from "@/lib/schema";
-import { useDiscordIntegration } from "@/contexts/IntegrationsContext";
+
 import {
   sampleWorkflows,
   getWorkflowById,
@@ -67,11 +67,6 @@ export function WorkflowApp() {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
-  const { token: discordToken, isEnabled: discordEnabled } =
-    useDiscordIntegration();
-
-  // Debug logging to see if token is retrieved
-  console.log("Discord integration status:", { discordToken, discordEnabled });
 
   // Refs to always access current state
   const nodesRef = useRef(nodes);
@@ -229,7 +224,7 @@ export function WorkflowApp() {
   );
 
   const executeConnectedActions = useCallback(
-    async (triggerId: string, token?: string) => {
+    async (triggerId: string) => {
       console.log("executeConnectedActions called with triggerId:", triggerId);
       const connectedEdges = edgesRef.current.filter(
         (edge) => edge.source === triggerId,
@@ -243,65 +238,6 @@ export function WorkflowApp() {
       for (const node of nextNodes) {
         if (node && node.type === NodeTypes.ACTION) {
           console.log("Executing action node:", node.data.label);
-          // Handle Discord actions
-          if (node.data.integrationId === "discord") {
-            console.log(
-              "Executing Discord action:",
-              node.data.label,
-              "with config:",
-              node.data.config,
-            );
-            try {
-              const requestPayload = {
-                action: node.data.label,
-                config: node.data.config,
-                nodeId: node.id,
-                workflowId: `trigger-${triggerId}-${Date.now()}`,
-                token: token || discordToken,
-              };
-              console.log(
-                "Making API request to /api/discord-action with:",
-                requestPayload,
-              );
-              console.log("Discord token being sent:", token || discordToken);
-
-              const response = await fetch("/api/discord-action", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(requestPayload),
-              });
-
-              console.log(
-                "API response status:",
-                response.status,
-                response.statusText,
-              );
-
-              if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                console.error(
-                  "Discord action failed with response:",
-                  errorData,
-                );
-                toast.error(
-                  `Discord ${node.data.label} failed: ${errorData.error || "Unknown error"}`,
-                );
-              } else {
-                const data = await response.json();
-                console.log("Discord action executed successfully:", data);
-                toast.success(
-                  `Discord ${node.data.label} executed successfully`,
-                );
-              }
-            } catch (error: any) {
-              console.error("Discord action error:", error);
-              toast.error(
-                `Discord ${node.data.label} failed: ${error.message}`,
-              );
-            }
-          }
 
           if (typeof window !== "undefined" && (window as any).logToDebugPane) {
             (window as any).logToDebugPane(
@@ -375,8 +311,7 @@ export function WorkflowApp() {
           ...nodeData.data,
           executeConnectedActions:
             nodeData.type === NodeTypes.TRIGGER
-              ? (triggerId: string) =>
-                  executeConnectedActions(triggerId, discordToken)
+              ? executeConnectedActions
               : undefined,
           onNodeSelect: (node: Node) => setSelectedNode(node),
         },
@@ -430,8 +365,6 @@ export function WorkflowApp() {
           source: edge.source,
           target: edge.target,
         })),
-        // Include Discord token for Discord actions
-        discordToken: discordToken,
       };
 
       // Execute via Temporal workflow
@@ -597,8 +530,7 @@ export function WorkflowApp() {
               ...data,
               executeConnectedActions:
                 type === NodeTypes.TRIGGER
-                  ? (triggerId: string) =>
-                      executeConnectedActions(triggerId, discordToken)
+                  ? executeConnectedActions
                   : undefined,
               onNodeSelect: (node: Node) => setSelectedNode(node),
             },
@@ -628,13 +560,13 @@ export function WorkflowApp() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
-                    className="min-w-[200px] justify-between"
+                    className="min-w-50 justify-between"
                   >
                     {workflowName}
                     <ChevronDown className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-[250px]">
+                <DropdownMenuContent className="w-62.5">
                   {getAllWorkflowNames().map((workflow) => (
                     <DropdownMenuItem
                       key={workflow.id}

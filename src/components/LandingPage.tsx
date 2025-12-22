@@ -13,10 +13,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Dialog,
+  DialogBackdrop,
+  DialogCloseTrigger,
   DialogContent,
   DialogDescription,
-  DialogHeader,
+  DialogPositioner,
+  DialogRoot,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -45,32 +47,38 @@ const features = [
   {
     icon: Workflow,
     title: "Visual Workflow Builder",
-    description: "Drag and drop interface to create complex automation workflows with ease.",
+    description:
+      "Drag and drop interface to create complex automation workflows with ease.",
   },
   {
     icon: Zap,
     title: "Lightning Fast",
-    description: "Execute workflows in milliseconds with our optimized runtime engine.",
+    description:
+      "Execute workflows in milliseconds with our optimized runtime engine.",
   },
   {
     icon: Globe,
     title: "API Integrations",
-    description: "Connect to any REST API, webhook, or third-party service seamlessly.",
+    description:
+      "Connect to any REST API, webhook, or third-party service seamlessly.",
   },
   {
     icon: Shield,
     title: "Enterprise Security",
-    description: "Bank-grade encryption and compliance with SOC 2 Type II standards.",
+    description:
+      "Bank-grade encryption and compliance with SOC 2 Type II standards.",
   },
   {
     icon: Clock,
     title: "24/7 Monitoring",
-    description: "Real-time monitoring and alerting to keep your workflows running smoothly.",
+    description:
+      "Real-time monitoring and alerting to keep your workflows running smoothly.",
   },
   {
     icon: Users,
     title: "Team Collaboration",
-    description: "Share workflows, collaborate in real-time, and manage team permissions.",
+    description:
+      "Share workflows, collaborate in real-time, and manage team permissions.",
   },
 ];
 
@@ -78,20 +86,26 @@ const testimonials = [
   {
     name: "Sarah Chen",
     role: "CTO at TechFlow",
-    content: "Vortex revolutionized our automation. We reduced manual work by 80% in just 2 months.",
-    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face&auto=format",
+    content:
+      "Vortex revolutionized our automation. We reduced manual work by 80% in just 2 months.",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face&auto=format",
   },
   {
     name: "Marcus Rodriguez",
     role: "Operations Director",
-    content: "The visual workflow builder is incredibly intuitive. Our team was productive from day one.",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face&auto=format",
+    content:
+      "The visual workflow builder is incredibly intuitive. Our team was productive from day one.",
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face&auto=format",
   },
   {
     name: "Emily Watson",
     role: "Product Manager",
-    content: "Integration with our existing tools was seamless. Vortex just works beautifully.",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face&auto=format",
+    content:
+      "Integration with our existing tools was seamless. Vortex just works beautifully.",
+    avatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face&auto=format",
   },
 ];
 
@@ -175,78 +189,102 @@ export function LandingPage() {
           </div>
 
           <nav className="hidden md:flex space-x-8">
-            <a href="#features" className="text-sm hover:text-primary transition-colors">Features</a>
-            <a href="#testimonials" className="text-sm hover:text-primary transition-colors">Testimonials</a>
-            <a href="#pricing" className="text-sm hover:text-primary transition-colors">Pricing</a>
+            <a
+              href="#features"
+              className="text-sm hover:text-primary transition-colors"
+            >
+              Features
+            </a>
+            <a
+              href="#testimonials"
+              className="text-sm hover:text-primary transition-colors"
+            >
+              Testimonials
+            </a>
+            <a
+              href="#pricing"
+              className="text-sm hover:text-primary transition-colors"
+            >
+              Pricing
+            </a>
           </nav>
 
           <div className="flex items-center space-x-4">
             <ThemeToggle />
-            <Dialog open={loginOpen} onOpenChange={setLoginOpen}>
+            <DialogRoot
+              open={loginOpen}
+              onOpenChange={({ open }) => setLoginOpen(open)}
+            >
               <DialogTrigger asChild>
                 <Button>Sign In</Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
+              <DialogBackdrop />
+              <DialogPositioner>
+                <DialogContent className="sm:max-w-md">
                   <DialogTitle>Welcome back</DialogTitle>
                   <DialogDescription>
                     Sign in to your account to continue building workflows.
                   </DialogDescription>
-                </DialogHeader>
-                <form onSubmit={handleLogin} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="alex@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
-                    <div className="relative">
+                  <DialogCloseTrigger />
+                  <form onSubmit={handleLogin} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
                       <Input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Enter 'demo' to sign in"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        id="email"
+                        type="email"
+                        placeholder="alex@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         required
                       />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </Button>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      Use password "demo" to try the app
-                    </p>
-                  </div>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Signing in...
-                      </>
-                    ) : (
-                      "Sign In"
-                    )}
-                  </Button>
-                </form>
-              </DialogContent>
-            </Dialog>
+                    <div className="space-y-2">
+                      <Label htmlFor="password">Password</Label>
+                      <div className="relative">
+                        <Input
+                          id="password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Enter 'demo' to sign in"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          required
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Use password "demo" to try the app
+                      </p>
+                    </div>
+                    <Button
+                      type="submit"
+                      className="w-full"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Signing in...
+                        </>
+                      ) : (
+                        "Sign In"
+                      )}
+                    </Button>
+                  </form>
+                </DialogContent>
+              </DialogPositioner>
+            </DialogRoot>
           </div>
         </div>
       </header>
@@ -266,19 +304,20 @@ export function LandingPage() {
             </h1>
 
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Create, automate, and scale your business processes with our intuitive
-              visual workflow builder. Connect any API, trigger actions, and watch your productivity soar.
+              Create, automate, and scale your business processes with our
+              intuitive visual workflow builder. Connect any API, trigger
+              actions, and watch your productivity soar.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Dialog open={loginOpen} onOpenChange={setLoginOpen}>
-                <DialogTrigger asChild>
-                  <Button size="lg" className="text-lg px-8 py-6">
-                    Get Started Free
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </DialogTrigger>
-              </Dialog>
+              <Button
+                size="lg"
+                className="text-lg px-8 py-6"
+                onClick={() => setLoginOpen(true)}
+              >
+                Get Started Free
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
               <Button size="lg" variant="outline" className="text-lg px-8 py-6">
                 Watch Demo
               </Button>
@@ -295,13 +334,17 @@ export function LandingPage() {
               Everything you need to automate
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Powerful features that scale with your business, from simple automations to complex workflows.
+              Powerful features that scale with your business, from simple
+              automations to complex workflows.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="border-0 shadow-md hover:shadow-lg transition-shadow">
+              <Card
+                key={index}
+                className="border-0 shadow-md hover:shadow-lg transition-shadow"
+              >
                 <CardHeader>
                   <feature.icon className="h-12 w-12 text-primary mb-4" />
                   <CardTitle className="text-xl">{feature.title}</CardTitle>
@@ -324,9 +367,14 @@ export function LandingPage() {
             </h2>
             <div className="flex justify-center items-center space-x-1 mb-4">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                <Star
+                  key={i}
+                  className="h-5 w-5 fill-yellow-400 text-yellow-400"
+                />
               ))}
-              <span className="ml-2 text-sm text-muted-foreground">4.9/5 from 2,341 reviews</span>
+              <span className="ml-2 text-sm text-muted-foreground">
+                4.9/5 from 2,341 reviews
+              </span>
             </div>
           </div>
 
@@ -334,7 +382,9 @@ export function LandingPage() {
             {testimonials.map((testimonial, index) => (
               <Card key={index} className="border-0 shadow-md">
                 <CardContent className="pt-6">
-                  <p className="text-muted-foreground mb-4">"{testimonial.content}"</p>
+                  <p className="text-muted-foreground mb-4">
+                    "{testimonial.content}"
+                  </p>
                   <div className="flex items-center space-x-3">
                     <img
                       src={testimonial.avatar}
@@ -343,7 +393,9 @@ export function LandingPage() {
                     />
                     <div>
                       <div className="font-medium">{testimonial.name}</div>
-                      <div className="text-sm text-muted-foreground">{testimonial.role}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {testimonial.role}
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -367,7 +419,10 @@ export function LandingPage() {
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {pricingPlans.map((plan, index) => (
-              <Card key={index} className={`border-0 shadow-md relative ${plan.popular ? 'ring-2 ring-primary' : ''}`}>
+              <Card
+                key={index}
+                className={`border-0 shadow-md relative ${plan.popular ? "ring-2 ring-primary" : ""}`}
+              >
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                     <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
@@ -380,13 +435,20 @@ export function LandingPage() {
                   <CardDescription>{plan.description}</CardDescription>
                   <div className="text-3xl font-bold">
                     {plan.price}
-                    {plan.period && <span className="text-base font-normal text-muted-foreground">{plan.period}</span>}
+                    {plan.period && (
+                      <span className="text-base font-normal text-muted-foreground">
+                        {plan.period}
+                      </span>
+                    )}
                   </div>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
                     {plan.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center space-x-3">
+                      <li
+                        key={featureIndex}
+                        className="flex items-center space-x-3"
+                      >
                         <Check className="h-5 w-5 text-primary flex-shrink-0" />
                         <span className="text-sm">{feature}</span>
                       </li>
@@ -394,13 +456,13 @@ export function LandingPage() {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  <Dialog open={loginOpen} onOpenChange={setLoginOpen}>
-                    <DialogTrigger asChild>
-                      <Button className="w-full" variant={plan.popular ? "default" : "outline"}>
-                        Get Started
-                      </Button>
-                    </DialogTrigger>
-                  </Dialog>
+                  <Button
+                    className="w-full"
+                    variant={plan.popular ? "default" : "outline"}
+                    onClick={() => setLoginOpen(true)}
+                  >
+                    Get Started
+                  </Button>
                 </CardFooter>
               </Card>
             ))}
@@ -416,16 +478,17 @@ export function LandingPage() {
               Ready to transform your workflow?
             </h2>
             <p className="text-xl text-muted-foreground mb-8">
-              Join thousands of teams already using Vortex to automate their processes and boost productivity.
+              Join thousands of teams already using Vortex to automate their
+              processes and boost productivity.
             </p>
-            <Dialog open={loginOpen} onOpenChange={setLoginOpen}>
-              <DialogTrigger asChild>
-                <Button size="lg" className="text-lg px-8 py-6">
-                  Start Building Today
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </DialogTrigger>
-            </Dialog>
+            <Button
+              size="lg"
+              className="text-lg px-8 py-6"
+              onClick={() => setLoginOpen(true)}
+            >
+              Start Building Today
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
           </div>
         </div>
       </section>
@@ -442,40 +505,106 @@ export function LandingPage() {
                 <span className="text-xl font-bold">Vortex</span>
               </div>
               <p className="text-muted-foreground text-sm">
-                The most intuitive workflow automation platform for modern teams.
+                The most intuitive workflow automation platform for modern
+                teams.
               </p>
             </div>
 
             <div>
               <h3 className="font-medium mb-4">Product</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">Features</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Integrations</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Templates</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">API</a></li>
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    Features
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    Integrations
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    Templates
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    API
+                  </a>
+                </li>
               </ul>
             </div>
 
             <div>
               <h3 className="font-medium mb-4">Company</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Contact</a></li>
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    About
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    Careers
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="hover:text-foreground transition-colors"
+                  >
+                    Contact
+                  </a>
+                </li>
               </ul>
             </div>
 
             <div>
               <h3 className="font-medium mb-4">Connect</h3>
               <div className="flex space-x-4">
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                <a
+                  href="#"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   <Github className="h-5 w-5" />
                 </a>
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                <a
+                  href="#"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   <Twitter className="h-5 w-5" />
                 </a>
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                <a
+                  href="#"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   <Mail className="h-5 w-5" />
                 </a>
               </div>

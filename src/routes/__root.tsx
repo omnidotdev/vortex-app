@@ -1,17 +1,33 @@
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import {
-  createRootRoute,
   HeadContent,
   Outlet,
   Scripts,
+  createRootRouteWithContext,
 } from "@tanstack/react-router";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
-import { ThemeProvider } from "@/components/theme-provider";
-import { AuthProvider } from "@/contexts/AuthContext";
-import "./globals.css";
+import { Toaster } from "sonner";
+import ThemeProvider from "@/providers/ThemeProvider";
+import { fetchSession } from "@/server/functions/auth";
+import { getTheme } from "@/server/functions/theme";
+import appCss from "@/lib/styles/globals.css?url";
 
+import type { QueryClient } from "@tanstack/react-query";
+import type { AuthSession } from "@/lib/auth/getAuth";
 import type { ReactNode } from "react";
+import type { Theme } from "@/providers/ThemeProvider";
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient;
+  session: AuthSession | null;
+}>()({
+  beforeLoad: async () => {
+    const { session } = await fetchSession();
+    return { session };
+  },
+  loader: () => getTheme(),
   head: () => ({
     meta: [
       {
@@ -26,16 +42,24 @@ export const Route = createRootRoute({
       },
       {
         name: "description",
-        content: "A powerful workflow automation and integration platform",
+        content:
+          "A powerful open-source workflow automation engine. Dev-first, JSON-first.",
       },
     ],
-    links: [{ rel: "icon", type: "image/png", href: "/logo.png" }],
+    links: [
+      { rel: "icon", type: "image/png", href: "/logo.png" },
+      { rel: "stylesheet", href: appCss },
+    ],
   }),
-  errorComponent: (props) => (
-    <RootDocument>
-      <div style={{ padding: "20px" }}>
-        <h1>Something went wrong!</h1>
-        <p>Error: {props.error.message}</p>
+  errorComponent: ({ error }) => (
+    <RootDocument theme="system">
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-600">
+            Something went wrong
+          </h1>
+          <p className="mt-2 text-gray-600">{error.message}</p>
+        </div>
       </div>
     </RootDocument>
   ),
@@ -43,28 +67,45 @@ export const Route = createRootRoute({
 });
 
 function RootComponent() {
+  const theme = Route.useLoaderData();
+
   return (
-    <RootDocument>
+    <RootDocument theme={theme}>
       <Outlet />
     </RootDocument>
   );
 }
 
-function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
+function RootDocument({
+  children,
+  theme,
+}: Readonly<{ children: ReactNode; theme: Theme }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={theme}>
       <head>
         <HeadContent />
       </head>
       <body className="font-sans antialiased">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AuthProvider>{children}</AuthProvider>
+        <ThemeProvider theme={theme}>
+          {children}
+          <Toaster position="top-center" richColors />
         </ThemeProvider>
+
+        {/* dev tools (only included in development) */}
+        <TanStackDevtools
+          plugins={[
+            {
+              name: "Router",
+              render: <TanStackRouterDevtoolsPanel />,
+              defaultOpen: true,
+            },
+            {
+              name: "Query",
+              render: <ReactQueryDevtoolsPanel />,
+            },
+          ]}
+        />
+
         <Scripts />
       </body>
     </html>

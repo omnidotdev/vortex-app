@@ -13,7 +13,7 @@ export function AppWrapper() {
   // Show loading while checking auth
   if (authLoading) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-muted">
+      <div className="h-screen w-screen flex items-center justify-center bg-linear-to-br from-background via-background to-muted">
         <div className="flex flex-col items-center space-y-4">
           <div className="h-12 w-12 bg-primary rounded-md flex items-center justify-center">
             <Workflow className="h-8 w-8 text-primary-foreground" />

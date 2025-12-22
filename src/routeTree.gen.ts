@@ -9,28 +9,36 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as DiscordRouteImport } from './routes/discord'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as ApiTestTemporalRouteImport } from './routes/api/test-temporal'
+import { Route as PublicRouteImport } from './routes/_public'
+import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as ApiSendEmailRouteImport } from './routes/api/send-email'
 import { Route as ApiExecuteWorkflowRouteImport } from './routes/api/execute-workflow'
-import { Route as ApiDiscordActionRouteImport } from './routes/api/discord-action'
-import { Route as ApiBrowserAlertRouteImport } from './routes/api/browser-alert'
+import { Route as PublicPricingRouteImport } from './routes/_public/pricing'
+import { Route as AuthWorkspacesIndexRouteImport } from './routes/_auth/workspaces/index'
+import { Route as ApiWebhooksRegisterRouteImport } from './routes/api/webhooks/register'
+import { Route as ApiWebhooksSplatRouteImport } from './routes/api/webhooks/$'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AuthWorkspacesWorkspaceSlugIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/index'
+import { Route as AuthWorkspacesWorkspaceSlugSettingsRouteImport } from './routes/_auth/workspaces/$workspaceSlug/settings'
+import { Route as AuthWorkspacesWorkspaceSlugWorkflowsIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/workflows/index'
+import { Route as AuthWorkspacesWorkspaceSlugPluginsIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/plugins/index'
+import { Route as AuthWorkspacesWorkspaceSlugIntegrationsIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/integrations/index'
+import { Route as AuthWorkspacesWorkspaceSlugWorkflowsNewRouteImport } from './routes/_auth/workspaces/$workspaceSlug/workflows/new'
+import { Route as AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRouteImport } from './routes/_auth/workspaces/$workspaceSlug/workflows/$workflowId'
 
-const DiscordRoute = DiscordRouteImport.update({
-  id: '/discord',
-  path: '/discord',
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const AuthRoute = AuthRouteImport.update({
+  id: '/_auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiTestTemporalRoute = ApiTestTemporalRouteImport.update({
-  id: '/api/test-temporal',
-  path: '/api/test-temporal',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => PublicRoute,
 } as any)
 const ApiSendEmailRoute = ApiSendEmailRouteImport.update({
   id: '/api/send-email',
@@ -42,107 +50,216 @@ const ApiExecuteWorkflowRoute = ApiExecuteWorkflowRouteImport.update({
   path: '/api/execute-workflow',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiDiscordActionRoute = ApiDiscordActionRouteImport.update({
-  id: '/api/discord-action',
-  path: '/api/discord-action',
+const PublicPricingRoute = PublicPricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => PublicRoute,
+} as any)
+const AuthWorkspacesIndexRoute = AuthWorkspacesIndexRouteImport.update({
+  id: '/workspaces/',
+  path: '/workspaces/',
+  getParentRoute: () => AuthRoute,
+} as any)
+const ApiWebhooksRegisterRoute = ApiWebhooksRegisterRouteImport.update({
+  id: '/api/webhooks/register',
+  path: '/api/webhooks/register',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiBrowserAlertRoute = ApiBrowserAlertRouteImport.update({
-  id: '/api/browser-alert',
-  path: '/api/browser-alert',
+const ApiWebhooksSplatRoute = ApiWebhooksSplatRouteImport.update({
+  id: '/api/webhooks/$',
+  path: '/api/webhooks/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthWorkspacesWorkspaceSlugIndexRoute =
+  AuthWorkspacesWorkspaceSlugIndexRouteImport.update({
+    id: '/workspaces/$workspaceSlug/',
+    path: '/workspaces/$workspaceSlug/',
+    getParentRoute: () => AuthRoute,
+  } as any)
+const AuthWorkspacesWorkspaceSlugSettingsRoute =
+  AuthWorkspacesWorkspaceSlugSettingsRouteImport.update({
+    id: '/workspaces/$workspaceSlug/settings',
+    path: '/workspaces/$workspaceSlug/settings',
+    getParentRoute: () => AuthRoute,
+  } as any)
+const AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute =
+  AuthWorkspacesWorkspaceSlugWorkflowsIndexRouteImport.update({
+    id: '/workspaces/$workspaceSlug/workflows/',
+    path: '/workspaces/$workspaceSlug/workflows/',
+    getParentRoute: () => AuthRoute,
+  } as any)
+const AuthWorkspacesWorkspaceSlugPluginsIndexRoute =
+  AuthWorkspacesWorkspaceSlugPluginsIndexRouteImport.update({
+    id: '/workspaces/$workspaceSlug/plugins/',
+    path: '/workspaces/$workspaceSlug/plugins/',
+    getParentRoute: () => AuthRoute,
+  } as any)
+const AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute =
+  AuthWorkspacesWorkspaceSlugIntegrationsIndexRouteImport.update({
+    id: '/workspaces/$workspaceSlug/integrations/',
+    path: '/workspaces/$workspaceSlug/integrations/',
+    getParentRoute: () => AuthRoute,
+  } as any)
+const AuthWorkspacesWorkspaceSlugWorkflowsNewRoute =
+  AuthWorkspacesWorkspaceSlugWorkflowsNewRouteImport.update({
+    id: '/workspaces/$workspaceSlug/workflows/new',
+    path: '/workspaces/$workspaceSlug/workflows/new',
+    getParentRoute: () => AuthRoute,
+  } as any)
+const AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute =
+  AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRouteImport.update({
+    id: '/workspaces/$workspaceSlug/workflows/$workflowId',
+    path: '/workspaces/$workspaceSlug/workflows/$workflowId',
+    getParentRoute: () => AuthRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/discord': typeof DiscordRoute
-  '/api/browser-alert': typeof ApiBrowserAlertRoute
-  '/api/discord-action': typeof ApiDiscordActionRoute
+  '/pricing': typeof PublicPricingRoute
   '/api/execute-workflow': typeof ApiExecuteWorkflowRoute
   '/api/send-email': typeof ApiSendEmailRoute
-  '/api/test-temporal': typeof ApiTestTemporalRoute
+  '/': typeof PublicIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/webhooks/$': typeof ApiWebhooksSplatRoute
+  '/api/webhooks/register': typeof ApiWebhooksRegisterRoute
+  '/workspaces': typeof AuthWorkspacesIndexRoute
+  '/workspaces/$workspaceSlug/settings': typeof AuthWorkspacesWorkspaceSlugSettingsRoute
+  '/workspaces/$workspaceSlug': typeof AuthWorkspacesWorkspaceSlugIndexRoute
+  '/workspaces/$workspaceSlug/workflows/$workflowId': typeof AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute
+  '/workspaces/$workspaceSlug/workflows/new': typeof AuthWorkspacesWorkspaceSlugWorkflowsNewRoute
+  '/workspaces/$workspaceSlug/integrations': typeof AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute
+  '/workspaces/$workspaceSlug/plugins': typeof AuthWorkspacesWorkspaceSlugPluginsIndexRoute
+  '/workspaces/$workspaceSlug/workflows': typeof AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/discord': typeof DiscordRoute
-  '/api/browser-alert': typeof ApiBrowserAlertRoute
-  '/api/discord-action': typeof ApiDiscordActionRoute
+  '/pricing': typeof PublicPricingRoute
   '/api/execute-workflow': typeof ApiExecuteWorkflowRoute
   '/api/send-email': typeof ApiSendEmailRoute
-  '/api/test-temporal': typeof ApiTestTemporalRoute
+  '/': typeof PublicIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/webhooks/$': typeof ApiWebhooksSplatRoute
+  '/api/webhooks/register': typeof ApiWebhooksRegisterRoute
+  '/workspaces': typeof AuthWorkspacesIndexRoute
+  '/workspaces/$workspaceSlug/settings': typeof AuthWorkspacesWorkspaceSlugSettingsRoute
+  '/workspaces/$workspaceSlug': typeof AuthWorkspacesWorkspaceSlugIndexRoute
+  '/workspaces/$workspaceSlug/workflows/$workflowId': typeof AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute
+  '/workspaces/$workspaceSlug/workflows/new': typeof AuthWorkspacesWorkspaceSlugWorkflowsNewRoute
+  '/workspaces/$workspaceSlug/integrations': typeof AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute
+  '/workspaces/$workspaceSlug/plugins': typeof AuthWorkspacesWorkspaceSlugPluginsIndexRoute
+  '/workspaces/$workspaceSlug/workflows': typeof AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/discord': typeof DiscordRoute
-  '/api/browser-alert': typeof ApiBrowserAlertRoute
-  '/api/discord-action': typeof ApiDiscordActionRoute
+  '/_auth': typeof AuthRouteWithChildren
+  '/_public': typeof PublicRouteWithChildren
+  '/_public/pricing': typeof PublicPricingRoute
   '/api/execute-workflow': typeof ApiExecuteWorkflowRoute
   '/api/send-email': typeof ApiSendEmailRoute
-  '/api/test-temporal': typeof ApiTestTemporalRoute
+  '/_public/': typeof PublicIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/webhooks/$': typeof ApiWebhooksSplatRoute
+  '/api/webhooks/register': typeof ApiWebhooksRegisterRoute
+  '/_auth/workspaces/': typeof AuthWorkspacesIndexRoute
+  '/_auth/workspaces/$workspaceSlug/settings': typeof AuthWorkspacesWorkspaceSlugSettingsRoute
+  '/_auth/workspaces/$workspaceSlug/': typeof AuthWorkspacesWorkspaceSlugIndexRoute
+  '/_auth/workspaces/$workspaceSlug/workflows/$workflowId': typeof AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute
+  '/_auth/workspaces/$workspaceSlug/workflows/new': typeof AuthWorkspacesWorkspaceSlugWorkflowsNewRoute
+  '/_auth/workspaces/$workspaceSlug/integrations/': typeof AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute
+  '/_auth/workspaces/$workspaceSlug/plugins/': typeof AuthWorkspacesWorkspaceSlugPluginsIndexRoute
+  '/_auth/workspaces/$workspaceSlug/workflows/': typeof AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/discord'
-    | '/api/browser-alert'
-    | '/api/discord-action'
+    | '/pricing'
     | '/api/execute-workflow'
     | '/api/send-email'
-    | '/api/test-temporal'
+    | '/'
+    | '/api/auth/$'
+    | '/api/webhooks/$'
+    | '/api/webhooks/register'
+    | '/workspaces'
+    | '/workspaces/$workspaceSlug/settings'
+    | '/workspaces/$workspaceSlug'
+    | '/workspaces/$workspaceSlug/workflows/$workflowId'
+    | '/workspaces/$workspaceSlug/workflows/new'
+    | '/workspaces/$workspaceSlug/integrations'
+    | '/workspaces/$workspaceSlug/plugins'
+    | '/workspaces/$workspaceSlug/workflows'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
-    | '/discord'
-    | '/api/browser-alert'
-    | '/api/discord-action'
+    | '/pricing'
     | '/api/execute-workflow'
     | '/api/send-email'
-    | '/api/test-temporal'
+    | '/'
+    | '/api/auth/$'
+    | '/api/webhooks/$'
+    | '/api/webhooks/register'
+    | '/workspaces'
+    | '/workspaces/$workspaceSlug/settings'
+    | '/workspaces/$workspaceSlug'
+    | '/workspaces/$workspaceSlug/workflows/$workflowId'
+    | '/workspaces/$workspaceSlug/workflows/new'
+    | '/workspaces/$workspaceSlug/integrations'
+    | '/workspaces/$workspaceSlug/plugins'
+    | '/workspaces/$workspaceSlug/workflows'
   id:
     | '__root__'
-    | '/'
-    | '/discord'
-    | '/api/browser-alert'
-    | '/api/discord-action'
+    | '/_auth'
+    | '/_public'
+    | '/_public/pricing'
     | '/api/execute-workflow'
     | '/api/send-email'
-    | '/api/test-temporal'
+    | '/_public/'
+    | '/api/auth/$'
+    | '/api/webhooks/$'
+    | '/api/webhooks/register'
+    | '/_auth/workspaces/'
+    | '/_auth/workspaces/$workspaceSlug/settings'
+    | '/_auth/workspaces/$workspaceSlug/'
+    | '/_auth/workspaces/$workspaceSlug/workflows/$workflowId'
+    | '/_auth/workspaces/$workspaceSlug/workflows/new'
+    | '/_auth/workspaces/$workspaceSlug/integrations/'
+    | '/_auth/workspaces/$workspaceSlug/plugins/'
+    | '/_auth/workspaces/$workspaceSlug/workflows/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  DiscordRoute: typeof DiscordRoute
-  ApiBrowserAlertRoute: typeof ApiBrowserAlertRoute
-  ApiDiscordActionRoute: typeof ApiDiscordActionRoute
+  AuthRoute: typeof AuthRouteWithChildren
+  PublicRoute: typeof PublicRouteWithChildren
   ApiExecuteWorkflowRoute: typeof ApiExecuteWorkflowRoute
   ApiSendEmailRoute: typeof ApiSendEmailRoute
-  ApiTestTemporalRoute: typeof ApiTestTemporalRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiWebhooksSplatRoute: typeof ApiWebhooksSplatRoute
+  ApiWebhooksRegisterRoute: typeof ApiWebhooksRegisterRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/discord': {
-      id: '/discord'
-      path: '/discord'
-      fullPath: '/discord'
-      preLoaderRoute: typeof DiscordRouteImport
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PublicRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_public/': {
+      id: '/_public/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/test-temporal': {
-      id: '/api/test-temporal'
-      path: '/api/test-temporal'
-      fullPath: '/api/test-temporal'
-      preLoaderRoute: typeof ApiTestTemporalRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/api/send-email': {
       id: '/api/send-email'
@@ -158,31 +275,144 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiExecuteWorkflowRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/discord-action': {
-      id: '/api/discord-action'
-      path: '/api/discord-action'
-      fullPath: '/api/discord-action'
-      preLoaderRoute: typeof ApiDiscordActionRouteImport
+    '/_public/pricing': {
+      id: '/_public/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PublicPricingRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_auth/workspaces/': {
+      id: '/_auth/workspaces/'
+      path: '/workspaces'
+      fullPath: '/workspaces'
+      preLoaderRoute: typeof AuthWorkspacesIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/api/webhooks/register': {
+      id: '/api/webhooks/register'
+      path: '/api/webhooks/register'
+      fullPath: '/api/webhooks/register'
+      preLoaderRoute: typeof ApiWebhooksRegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/browser-alert': {
-      id: '/api/browser-alert'
-      path: '/api/browser-alert'
-      fullPath: '/api/browser-alert'
-      preLoaderRoute: typeof ApiBrowserAlertRouteImport
+    '/api/webhooks/$': {
+      id: '/api/webhooks/$'
+      path: '/api/webhooks/$'
+      fullPath: '/api/webhooks/$'
+      preLoaderRoute: typeof ApiWebhooksSplatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth/workspaces/$workspaceSlug/': {
+      id: '/_auth/workspaces/$workspaceSlug/'
+      path: '/workspaces/$workspaceSlug'
+      fullPath: '/workspaces/$workspaceSlug'
+      preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/workspaces/$workspaceSlug/settings': {
+      id: '/_auth/workspaces/$workspaceSlug/settings'
+      path: '/workspaces/$workspaceSlug/settings'
+      fullPath: '/workspaces/$workspaceSlug/settings'
+      preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugSettingsRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/workspaces/$workspaceSlug/workflows/': {
+      id: '/_auth/workspaces/$workspaceSlug/workflows/'
+      path: '/workspaces/$workspaceSlug/workflows'
+      fullPath: '/workspaces/$workspaceSlug/workflows'
+      preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugWorkflowsIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/workspaces/$workspaceSlug/plugins/': {
+      id: '/_auth/workspaces/$workspaceSlug/plugins/'
+      path: '/workspaces/$workspaceSlug/plugins'
+      fullPath: '/workspaces/$workspaceSlug/plugins'
+      preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugPluginsIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/workspaces/$workspaceSlug/integrations/': {
+      id: '/_auth/workspaces/$workspaceSlug/integrations/'
+      path: '/workspaces/$workspaceSlug/integrations'
+      fullPath: '/workspaces/$workspaceSlug/integrations'
+      preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugIntegrationsIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/workspaces/$workspaceSlug/workflows/new': {
+      id: '/_auth/workspaces/$workspaceSlug/workflows/new'
+      path: '/workspaces/$workspaceSlug/workflows/new'
+      fullPath: '/workspaces/$workspaceSlug/workflows/new'
+      preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugWorkflowsNewRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/workspaces/$workspaceSlug/workflows/$workflowId': {
+      id: '/_auth/workspaces/$workspaceSlug/workflows/$workflowId'
+      path: '/workspaces/$workspaceSlug/workflows/$workflowId'
+      fullPath: '/workspaces/$workspaceSlug/workflows/$workflowId'
+      preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRouteImport
+      parentRoute: typeof AuthRoute
     }
   }
 }
 
+interface AuthRouteChildren {
+  AuthWorkspacesIndexRoute: typeof AuthWorkspacesIndexRoute
+  AuthWorkspacesWorkspaceSlugSettingsRoute: typeof AuthWorkspacesWorkspaceSlugSettingsRoute
+  AuthWorkspacesWorkspaceSlugIndexRoute: typeof AuthWorkspacesWorkspaceSlugIndexRoute
+  AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute: typeof AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute
+  AuthWorkspacesWorkspaceSlugWorkflowsNewRoute: typeof AuthWorkspacesWorkspaceSlugWorkflowsNewRoute
+  AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute: typeof AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute
+  AuthWorkspacesWorkspaceSlugPluginsIndexRoute: typeof AuthWorkspacesWorkspaceSlugPluginsIndexRoute
+  AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute: typeof AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthWorkspacesIndexRoute: AuthWorkspacesIndexRoute,
+  AuthWorkspacesWorkspaceSlugSettingsRoute:
+    AuthWorkspacesWorkspaceSlugSettingsRoute,
+  AuthWorkspacesWorkspaceSlugIndexRoute: AuthWorkspacesWorkspaceSlugIndexRoute,
+  AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute:
+    AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute,
+  AuthWorkspacesWorkspaceSlugWorkflowsNewRoute:
+    AuthWorkspacesWorkspaceSlugWorkflowsNewRoute,
+  AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute:
+    AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute,
+  AuthWorkspacesWorkspaceSlugPluginsIndexRoute:
+    AuthWorkspacesWorkspaceSlugPluginsIndexRoute,
+  AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute:
+    AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
+interface PublicRouteChildren {
+  PublicPricingRoute: typeof PublicPricingRoute
+  PublicIndexRoute: typeof PublicIndexRoute
+}
+
+const PublicRouteChildren: PublicRouteChildren = {
+  PublicPricingRoute: PublicPricingRoute,
+  PublicIndexRoute: PublicIndexRoute,
+}
+
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  DiscordRoute: DiscordRoute,
-  ApiBrowserAlertRoute: ApiBrowserAlertRoute,
-  ApiDiscordActionRoute: ApiDiscordActionRoute,
+  AuthRoute: AuthRouteWithChildren,
+  PublicRoute: PublicRouteWithChildren,
   ApiExecuteWorkflowRoute: ApiExecuteWorkflowRoute,
   ApiSendEmailRoute: ApiSendEmailRoute,
-  ApiTestTemporalRoute: ApiTestTemporalRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiWebhooksSplatRoute: ApiWebhooksSplatRoute,
+  ApiWebhooksRegisterRoute: ApiWebhooksRegisterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

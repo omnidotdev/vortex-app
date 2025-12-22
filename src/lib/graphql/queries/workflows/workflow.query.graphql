@@ -1,0 +1,46 @@
+query Workflow($rowId: UUID!) {
+  workflow(rowId: $rowId) {
+    rowId
+    workspaceId
+    name
+    description
+    definition
+    triggerType
+    cronExpression
+    webhookSecret
+    isActive
+    createdAt
+    updatedAt
+    workspace {
+      rowId
+      name
+      slug
+      tier
+    }
+    workflowRuns(orderBy: CREATED_AT_DESC, first: 10) {
+      nodes {
+        rowId
+        temporalWorkflowId
+        status
+        startedAt
+        completedAt
+        error
+        createdAt
+        workflowStepLogs(orderBy: STARTED_AT_ASC) {
+          nodes {
+            rowId
+            stepId
+            stepType
+            status
+            input
+            output
+            error
+            startedAt
+            completedAt
+          }
+        }
+      }
+      totalCount
+    }
+  }
+}

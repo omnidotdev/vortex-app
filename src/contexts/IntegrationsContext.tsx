@@ -28,18 +28,6 @@ const IntegrationsContext = createContext<IntegrationsContextType | undefined>(
 
 const defaultIntegrations: Integration[] = [
   {
-    id: "discord",
-    name: "discord",
-    displayName: "Discord",
-    description: "Send messages, manage roles, and monitor Discord servers",
-    icon: "MessageCircle",
-    isEnabled: false,
-    config: {
-      botToken: "",
-      defaultGuildId: "",
-    },
-  },
-  {
     id: "linkedin",
     name: "linkedin",
     displayName: "LinkedIn",
@@ -137,9 +125,6 @@ export function IntegrationsProvider({ children }: IntegrationsProviderProps) {
     // Check if integration has required tokens/config
     let enabled = false;
     switch (id) {
-      case "discord":
-        enabled = integration.isEnabled && !!integration.config?.botToken;
-        break;
       case "linkedin":
         enabled = integration.isEnabled && !!integration.config?.accessToken;
         break;
@@ -161,8 +146,6 @@ export function IntegrationsProvider({ children }: IntegrationsProviderProps) {
     if (!integration) return undefined;
 
     switch (id) {
-      case "discord":
-        return integration.config?.botToken;
       case "linkedin":
         return integration.config?.accessToken;
       case "slack":
@@ -180,8 +163,6 @@ export function IntegrationsProvider({ children }: IntegrationsProviderProps) {
 
     const tokenKey = (() => {
       switch (id) {
-        case "discord":
-          return "botToken";
         case "linkedin":
           return "accessToken";
         case "slack":
@@ -243,17 +224,6 @@ export function useIntegrations() {
 }
 
 // Utility hooks for specific integrations
-export function useDiscordIntegration() {
-  const { getIntegration, isIntegrationEnabled, getIntegrationToken } =
-    useIntegrations();
-
-  return {
-    integration: getIntegration("discord"),
-    isEnabled: isIntegrationEnabled("discord"),
-    token: getIntegrationToken("discord"),
-  };
-}
-
 export function useLinkedInIntegration() {
   const { getIntegration, isIntegrationEnabled, getIntegrationToken } =
     useIntegrations();

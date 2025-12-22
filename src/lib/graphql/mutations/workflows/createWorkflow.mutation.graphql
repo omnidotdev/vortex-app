@@ -1,0 +1,15 @@
+mutation CreateWorkflow($input: CreateWorkflowInput!) {
+  createWorkflow(input: $input) {
+    workflow {
+      rowId
+      workspaceId
+      name
+      description
+      definition
+      triggerType
+      cronExpression
+      isActive
+      createdAt
+    }
+  }
+}

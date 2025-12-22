@@ -1,0 +1,15 @@
+mutation UpdateWorkflow($input: UpdateWorkflowInput!) {
+  updateWorkflow(input: $input) {
+    workflow {
+      rowId
+      workspaceId
+      name
+      description
+      definition
+      triggerType
+      cronExpression
+      isActive
+      updatedAt
+    }
+  }
+}

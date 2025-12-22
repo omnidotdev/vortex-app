@@ -41,13 +41,6 @@ async function run() {
     console.error("❌ Temporal connection test failed:", error);
   }
 
-  // Check if executeDiscordAction is registered
-  if (activities.executeDiscordAction) {
-    console.log("✅ executeDiscordAction is registered");
-  } else {
-    console.error("❌ executeDiscordAction is NOT registered");
-  }
-
   // Show all activities with their types
   Object.keys(activities).forEach((name) => {
     console.log(

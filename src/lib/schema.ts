@@ -2,18 +2,25 @@ import { z } from "zod";
 
 // Node Types
 export const NodeTypes = {
-  TRIGGER: 'triggerNode',
-  ACTION: 'actionNode',
-  CONDITION: 'conditionNode',
-  SWITCH: 'switchNode',
-  DELAY: 'delayNode',
-  LOOP: 'loopNode',
+  TRIGGER: "triggerNode",
+  ACTION: "actionNode",
+  CONDITION: "conditionNode",
+  SWITCH: "switchNode",
+  DELAY: "delayNode",
+  LOOP: "loopNode",
 } as const;
 
 // Base node schema
 const baseNodeSchema = z.object({
   id: z.string(),
-  type: z.enum([NodeTypes.TRIGGER, NodeTypes.ACTION, NodeTypes.CONDITION, NodeTypes.SWITCH, NodeTypes.DELAY, NodeTypes.LOOP]),
+  type: z.enum([
+    NodeTypes.TRIGGER,
+    NodeTypes.ACTION,
+    NodeTypes.CONDITION,
+    NodeTypes.SWITCH,
+    NodeTypes.DELAY,
+    NodeTypes.LOOP,
+  ]),
   position: z.object({
     x: z.number(),
     y: z.number(),
@@ -29,11 +36,15 @@ export const triggerNodeSchema = baseNodeSchema.extend({
     icon: z.string(),
     config: z.object({
       event: z.string(),
-      conditions: z.array(z.object({
-        field: z.string(),
-        operator: z.enum(['equals', 'contains', 'startsWith', 'endsWith']),
-        value: z.string(),
-      })).optional(),
+      conditions: z
+        .array(
+          z.object({
+            field: z.string(),
+            operator: z.enum(["equals", "contains", "startsWith", "endsWith"]),
+            value: z.string(),
+          }),
+        )
+        .optional(),
     }),
   }),
 });
@@ -47,7 +58,7 @@ export const actionNodeSchema = baseNodeSchema.extend({
     icon: z.string(),
     config: z.object({
       action: z.string(),
-      parameters: z.record(z.unknown()),
+      parameters: z.record(z.string(), z.unknown()),
     }),
   }),
 });
@@ -61,7 +72,13 @@ export const conditionNodeSchema = baseNodeSchema.extend({
     icon: z.string(),
     config: z.object({
       condition: z.string(),
-      operator: z.enum(['equals', 'notEquals', 'contains', 'greaterThan', 'lessThan']),
+      operator: z.enum([
+        "equals",
+        "notEquals",
+        "contains",
+        "greaterThan",
+        "lessThan",
+      ]),
       value: z.union([z.string(), z.number(), z.boolean()]),
     }),
   }),
@@ -76,10 +93,12 @@ export const switchNodeSchema = baseNodeSchema.extend({
     icon: z.string(),
     config: z.object({
       field: z.string(),
-      cases: z.array(z.object({
-        value: z.union([z.string(), z.number(), z.boolean()]),
-        label: z.string(),
-      })),
+      cases: z.array(
+        z.object({
+          value: z.union([z.string(), z.number(), z.boolean()]),
+          label: z.string(),
+        }),
+      ),
     }),
   }),
 });
@@ -93,7 +112,7 @@ export const delayNodeSchema = baseNodeSchema.extend({
     icon: z.string(),
     config: z.object({
       duration: z.number(),
-      unit: z.enum(['seconds', 'minutes', 'hours']),
+      unit: z.enum(["seconds", "minutes", "hours"]),
     }),
   }),
 });
@@ -106,7 +125,7 @@ export const loopNodeSchema = baseNodeSchema.extend({
     description: z.string(),
     icon: z.string(),
     config: z.object({
-      type: z.enum(['count', 'collection', 'while']),
+      type: z.enum(["count", "collection", "while"]),
       count: z.number().optional(),
       collection: z.string().optional(),
       condition: z.string().optional(),
@@ -120,7 +139,7 @@ export const edgeSchema = z.object({
   source: z.string(),
   target: z.string(),
   label: z.string().optional(),
-  type: z.enum(['default', 'success', 'failure', 'case']).optional(),
+  type: z.enum(["default", "success", "failure", "case"]).optional(),
 });
 
 // Workflow schema
@@ -128,14 +147,16 @@ export const workflowSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string().optional(),
-  nodes: z.array(z.union([
-    triggerNodeSchema,
-    actionNodeSchema,
-    conditionNodeSchema,
-    switchNodeSchema,
-    delayNodeSchema,
-    loopNodeSchema,
-  ])),
+  nodes: z.array(
+    z.union([
+      triggerNodeSchema,
+      actionNodeSchema,
+      conditionNodeSchema,
+      switchNodeSchema,
+      delayNodeSchema,
+      loopNodeSchema,
+    ]),
+  ),
   edges: z.array(edgeSchema),
 });
 

@@ -1,85 +1,93 @@
 import { createFileRoute } from "@tanstack/react-router";
+
 import { getTemporalClient } from "../../temporal/client";
+
+import type { WorkflowDefinition } from "../../lib/workflow/types";
 
 export const Route = createFileRoute("/api/execute-workflow")({
   server: {
     handlers: {
       POST: async ({ request }) => {
         try {
+          const body = await request.json();
           const {
             workflowId,
             workflowDefinition,
-            workflowType = "simpleTestWorkflow",
-          } = await request.json();
+            workflowType = "executeVortexWorkflow",
+            useDsl = false,
+            triggerData = {},
+          } = body;
 
-          console.log(
-            "🚀 [API] Starting Vortex workflow via Temporal:",
-            workflowId,
-          );
-          console.log(
-            "📋 [API] Workflow definition:",
-            JSON.stringify(workflowDefinition, null, 2),
-          );
+          // Generate workflow run ID
+          const workflowRunId = `wf-run-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+          const temporalWorkflowId = workflowId || `wf-${Date.now()}`;
+
+          console.log("🚀 [API] Starting Vortex workflow via Temporal");
+          console.log("🔍 [API] Workflow Run ID:", workflowRunId);
+          console.log("🔍 [API] Workflow ID:", temporalWorkflowId);
           console.log("🔍 [API] Workflow type:", workflowType);
+          console.log("🔍 [API] Use DSL:", useDsl);
           console.log("🔍 [API] Task queue: vortex");
-          console.log("🔍 [API] Namespace: default");
 
           const client = await getTemporalClient();
-          console.log("🔗 [API] Temporal client obtained");
 
-          // Test connection and verify server state
-          try {
-            console.log("🔍 [API] Testing Temporal server connection...");
-            const workflows = [];
-            const listIterator = client.workflow.list({ pageSize: 1 });
-            for await (const workflow of listIterator) {
-              workflows.push(workflow.workflowId);
-              break;
-            }
-            console.log("✅ [API] Can connect to Temporal server");
-            console.log("📊 [API] Server has workflows:", workflows.length > 0);
-          } catch (connectionError) {
-            console.error(
-              "❌ [API] Temporal server connection failed:",
-              connectionError,
+          let handle;
+
+          if (useDsl && isDslDefinition(workflowDefinition)) {
+            // Use new DSL-based workflow with database tracking
+            console.log("📋 [API] Executing DSL workflow");
+            console.log(`📋 [API] Steps: ${workflowDefinition.steps.length}`);
+
+            handle = await client.workflow.start("executeDslWorkflow", {
+              args: [
+                {
+                  workflowRunId,
+                  workflowId: temporalWorkflowId,
+                  definition: workflowDefinition,
+                  triggerData,
+                },
+              ],
+              taskQueue: "vortex",
+              workflowId: temporalWorkflowId,
+            });
+
+            console.log("✅ [API] DSL workflow started:", handle.workflowId);
+
+            return Response.json({
+              success: true,
+              workflowId: handle.workflowId,
+              workflowRunId,
+              status: "started",
+              type: "dsl",
+              temporalUI: `http://localhost:8080/namespaces/default/workflows/${handle.workflowId}`,
+              message: "DSL workflow started successfully",
+              note: "Check Temporal UI to monitor progress. Workflow run is being tracked in database.",
+            });
+          } else {
+            // Use legacy visual workflow format
+            console.log("📋 [API] Executing legacy visual workflow");
+            console.log(
+              `📋 [API] Nodes: ${workflowDefinition.nodes?.length || 0}`,
             );
+
+            handle = await client.workflow.start(workflowType, {
+              args: [workflowDefinition],
+              taskQueue: "vortex",
+              workflowId: temporalWorkflowId,
+            });
+
+            console.log("✅ [API] Workflow started:", handle.workflowId);
+
+            return Response.json({
+              success: true,
+              workflowId: handle.workflowId,
+              status: "started",
+              type: "legacy",
+              temporalUI: `http://localhost:8080/namespaces/default/workflows/${handle.workflowId}`,
+              message: "Workflow started successfully via Temporal",
+              note: "Check Temporal UI to monitor progress",
+            });
           }
-
-          // Start the Temporal workflow
-          console.log("📤 [API] Sending workflow to Temporal server...");
-          console.log("📤 [API] Workflow type:", workflowType);
-          console.log("📤 [API] Task queue: vortex");
-          console.log("📤 [API] Namespace: default");
-          const handle = await client.workflow.start(workflowType, {
-            args: [workflowDefinition],
-            taskQueue: "vortex",
-            workflowId,
-          });
-
-          console.log("✅ [API] Temporal workflow started:", handle.workflowId);
-          console.log("🔗 [API] Workflow handle created successfully");
-
-          // Check workflow status (simplified to avoid type errors)
-          try {
-            const description = await handle.describe();
-            console.log("📊 [API] Workflow description:", description);
-          } catch (describeError) {
-            console.log("⚠️ [API] Could not describe workflow:", describeError);
-          }
-
-          // Don't wait for completion - return immediately so UI doesn't hang
-          console.log(
-            "✅ [API] Workflow started successfully, returning immediately",
-          );
-
-          return Response.json({
-            success: true,
-            workflowId: handle.workflowId,
-            status: "started",
-            temporalUI: `http://localhost:8080/namespaces/default/workflows/${handle.workflowId}`,
-            message: "Workflow started successfully via Temporal",
-            note: "Check Temporal UI to monitor progress",
-          });
         } catch (error) {
           console.error("❌ [API] Workflow execution failed:", error);
 
@@ -107,12 +115,25 @@ export const Route = createFileRoute("/api/execute-workflow")({
             method: "POST",
             body: {
               workflowId: "string (optional, will be auto-generated)",
-              workflowDefinition: {
-                nodes: "array of workflow nodes",
-                edges: "array of workflow edges",
-              },
+              workflowDefinition:
+                "WorkflowDefinition (DSL) or legacy visual format",
               workflowType:
-                "string (optional, defaults to 'simpleTestWorkflow')",
+                "string (optional, defaults to 'executeVortexWorkflow')",
+              useDsl: "boolean (optional, defaults to false)",
+              triggerData: "object (optional, data passed to trigger)",
+            },
+          },
+          formats: {
+            dsl: {
+              version: "1.0",
+              steps: "array of Step objects",
+              edges: "array of EdgeDefinition objects",
+              variables: "optional variable definitions",
+              settings: "optional workflow settings",
+            },
+            legacy: {
+              nodes: "array of visual nodes",
+              edges: "array of visual edges",
             },
           },
           temporalUI: "http://localhost:8080",
@@ -121,3 +142,16 @@ export const Route = createFileRoute("/api/execute-workflow")({
     },
   },
 });
+
+/**
+ * Type guard to check if definition is DSL format
+ */
+function isDslDefinition(def: any): def is WorkflowDefinition {
+  return (
+    def &&
+    typeof def === "object" &&
+    def.version === "1.0" &&
+    Array.isArray(def.steps) &&
+    Array.isArray(def.edges)
+  );
+}

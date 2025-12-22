@@ -1,0 +1,26 @@
+query Workflows($workspaceId: UUID!, $limit: Int) {
+  workflows(
+    condition: { workspaceId: $workspaceId }
+    orderBy: NAME_ASC
+    first: $limit
+  ) {
+    nodes {
+      rowId
+      name
+      description
+      triggerType
+      cronExpression
+      isActive
+      createdAt
+      updatedAt
+      workflowRuns(orderBy: CREATED_AT_DESC, first: 1) {
+        nodes {
+          rowId
+          status
+          createdAt
+        }
+      }
+    }
+    totalCount
+  }
+}

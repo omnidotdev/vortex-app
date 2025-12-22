@@ -34,12 +34,6 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { NodeTypes } from "@/lib/schema";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { useIntegrations } from "@/contexts/IntegrationsContext";
 import { IntegrationsSettings } from "@/components/IntegrationsSettings";
 
 const coreNodeTemplates = [
@@ -116,79 +110,6 @@ const coreNodeTemplates = [
   },
 ];
 
-const discordNodeTemplates = {
-  triggers: {
-    category: "Discord Triggers",
-    items: [
-      {
-        iconName: "MessageCircle",
-        label: "New Message",
-        description: "Triggered when a message is sent in a channel",
-        integrationId: "discord",
-      },
-      {
-        iconName: "UserPlus",
-        label: "New Member",
-        description: "Triggered when a new member joins",
-        integrationId: "discord",
-      },
-    ],
-  },
-  actions: {
-    category: "Discord Actions",
-    items: [
-      {
-        iconName: "Send",
-        label: "Send Message",
-        description: "Send a message to a Discord channel",
-        integrationId: "discord",
-      },
-      {
-        iconName: "Webhook",
-        label: "Send Webhook Message",
-        description: "Send a message via Discord webhook",
-        integrationId: "discord",
-      },
-      {
-        iconName: "Shield",
-        label: "Add Role",
-        description: "Add a role to a member",
-        integrationId: "discord",
-      },
-      {
-        iconName: "Shield",
-        label: "Remove Role",
-        description: "Remove a role from a member",
-        integrationId: "discord",
-      },
-      {
-        iconName: "Hash",
-        label: "Create Channel",
-        description: "Create a new Discord channel",
-        integrationId: "discord",
-      },
-      {
-        iconName: "Crown",
-        label: "Create Role",
-        description: "Create a new Discord role",
-        integrationId: "discord",
-      },
-      {
-        iconName: "Ban",
-        label: "Ban Member",
-        description: "Ban a member from the server",
-        integrationId: "discord",
-      },
-      {
-        iconName: "Users",
-        label: "List Members",
-        description: "List guild members",
-        integrationId: "discord",
-      },
-    ],
-  },
-};
-
 const IconMap: Record<string, React.ElementType> = {
   Mail,
   Send,
@@ -231,28 +152,10 @@ export function WorkflowSidebar({
   currentWorkflow,
 }: WorkflowSidebarProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [isDiscordOpen, setIsDiscordOpen] = useState(true);
-  const { isIntegrationEnabled } = useIntegrations();
 
   const allNodeTemplates = useMemo(() => {
-    const templates = [...coreNodeTemplates];
-
-    // Add Discord nodes (temporarily forced for testing)
-    if (isIntegrationEnabled("discord") || true) {
-      templates.push({
-        type: NodeTypes.TRIGGER,
-        category: discordNodeTemplates.triggers.category,
-        items: discordNodeTemplates.triggers.items,
-      });
-      templates.push({
-        type: NodeTypes.ACTION,
-        category: discordNodeTemplates.actions.category,
-        items: discordNodeTemplates.actions.items,
-      });
-    }
-
-    return templates;
-  }, [isIntegrationEnabled]);
+    return coreNodeTemplates;
+  }, []);
 
   const filteredNodeTemplates = useMemo(() => {
     if (!searchQuery.trim()) return allNodeTemplates;
@@ -288,32 +191,6 @@ export function WorkflowSidebar({
       }
       if (type === NodeTypes.LOOP) {
         return { type: "count", count: 5 };
-      }
-      // Discord node configurations
-      if (nodeData.data.integrationId === "discord") {
-        switch (nodeData.data.label) {
-          case "New Message":
-            return { channelId: "", limit: 50 };
-          case "New Member":
-            return { guildId: "", limit: 50 };
-          case "Send Message":
-            return { channelId: "", message: "" };
-          case "Send Webhook Message":
-            return { webhookUrl: "", content: "" };
-          case "Add Role":
-          case "Remove Role":
-            return { guildId: "", userId: "", roleId: "" };
-          case "Create Channel":
-            return { guildId: "", name: "" };
-          case "Create Role":
-            return { guildId: "", roleName: "" };
-          case "Ban Member":
-            return { guildId: "", userId: "", reason: "" };
-          case "List Members":
-            return { guildId: "", search: "" };
-          default:
-            return {};
-        }
       }
       return {};
     })();
@@ -390,102 +267,40 @@ export function WorkflowSidebar({
       </div>
 
       <ScrollArea className="h-[calc(100vh-180px)]">
-        {filteredNodeTemplates.map((category) => {
-          // Check if this is a Discord category
-          const isDiscordCategory = category.category.includes("Discord");
-
-          if (isDiscordCategory) {
-            return (
-              <div key={category.category} className="mb-6">
-                <Collapsible
-                  open={isDiscordOpen}
-                  onOpenChange={setIsDiscordOpen}
+        {filteredNodeTemplates.map((category) => (
+          <div key={category.category} className="mb-6">
+            <h3 className="text-sm font-medium text-muted-foreground mb-2">
+              {category.category}
+            </h3>
+            <div className="space-y-2">
+              {category.items.map((item) => (
+                <div
+                  key={item.label}
+                  className="flex items-start p-2 rounded-md hover:bg-accent cursor-move"
+                  draggable
+                  onDragStart={(e) =>
+                    handleDragStart(e, {
+                      type: category.type,
+                      data: {
+                        label: item.label,
+                        description: item.description,
+                        iconName: item.iconName,
+                      },
+                    })
+                  }
                 >
-                  <CollapsibleTrigger className="flex items-center justify-between w-full p-1 hover:bg-accent rounded">
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      {category.category}
-                    </h3>
-                    {isDiscordOpen ? (
-                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                    )}
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="space-y-2 mt-2">
-                    {category.items.map((item) => (
-                      <div
-                        key={item.label}
-                        className="flex items-start p-2 rounded-md hover:bg-accent cursor-move ml-2"
-                        draggable
-                        onDragStart={(e) =>
-                          handleDragStart(e, {
-                            type: category.type,
-                            data: {
-                              label: item.label,
-                              description: item.description,
-                              iconName: item.iconName,
-                              integrationId: (item as any).integrationId,
-                            },
-                          })
-                        }
-                      >
-                        <div className="mr-2 mt-0.5">
-                          {renderIcon(item.iconName)}
-                        </div>
-                        <div>
-                          <div className="text-sm font-medium">
-                            {item.label}
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            {item.description}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </CollapsibleContent>
-                </Collapsible>
-              </div>
-            );
-          }
-
-          // Regular categories
-          return (
-            <div key={category.category} className="mb-6">
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">
-                {category.category}
-              </h3>
-              <div className="space-y-2">
-                {category.items.map((item) => (
-                  <div
-                    key={item.label}
-                    className="flex items-start p-2 rounded-md hover:bg-accent cursor-move"
-                    draggable
-                    onDragStart={(e) =>
-                      handleDragStart(e, {
-                        type: category.type,
-                        data: {
-                          label: item.label,
-                          description: item.description,
-                          iconName: item.iconName,
-                        },
-                      })
-                    }
-                  >
-                    <div className="mr-2 mt-0.5">
-                      {renderIcon(item.iconName)}
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium">{item.label}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {item.description}
-                      </div>
+                  <div className="mr-2 mt-0.5">{renderIcon(item.iconName)}</div>
+                  <div>
+                    <div className="text-sm font-medium">{item.label}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {item.description}
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-          );
-        })}
+          </div>
+        ))}
       </ScrollArea>
     </div>
   );

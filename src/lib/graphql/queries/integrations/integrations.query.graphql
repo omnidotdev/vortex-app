@@ -1,0 +1,17 @@
+query Integrations($workspaceId: UUID!, $limit: Int) {
+  integrations(
+    condition: { workspaceId: $workspaceId }
+    orderBy: NAME_ASC
+    first: $limit
+  ) {
+    nodes {
+      rowId
+      name
+      type
+      isEnabled
+      createdAt
+      updatedAt
+    }
+    totalCount
+  }
+}

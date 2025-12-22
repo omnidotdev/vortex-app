@@ -1,0 +1,10 @@
+mutation UpdateWorkspace($input: UpdateWorkspaceInput!) {
+  updateWorkspace(input: $input) {
+    workspace {
+      rowId
+      name
+      slug
+      tier
+    }
+  }
+}

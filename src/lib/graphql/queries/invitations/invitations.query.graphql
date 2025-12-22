@@ -1,0 +1,18 @@
+query Invitations($email: String) {
+  invitations(condition: { email: $email }) {
+    nodes {
+      rowId
+      email
+      role
+      createdAt
+      workspace {
+        rowId
+        name
+        slug
+        workspaceUsers {
+          totalCount
+        }
+      }
+    }
+  }
+}

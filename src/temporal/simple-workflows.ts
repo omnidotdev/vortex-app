@@ -15,12 +15,7 @@ export async function executeVortexWorkflow(workflowDefinition: any) {
       JSON.stringify(workflowDefinition, null, 2),
     );
 
-    const { executeDiscordAction, executeVortexAction } = proxyActivities<{
-      executeDiscordAction: (
-        actionName: string,
-        props: any,
-        auth: string,
-      ) => Promise<any>;
+    const { executeVortexAction } = proxyActivities<{
       executeVortexAction: (node: any) => Promise<any>;
     }>({
       startToCloseTimeout: "2 minutes",
@@ -43,44 +38,12 @@ export async function executeVortexWorkflow(workflowDefinition: any) {
       try {
         let result;
 
-        // Handle Discord actions
-        if (node.data?.integrationId === "discord") {
-          console.log("🤖 Discord action detected, using Temporal activity");
-          console.log(
-            "📋 Discord node config:",
-            JSON.stringify(node.data.config, null, 2),
-          );
-
-          const botToken = workflowDefinition.discordToken;
-          console.log("🔑 Discord token available:", !!botToken);
-
-          if (!botToken) {
-            throw new Error(
-              "Discord bot token is required for Discord actions",
-            );
-          }
-
-          console.log("📤 Calling executeDiscordAction activity...");
-          result = await executeDiscordAction(
-            node.data.label,
-            node.data.config || {},
-            botToken,
-          );
-
-          console.log(
-            "📥 Discord activity result:",
-            JSON.stringify(result, null, 2),
-          );
-        }
-        // Handle other actions
-        else {
-          console.log("🔧 Non-Discord action, using executeVortexAction");
-          result = await executeVortexAction(node);
-          console.log(
-            "📥 Vortex activity result:",
-            JSON.stringify(result, null, 2),
-          );
-        }
+        console.log("🔧 Executing action using executeVortexAction");
+        result = await executeVortexAction(node);
+        console.log(
+          "📥 Vortex activity result:",
+          JSON.stringify(result, null, 2),
+        );
 
         const nodeResult = {
           nodeId: node.id,

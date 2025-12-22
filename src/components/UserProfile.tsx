@@ -11,10 +11,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Dialog,
+  DialogBackdrop,
+  DialogCloseTrigger,
   DialogContent,
   DialogDescription,
-  DialogHeader,
+  DialogPositioner,
+  DialogRoot,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -81,14 +83,15 @@ export function UserProfile() {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <Dialog open={profileOpen} onOpenChange={setProfileOpen}>
-            <DialogTrigger asChild>
-              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <User className="mr-2 h-4 w-4" />
-                <span>Profile</span>
-              </DropdownMenuItem>
-            </DialogTrigger>
-          </Dialog>
+          <DropdownMenuItem
+            onSelect={(e) => {
+              e.preventDefault();
+              setProfileOpen(true);
+            }}
+          >
+            <User className="mr-2 h-4 w-4" />
+            <span>Profile</span>
+          </DropdownMenuItem>
           <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
@@ -113,58 +116,63 @@ export function UserProfile() {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <Dialog open={profileOpen} onOpenChange={setProfileOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
+      <DialogRoot
+        open={profileOpen}
+        onOpenChange={({ open }) => setProfileOpen(open)}
+      >
+        <DialogBackdrop />
+        <DialogPositioner>
+          <DialogContent className="sm:max-w-[425px]">
             <DialogTitle>Edit Profile</DialogTitle>
             <DialogDescription>
               Make changes to your profile here. Click save when you're done.
             </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="flex justify-center">
-              <Avatar className="h-20 w-20">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="bg-primary text-primary-foreground text-lg">
-                  {initials}
-                </AvatarFallback>
-              </Avatar>
+            <DialogCloseTrigger />
+            <div className="grid gap-4 py-4">
+              <div className="flex justify-center">
+                <Avatar className="h-20 w-20">
+                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarFallback className="bg-primary text-primary-foreground text-lg">
+                    {initials}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  Name
+                </Label>
+                <Input
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="email" className="text-right">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="col-span-3"
+                />
+              </div>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Name
-              </Label>
-              <Input
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="col-span-3"
-              />
+            <div className="flex justify-end space-x-2">
+              <DialogCloseTrigger asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogCloseTrigger>
+              <Button onClick={handleSaveProfile}>
+                <Save className="mr-2 h-4 w-4" />
+                Save changes
+              </Button>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="email" className="text-right">
-                Email
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="col-span-3"
-              />
-            </div>
-          </div>
-          <div className="flex justify-end space-x-2">
-            <Button variant="outline" onClick={() => setProfileOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleSaveProfile}>
-              <Save className="mr-2 h-4 w-4" />
-              Save changes
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </DialogPositioner>
+      </DialogRoot>
     </>
   );
 }
