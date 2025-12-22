@@ -7,7 +7,13 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**", "!!**/generated", "!!src/routeTree.gen.ts"]
+    "includes": [
+      "**",
+      "!!**/generated",
+      "!!src/routeTree.gen.ts",
+      "!!src/temporal",
+      "!!public/sw.js"
+    ]
   },
   "css": {
     "parser": {
@@ -27,16 +33,10 @@
       "a11y": {
         "useSemanticElements": "off",
         "noStaticElementInteractions": "off",
-        "useKeyWithClickEvents": "off",
-        "noAutofocus": "off",
-        "useValidAnchor": "warn",
-        "noSvgWithoutTitle": "warn"
+        "useKeyWithClickEvents": "off"
       },
       "correctness": {
-        "useUniqueElementIds": "off",
-        "noUnusedImports": { "fix": "safe", "options": {}, "level": "error" },
-        "useExhaustiveDependencies": "warn",
-        "noSwitchDeclarations": "warn"
+        "noUnusedImports": { "fix": "safe", "options": {}, "level": "error" }
       },
       "nursery": {
         "useSortedClasses": {
@@ -57,10 +57,7 @@
         }
       },
       "suspicious": {
-        "noUnknownAtRules": "off",
         "noArrayIndexKey": "warn",
-        "noAssignInExpressions": "warn",
-        "noImplicitAnyLet": "warn",
         "noNonNullAssertedOptionalChain": "off",
         "useIterableCallbackReturn": "off",
         "noConsole": {
