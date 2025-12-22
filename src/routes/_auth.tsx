@@ -8,9 +8,9 @@ import {
 } from "@tanstack/react-router";
 
 import CreateWorkspaceDialog from "@/components/core/CreateWorkspaceDialog";
-import SidebarProvider from "@/providers/SidebarProvider";
 import workspaceBySlugOptions from "@/lib/options/workspaceBySlug.options";
 import workspacesOptions from "@/lib/options/workspaces.options";
+import SidebarProvider from "@/providers/SidebarProvider";
 import { signOutAndRedirect } from "@/server/functions/auth";
 
 export const Route = createFileRoute("/_auth")({
@@ -57,7 +57,7 @@ export const Route = createFileRoute("/_auth")({
   notFoundComponent: () => (
     <div className="flex min-h-screen items-center justify-center">
       <div className="text-center">
-        <h1 className="text-2xl font-bold">Workspace Not Found</h1>
+        <h1 className="font-bold text-2xl">Workspace Not Found</h1>
         <p className="mt-2 text-muted-foreground">
           The workspace you're looking for doesn't exist or you don't have
           access.
@@ -98,7 +98,7 @@ function AppSidebar() {
       <div className="flex h-full flex-col">
         {/* Header */}
         <div className="flex h-16 items-center border-b px-4">
-          <Link to="/workspaces" className="text-xl font-bold hover:opacity-80">
+          <Link to="/workspaces" className="font-bold text-xl hover:opacity-80">
             Vortex
           </Link>
         </div>
@@ -117,7 +117,7 @@ function AppSidebar() {
           {workspaceSlug && (
             <>
               <div className="pt-4 pb-2">
-                <p className="px-3 text-xs font-medium uppercase text-muted-foreground">
+                <p className="px-3 font-medium text-muted-foreground text-xs uppercase">
                   {workspaceBySlug?.name || workspaceSlug}
                 </p>
               </div>
@@ -176,15 +176,15 @@ function AppSidebar() {
                 className="h-8 w-8 rounded-full"
               />
             ) : (
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-sm font-medium">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 font-medium text-sm">
                 {session?.user?.name?.charAt(0) || "U"}
               </div>
             )}
             <div className="flex-1 truncate">
-              <p className="truncate text-sm font-medium">
+              <p className="truncate font-medium text-sm">
                 {session?.user?.name || "User"}
               </p>
-              <p className="truncate text-xs text-muted-foreground">
+              <p className="truncate text-muted-foreground text-xs">
                 {session?.user?.email}
               </p>
             </div>

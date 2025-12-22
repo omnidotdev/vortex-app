@@ -7,16 +7,16 @@ import {
   createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-
 import { Toaster } from "sonner";
+
+import appCss from "@/lib/styles/globals.css?url";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { fetchSession } from "@/server/functions/auth";
 import { getTheme } from "@/server/functions/theme";
-import appCss from "@/lib/styles/globals.css?url";
 
 import type { QueryClient } from "@tanstack/react-query";
-import type { AuthSession } from "@/lib/auth/getAuth";
 import type { ReactNode } from "react";
+import type { AuthSession } from "@/lib/auth/getAuth";
 import type { Theme } from "@/providers/ThemeProvider";
 
 export const Route = createRootRouteWithContext<{
@@ -55,7 +55,7 @@ export const Route = createRootRouteWithContext<{
     <RootDocument theme="system">
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600">
+          <h1 className="font-bold text-2xl text-red-600">
             Something went wrong
           </h1>
           <p className="mt-2 text-gray-600">{error.message}</p>

@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 
 import authClient from "@/lib/auth/authClient";
 
@@ -67,11 +67,11 @@ function PricingPage() {
       <header className="border-b">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold">Vortex</span>
+            <span className="font-bold text-2xl">Vortex</span>
           </Link>
           <button
             onClick={handleSignIn}
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm hover:bg-primary/90"
           >
             Sign In
           </button>
@@ -82,7 +82,7 @@ function PricingPage() {
       <main className="flex-1 py-20">
         <div className="container mx-auto px-4">
           <div className="text-center">
-            <h1 className="text-4xl font-bold">Simple, transparent pricing</h1>
+            <h1 className="font-bold text-4xl">Simple, transparent pricing</h1>
             <p className="mt-4 text-lg text-muted-foreground">
               Choose the plan that fits your needs
             </p>
@@ -93,25 +93,26 @@ function PricingPage() {
               <div
                 key={plan.name}
                 className={`rounded-lg border p-8 ${
-                  plan.highlighted
-                    ? "border-primary ring-2 ring-primary"
-                    : ""
+                  plan.highlighted ? "border-primary ring-2 ring-primary" : ""
                 }`}
               >
-                <h3 className="text-xl font-semibold">{plan.name}</h3>
+                <h3 className="font-semibold text-xl">{plan.name}</h3>
                 <div className="mt-4">
-                  <span className="text-4xl font-bold">{plan.price}</span>
+                  <span className="font-bold text-4xl">{plan.price}</span>
                   {plan.period && (
                     <span className="text-muted-foreground">{plan.period}</span>
                   )}
                 </div>
-                <p className="mt-2 text-sm text-muted-foreground">
+                <p className="mt-2 text-muted-foreground text-sm">
                   {plan.description}
                 </p>
 
                 <ul className="mt-6 space-y-3">
                   {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-2 text-sm">
+                    <li
+                      key={feature}
+                      className="flex items-center gap-2 text-sm"
+                    >
                       <svg
                         className="h-4 w-4 text-green-500"
                         fill="none"
@@ -132,7 +133,7 @@ function PricingPage() {
 
                 <button
                   onClick={handleSignIn}
-                  className={`mt-8 w-full rounded-md px-4 py-2 text-sm font-medium ${
+                  className={`mt-8 w-full rounded-md px-4 py-2 font-medium text-sm ${
                     plan.highlighted
                       ? "bg-primary text-primary-foreground hover:bg-primary/90"
                       : "border hover:bg-accent"
@@ -148,7 +149,7 @@ function PricingPage() {
 
       {/* Footer */}
       <footer className="border-t py-8">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
+        <div className="container mx-auto px-4 text-center text-muted-foreground text-sm">
           <p>MIT License. Built with care.</p>
         </div>
       </footer>

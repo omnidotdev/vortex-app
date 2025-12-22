@@ -1,12 +1,13 @@
+import { addEdge, applyEdgeChanges, applyNodeChanges } from "reactflow";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
-import type { Edge, Node, OnEdgesChange, OnNodesChange } from "reactflow";
-import {
-  addEdge,
-  applyEdgeChanges,
-  applyNodeChanges,
-  type Connection,
+import type {
+  Connection,
+  Edge,
+  Node,
+  OnEdgesChange,
+  OnNodesChange,
 } from "reactflow";
 
 export interface WorkflowEditorState {
@@ -51,7 +52,9 @@ export interface WorkflowEditorState {
   selectNode: (nodeId: string | null) => void;
   setName: (name: string) => void;
   setDescription: (description: string) => void;
-  setTriggerType: (triggerType: "manual" | "webhook" | "cron" | "event") => void;
+  setTriggerType: (
+    triggerType: "manual" | "webhook" | "cron" | "event",
+  ) => void;
   setCronExpression: (cronExpression: string | null) => void;
   setIsActive: (isActive: boolean) => void;
   setIsDirty: (isDirty: boolean) => void;
@@ -88,7 +91,9 @@ export const useWorkflowEditorStore = create<WorkflowEditorState>()(
           workspaceId: workflow.workspaceId,
           name: workflow.name,
           description: workflow.description || "",
-          triggerType: (workflow.triggerType as WorkflowEditorState["triggerType"]) || "manual",
+          triggerType:
+            (workflow.triggerType as WorkflowEditorState["triggerType"]) ||
+            "manual",
           cronExpression: workflow.cronExpression || null,
           isActive: workflow.isActive ?? false,
           isDirty: false,
@@ -134,7 +139,9 @@ export const useWorkflowEditorStore = create<WorkflowEditorState>()(
       updateNode: (nodeId, data) => {
         set({
           nodes: get().nodes.map((node) =>
-            node.id === nodeId ? { ...node, data: { ...node.data, ...data } } : node,
+            node.id === nodeId
+              ? { ...node, data: { ...node.data, ...data } }
+              : node,
           ),
           isDirty: true,
         });
@@ -146,7 +153,8 @@ export const useWorkflowEditorStore = create<WorkflowEditorState>()(
           edges: get().edges.filter(
             (edge) => edge.source !== nodeId && edge.target !== nodeId,
           ),
-          selectedNodeId: get().selectedNodeId === nodeId ? null : get().selectedNodeId,
+          selectedNodeId:
+            get().selectedNodeId === nodeId ? null : get().selectedNodeId,
           isDirty: true,
         });
       },

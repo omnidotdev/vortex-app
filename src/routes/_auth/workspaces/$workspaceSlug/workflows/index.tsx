@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
 import workflowsOptions from "@/lib/options/workflows.options";
 
@@ -33,11 +33,11 @@ function WorkflowsPage() {
   return (
     <div className="p-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Workflows</h1>
+        <h1 className="font-bold text-2xl">Workflows</h1>
         <Link
           to="/workspaces/$workspaceSlug/workflows/new"
           params={{ workspaceSlug }}
-          className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm hover:bg-primary/90"
         >
           Create Workflow
         </Link>
@@ -46,14 +46,14 @@ function WorkflowsPage() {
       {workflows.length === 0 ? (
         <div className="mt-16 text-center">
           <div className="mx-auto h-16 w-16 rounded-full bg-muted" />
-          <h3 className="mt-4 text-lg font-semibold">No workflows yet</h3>
+          <h3 className="mt-4 font-semibold text-lg">No workflows yet</h3>
           <p className="mt-2 text-muted-foreground">
             Create your first workflow to start automating.
           </p>
           <Link
             to="/workspaces/$workspaceSlug/workflows/new"
             params={{ workspaceSlug }}
-            className="mt-4 inline-block rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90"
+            className="mt-4 inline-block rounded-md bg-primary px-4 py-2 text-primary-foreground text-sm hover:bg-primary/90"
           >
             Create Workflow
           </Link>
@@ -62,7 +62,7 @@ function WorkflowsPage() {
         <div className="mt-8">
           <table className="w-full">
             <thead>
-              <tr className="border-b text-left text-sm text-muted-foreground">
+              <tr className="border-b text-left text-muted-foreground text-sm">
                 <th className="pb-3 font-medium">Name</th>
                 <th className="pb-3 font-medium">Trigger</th>
                 <th className="pb-3 font-medium">Status</th>
@@ -94,7 +94,7 @@ function WorkflowsPage() {
                       {workflow.isActive ? "Active" : "Inactive"}
                     </span>
                   </td>
-                  <td className="py-4 text-sm text-muted-foreground">
+                  <td className="py-4 text-muted-foreground text-sm">
                     {workflow.workflowRuns.nodes[0]?.createdAt
                       ? new Date(
                           workflow.workflowRuns.nodes[0].createdAt,
@@ -105,7 +105,7 @@ function WorkflowsPage() {
                     <Link
                       to="/workspaces/$workspaceSlug/workflows/$workflowId"
                       params={{ workspaceSlug, workflowId: workflow.rowId }}
-                      className="text-sm text-primary hover:underline"
+                      className="text-primary text-sm hover:underline"
                     >
                       Edit
                     </Link>

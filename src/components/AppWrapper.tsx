@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
 import { Loader2, Workflow } from "lucide-react";
+
+import { LandingPage } from "@/components/LandingPage";
 import { useAuth } from "@/contexts/AuthContext";
 import { IntegrationsProvider } from "@/contexts/IntegrationsContext";
-import { LandingPage } from "@/components/LandingPage";
 import { WorkflowApp } from "./WorkflowApp";
 
 export function AppWrapper() {
@@ -13,14 +13,14 @@ export function AppWrapper() {
   // Show loading while checking auth
   if (authLoading) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center bg-linear-to-br from-background via-background to-muted">
+      <div className="flex h-screen w-screen items-center justify-center bg-linear-to-br from-background via-background to-muted">
         <div className="flex flex-col items-center space-y-4">
-          <div className="h-12 w-12 bg-primary rounded-md flex items-center justify-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-md bg-primary">
             <Workflow className="h-8 w-8 text-primary-foreground" />
           </div>
           <div className="flex items-center space-x-2">
             <Loader2 className="h-6 w-6 animate-spin text-primary" />
-            <span className="text-lg font-medium text-foreground">
+            <span className="font-medium text-foreground text-lg">
               Loading Vortex...
             </span>
           </div>

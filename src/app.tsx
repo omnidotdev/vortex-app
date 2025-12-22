@@ -1,10 +1,11 @@
-import { Suspense } from "react";
-import { RouterProvider } from "@tanstack/react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { getRouter } from "./router";
+import { RouterProvider } from "@tanstack/react-router";
+import { Suspense } from "react";
+
 import { Toaster } from "@/components/ui/sonner";
 import { queryClient } from "@/lib/query-client";
+import { getRouter } from "./router";
 
 const router = getRouter();
 

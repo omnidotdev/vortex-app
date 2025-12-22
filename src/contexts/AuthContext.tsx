@@ -1,6 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+
+import type React from "react";
 
 interface User {
   id: string;
@@ -26,7 +28,8 @@ const MOCK_USER: User = {
   id: "user-1",
   name: "Alex Johnson",
   email: "alex@example.com",
-  avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face&auto=format",
+  avatar:
+    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face&auto=format",
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {

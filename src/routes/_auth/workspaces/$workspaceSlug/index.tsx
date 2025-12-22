@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_auth/workspaces/$workspaceSlug/")({
   component: WorkspaceDashboard,
@@ -12,7 +12,7 @@ function WorkspaceDashboard() {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
+      <h1 className="font-bold text-2xl">Dashboard</h1>
       <p className="mt-2 text-muted-foreground">
         Welcome to workspace: {workspaceSlug}
       </p>
@@ -20,26 +20,26 @@ function WorkspaceDashboard() {
       {/* Quick stats */}
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-lg border p-6">
-          <p className="text-sm text-muted-foreground">Workflows</p>
-          <p className="mt-2 text-3xl font-bold">0</p>
+          <p className="text-muted-foreground text-sm">Workflows</p>
+          <p className="mt-2 font-bold text-3xl">0</p>
         </div>
         <div className="rounded-lg border p-6">
-          <p className="text-sm text-muted-foreground">Runs Today</p>
-          <p className="mt-2 text-3xl font-bold">0</p>
+          <p className="text-muted-foreground text-sm">Runs Today</p>
+          <p className="mt-2 font-bold text-3xl">0</p>
         </div>
         <div className="rounded-lg border p-6">
-          <p className="text-sm text-muted-foreground">Integrations</p>
-          <p className="mt-2 text-3xl font-bold">0</p>
+          <p className="text-muted-foreground text-sm">Integrations</p>
+          <p className="mt-2 font-bold text-3xl">0</p>
         </div>
         <div className="rounded-lg border p-6">
-          <p className="text-sm text-muted-foreground">Plugins</p>
-          <p className="mt-2 text-3xl font-bold">0</p>
+          <p className="text-muted-foreground text-sm">Plugins</p>
+          <p className="mt-2 font-bold text-3xl">0</p>
         </div>
       </div>
 
       {/* Quick actions */}
       <div className="mt-8">
-        <h2 className="text-lg font-semibold">Quick Actions</h2>
+        <h2 className="font-semibold text-lg">Quick Actions</h2>
         <div className="mt-4 flex gap-4">
           <Link
             to="/workspaces/$workspaceSlug/workflows"
@@ -51,7 +51,7 @@ function WorkspaceDashboard() {
           <Link
             to="/workspaces/$workspaceSlug/workflows/new"
             params={{ workspaceSlug }}
-            className="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90"
+            className="rounded-md bg-primary px-4 py-2 text-primary-foreground text-sm hover:bg-primary/90"
           >
             Create Workflow
           </Link>

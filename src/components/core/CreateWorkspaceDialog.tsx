@@ -17,13 +17,11 @@ import {
   WorkspaceRole,
   useCreateWorkspaceMutation,
   useCreateWorkspaceUserMutation,
-  useWorkspacesQuery,
 } from "@/generated/graphql";
 import useDialogStore, { DialogType } from "@/lib/hooks/store/useDialogStore";
 import useForm from "@/lib/hooks/useForm";
 import workspacesOptions from "@/lib/options/workspaces.options";
 import generateSlug from "@/lib/util/generateSlug";
-import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
 
 const CreateWorkspaceDialog = () => {
   const navigate = useNavigate();
@@ -151,7 +149,7 @@ const CreateWorkspaceDialog = () => {
             <form.Field name="name">
               {(field) => (
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm text-foreground" htmlFor="name">
+                  <label className="text-foreground text-sm" htmlFor="name">
                     Name
                   </label>
 
@@ -168,7 +166,7 @@ const CreateWorkspaceDialog = () => {
 
                   <div className="h-4">
                     {field.state.meta.errors.map((error, index) => (
-                      <p key={index} className="text-xs text-destructive">
+                      <p key={index} className="text-destructive text-xs">
                         {error}
                       </p>
                     ))}

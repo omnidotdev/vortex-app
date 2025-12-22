@@ -1,7 +1,9 @@
-import { Worker } from "@temporalio/worker";
-import * as activities from "./activities";
-import { fileURLToPath } from "url";
 import { dirname, resolve } from "path";
+import { fileURLToPath } from "url";
+
+import { Worker } from "@temporalio/worker";
+
+import * as activities from "./activities";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

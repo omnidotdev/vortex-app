@@ -75,20 +75,20 @@ function NewWorkflowPage() {
 
   return (
     <div className="mx-auto max-w-2xl p-8">
-      <h1 className="text-2xl font-bold">Create New Workflow</h1>
+      <h1 className="font-bold text-2xl">Create New Workflow</h1>
       <p className="mt-2 text-muted-foreground">
         Set up a new automation workflow for your workspace.
       </p>
 
       {error && (
-        <div className="mt-4 rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="mt-4 rounded-md border border-red-200 bg-red-50 p-4 text-red-700 text-sm">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-6">
         <div className="space-y-2">
-          <label htmlFor="name" className="text-sm font-medium">
+          <label htmlFor="name" className="font-medium text-sm">
             Workflow Name
           </label>
           <input
@@ -103,7 +103,7 @@ function NewWorkflowPage() {
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="description" className="text-sm font-medium">
+          <label htmlFor="description" className="font-medium text-sm">
             Description
           </label>
           <textarea
@@ -117,7 +117,7 @@ function NewWorkflowPage() {
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="triggerType" className="text-sm font-medium">
+          <label htmlFor="triggerType" className="font-medium text-sm">
             Trigger Type
           </label>
           <select
@@ -149,7 +149,7 @@ function NewWorkflowPage() {
           <button
             type="submit"
             disabled={isPending || !name.trim()}
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+            className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm hover:bg-primary/90 disabled:opacity-50"
           >
             {isPending ? "Creating..." : "Create Workflow"}
           </button>

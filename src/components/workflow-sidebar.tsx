@@ -1,40 +1,40 @@
 "use client";
 
 import {
-  Plus,
-  Mail,
-  Send,
-  Bell,
-  Clock,
-  Database,
-  FileJson,
-  Webhook,
-  MousePointer,
-  Search,
-  GitBranch,
-  SplitSquareVertical,
-  Timer,
-  Repeat,
   AlertTriangle,
-  Globe,
-  MessageCircle,
-  Users,
-  UserPlus,
-  Shield,
-  Hash,
-  Crown,
   Ban,
-  Settings as SettingsIcon,
+  Bell,
   ChevronDown,
   ChevronRight,
+  Clock,
+  Crown,
+  Database,
+  FileJson,
+  GitBranch,
+  Globe,
+  Hash,
+  Mail,
+  MessageCircle,
+  MousePointer,
+  Repeat,
+  Search,
+  Send,
+  Settings as SettingsIcon,
+  Shield,
+  SplitSquareVertical,
+  Timer,
+  UserPlus,
+  Users,
+  Webhook,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { NodeTypes } from "@/lib/schema";
-import { Input } from "@/components/ui/input";
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
+
 import { IntegrationsSettings } from "@/components/IntegrationsSettings";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { NodeTypes } from "@/lib/schema";
 
 const coreNodeTemplates = [
   {
@@ -215,14 +215,14 @@ export function WorkflowSidebar({
   };
 
   return (
-    <div className="w-64 bg-card p-4 border-r border-border">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-foreground">Vortex</h2>
+    <div className="w-64 border-border border-r bg-card p-4">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="font-bold text-foreground text-xl">Vortex</h2>
         <div className="flex gap-2">
           <IntegrationsSettings
             trigger={
               <Button variant="ghost" size="sm">
-                <SettingsIcon className="w-4 h-4" />
+                <SettingsIcon className="h-4 w-4" />
               </Button>
             }
           />
@@ -231,25 +231,25 @@ export function WorkflowSidebar({
       </div>
 
       {currentWorkflow ? (
-        <div className="bg-muted/50 p-3 rounded-lg mb-4">
-          <h3 className="font-medium text-foreground text-sm mb-1">
+        <div className="mb-4 rounded-lg bg-muted/50 p-3">
+          <h3 className="mb-1 font-medium text-foreground text-sm">
             Current Workflow
           </h3>
-          <div className="text-sm font-medium text-foreground">
+          <div className="font-medium text-foreground text-sm">
             {currentWorkflow.name}
           </div>
           {currentWorkflow.description && (
-            <div className="text-xs text-muted-foreground mt-1">
+            <div className="mt-1 text-muted-foreground text-xs">
               {currentWorkflow.description}
             </div>
           )}
         </div>
       ) : (
-        <div className="bg-primary/5 border border-primary/20 p-3 rounded-lg mb-4">
-          <h3 className="font-medium text-primary text-sm mb-1">
+        <div className="mb-4 rounded-lg border border-primary/20 bg-primary/5 p-3">
+          <h3 className="mb-1 font-medium text-primary text-sm">
             Welcome to Vortex! 👋
           </h3>
-          <div className="text-xs text-muted-foreground">
+          <div className="text-muted-foreground text-xs">
             Drag nodes from below to start building your first workflow, or
             select a sample workflow from the dropdown above.
           </div>
@@ -257,7 +257,7 @@ export function WorkflowSidebar({
       )}
 
       <div className="relative mb-4">
-        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute top-2.5 left-2 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Search nodes..."
           value={searchQuery}
@@ -269,14 +269,14 @@ export function WorkflowSidebar({
       <ScrollArea className="h-[calc(100vh-180px)]">
         {filteredNodeTemplates.map((category) => (
           <div key={category.category} className="mb-6">
-            <h3 className="text-sm font-medium text-muted-foreground mb-2">
+            <h3 className="mb-2 font-medium text-muted-foreground text-sm">
               {category.category}
             </h3>
             <div className="space-y-2">
               {category.items.map((item) => (
                 <div
                   key={item.label}
-                  className="flex items-start p-2 rounded-md hover:bg-accent cursor-move"
+                  className="flex cursor-move items-start rounded-md p-2 hover:bg-accent"
                   draggable
                   onDragStart={(e) =>
                     handleDragStart(e, {
@@ -289,10 +289,10 @@ export function WorkflowSidebar({
                     })
                   }
                 >
-                  <div className="mr-2 mt-0.5">{renderIcon(item.iconName)}</div>
+                  <div className="mt-0.5 mr-2">{renderIcon(item.iconName)}</div>
                   <div>
-                    <div className="text-sm font-medium">{item.label}</div>
-                    <div className="text-xs text-muted-foreground">
+                    <div className="font-medium text-sm">{item.label}</div>
+                    <div className="text-muted-foreground text-xs">
                       {item.description}
                     </div>
                   </div>

@@ -1,4 +1,6 @@
-import { Workflow, NodeTypes } from "./schema";
+import { NodeTypes } from "./schema";
+
+import type { Workflow } from "./schema";
 
 export const sampleWorkflows: Workflow[] = [
   {

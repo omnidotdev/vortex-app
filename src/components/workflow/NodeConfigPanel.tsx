@@ -1,17 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -19,8 +13,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
 
 import type { Node } from "reactflow";
 
@@ -45,19 +46,16 @@ export function NodeConfigPanel({
     }
   }, [node]);
 
-  const handleChange = useCallback(
-    (key: string, value: unknown) => {
-      setFormData((prev) => ({ ...prev, [key]: value }));
-    },
-    [],
-  );
+  const handleChange = useCallback((key: string, value: unknown) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+  }, []);
 
   const handleNestedChange = useCallback(
     (parentKey: string, key: string, value: unknown) => {
       setFormData((prev) => ({
         ...prev,
         [parentKey]: {
-          ...(prev[parentKey] as Record<string, unknown> || {}),
+          ...((prev[parentKey] as Record<string, unknown>) || {}),
           [key]: value,
         },
       }));
@@ -85,24 +83,24 @@ export function NodeConfigPanel({
       <SheetContent className="w-[450px] overflow-y-auto">
         <SheetHeader>
           <div className="flex items-center gap-2">
-            <SheetTitle>{formData.label as string || "Configure Node"}</SheetTitle>
+            <SheetTitle>
+              {(formData.label as string) || "Configure Node"}
+            </SheetTitle>
             <Badge variant="outline" className="text-xs">
               {nodeType.replace("Node", "")}
             </Badge>
           </div>
-          <SheetDescription>
-            Configure this workflow step
-          </SheetDescription>
+          <SheetDescription>Configure this workflow step</SheetDescription>
         </SheetHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+        <form onSubmit={handleSubmit} className="mt-4 space-y-4">
           <Tabs defaultValue="basic" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="basic">Basic</TabsTrigger>
               <TabsTrigger value="advanced">Advanced</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="basic" className="space-y-4 mt-4">
+            <TabsContent value="basic" className="mt-4 space-y-4">
               {/* Common fields */}
               <div className="space-y-2">
                 <Label htmlFor="label">Label</Label>
@@ -132,7 +130,9 @@ export function NodeConfigPanel({
                     <Label>Trigger Type</Label>
                     <Select
                       value={(formData.triggerType as string) || "manual"}
-                      onValueChange={(value) => handleChange("triggerType", value)}
+                      onValueChange={(value) =>
+                        handleChange("triggerType", value)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -151,13 +151,20 @@ export function NodeConfigPanel({
                       <Label htmlFor="cronExpression">Cron Expression</Label>
                       <Input
                         id="cronExpression"
-                        value={((formData.config as Record<string, unknown>)?.expression as string) || ""}
+                        value={
+                          ((formData.config as Record<string, unknown>)
+                            ?.expression as string) || ""
+                        }
                         onChange={(e) =>
-                          handleNestedChange("config", "expression", e.target.value)
+                          handleNestedChange(
+                            "config",
+                            "expression",
+                            e.target.value,
+                          )
                         }
                         placeholder="0 0 * * *"
                       />
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-muted-foreground text-xs">
                         Example: 0 0 * * * (daily at midnight)
                       </p>
                     </div>
@@ -173,7 +180,9 @@ export function NodeConfigPanel({
                     <Input
                       id="operation"
                       value={(formData.operation as string) || ""}
-                      onChange={(e) => handleChange("operation", e.target.value)}
+                      onChange={(e) =>
+                        handleChange("operation", e.target.value)
+                      }
                       placeholder="e.g., sendEmail, httpRequest"
                     />
                   </div>
@@ -210,7 +219,7 @@ export function NodeConfigPanel({
                     rows={2}
                     className="font-mono text-sm"
                   />
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     Use JSONPath expressions. Returns true/false.
                   </p>
                 </div>
@@ -224,7 +233,9 @@ export function NodeConfigPanel({
                     <Input
                       id="switchExpression"
                       value={(formData.expression as string) || ""}
-                      onChange={(e) => handleChange("expression", e.target.value)}
+                      onChange={(e) =>
+                        handleChange("expression", e.target.value)
+                      }
                       placeholder="$.trigger.data.type"
                       className="font-mono text-sm"
                     />
@@ -272,11 +283,15 @@ export function NodeConfigPanel({
                   {formData.loopType === "forEach" && (
                     <>
                       <div className="space-y-2">
-                        <Label htmlFor="collection">Collection Expression</Label>
+                        <Label htmlFor="collection">
+                          Collection Expression
+                        </Label>
                         <Input
                           id="collection"
                           value={(formData.collection as string) || ""}
-                          onChange={(e) => handleChange("collection", e.target.value)}
+                          onChange={(e) =>
+                            handleChange("collection", e.target.value)
+                          }
                           placeholder="$.trigger.data.items"
                           className="font-mono text-sm"
                         />
@@ -286,7 +301,9 @@ export function NodeConfigPanel({
                         <Input
                           id="itemVariable"
                           value={(formData.itemVariable as string) || "item"}
-                          onChange={(e) => handleChange("itemVariable", e.target.value)}
+                          onChange={(e) =>
+                            handleChange("itemVariable", e.target.value)
+                          }
                           placeholder="item"
                         />
                       </div>
@@ -299,7 +316,9 @@ export function NodeConfigPanel({
                       <Input
                         id="condition"
                         value={(formData.condition as string) || ""}
-                        onChange={(e) => handleChange("condition", e.target.value)}
+                        onChange={(e) =>
+                          handleChange("condition", e.target.value)
+                        }
                         placeholder="$.variables.count < 10"
                         className="font-mono text-sm"
                       />
@@ -344,14 +363,21 @@ export function NodeConfigPanel({
 
                   {formData.gateType === "approval" && (
                     <div className="space-y-2">
-                      <Label htmlFor="approvers">Approvers (comma-separated)</Label>
+                      <Label htmlFor="approvers">
+                        Approvers (comma-separated)
+                      </Label>
                       <Input
                         id="approvers"
-                        value={((formData.approvers as string[]) || []).join(", ")}
+                        value={((formData.approvers as string[]) || []).join(
+                          ", ",
+                        )}
                         onChange={(e) =>
                           handleChange(
                             "approvers",
-                            e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                            e.target.value
+                              .split(",")
+                              .map((s) => s.trim())
+                              .filter(Boolean),
                           )
                         }
                         placeholder="user@example.com, admin@example.com"
@@ -365,7 +391,9 @@ export function NodeConfigPanel({
                       <Input
                         id="signalName"
                         value={(formData.signalName as string) || ""}
-                        onChange={(e) => handleChange("signalName", e.target.value)}
+                        onChange={(e) =>
+                          handleChange("signalName", e.target.value)
+                        }
                         placeholder="continue-workflow"
                       />
                     </div>
@@ -385,7 +413,9 @@ export function NodeConfigPanel({
                     <Label>Timeout Action</Label>
                     <Select
                       value={(formData.timeoutAction as string) || "reject"}
-                      onValueChange={(value) => handleChange("timeoutAction", value)}
+                      onValueChange={(value) =>
+                        handleChange("timeoutAction", value)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -393,7 +423,9 @@ export function NodeConfigPanel({
                       <SelectContent>
                         <SelectItem value="approve">Auto-approve</SelectItem>
                         <SelectItem value="reject">Auto-reject</SelectItem>
-                        <SelectItem value="continue">Continue anyway</SelectItem>
+                        <SelectItem value="continue">
+                          Continue anyway
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -411,7 +443,10 @@ export function NodeConfigPanel({
                         type="number"
                         value={(formData.duration as number) || 1}
                         onChange={(e) =>
-                          handleChange("duration", parseInt(e.target.value) || 1)
+                          handleChange(
+                            "duration",
+                            parseInt(e.target.value) || 1,
+                          )
                         }
                         min={1}
                       />
@@ -447,7 +482,9 @@ export function NodeConfigPanel({
                       onValueChange={(value) =>
                         handleChange(
                           "waitFor",
-                          value === "all" || value === "any" ? value : parseInt(value),
+                          value === "all" || value === "any"
+                            ? value
+                            : parseInt(value),
                         )
                       }
                     >
@@ -464,8 +501,9 @@ export function NodeConfigPanel({
                     </Select>
                   </div>
 
-                  <p className="text-xs text-muted-foreground">
-                    Connect each branch handle to the first step of each parallel execution path.
+                  <p className="text-muted-foreground text-xs">
+                    Connect each branch handle to the first step of each
+                    parallel execution path.
                   </p>
                 </>
               )}
@@ -514,12 +552,15 @@ export function NodeConfigPanel({
               )}
             </TabsContent>
 
-            <TabsContent value="advanced" className="space-y-4 mt-4">
+            <TabsContent value="advanced" className="mt-4 space-y-4">
               {/* Error Handling */}
               <div className="space-y-2">
                 <Label>On Error</Label>
                 <Select
-                  value={((formData.onError as Record<string, unknown>)?.action as string) || "stop"}
+                  value={
+                    ((formData.onError as Record<string, unknown>)
+                      ?.action as string) || "stop"
+                  }
                   onValueChange={(value) =>
                     handleNestedChange("onError", "action", value)
                   }
@@ -535,16 +576,24 @@ export function NodeConfigPanel({
                 </Select>
               </div>
 
-              {((formData.onError as Record<string, unknown>)?.action as string) === "retry" && (
+              {((formData.onError as Record<string, unknown>)
+                ?.action as string) === "retry" && (
                 <>
                   <div className="space-y-2">
                     <Label htmlFor="retryCount">Max Retries</Label>
                     <Input
                       id="retryCount"
                       type="number"
-                      value={((formData.onError as Record<string, unknown>)?.retryCount as number) || 3}
+                      value={
+                        ((formData.onError as Record<string, unknown>)
+                          ?.retryCount as number) || 3
+                      }
                       onChange={(e) =>
-                        handleNestedChange("onError", "retryCount", parseInt(e.target.value) || 3)
+                        handleNestedChange(
+                          "onError",
+                          "retryCount",
+                          parseInt(e.target.value) || 3,
+                        )
                       }
                       min={1}
                       max={10}
@@ -554,7 +603,10 @@ export function NodeConfigPanel({
                   <div className="space-y-2">
                     <Label>Backoff Strategy</Label>
                     <Select
-                      value={((formData.onError as Record<string, unknown>)?.retryBackoff as string) || "exponential"}
+                      value={
+                        ((formData.onError as Record<string, unknown>)
+                          ?.retryBackoff as string) || "exponential"
+                      }
                       onValueChange={(value) =>
                         handleNestedChange("onError", "retryBackoff", value)
                       }
@@ -574,13 +626,18 @@ export function NodeConfigPanel({
               {/* Loop-specific: Max iterations */}
               {nodeType === "loopNode" && (
                 <div className="space-y-2">
-                  <Label htmlFor="maxIterations">Max Iterations (safety limit)</Label>
+                  <Label htmlFor="maxIterations">
+                    Max Iterations (safety limit)
+                  </Label>
                   <Input
                     id="maxIterations"
                     type="number"
                     value={(formData.maxIterations as number) || 1000}
                     onChange={(e) =>
-                      handleChange("maxIterations", parseInt(e.target.value) || 1000)
+                      handleChange(
+                        "maxIterations",
+                        parseInt(e.target.value) || 1000,
+                      )
                     }
                     min={1}
                   />
@@ -597,7 +654,10 @@ export function NodeConfigPanel({
                       type="number"
                       value={(formData.timeout as number) || 30000}
                       onChange={(e) =>
-                        handleChange("timeout", parseInt(e.target.value) || 30000)
+                        handleChange(
+                          "timeout",
+                          parseInt(e.target.value) || 30000,
+                        )
                       }
                       min={1000}
                     />
@@ -610,7 +670,10 @@ export function NodeConfigPanel({
                       type="number"
                       value={(formData.memoryLimit as number) || 128}
                       onChange={(e) =>
-                        handleChange("memoryLimit", parseInt(e.target.value) || 128)
+                        handleChange(
+                          "memoryLimit",
+                          parseInt(e.target.value) || 128,
+                        )
                       }
                       min={16}
                       max={1024}
@@ -621,7 +684,7 @@ export function NodeConfigPanel({
             </TabsContent>
           </Tabs>
 
-          <div className="flex justify-end gap-2 pt-4 border-t">
+          <div className="flex justify-end gap-2 border-t pt-4">
             <Button variant="outline" type="button" onClick={onClose}>
               Cancel
             </Button>

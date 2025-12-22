@@ -3,22 +3,22 @@
   "vcs": {
     "enabled": true,
     "clientKind": "git",
-    "useIgnoreFile": true,
+    "useIgnoreFile": true
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**", "!!**/generated", "!!src/routeTree.gen.ts"],
+    "includes": ["**", "!!**/generated", "!!src/routeTree.gen.ts"]
   },
   "css": {
     "parser": {
-      "tailwindDirectives": true,
-    },
+      "tailwindDirectives": true
+    }
   },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
     "lineWidth": 80,
-    "indentWidth": 2,
+    "indentWidth": 2
   },
   "linter": {
     "enabled": true,
@@ -30,13 +30,13 @@
         "useKeyWithClickEvents": "off",
         "noAutofocus": "off",
         "useValidAnchor": "warn",
-        "noSvgWithoutTitle": "warn",
+        "noSvgWithoutTitle": "warn"
       },
       "correctness": {
         "useUniqueElementIds": "off",
         "noUnusedImports": { "fix": "safe", "options": {}, "level": "error" },
         "useExhaustiveDependencies": "warn",
-        "noSwitchDeclarations": "warn",
+        "noSwitchDeclarations": "warn"
       },
       "nursery": {
         "useSortedClasses": {
@@ -44,17 +44,17 @@
           "fix": "safe",
           "options": {
             "attributes": ["className"],
-            "functions": ["cn, cva, tv"],
-          },
-        },
+            "functions": ["cn, cva, tv"]
+          }
+        }
       },
       "style": {
         "noNonNullAssertion": "off",
         "useSingleVarDeclarator": "off",
         "useImportType": {
           "level": "error",
-          "options": { "style": "separatedType" },
-        },
+          "options": { "style": "separatedType" }
+        }
       },
       "suspicious": {
         "noUnknownAtRules": "off",
@@ -66,11 +66,11 @@
         "noConsole": {
           "level": "error",
           "options": {
-            "allow": ["error", "warn"],
-          },
-        },
-      },
-    },
+            "allow": ["error", "warn"]
+          }
+        }
+      }
+    }
   },
   "assist": {
     "actions": {
@@ -84,16 +84,16 @@
               ":BLANK_LINE:",
               {
                 "type": false,
-                "source": [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:"],
+                "source": [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:"]
               },
               ":BLANK_LINE:",
               { "type": false, "source": ["**"] },
               ":BLANK_LINE:",
-              { "type": true },
-            ],
-          },
-        },
-      },
-    },
-  },
+              { "type": true }
+            ]
+          }
+        }
+      }
+    }
+  }
 }

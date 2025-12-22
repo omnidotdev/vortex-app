@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 
 import authClient from "@/lib/auth/authClient";
 
@@ -20,7 +20,7 @@ function LandingPage() {
       <header className="border-b">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold">Vortex</span>
+            <span className="font-bold text-2xl">Vortex</span>
           </div>
           <nav className="flex items-center gap-4">
             <Link to="/pricing" className="text-sm hover:underline">
@@ -28,7 +28,7 @@ function LandingPage() {
             </Link>
             <button
               onClick={handleSignIn}
-              className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+              className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm hover:bg-primary/90"
             >
               Sign In
             </button>
@@ -38,7 +38,7 @@ function LandingPage() {
 
       {/* Hero */}
       <main className="flex flex-1 flex-col items-center justify-center px-4 text-center">
-        <h1 className="text-5xl font-bold tracking-tight sm:text-6xl ">
+        <h1 className="font-bold text-5xl tracking-tight sm:text-6xl">
           Workflow Automation
           <br />
           <span className="text-primary">Made Simple</span>
@@ -50,7 +50,7 @@ function LandingPage() {
         <div className="mt-10 flex gap-4">
           <button
             onClick={handleSignIn}
-            className="rounded-md bg-primary px-6 py-3 text-lg font-medium text-primary-foreground hover:bg-primary/90"
+            className="rounded-md bg-primary px-6 py-3 font-medium text-lg text-primary-foreground hover:bg-primary/90"
           >
             Get Started
           </button>
@@ -58,7 +58,7 @@ function LandingPage() {
             href="https://github.com/omnidotdev/vortex"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-md border px-6 py-3 text-lg font-medium hover:bg-accent"
+            className="rounded-md border px-6 py-3 font-medium text-lg hover:bg-accent"
           >
             View on GitHub
           </a>
@@ -67,21 +67,21 @@ function LandingPage() {
         {/* Features */}
         <div className="mt-20 grid max-w-4xl gap-8 sm:grid-cols-3">
           <div className="rounded-lg border p-6 text-left">
-            <h3 className="text-lg font-semibold">JSON-First DSL</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <h3 className="font-semibold text-lg">JSON-First DSL</h3>
+            <p className="mt-2 text-muted-foreground text-sm">
               Define workflows as JSON. The web UI is an artifact of the schema,
               not the primary interface.
             </p>
           </div>
           <div className="rounded-lg border p-6 text-left">
-            <h3 className="text-lg font-semibold">Temporal Powered</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <h3 className="font-semibold text-lg">Temporal Powered</h3>
+            <p className="mt-2 text-muted-foreground text-sm">
               Built on Temporal for durable execution, retries, and scheduling.
             </p>
           </div>
           <div className="rounded-lg border p-6 text-left">
-            <h3 className="text-lg font-semibold">WASM Plugins</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <h3 className="font-semibold text-lg">WASM Plugins</h3>
+            <p className="mt-2 text-muted-foreground text-sm">
               Extend with Extism plugins in any language that compiles to WASM.
             </p>
           </div>
@@ -90,7 +90,7 @@ function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t py-8">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
+        <div className="container mx-auto px-4 text-center text-muted-foreground text-sm">
           <p>MIT License. Built with care.</p>
         </div>
       </footer>

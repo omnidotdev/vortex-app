@@ -36,7 +36,7 @@ function IntegrationsPage() {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold">Integrations</h1>
+      <h1 className="font-bold text-2xl">Integrations</h1>
       <p className="mt-2 text-muted-foreground">
         Connect external services to use in your workflows.
       </p>
@@ -55,13 +55,13 @@ function IntegrationsPage() {
               <div className="flex items-start justify-between">
                 <div className="text-3xl">{integration.icon}</div>
                 {isConfigured && (
-                  <span className="rounded-full bg-green-100 px-2 py-1 text-xs text-green-700">
+                  <span className="rounded-full bg-green-100 px-2 py-1 text-green-700 text-xs">
                     Connected
                   </span>
                 )}
               </div>
               <h3 className="mt-4 font-semibold">{integration.name}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="mt-1 text-muted-foreground text-sm">
                 {integration.description}
               </p>
               <button

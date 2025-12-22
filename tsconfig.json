@@ -16,15 +16,15 @@
     "noUncheckedIndexedAccess": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./src/*"]
     },
-    "types": ["vite/client"],
+    "types": ["vite/client"]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
     "vite.config.ts",
-    "src/routeTree.gen.ts",
+    "src/routeTree.gen.ts"
   ],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules"]
 }

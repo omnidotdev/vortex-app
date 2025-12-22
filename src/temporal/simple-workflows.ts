@@ -1,4 +1,4 @@
-import { sleep, proxyActivities } from "@temporalio/workflow";
+import { proxyActivities, sleep } from "@temporalio/workflow";
 
 export async function testWorkflow(input: { message: string }) {
   console.log("🧪 Test workflow started:", input.message);

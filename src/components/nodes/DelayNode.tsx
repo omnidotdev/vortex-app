@@ -1,8 +1,9 @@
 "use client";
 
+import { Clock, Trash2 } from "lucide-react";
 import { memo } from "react";
 import { Handle, Position } from "reactflow";
-import { Clock, Trash2 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 
 interface DelayNodeData {
@@ -35,13 +36,13 @@ export const DelayNode = memo(
 
     return (
       <div
-        className="px-4 py-2 shadow-lg rounded-lg border-2 min-w-[150px] relative group cursor-pointer hover:shadow-xl transition-shadow bg-cyan-50 border-cyan-200"
+        className="group relative min-w-[150px] cursor-pointer rounded-lg border-2 border-cyan-200 bg-cyan-50 px-4 py-2 shadow-lg transition-shadow hover:shadow-xl"
         onClick={handleNodeClick}
       >
         <Button
           variant="ghost"
           size="icon"
-          className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-background shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-background opacity-0 shadow-md transition-opacity group-hover:opacity-100"
           onClick={(e) => {
             e.stopPropagation();
             data.onDelete?.();
@@ -55,12 +56,12 @@ export const DelayNode = memo(
           <div className="font-bold">{data.label || "Delay"}</div>
         </div>
 
-        <div className="text-sm text-cyan-600 mt-1 font-medium">
+        <div className="mt-1 font-medium text-cyan-600 text-sm">
           {getDelayDisplay()}
         </div>
 
         {data.description && (
-          <div className="text-xs text-muted-foreground mt-1">
+          <div className="mt-1 text-muted-foreground text-xs">
             {data.description}
           </div>
         )}
@@ -68,12 +69,12 @@ export const DelayNode = memo(
         <Handle
           type="target"
           position={Position.Top}
-          className="w-3 h-3 bg-cyan-500!"
+          className="h-3 w-3 bg-cyan-500!"
         />
         <Handle
           type="source"
           position={Position.Bottom}
-          className="w-3 h-3 bg-cyan-500!"
+          className="h-3 w-3 bg-cyan-500!"
         />
       </div>
     );

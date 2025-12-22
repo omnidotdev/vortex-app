@@ -54,7 +54,7 @@ export function getRouter() {
     defaultNotFoundComponent: () => (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">Page Not Found</h1>
+          <h1 className="font-bold text-2xl">Page Not Found</h1>
           <p className="mt-2 text-gray-600">
             The page you're looking for doesn't exist.
           </p>

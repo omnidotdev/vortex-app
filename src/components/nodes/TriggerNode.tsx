@@ -1,11 +1,13 @@
 "use client";
 
-import React, { memo } from "react";
-import { Handle, Position } from "reactflow";
 import * as Icons from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Trash2 } from "lucide-react";
+import { memo } from "react";
+import { Handle, Position } from "reactflow";
+
+import { Button } from "@/components/ui/button";
+
+import type React from "react";
 export const TriggerNode = memo(({ data, id }: { data: any; id: string }) => {
   const IconComponent = data.iconName
     ? (Icons[data.iconName as keyof typeof Icons] as React.ComponentType<{
@@ -55,13 +57,13 @@ export const TriggerNode = memo(({ data, id }: { data: any; id: string }) => {
 
   return (
     <div
-      className="px-4 py-2 shadow-lg rounded-lg border-2 min-w-[150px] relative group cursor-pointer hover:shadow-xl transition-shadow bg-blue-50 border-blue-200"
+      className="group relative min-w-[150px] cursor-pointer rounded-lg border-2 border-blue-200 bg-blue-50 px-4 py-2 shadow-lg transition-shadow hover:shadow-xl"
       onClick={handleNodeClick}
     >
       <Button
         variant="ghost"
         size="icon"
-        className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-background shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-background opacity-0 shadow-md transition-opacity group-hover:opacity-100"
         onClick={(e) => {
           e.stopPropagation();
           data.onDelete?.();
@@ -76,18 +78,18 @@ export const TriggerNode = memo(({ data, id }: { data: any; id: string }) => {
           <div className="font-bold">{data.label}</div>
         </div>
       </div>
-      <div className="text-sm text-muted-foreground mt-1">
+      <div className="mt-1 text-muted-foreground text-sm">
         {data.description}
       </div>
 
       {/* Status indicator */}
-      <div className="mt-3 flex justify-between items-center">
-        <span className="text-xs text-gray-600">Active</span>
-        <div className="w-2 h-2 rounded-full bg-green-400" />
+      <div className="mt-3 flex items-center justify-between">
+        <span className="text-gray-600 text-xs">Active</span>
+        <div className="h-2 w-2 rounded-full bg-green-400" />
       </div>
       {isClickTrigger && (
         <div
-          className="text-xs text-blue-600 mt-1 font-medium cursor-pointer hover:text-blue-800 px-2 py-1 rounded bg-blue-50 hover:bg-blue-100 transition-colors"
+          className="mt-1 cursor-pointer rounded bg-blue-50 px-2 py-1 font-medium text-blue-600 text-xs transition-colors hover:bg-blue-100 hover:text-blue-800"
           onClick={handleTriggerClick}
         >
           Click to trigger
@@ -96,7 +98,7 @@ export const TriggerNode = memo(({ data, id }: { data: any; id: string }) => {
       <Handle
         type="source"
         position={Position.Bottom}
-        className="w-3 h-3 !bg-blue-500"
+        className="!bg-blue-500 h-3 w-3"
       />
     </div>
   );

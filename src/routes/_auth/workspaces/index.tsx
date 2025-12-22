@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -22,11 +22,11 @@ function WorkspacesPage() {
     return (
       <div className="p-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Workspaces</h1>
+          <h1 className="font-bold text-2xl">Workspaces</h1>
         </div>
         <div className="mt-8 rounded-lg border border-dashed p-12 text-center">
-          <h3 className="text-lg font-medium">Setting up your account...</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <h3 className="font-medium text-lg">Setting up your account...</h3>
+          <p className="mt-2 text-muted-foreground text-sm">
             Please wait while we finish setting up your account.
           </p>
         </div>
@@ -51,7 +51,7 @@ function WorkspacesList({ userId }: { userId: string }) {
   return (
     <div className="p-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Workspaces</h1>
+        <h1 className="font-bold text-2xl">Workspaces</h1>
         <Button onClick={() => setIsCreateWorkspaceOpen(true)}>
           <PlusIcon className="mr-2 size-4" />
           Create Workspace
@@ -60,8 +60,8 @@ function WorkspacesList({ userId }: { userId: string }) {
 
       {workspaces.length === 0 ? (
         <div className="mt-8 rounded-lg border border-dashed p-12 text-center">
-          <h3 className="text-lg font-medium">No workspaces yet</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <h3 className="font-medium text-lg">No workspaces yet</h3>
+          <p className="mt-2 text-muted-foreground text-sm">
             Create your first workspace to get started with Vortex.
           </p>
           <Button
@@ -82,7 +82,7 @@ function WorkspacesList({ userId }: { userId: string }) {
               className="block rounded-lg border p-6 hover:bg-accent"
             >
               <h3 className="font-semibold">{workspace.name}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="mt-1 text-muted-foreground text-sm">
                 {workspace.tier.toLowerCase()} plan
               </p>
             </Link>

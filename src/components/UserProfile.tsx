@@ -1,15 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Bell,
+  CreditCard,
+  HelpCircle,
+  LogOut,
+  Save,
+  Settings,
+  User,
+} from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DialogBackdrop,
   DialogCloseTrigger,
@@ -18,22 +22,18 @@ import {
   DialogPositioner,
   DialogRoot,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  User,
-  Settings,
-  LogOut,
-  Bell,
-  CreditCard,
-  HelpCircle,
-  Save,
-} from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { toast } from "sonner";
 
 export function UserProfile() {
   const { user, logout } = useAuth();
@@ -76,8 +76,8 @@ export function UserProfile() {
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">{user.name}</p>
-              <p className="text-xs leading-none text-muted-foreground">
+              <p className="font-medium text-sm leading-none">{user.name}</p>
+              <p className="text-muted-foreground text-xs leading-none">
                 {user.email}
               </p>
             </div>
@@ -132,7 +132,7 @@ export function UserProfile() {
               <div className="flex justify-center">
                 <Avatar className="h-20 w-20">
                   <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="bg-primary text-primary-foreground text-lg">
+                  <AvatarFallback className="bg-primary text-lg text-primary-foreground">
                     {initials}
                   </AvatarFallback>
                 </Avatar>

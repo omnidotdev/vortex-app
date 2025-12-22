@@ -1,9 +1,27 @@
 "use client";
 
-import React, { useState } from "react";
+import {
+  ArrowRight,
+  Check,
+  Clock,
+  Eye,
+  EyeOff,
+  Github,
+  Globe,
+  Loader2,
+  Mail,
+  Shield,
+  Star,
+  Twitter,
+  Users,
+  Workflow,
+  Zap,
+} from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -22,26 +40,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Zap,
-  Workflow,
-  Globe,
-  Shield,
-  Clock,
-  Users,
-  ArrowRight,
-  Check,
-  Star,
-  Github,
-  Twitter,
-  Mail,
-  Eye,
-  EyeOff,
-  Loader2,
-} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
-import { toast } from "sonner";
-import { ThemeToggle } from "@/components/theme-toggle";
+
+import type React from "react";
 
 const features = [
   {
@@ -180,30 +183,30 @@ export function LandingPage() {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
       {/* Header */}
       <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center space-x-2">
-            <div className="h-8 w-8 bg-primary rounded-md flex items-center justify-center">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
               <Workflow className="h-5 w-5 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold">Vortex</span>
+            <span className="font-bold text-xl">Vortex</span>
           </div>
 
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden space-x-8 md:flex">
             <a
               href="#features"
-              className="text-sm hover:text-primary transition-colors"
+              className="text-sm transition-colors hover:text-primary"
             >
               Features
             </a>
             <a
               href="#testimonials"
-              className="text-sm hover:text-primary transition-colors"
+              className="text-sm transition-colors hover:text-primary"
             >
               Testimonials
             </a>
             <a
               href="#pricing"
-              className="text-sm hover:text-primary transition-colors"
+              className="text-sm transition-colors hover:text-primary"
             >
               Pricing
             </a>
@@ -253,7 +256,7 @@ export function LandingPage() {
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                          className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? (
@@ -263,7 +266,7 @@ export function LandingPage() {
                           )}
                         </Button>
                       </div>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-muted-foreground text-xs">
                         Use password "demo" to try the app
                       </p>
                     </div>
@@ -292,33 +295,33 @@ export function LandingPage() {
       {/* Hero Section */}
       <section className="py-20 lg:py-32">
         <div className="container mx-auto px-4 text-center">
-          <div className="max-w-4xl mx-auto">
-            <div className="inline-flex items-center rounded-full border px-4 py-2 text-sm mb-8">
+          <div className="mx-auto max-w-4xl">
+            <div className="mb-8 inline-flex items-center rounded-full border px-4 py-2 text-sm">
               <Zap className="mr-2 h-4 w-4 text-primary" />
               Now with AI-powered workflow suggestions
             </div>
 
-            <h1 className="text-4xl lg:text-6xl font-bold tracking-tight mb-6">
+            <h1 className="mb-6 font-bold text-4xl tracking-tight lg:text-6xl">
               Build powerful workflows
-              <span className="text-primary block">without writing code</span>
+              <span className="block text-primary">without writing code</span>
             </h1>
 
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="mx-auto mb-8 max-w-2xl text-muted-foreground text-xl">
               Create, automate, and scale your business processes with our
               intuitive visual workflow builder. Connect any API, trigger
               actions, and watch your productivity soar.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Button
                 size="lg"
-                className="text-lg px-8 py-6"
+                className="px-8 py-6 text-lg"
                 onClick={() => setLoginOpen(true)}
               >
                 Get Started Free
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6">
+              <Button size="lg" variant="outline" className="px-8 py-6 text-lg">
                 Watch Demo
               </Button>
             </div>
@@ -327,26 +330,26 @@ export function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-muted/50">
+      <section id="features" className="bg-muted/50 py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">
+          <div className="mb-16 text-center">
+            <h2 className="mb-4 font-bold text-3xl lg:text-4xl">
               Everything you need to automate
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-muted-foreground text-xl">
               Powerful features that scale with your business, from simple
               automations to complex workflows.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature, index) => (
               <Card
                 key={index}
-                className="border-0 shadow-md hover:shadow-lg transition-shadow"
+                className="border-0 shadow-md transition-shadow hover:shadow-lg"
               >
                 <CardHeader>
-                  <feature.icon className="h-12 w-12 text-primary mb-4" />
+                  <feature.icon className="mb-4 h-12 w-12 text-primary" />
                   <CardTitle className="text-xl">{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -361,28 +364,28 @@ export function LandingPage() {
       {/* Testimonials Section */}
       <section id="testimonials" className="py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">
+          <div className="mb-16 text-center">
+            <h2 className="mb-4 font-bold text-3xl lg:text-4xl">
               Loved by thousands of teams
             </h2>
-            <div className="flex justify-center items-center space-x-1 mb-4">
+            <div className="mb-4 flex items-center justify-center space-x-1">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
                   className="h-5 w-5 fill-yellow-400 text-yellow-400"
                 />
               ))}
-              <span className="ml-2 text-sm text-muted-foreground">
+              <span className="ml-2 text-muted-foreground text-sm">
                 4.9/5 from 2,341 reviews
               </span>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid gap-8 md:grid-cols-3">
             {testimonials.map((testimonial, index) => (
               <Card key={index} className="border-0 shadow-md">
                 <CardContent className="pt-6">
-                  <p className="text-muted-foreground mb-4">
+                  <p className="mb-4 text-muted-foreground">
                     "{testimonial.content}"
                   </p>
                   <div className="flex items-center space-x-3">
@@ -393,7 +396,7 @@ export function LandingPage() {
                     />
                     <div>
                       <div className="font-medium">{testimonial.name}</div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-muted-foreground text-sm">
                         {testimonial.role}
                       </div>
                     </div>
@@ -406,26 +409,26 @@ export function LandingPage() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-20 bg-muted/50">
+      <section id="pricing" className="bg-muted/50 py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">
+          <div className="mb-16 text-center">
+            <h2 className="mb-4 font-bold text-3xl lg:text-4xl">
               Simple, transparent pricing
             </h2>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-muted-foreground text-xl">
               Choose the plan that's right for your team
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-3">
             {pricingPlans.map((plan, index) => (
               <Card
                 key={index}
-                className={`border-0 shadow-md relative ${plan.popular ? "ring-2 ring-primary" : ""}`}
+                className={`relative border-0 shadow-md ${plan.popular ? "ring-2 ring-primary" : ""}`}
               >
                 {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 transform">
+                    <span className="rounded-full bg-primary px-3 py-1 font-medium text-primary-foreground text-sm">
                       Most Popular
                     </span>
                   </div>
@@ -433,10 +436,10 @@ export function LandingPage() {
                 <CardHeader>
                   <CardTitle className="text-xl">{plan.name}</CardTitle>
                   <CardDescription>{plan.description}</CardDescription>
-                  <div className="text-3xl font-bold">
+                  <div className="font-bold text-3xl">
                     {plan.price}
                     {plan.period && (
-                      <span className="text-base font-normal text-muted-foreground">
+                      <span className="font-normal text-base text-muted-foreground">
                         {plan.period}
                       </span>
                     )}
@@ -449,7 +452,7 @@ export function LandingPage() {
                         key={featureIndex}
                         className="flex items-center space-x-3"
                       >
-                        <Check className="h-5 w-5 text-primary flex-shrink-0" />
+                        <Check className="h-5 w-5 flex-shrink-0 text-primary" />
                         <span className="text-sm">{feature}</span>
                       </li>
                     ))}
@@ -473,17 +476,17 @@ export function LandingPage() {
       {/* CTA Section */}
       <section className="py-20">
         <div className="container mx-auto px-4 text-center">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-6">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="mb-6 font-bold text-3xl lg:text-4xl">
               Ready to transform your workflow?
             </h2>
-            <p className="text-xl text-muted-foreground mb-8">
+            <p className="mb-8 text-muted-foreground text-xl">
               Join thousands of teams already using Vortex to automate their
               processes and boost productivity.
             </p>
             <Button
               size="lg"
-              className="text-lg px-8 py-6"
+              className="px-8 py-6 text-lg"
               onClick={() => setLoginOpen(true)}
             >
               Start Building Today
@@ -496,13 +499,13 @@ export function LandingPage() {
       {/* Footer */}
       <footer className="border-t bg-muted/50">
         <div className="container mx-auto px-4 py-12">
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid gap-8 md:grid-cols-4">
             <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="h-8 w-8 bg-primary rounded-md flex items-center justify-center">
+              <div className="mb-4 flex items-center space-x-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
                   <Workflow className="h-5 w-5 text-primary-foreground" />
                 </div>
-                <span className="text-xl font-bold">Vortex</span>
+                <span className="font-bold text-xl">Vortex</span>
               </div>
               <p className="text-muted-foreground text-sm">
                 The most intuitive workflow automation platform for modern
@@ -511,12 +514,12 @@ export function LandingPage() {
             </div>
 
             <div>
-              <h3 className="font-medium mb-4">Product</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <h3 className="mb-4 font-medium">Product</h3>
+              <ul className="space-y-2 text-muted-foreground text-sm">
                 <li>
                   <a
                     href="#"
-                    className="hover:text-foreground transition-colors"
+                    className="transition-colors hover:text-foreground"
                   >
                     Features
                   </a>
@@ -524,7 +527,7 @@ export function LandingPage() {
                 <li>
                   <a
                     href="#"
-                    className="hover:text-foreground transition-colors"
+                    className="transition-colors hover:text-foreground"
                   >
                     Integrations
                   </a>
@@ -532,7 +535,7 @@ export function LandingPage() {
                 <li>
                   <a
                     href="#"
-                    className="hover:text-foreground transition-colors"
+                    className="transition-colors hover:text-foreground"
                   >
                     Templates
                   </a>
@@ -540,7 +543,7 @@ export function LandingPage() {
                 <li>
                   <a
                     href="#"
-                    className="hover:text-foreground transition-colors"
+                    className="transition-colors hover:text-foreground"
                   >
                     API
                   </a>
@@ -549,12 +552,12 @@ export function LandingPage() {
             </div>
 
             <div>
-              <h3 className="font-medium mb-4">Company</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <h3 className="mb-4 font-medium">Company</h3>
+              <ul className="space-y-2 text-muted-foreground text-sm">
                 <li>
                   <a
                     href="#"
-                    className="hover:text-foreground transition-colors"
+                    className="transition-colors hover:text-foreground"
                   >
                     About
                   </a>
@@ -562,7 +565,7 @@ export function LandingPage() {
                 <li>
                   <a
                     href="#"
-                    className="hover:text-foreground transition-colors"
+                    className="transition-colors hover:text-foreground"
                   >
                     Blog
                   </a>
@@ -570,7 +573,7 @@ export function LandingPage() {
                 <li>
                   <a
                     href="#"
-                    className="hover:text-foreground transition-colors"
+                    className="transition-colors hover:text-foreground"
                   >
                     Careers
                   </a>
@@ -578,7 +581,7 @@ export function LandingPage() {
                 <li>
                   <a
                     href="#"
-                    className="hover:text-foreground transition-colors"
+                    className="transition-colors hover:text-foreground"
                   >
                     Contact
                   </a>
@@ -587,23 +590,23 @@ export function LandingPage() {
             </div>
 
             <div>
-              <h3 className="font-medium mb-4">Connect</h3>
+              <h3 className="mb-4 font-medium">Connect</h3>
               <div className="flex space-x-4">
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <Github className="h-5 w-5" />
                 </a>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <Twitter className="h-5 w-5" />
                 </a>
                 <a
                   href="#"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <Mail className="h-5 w-5" />
                 </a>
@@ -611,7 +614,7 @@ export function LandingPage() {
             </div>
           </div>
 
-          <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
+          <div className="mt-8 border-t pt-8 text-center text-muted-foreground text-sm">
             © 2024 Vortex. All rights reserved.
           </div>
         </div>

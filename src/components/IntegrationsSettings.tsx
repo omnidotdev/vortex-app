@@ -1,6 +1,31 @@
 "use client";
 
-import React, { useState } from "react";
+import {
+  AlertCircle,
+  Check,
+  ExternalLink,
+  Eye,
+  EyeOff,
+  FileText,
+  Linkedin,
+  MessageCircle,
+  Settings,
+  Slack,
+  Trash2,
+  X,
+} from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   DialogBackdrop,
   DialogCloseTrigger,
@@ -11,37 +36,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Settings,
-  MessageCircle,
-  Linkedin,
-  Slack,
-  FileText,
-  Check,
-  X,
-  Eye,
-  EyeOff,
-  ExternalLink,
-  AlertCircle,
-  Trash2,
-} from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import { useIntegrations } from "@/contexts/IntegrationsContext";
-import { toast } from "sonner";
+
+import type React from "react";
 
 const integrationIcons = {
   MessageCircle,
@@ -183,7 +185,7 @@ export function IntegrationsSettings({ trigger }: IntegrationsSettingsProps) {
 
   const defaultTrigger = (
     <Button variant="outline" size="sm">
-      <Settings className="w-4 h-4 mr-2" />
+      <Settings className="mr-2 h-4 w-4" />
       Integrations
     </Button>
   );
@@ -200,7 +202,7 @@ export function IntegrationsSettings({ trigger }: IntegrationsSettingsProps) {
       <DialogTrigger asChild>{trigger || defaultTrigger}</DialogTrigger>
       <DialogBackdrop />
       <DialogPositioner>
-        <DialogContent className="max-w-4xl max-h-[80vh]">
+        <DialogContent className="max-h-[80vh] max-w-4xl">
           <DialogTitle>Integration Settings</DialogTitle>
           <DialogDescription>
             Connect external services to enhance your workflows
@@ -222,9 +224,9 @@ export function IntegrationsSettings({ trigger }: IntegrationsSettingsProps) {
                     return (
                       <div
                         key={integration.id}
-                        className={`p-3 rounded-lg cursor-pointer transition-colors ${
+                        className={`cursor-pointer rounded-lg p-3 transition-colors ${
                           activeIntegration === integration.id
-                            ? "bg-primary/10 border-primary/20 border"
+                            ? "border border-primary/20 bg-primary/10"
                             : "hover:bg-muted/50"
                         }`}
                         onClick={() => setActiveIntegration(integration.id)}
@@ -232,10 +234,10 @@ export function IntegrationsSettings({ trigger }: IntegrationsSettingsProps) {
                         <div className="flex items-center gap-3">
                           <div className="relative">
                             {IconComponent && (
-                              <IconComponent className="w-5 h-5" />
+                              <IconComponent className="h-5 w-5" />
                             )}
                             <div
-                              className={`absolute -top-1 -right-1 w-3 h-3 rounded-full ${
+                              className={`absolute -top-1 -right-1 h-3 w-3 rounded-full ${
                                 isEnabled ? "bg-green-500" : "bg-gray-400"
                               }`}
                             />
@@ -244,7 +246,7 @@ export function IntegrationsSettings({ trigger }: IntegrationsSettingsProps) {
                             <div className="font-medium text-sm">
                               {integration.displayName}
                             </div>
-                            <div className="flex items-center gap-2 mt-1">
+                            <div className="mt-1 flex items-center gap-2">
                               <Badge
                                 variant={isEnabled ? "default" : "secondary"}
                                 className="text-xs"
@@ -264,22 +266,22 @@ export function IntegrationsSettings({ trigger }: IntegrationsSettingsProps) {
             {/* Main Content */}
             <div className="flex-1">
               {currentIntegration && (
-                <div className="h-full flex flex-col">
-                  <div className="flex items-center gap-3 mb-6">
+                <div className="flex h-full flex-col">
+                  <div className="mb-6 flex items-center gap-3">
                     {(() => {
                       const IconComponent =
                         integrationIcons[
                           currentIntegration.icon as keyof typeof integrationIcons
                         ];
                       return IconComponent ? (
-                        <IconComponent className="w-6 h-6" />
+                        <IconComponent className="h-6 w-6" />
                       ) : null;
                     })()}
                     <div>
-                      <h3 className="text-lg font-semibold">
+                      <h3 className="font-semibold text-lg">
                         {currentIntegration.displayName}
                       </h3>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         {currentIntegration.description}
                       </p>
                     </div>
@@ -328,15 +330,15 @@ export function IntegrationsSettings({ trigger }: IntegrationsSettingsProps) {
                                   type="button"
                                   variant="ghost"
                                   size="sm"
-                                  className="absolute right-0 top-0 h-full px-3"
+                                  className="absolute top-0 right-0 h-full px-3"
                                   onClick={() =>
                                     toggleTokenVisibility(currentIntegration.id)
                                   }
                                 >
                                   {showTokens[currentIntegration.id] ? (
-                                    <EyeOff className="w-4 h-4" />
+                                    <EyeOff className="h-4 w-4" />
                                   ) : (
-                                    <Eye className="w-4 h-4" />
+                                    <Eye className="h-4 w-4" />
                                   )}
                                 </Button>
                               </div>
@@ -348,7 +350,7 @@ export function IntegrationsSettings({ trigger }: IntegrationsSettingsProps) {
                                   !pendingTokens[currentIntegration.id]?.trim()
                                 }
                               >
-                                <Check className="w-4 h-4 mr-2" />
+                                <Check className="mr-2 h-4 w-4" />
                                 Save
                               </Button>
                             </div>
@@ -357,7 +359,7 @@ export function IntegrationsSettings({ trigger }: IntegrationsSettingsProps) {
                           <div className="flex items-center justify-between">
                             <div className="space-y-0.5">
                               <Label>Enable Integration</Label>
-                              <div className="text-sm text-muted-foreground">
+                              <div className="text-muted-foreground text-sm">
                                 Allow workflows to use this integration
                               </div>
                             </div>
@@ -386,7 +388,7 @@ export function IntegrationsSettings({ trigger }: IntegrationsSettingsProps) {
                                 !isIntegrationEnabled(currentIntegration.id)
                               }
                             >
-                              <Trash2 className="w-4 h-4 mr-2" />
+                              <Trash2 className="mr-2 h-4 w-4" />
                               Remove Integration
                             </Button>
                           </div>
@@ -397,8 +399,8 @@ export function IntegrationsSettings({ trigger }: IntegrationsSettingsProps) {
                       {setupInstructions && (
                         <Card>
                           <CardHeader>
-                            <CardTitle className="text-base flex items-center gap-2">
-                              <AlertCircle className="w-4 h-4" />
+                            <CardTitle className="flex items-center gap-2 text-base">
+                              <AlertCircle className="h-4 w-4" />
                               {setupInstructions.title}
                             </CardTitle>
                             <CardDescription>
@@ -423,7 +425,7 @@ export function IntegrationsSettings({ trigger }: IntegrationsSettingsProps) {
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >
-                                  <ExternalLink className="w-4 h-4 mr-2" />
+                                  <ExternalLink className="mr-2 h-4 w-4" />
                                   Open Developer Portal
                                 </a>
                               </Button>
@@ -441,14 +443,14 @@ export function IntegrationsSettings({ trigger }: IntegrationsSettingsProps) {
                           <div className="flex items-center gap-2">
                             {isIntegrationEnabled(currentIntegration.id) ? (
                               <>
-                                <Check className="w-4 h-4 text-green-500" />
+                                <Check className="h-4 w-4 text-green-500" />
                                 <span className="text-green-700">
                                   Connected and ready to use
                                 </span>
                               </>
                             ) : (
                               <>
-                                <X className="w-4 h-4 text-red-500" />
+                                <X className="h-4 w-4 text-red-500" />
                                 <span className="text-red-700">
                                   Not connected
                                 </span>

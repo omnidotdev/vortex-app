@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
-  createFileRoute,
   Link,
+  createFileRoute,
   notFound,
   useNavigate,
 } from "@tanstack/react-router";
@@ -9,10 +9,10 @@ import { useCallback, useState } from "react";
 import ReactFlow, {
   Background,
   Controls,
-  addEdge,
-  useNodesState,
-  useEdgesState,
   MarkerType,
+  addEdge,
+  useEdgesState,
+  useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
 
@@ -24,7 +24,7 @@ import {
 import workflowOptions from "@/lib/options/workflow.options";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
 
-import type { Connection, Node, Edge } from "reactflow";
+import type { Connection, Edge, Node } from "reactflow";
 
 export const Route = createFileRoute(
   "/_auth/workspaces/$workspaceSlug/workflows/$workflowId",
@@ -163,7 +163,7 @@ function WorkflowEditorPage() {
           </span>
         </div>
         <div className="flex items-center gap-2">
-          {error && <span className="text-sm text-red-500">{error}</span>}
+          {error && <span className="text-red-500 text-sm">{error}</span>}
           <button
             onClick={() =>
               navigate({
@@ -178,7 +178,7 @@ function WorkflowEditorPage() {
           <button
             onClick={handleSave}
             disabled={isSaving}
-            className="rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+            className="rounded-md bg-primary px-3 py-1.5 text-primary-foreground text-sm hover:bg-primary/90 disabled:opacity-50"
           >
             {isSaving ? "Saving..." : "Save"}
           </button>
@@ -189,10 +189,10 @@ function WorkflowEditorPage() {
       <div className="flex flex-1">
         {/* Node palette */}
         <aside className="w-64 border-r bg-muted/30 p-4">
-          <h2 className="text-sm font-medium text-muted-foreground">
+          <h2 className="font-medium text-muted-foreground text-sm">
             Step Types
           </h2>
-          <p className="mt-1 text-xs text-muted-foreground">
+          <p className="mt-1 text-muted-foreground text-xs">
             Click to add to canvas
           </p>
           <div className="mt-4 space-y-2">
@@ -230,7 +230,7 @@ function WorkflowEditorPage() {
 
         {/* Properties panel */}
         <aside className="w-80 border-l bg-muted/30 p-4">
-          <h2 className="text-sm font-medium text-muted-foreground">
+          <h2 className="font-medium text-muted-foreground text-sm">
             Workflow Info
           </h2>
           <div className="mt-4 space-y-4 text-sm">

@@ -1,4 +1,6 @@
-import React from "react";
+import { Edit, Play, Plus, Trash2 } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,8 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, Play } from "lucide-react";
 
 interface Workflow {
   id: string;
@@ -60,7 +60,7 @@ export function WorkflowList({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">My Workflows</h2>
+          <h2 className="font-bold text-2xl">My Workflows</h2>
           <p className="text-muted-foreground">
             Manage your automation workflows
           </p>
@@ -76,7 +76,7 @@ export function WorkflowList({
         <Card className="p-8 text-center">
           <CardContent className="space-y-4">
             <div className="text-muted-foreground">
-              <h3 className="text-lg font-medium mb-2">No workflows yet</h3>
+              <h3 className="mb-2 font-medium text-lg">No workflows yet</h3>
               <p>Create your first workflow to get started with automation.</p>
             </div>
             <Button onClick={onCreateClick} className="gap-2">
@@ -90,7 +90,7 @@ export function WorkflowList({
           {workflows.map((workflow) => (
             <Card
               key={workflow.id}
-              className="hover:shadow-md transition-shadow"
+              className="transition-shadow hover:shadow-md"
             >
               <CardHeader>
                 <div className="flex items-start justify-between">
@@ -110,7 +110,7 @@ export function WorkflowList({
 
               <CardContent className="space-y-4">
                 {/* Workflow Stats */}
-                <div className="text-sm text-muted-foreground">
+                <div className="text-muted-foreground text-sm">
                   <p>
                     Created: {new Date(workflow.createdAt).toLocaleDateString()}
                   </p>

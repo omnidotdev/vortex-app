@@ -247,7 +247,7 @@ export async function executeDslWorkflow(input: {
             }
             break;
 
-          case "condition":
+          case "condition": {
             const conditionResult = evaluateExpression(
               step.condition.expression,
               variables,
@@ -262,8 +262,9 @@ export async function executeDslWorkflow(input: {
               stepQueue.push(nextStepId);
             }
             break;
+          }
 
-          case "delay":
+          case "delay": {
             const delayMs = convertToMilliseconds(
               step.delay.duration,
               step.delay.unit,
@@ -271,6 +272,7 @@ export async function executeDslWorkflow(input: {
             await wf.sleep(delayMs);
             stepResult = { delayMs };
             break;
+          }
 
           default:
             console.warn(
@@ -326,7 +328,6 @@ export async function executeDslWorkflow(input: {
 
         // Handle error based on step configuration
         if (step.onError?.action === "continue") {
-          continue;
         } else {
           throw stepError;
         }

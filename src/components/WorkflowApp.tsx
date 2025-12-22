@@ -1,47 +1,45 @@
 "use client";
 
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ReactFlow, {
   Background,
   Controls,
-  Node,
-  Edge,
-  Connection,
-  addEdge,
-  useNodesState,
-  useEdgesState,
   MarkerType,
-  ReactFlowInstance,
+  addEdge,
+  useEdgesState,
+  useNodesState,
 } from "reactflow";
+
+import type React from "react";
+import type { Connection, Edge, Node, ReactFlowInstance } from "reactflow";
 import "reactflow/dist/style.css";
+
+import { ChevronDown, Loader2, PlayCircle, Save } from "lucide-react";
+import { toast } from "sonner";
+
+import { DebugPane } from "@/components/debug-pane";
+import { NodeEditor } from "@/components/node-editor";
+import { ActionNode } from "@/components/nodes/ActionNode";
+import { ConditionNode } from "@/components/nodes/ConditionNode";
+import { SwitchNode } from "@/components/nodes/SwitchNode";
+import { TriggerNode } from "@/components/nodes/TriggerNode";
+import { UserProfile } from "@/components/UserProfile";
 import { Button } from "@/components/ui/button";
-import { Loader2, PlayCircle, ChevronDown, Save } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { TriggerNode } from "@/components/nodes/TriggerNode";
-import { ActionNode } from "@/components/nodes/ActionNode";
-import { ConditionNode } from "@/components/nodes/ConditionNode";
-import { SwitchNode } from "@/components/nodes/SwitchNode";
-
 import { WorkflowSidebar } from "@/components/workflow-sidebar";
-import { NodeEditor } from "@/components/node-editor";
-import { DebugPane } from "@/components/debug-pane";
-import { UserProfile } from "@/components/UserProfile";
-import { toast } from "sonner";
-import { NodeTypes } from "@/lib/schema";
-
 import {
-  sampleWorkflows,
-  getWorkflowById,
-  getAllWorkflowNames,
   createEmptyWorkflow,
+  getAllWorkflowNames,
+  getWorkflowById,
   saveCustomWorkflow,
 } from "@/lib/sample-workflows";
+import { NodeTypes } from "@/lib/schema";
 
 const nodeTypes = {
   triggerNode: TriggerNode,
@@ -552,9 +550,9 @@ export function WorkflowApp() {
         }}
       />
 
-      <div className="flex-1 flex flex-col">
-        <div className="bg-card p-4 border-b border-border">
-          <div className="flex justify-between items-center">
+      <div className="flex flex-1 flex-col">
+        <div className="border-border border-b bg-card p-4">
+          <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -573,16 +571,16 @@ export function WorkflowApp() {
                       onClick={() => handleWorkflowChange(workflow.id)}
                       className="flex flex-col items-start p-3"
                     >
-                      <div className="flex items-center justify-between w-full">
+                      <div className="flex w-full items-center justify-between">
                         <div className="font-medium">{workflow.name}</div>
                         {workflow.isCustom && (
-                          <span className="text-xs bg-primary text-primary-foreground px-1.5 py-0.5 rounded">
+                          <span className="rounded bg-primary px-1.5 py-0.5 text-primary-foreground text-xs">
                             Custom
                           </span>
                         )}
                       </div>
                       {workflow.description && (
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-muted-foreground text-sm">
                           {workflow.description}
                         </div>
                       )}
@@ -601,15 +599,15 @@ export function WorkflowApp() {
                   variant="outline"
                   disabled={loading}
                 >
-                  <Save className="h-4 w-4 mr-2" />
+                  <Save className="mr-2 h-4 w-4" />
                   Save
                 </Button>
 
                 <Button onClick={handleExecuteWorkflow} disabled={loading}>
                   {loading ? (
-                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (
-                    <PlayCircle className="h-4 w-4 mr-2" />
+                    <PlayCircle className="mr-2 h-4 w-4" />
                   )}
                   Execute Workflow
                 </Button>
@@ -620,7 +618,7 @@ export function WorkflowApp() {
           </div>
         </div>
 
-        <div className="flex-1 relative" ref={reactFlowWrapper}>
+        <div className="relative flex-1" ref={reactFlowWrapper}>
           <ReactFlow
             nodes={nodes}
             edges={edges}

@@ -1,10 +1,11 @@
 "use client";
 
+import { Repeat, Trash2 } from "lucide-react";
 import { memo } from "react";
 import { Handle, Position } from "reactflow";
-import { Repeat, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface LoopNodeData {
   label: string;
@@ -46,13 +47,13 @@ export const LoopNode = memo(
 
     return (
       <div
-        className="px-4 py-2 shadow-lg rounded-lg border-2 min-w-[150px] relative group cursor-pointer hover:shadow-xl transition-shadow bg-indigo-50 border-indigo-200"
+        className="group relative min-w-[150px] cursor-pointer rounded-lg border-2 border-indigo-200 bg-indigo-50 px-4 py-2 shadow-lg transition-shadow hover:shadow-xl"
         onClick={handleNodeClick}
       >
         <Button
           variant="ghost"
           size="icon"
-          className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-background shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-background opacity-0 shadow-md transition-opacity group-hover:opacity-100"
           onClick={(e) => {
             e.stopPropagation();
             data.onDelete?.();
@@ -66,31 +67,31 @@ export const LoopNode = memo(
             <Repeat className="h-4 w-4 text-indigo-600" />
             <div className="font-bold">{data.label || "Loop"}</div>
           </div>
-          <Badge variant="outline" className="text-xs bg-indigo-100">
+          <Badge variant="outline" className="bg-indigo-100 text-xs">
             {getLoopTypeLabel()}
           </Badge>
         </div>
 
         {data.description && (
-          <div className="text-sm text-muted-foreground mt-1">
+          <div className="mt-1 text-muted-foreground text-sm">
             {data.description}
           </div>
         )}
 
         {data.loopType === "forEach" && data.collection && (
-          <div className="mt-2 text-xs text-indigo-600">
+          <div className="mt-2 text-indigo-600 text-xs">
             Over: {data.collection}
           </div>
         )}
 
         {data.loopType === "while" && data.condition && (
-          <div className="mt-2 text-xs text-indigo-600">
+          <div className="mt-2 text-indigo-600 text-xs">
             While: {data.condition}
           </div>
         )}
 
         {data.maxIterations && (
-          <div className="mt-1 text-xs text-muted-foreground">
+          <div className="mt-1 text-muted-foreground text-xs">
             Max: {data.maxIterations} iterations
           </div>
         )}
@@ -98,24 +99,24 @@ export const LoopNode = memo(
         <Handle
           type="target"
           position={Position.Top}
-          className="w-3 h-3 !bg-indigo-500"
+          className="!bg-indigo-500 h-3 w-3"
         />
         <Handle
           type="source"
           position={Position.Bottom}
           id="body"
-          className="w-3 h-3 !bg-indigo-500"
+          className="!bg-indigo-500 h-3 w-3"
           style={{ left: "30%" }}
         />
         <Handle
           type="source"
           position={Position.Bottom}
           id="next"
-          className="w-3 h-3 bg-gray-400!"
+          className="h-3 w-3 bg-gray-400!"
           style={{ left: "70%" }}
         />
 
-        <div className="flex justify-between text-[10px] text-muted-foreground mt-2 px-2">
+        <div className="mt-2 flex justify-between px-2 text-[10px] text-muted-foreground">
           <span>Body</span>
           <span>Next</span>
         </div>
