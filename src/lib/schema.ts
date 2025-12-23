@@ -8,6 +8,9 @@ export const NodeTypes = {
   SWITCH: "switchNode",
   DELAY: "delayNode",
   LOOP: "loopNode",
+  GATE: "gateNode",
+  PARALLEL: "parallelNode",
+  PLUGIN: "pluginNode",
 } as const;
 
 // Base node schema
