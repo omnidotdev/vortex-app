@@ -27,6 +27,26 @@ export const DelayNode = memo(
       }
     };
 
+    const handleSkipDelay = (event: React.MouseEvent) => {
+      event.stopPropagation();
+      if (typeof window !== "undefined" && (window as any).logToDebugPane) {
+        (window as any).logToDebugPane(
+          "action",
+          "Delay SKIPPED",
+          {
+            delayId: id,
+            originalDuration: data.duration,
+            unit: data.unit,
+          },
+          {
+            nodeType: "Delay",
+            nodeName: data.label || "Delay",
+            expectedOutcome: "Continue immediately without waiting",
+          },
+        );
+      }
+    };
+
     const getDelayDisplay = () => {
       if (!data.duration) return "No delay set";
       const unit = data.unit || "minutes";
@@ -65,6 +85,13 @@ export const DelayNode = memo(
             {data.description}
           </div>
         )}
+
+        <div
+          className="mt-2 cursor-pointer rounded bg-cyan-100 px-2 py-1 text-center font-medium text-cyan-700 text-xs transition-colors hover:bg-cyan-200"
+          onClick={handleSkipDelay}
+        >
+          Skip Delay
+        </div>
 
         <Handle
           type="target"

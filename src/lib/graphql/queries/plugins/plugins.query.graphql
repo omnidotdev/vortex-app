@@ -1,6 +1,6 @@
 query Plugins($workspaceId: UUID!, $limit: Int) {
   plugins(
-    condition: { workspaceId: $workspaceId }
+    condition: { workspaceId: $workspaceId, isEnabled: true }
     orderBy: NAME_ASC
     first: $limit
   ) {
@@ -11,6 +11,8 @@ query Plugins($workspaceId: UUID!, $limit: Int) {
       manifest
       wasmUrl
       isEnabled
+      isVerified
+      source
       createdAt
       updatedAt
     }

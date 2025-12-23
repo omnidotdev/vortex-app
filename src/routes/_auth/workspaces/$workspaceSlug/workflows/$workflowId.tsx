@@ -340,9 +340,8 @@ function WorkflowEditorPage() {
     (event: React.DragEvent) => {
       event.preventDefault();
 
-      if (!reactFlowWrapper.current || !reactFlowInstance) return;
+      if (!reactFlowInstance) return;
 
-      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
       const nodeData = event.dataTransfer.getData("application/reactflow");
 
       if (!nodeData) return;
@@ -357,9 +356,10 @@ function WorkflowEditorPage() {
         const iconName = parsed.data?.iconName;
         const config = parsed.data?.config || {};
 
+        // screenToFlowPosition expects screen coordinates (clientX/Y), not relative
         const position = reactFlowInstance.screenToFlowPosition({
-          x: event.clientX - reactFlowBounds.left,
-          y: event.clientY - reactFlowBounds.top,
+          x: event.clientX,
+          y: event.clientY,
         });
 
         const nodeId = getNodeId();

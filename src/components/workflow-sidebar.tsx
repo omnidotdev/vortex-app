@@ -173,6 +173,31 @@ export function WorkflowSidebar({
   }, [searchQuery, allNodeTemplates]);
 
   const handleDragStart = (event: React.DragEvent, nodeData: any) => {
+    // Create custom drag preview
+    const dragPreview = document.createElement("div");
+    dragPreview.textContent = nodeData.data.label;
+    dragPreview.style.cssText = `
+      position: absolute;
+      top: -1000px;
+      left: -1000px;
+      padding: 8px 12px;
+      background: hsl(var(--card));
+      border: 1px solid hsl(var(--border));
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      color: hsl(var(--foreground));
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      pointer-events: none;
+    `;
+    document.body.appendChild(dragPreview);
+    event.dataTransfer.setDragImage(dragPreview, 0, 0);
+
+    // Clean up after a frame
+    requestAnimationFrame(() => {
+      document.body.removeChild(dragPreview);
+    });
+
     const type =
       nodeData.type === NodeTypes.CONDITION && nodeData.data.label === "Switch"
         ? NodeTypes.SWITCH
