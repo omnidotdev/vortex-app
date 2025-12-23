@@ -20,7 +20,7 @@ services:
 
   temporal-admin-tools:
     container_name: temporal-admin-tools
-    image: temporalio/admin-tools:1.22.3
+    image: temporalio/admin-tools:1.27.1
     depends_on:
       - temporal
 
