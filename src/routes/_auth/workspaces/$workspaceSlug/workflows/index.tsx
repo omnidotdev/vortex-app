@@ -64,12 +64,13 @@ function WorkflowsPage() {
             <thead>
               <tr className="border-b text-left text-muted-foreground text-sm">
                 <th className="pb-3 font-medium">Name</th>
-                <th className="pb-3 font-medium">Trigger</th>
+                <th className="pb-3 font-medium">Description</th>
                 <th className="pb-3 font-medium">Status</th>
                 <th className="pb-3 font-medium">Last Run</th>
                 <th className="pb-3 font-medium" />
               </tr>
             </thead>
+
             <tbody>
               {workflows.map((workflow) => (
                 <tr key={workflow.rowId} className="border-b">
@@ -82,7 +83,9 @@ function WorkflowsPage() {
                       {workflow.name}
                     </Link>
                   </td>
-                  <td className="py-4 text-sm">{workflow.triggerType}</td>
+
+                  <td className="py-4">{workflow.description}</td>
+
                   <td className="py-4">
                     <span
                       className={`inline-flex rounded-full px-2 py-1 text-xs ${
@@ -100,15 +103,6 @@ function WorkflowsPage() {
                           workflow.workflowRuns.nodes[0].createdAt,
                         ).toLocaleString()
                       : "Never"}
-                  </td>
-                  <td className="py-4 text-right">
-                    <Link
-                      to="/workspaces/$workspaceSlug/workflows/$workflowId"
-                      params={{ workspaceSlug, workflowId: workflow.rowId }}
-                      className="text-primary text-sm hover:underline"
-                    >
-                      Edit
-                    </Link>
                   </td>
                 </tr>
               ))}

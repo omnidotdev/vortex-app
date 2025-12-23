@@ -405,18 +405,18 @@ export function WorkflowApp() {
       }
 
       const result = await response.json();
-      console.log("✅ [UI] Temporal workflow completed:", result);
-      console.log("🔗 [UI] View in Temporal UI:", result.temporalUI);
+      console.log("Workflow started:", result);
+      console.log("View in Hatchet UI:", result.hatchetUI);
 
       // Log to debug pane
       if (typeof window !== "undefined" && (window as any).logToDebugPane) {
         (window as any).logToDebugPane(
           "workflow",
-          "Temporal Workflow Executed",
+          "Workflow Executed",
           result,
           {
             workflowId: result.workflowId,
-            temporalUI: result.temporalUI,
+            hatchetUI: result.hatchetUI,
             nodesExecuted: workflowDefinition.nodes.length,
             executionTime: result.executionTime,
           },
@@ -431,13 +431,13 @@ export function WorkflowApp() {
         result.executedActions ||
         workflowDefinition.nodes.filter((n) => n.type === "actionNode").length;
       alert(
-        `🎉 Workflow executed successfully via Temporal!\n\n` +
-          `• ${executedCount} actions completed\n` +
+        `Workflow started successfully!\n\n` +
+          `• ${executedCount} actions queued\n` +
           `• Workflow ID: ${result.workflowId}\n` +
-          `• View in Temporal UI: ${result.temporalUI || "http://localhost:8080"}`,
+          `• View in Hatchet UI: ${result.hatchetUI || "http://localhost:8080"}`,
       );
 
-      console.log("🎉 [UI] Workflow execution completed successfully");
+      console.log("Workflow execution started successfully");
     } catch (error: any) {
       console.error("❌ [UI] Workflow execution failed:", error);
 
@@ -456,12 +456,12 @@ export function WorkflowApp() {
             "error",
             "All Workflow Execution Failed",
             {
-              temporalError: error.message,
+              hatchetError: error.message,
               directError: (fallbackError as Error).message,
             },
             {
               workflowType: "Failed Execution",
-              troubleshooting: "Both Temporal and direct execution failed",
+              troubleshooting: "Both Hatchet and direct execution failed",
             },
           );
         }

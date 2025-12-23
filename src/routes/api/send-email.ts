@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Resend } from "resend";
 
-import { getTemporalClient } from "../../temporal/client";
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const Route = createFileRoute("/api/send-email")({
   server: {
@@ -9,21 +10,26 @@ export const Route = createFileRoute("/api/send-email")({
         try {
           const { to, subject, content } = await request.json();
 
-          const client = await getTemporalClient();
-
-          const handle = await client.workflow.start("sendEmailWorkflow", {
-            args: [to, subject, content],
-            taskQueue: "vortex",
-            workflowId: `send-email-${Date.now()}`,
+          // Send email directly via Resend
+          // For workflow-based email sending, use the workflow execution API
+          const result = await resend.emails.send({
+            from: process.env.EMAIL_FROM || "noreply@example.com",
+            to,
+            subject,
+            html: content,
           });
 
-          // Wait for the workflow to complete
-          const result = await handle.result();
-          return Response.json(result);
-        } catch (error: any) {
-          console.error("Error executing workflow:", error);
+          return Response.json({
+            success: true,
+            messageId: result.data?.id,
+          });
+        } catch (error) {
+          console.error("Error sending email:", error);
           return Response.json(
-            { error: "Failed to execute workflow", details: error.message },
+            {
+              error: "Failed to send email",
+              details: error instanceof Error ? error.message : "Unknown error",
+            },
             { status: 500 },
           );
         }

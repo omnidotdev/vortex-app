@@ -16,14 +16,30 @@ local_resource(
     "dev-%s" % project_name,
     serve_cmd="bun dev",
     labels=[project_name],
-	env=env_local,
+    env=env_local,
 )
 
 docker_compose('docker-compose.yml')
 
+# Hatchet dashboard available at http://localhost:8080
+dc_resource('hatchet', labels=['hatchet'])
+
 local_resource(
-    'temporal-worker',
-    serve_cmd='bun worker:dev',
-    deps=['src/temporal'],
-    resource_deps=['temporal', 'install-deps-%s' % project_name]
+    'install-deps-vortex-worker',
+    cmd='bun i',
+    dir='../vortex-worker',
+    deps=['../vortex-worker/package.json'],
+    labels=['worker'],
+)
+
+worker_env = dotenv_values("../vortex-worker/.env.local")
+
+local_resource(
+    'vortex-worker',
+    serve_cmd='bun run dev',
+    serve_dir='../vortex-worker',
+    deps=['../vortex-worker/src'],
+    resource_deps=['hatchet', 'install-deps-vortex-worker'],
+    labels=['worker'],
+    env=worker_env,
 )
