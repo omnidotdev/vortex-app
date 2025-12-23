@@ -1,6 +1,5 @@
 /**
  * Environment variables.
- * @knipignore
  */
 export const {
   // core
@@ -21,5 +20,4 @@ export const API_GRAPHQL_URL = `${API_BASE_URL}/graphql`;
 export const AUTH_ISSUER_URL = `${AUTH_BASE_URL}/api/auth`;
 
 // environment helpers
-/** @knipignore TODO remove ignore when this is inevitably used */
 export const isDevEnv = import.meta.env.DEV;

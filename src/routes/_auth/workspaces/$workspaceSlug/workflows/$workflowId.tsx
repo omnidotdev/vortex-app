@@ -26,7 +26,7 @@ import ReactFlow, {
 import type { Connection, Edge, Node, ReactFlowInstance } from "reactflow";
 import "reactflow/dist/style.css";
 
-import { DebugPane } from "@/components/debug-pane";
+import DebugPane from "@/components/DebugPane";
 import { ActionNode } from "@/components/nodes/ActionNode";
 import { ConditionNode } from "@/components/nodes/ConditionNode";
 import { DelayNode } from "@/components/nodes/DelayNode";
@@ -43,8 +43,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import WorkflowSidebar from "@/components/WorkflowSidebar";
 import { NodeConfigPanel } from "@/components/workflow/NodeConfigPanel";
-import { WorkflowSidebar } from "@/components/workflow-sidebar";
 import {
   useUpdateWorkflowMutation,
   useWorkflowQuery,
@@ -314,6 +314,62 @@ function WorkflowEditorPage() {
     }
   };
 
+  // Execute connected actions from a trigger node
+  const executeConnectedActions = useCallback(
+    async (triggerId: string) => {
+      // Find all edges that start from this trigger
+      const connectedEdges = edgesRef.current.filter(
+        (edge) => edge.source === triggerId,
+      );
+
+      for (const edge of connectedEdges) {
+        const targetNode = nodesRef.current.find((n) => n.id === edge.target);
+        if (targetNode) {
+          logToDebugPane(
+            "action",
+            `Executing: ${targetNode.data.label}`,
+            targetNode.data,
+            {
+              nodeType: targetNode.type,
+              nodeName: targetNode.data.label,
+              expectedOutcome: `Execute ${targetNode.data.label} action`,
+            },
+          );
+
+          // Execute action based on type
+          if (targetNode.data.label === "Browser Alert") {
+            const message =
+              targetNode.data.config?.message ||
+              targetNode.data.description ||
+              "Browser alert triggered!";
+            alert(message);
+          } else if (targetNode.data.label === "HTTP Call") {
+            const url =
+              targetNode.data.config?.url || "https://httpbin.org/get";
+            const method = targetNode.data.config?.method || "GET";
+            try {
+              const response = await fetch(url, { method });
+              const result = await response.text();
+              logToDebugPane("action", `HTTP ${method} ${response.status}`, {
+                url,
+                status: response.status,
+                response: result.substring(0, 200),
+              });
+            } catch (err) {
+              logToDebugPane("action", "HTTP Call failed", {
+                error: err instanceof Error ? err.message : "Unknown error",
+              });
+            }
+          }
+
+          // Recursively execute connected actions
+          await executeConnectedActions(targetNode.id);
+        }
+      }
+    },
+    [logToDebugPane],
+  );
+
   // Handle node deletion
   const handleDeleteNode = useCallback(
     (nodeId: string) => {
@@ -373,6 +429,8 @@ function WorkflowEditorPage() {
             iconName,
             config,
             onDelete: () => handleDeleteNode(nodeId),
+            executeConnectedActions:
+              nodeType === "triggerNode" ? executeConnectedActions : undefined,
           },
         };
 
@@ -387,7 +445,13 @@ function WorkflowEditorPage() {
         console.error("Failed to parse dropped node data:", e);
       }
     },
-    [reactFlowInstance, setNodes, logToDebugPane, handleDeleteNode],
+    [
+      reactFlowInstance,
+      setNodes,
+      logToDebugPane,
+      handleDeleteNode,
+      executeConnectedActions,
+    ],
   );
 
   // Handle node click to open config panel

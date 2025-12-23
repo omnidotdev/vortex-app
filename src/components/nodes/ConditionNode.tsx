@@ -81,7 +81,7 @@ export const ConditionNode = memo(({ data, id }: { data: any; id: string }) => {
         </div>
       )}
       <div
-        className="mt-2 cursor-pointer rounded bg-yellow-100 px-2 py-1 font-medium text-yellow-700 text-xs transition-colors hover:bg-yellow-200"
+        className="mt-2 cursor-pointer rounded bg-yellow-100 px-2 py-1 font-medium text-xs text-yellow-700 transition-colors hover:bg-yellow-200"
         onClick={handleTestCondition}
       >
         Test Condition

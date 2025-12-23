@@ -4,6 +4,7 @@ import {
   AlertTriangle,
   Ban,
   Bell,
+  CheckCircle,
   ChevronDown,
   ChevronRight,
   Clock,
@@ -11,11 +12,13 @@ import {
   Database,
   FileJson,
   GitBranch,
+  GitFork,
   Globe,
   Hash,
   Mail,
   MessageCircle,
   MousePointer,
+  Puzzle,
   Repeat,
   Search,
   Send,
@@ -30,13 +33,15 @@ import {
 import { useMemo, useState } from "react";
 
 import { IntegrationsSettings } from "@/components/IntegrationsSettings";
-import { ThemeToggle } from "@/components/theme-toggle";
+import ThemeToggle from "@/components/ThemeToggle";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NodeTypes } from "@/lib/schema";
 
-const coreNodeTemplates = [
+// Official plugins - built-in node types that ship with Vortex
+const officialPlugins = [
   {
     type: NodeTypes.TRIGGER,
     category: "Triggers",
@@ -106,6 +111,16 @@ const coreNodeTemplates = [
       },
       { iconName: "Timer", label: "Delay", description: "Add a time delay" },
       { iconName: "Repeat", label: "Loop", description: "Repeat actions" },
+      {
+        iconName: "GitFork",
+        label: "Parallel",
+        description: "Run branches in parallel",
+      },
+      {
+        iconName: "Shield",
+        label: "Gate",
+        description: "Require approval to continue",
+      },
     ],
   },
 ];
@@ -136,6 +151,9 @@ const IconMap: Record<string, React.ElementType> = {
   SettingsIcon,
   ChevronDown,
   ChevronRight,
+  GitFork,
+  Puzzle,
+  CheckCircle,
 };
 
 interface WorkflowSidebarProps {
@@ -147,20 +165,25 @@ interface WorkflowSidebarProps {
   };
 }
 
-export function WorkflowSidebar({
-  onAddNode,
-  currentWorkflow,
-}: WorkflowSidebarProps) {
+// Placeholder for community plugins - will be fetched from API
+interface CommunityPlugin {
+  id: string;
+  name: string;
+  description?: string;
+  isVerified: boolean;
+}
+
+function WorkflowSidebar({ onAddNode, currentWorkflow }: WorkflowSidebarProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [showCommunity, setShowCommunity] = useState(true);
 
-  const allNodeTemplates = useMemo(() => {
-    return coreNodeTemplates;
-  }, []);
+  // TODO: Fetch community plugins from API using usePluginsQuery
+  const communityPlugins: CommunityPlugin[] = [];
 
-  const filteredNodeTemplates = useMemo(() => {
-    if (!searchQuery.trim()) return allNodeTemplates;
+  const filteredOfficialPlugins = useMemo(() => {
+    if (!searchQuery.trim()) return officialPlugins;
 
-    return allNodeTemplates
+    return officialPlugins
       .map((category) => ({
         ...category,
         items: category.items.filter(
@@ -170,7 +193,17 @@ export function WorkflowSidebar({
         ),
       }))
       .filter((category) => category.items.length > 0);
-  }, [searchQuery, allNodeTemplates]);
+  }, [searchQuery]);
+
+  const filteredCommunityPlugins = useMemo(() => {
+    if (!searchQuery.trim()) return communityPlugins;
+
+    return communityPlugins.filter(
+      (plugin) =>
+        plugin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        plugin.description?.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+  }, [searchQuery]);
 
   const handleDragStart = (event: React.DragEvent, nodeData: any) => {
     // Create custom drag preview
@@ -292,41 +325,140 @@ export function WorkflowSidebar({
       </div>
 
       <ScrollArea className="h-[calc(100vh-180px)]">
-        {filteredNodeTemplates.map((category) => (
-          <div key={category.category} className="mb-6">
-            <h3 className="mb-2 font-medium text-muted-foreground text-sm">
-              {category.category}
-            </h3>
-            <div className="space-y-2">
-              {category.items.map((item) => (
-                <div
-                  key={item.label}
-                  className="flex cursor-move items-start rounded-md p-2 hover:bg-accent"
-                  draggable
-                  onDragStart={(e) =>
-                    handleDragStart(e, {
-                      type: category.type,
-                      data: {
-                        label: item.label,
-                        description: item.description,
-                        iconName: item.iconName,
-                      },
-                    })
-                  }
-                >
-                  <div className="mt-0.5 mr-2">{renderIcon(item.iconName)}</div>
-                  <div>
-                    <div className="font-medium text-sm">{item.label}</div>
-                    <div className="text-muted-foreground text-xs">
-                      {item.description}
+        {/* Official Plugins Section */}
+        <div className="mb-4">
+          <div className="mb-2 flex items-center gap-2">
+            <h3 className="font-semibold text-foreground text-sm">Official</h3>
+            <Badge variant="secondary" className="text-[10px]">
+              Built-in
+            </Badge>
+          </div>
+
+          {filteredOfficialPlugins.map((category) => (
+            <div key={category.category} className="mb-4">
+              <h4 className="mb-2 font-medium text-muted-foreground text-xs uppercase tracking-wide">
+                {category.category}
+              </h4>
+              <div className="space-y-1">
+                {category.items.map((item) => (
+                  <div
+                    key={item.label}
+                    className="flex cursor-move items-start rounded-md p-2 hover:bg-accent"
+                    draggable
+                    onDragStart={(e) =>
+                      handleDragStart(e, {
+                        type: category.type,
+                        data: {
+                          label: item.label,
+                          description: item.description,
+                          iconName: item.iconName,
+                        },
+                      })
+                    }
+                  >
+                    <div className="mt-0.5 mr-2">
+                      {renderIcon(item.iconName)}
+                    </div>
+                    <div>
+                      <div className="font-medium text-sm">{item.label}</div>
+                      <div className="text-muted-foreground text-xs">
+                        {item.description}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        {/* Community Plugins Section */}
+        <div className="border-border border-t pt-4">
+          <button
+            type="button"
+            className="mb-2 flex w-full items-center justify-between"
+            onClick={() => setShowCommunity(!showCommunity)}
+          >
+            <div className="flex items-center gap-2">
+              <h3 className="font-semibold text-foreground text-sm">
+                Community
+              </h3>
+              <Badge variant="outline" className="text-[10px]">
+                {filteredCommunityPlugins.length}
+              </Badge>
+            </div>
+            {showCommunity ? (
+              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+            ) : (
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            )}
+          </button>
+
+          {showCommunity && (
+            <div className="space-y-1">
+              {filteredCommunityPlugins.length > 0 ? (
+                filteredCommunityPlugins.map((plugin) => (
+                  <div
+                    key={plugin.id}
+                    className="flex cursor-move items-start rounded-md p-2 hover:bg-accent"
+                    draggable
+                    onDragStart={(e) =>
+                      handleDragStart(e, {
+                        type: NodeTypes.PLUGIN,
+                        data: {
+                          label: plugin.name,
+                          description: plugin.description || "Community plugin",
+                          iconName: "Puzzle",
+                          pluginId: plugin.id,
+                        },
+                      })
+                    }
+                  >
+                    <div className="mt-0.5 mr-2">
+                      <Puzzle className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-1">
+                        <span className="font-medium text-sm">
+                          {plugin.name}
+                        </span>
+                        {plugin.isVerified && (
+                          <CheckCircle className="h-3 w-3 text-blue-500" />
+                        )}
+                      </div>
+                      <div className="text-muted-foreground text-xs">
+                        {plugin.description || "Community plugin"}
+                      </div>
+                    </div>
+                    <Badge
+                      variant="outline"
+                      className="ml-1 text-[10px] text-muted-foreground"
+                    >
+                      WASM
+                    </Badge>
+                  </div>
+                ))
+              ) : (
+                <div className="py-4 text-center text-muted-foreground text-xs">
+                  No community plugins installed
+                </div>
+              )}
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className="mt-2 w-full text-muted-foreground"
+                disabled
+              >
+                <Puzzle className="mr-2 h-4 w-4" />
+                Browse Plugins (Coming Soon)
+              </Button>
+            </div>
+          )}
+        </div>
       </ScrollArea>
     </div>
   );
 }
+
+export default WorkflowSidebar;

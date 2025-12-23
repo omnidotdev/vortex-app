@@ -12,7 +12,6 @@ query Plugins($workspaceId: UUID!, $limit: Int) {
       wasmUrl
       isEnabled
       isVerified
-      source
       createdAt
       updatedAt
     }
