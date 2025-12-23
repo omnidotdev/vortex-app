@@ -290,12 +290,10 @@ function WorkflowSidebar({ onAddNode, currentWorkflow }: WorkflowSidebarProps) {
 
       {currentWorkflow ? (
         <div className="mb-4 rounded-lg bg-muted/50 p-3">
-          <h3 className="mb-1 font-medium text-foreground text-sm">
-            Current Workflow
-          </h3>
-          <div className="font-medium text-foreground text-sm">
+          <h3 className="font-medium text-foreground text-sm">
             {currentWorkflow.name}
-          </div>
+          </h3>
+
           {currentWorkflow.description && (
             <div className="mt-1 text-muted-foreground text-xs">
               {currentWorkflow.description}

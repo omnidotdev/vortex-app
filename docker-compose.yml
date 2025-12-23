@@ -1,51 +1,30 @@
 services:
-  # Temporal
-  temporal:
-    container_name: temporal
-    image: temporalio/auto-setup:1.22.3
+  # Hatchet (workflow engine) - dashboard at http://localhost:8080
+  hatchet:
+    container_name: hatchet
+    image: ghcr.io/hatchet-dev/hatchet/hatchet-lite:latest
     ports:
-      - "7233:7233"
-      - "7234:7234"
-      - "7235:7235"
-      - "7236:7236"
-      - "8233:8233"
+      - "8080:8080" # Web dashboard
+      - "7077:7077" # gRPC
     environment:
-      - DB=postgresql
-      - DB_PORT=5432
-      - POSTGRES_USER=temporal
-      - POSTGRES_PWD=temporal
-      - POSTGRES_SEEDS=temporal-db
+      - DATABASE_URL=postgres://hatchet:hatchet@hatchet-db:5432/hatchet?sslmode=disable
+      - SERVER_AUTH_COOKIE_SECRETS=random-secret-key-min-32-chars-long
+      - SERVER_AUTH_COOKIE_INSECURE=true
     depends_on:
-      - temporal-db
+      - hatchet-db
 
-  temporal-admin-tools:
-    container_name: temporal-admin-tools
-    image: temporalio/admin-tools:1.22.3
-    depends_on:
-      - temporal
-
-  temporal-ui:
-    container_name: temporal-ui
-    image: temporalio/ui:2.21.3
+  # PostgreSQL for Hatchet
+  hatchet-db:
+    container_name: hatchet-db
+    image: postgres:15
     ports:
-      - "8080:8080"
+      - "5433:5432"
     environment:
-      - TEMPORAL_ADDRESS=temporal:7233
-      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
-    depends_on:
-      - temporal
-
-  # PostgreSQL for Temporal
-  temporal-db:
-    image: postgres:13
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_USER=temporal
-      - POSTGRES_PASSWORD=temporal
-      - POSTGRES_DB=temporal
+      - POSTGRES_USER=hatchet
+      - POSTGRES_PASSWORD=hatchet
+      - POSTGRES_DB=hatchet
     volumes:
-      - data:/var/lib/postgresql/data
+      - hatchet-data:/var/lib/postgresql/data
 
 volumes:
-  data:
+  hatchet-data:

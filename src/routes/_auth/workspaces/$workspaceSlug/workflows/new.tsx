@@ -27,7 +27,6 @@ function NewWorkflowPage() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [triggerType, setTriggerType] = useState("manual");
   const [error, setError] = useState<string | null>(null);
 
   const { mutate: createWorkflow, isPending } = useCreateWorkflowMutation({
@@ -65,7 +64,6 @@ function NewWorkflowPage() {
           workspaceId,
           name: name.trim(),
           description: description.trim() || null,
-          triggerType,
           definition: { nodes: [], edges: [], version: "1.0" },
           isActive: true,
         },
@@ -114,23 +112,6 @@ function NewWorkflowPage() {
             rows={3}
             className="w-full rounded-md border bg-background px-3 py-2 text-sm"
           />
-        </div>
-
-        <div className="space-y-2">
-          <label htmlFor="triggerType" className="font-medium text-sm">
-            Trigger Type
-          </label>
-          <select
-            id="triggerType"
-            value={triggerType}
-            onChange={(e) => setTriggerType(e.target.value)}
-            className="w-full rounded-md border bg-background px-3 py-2 text-sm"
-          >
-            <option value="manual">Manual</option>
-            <option value="webhook">Webhook</option>
-            <option value="cron">Scheduled (Cron)</option>
-            <option value="event">Event</option>
-          </select>
         </div>
 
         <div className="flex gap-4">

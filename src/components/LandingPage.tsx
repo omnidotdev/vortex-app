@@ -180,9 +180,9 @@ export function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
+    <div className="min-h-screen bg-linear-to-br from-background via-background to-muted">
       {/* Header */}
-      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center space-x-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
@@ -452,7 +452,7 @@ export function LandingPage() {
                         key={featureIndex}
                         className="flex items-center space-x-3"
                       >
-                        <Check className="h-5 w-5 flex-shrink-0 text-primary" />
+                        <Check className="h-5 w-5 shrink-0 text-primary" />
                         <span className="text-sm">{feature}</span>
                       </li>
                     ))}
