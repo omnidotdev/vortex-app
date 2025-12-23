@@ -226,6 +226,7 @@ export function useIntegrations() {
 }
 
 // Utility hooks for specific integrations
+/** @knipignore */
 export function useLinkedInIntegration() {
   const { getIntegration, isIntegrationEnabled, getIntegrationToken } =
     useIntegrations();

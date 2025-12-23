@@ -26,7 +26,7 @@ export const SwitchNode = memo(({ data, id }: { data: any; id: string }) => {
 
   return (
     <div
-      className="group relative min-w-[150px] cursor-pointer rounded-lg border-2 border-purple-500 bg-card px-4 py-2 shadow-lg transition-shadow hover:shadow-xl"
+      className="group relative min-w-37.5 cursor-pointer rounded-lg border-2 border-purple-500 bg-card px-4 py-2 shadow-lg transition-shadow hover:shadow-xl"
       onClick={handleNodeClick}
     >
       <Button
@@ -51,7 +51,7 @@ export const SwitchNode = memo(({ data, id }: { data: any; id: string }) => {
       <Handle
         type="target"
         position={Position.Top}
-        className="!bg-purple-500 h-3 w-3"
+        className="h-3 w-3 bg-purple-500!"
       />
       {cases.map((c: any, index: number) => (
         <Handle
@@ -59,7 +59,7 @@ export const SwitchNode = memo(({ data, id }: { data: any; id: string }) => {
           type="source"
           position={Position.Bottom}
           id={`case_${index}`}
-          className="!bg-purple-500 h-3 w-3"
+          className="h-3 w-3 bg-purple-500!"
           style={{ left: `${((index + 1) / (cases.length + 1)) * 100}%` }}
         />
       ))}
@@ -67,7 +67,7 @@ export const SwitchNode = memo(({ data, id }: { data: any; id: string }) => {
         type="source"
         position={Position.Right}
         id="default"
-        className="!bg-gray-500 h-3 w-3"
+        className="h-3 w-3 bg-gray-500!"
       />
     </div>
   );

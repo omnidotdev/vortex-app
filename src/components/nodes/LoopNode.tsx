@@ -47,7 +47,7 @@ export const LoopNode = memo(
 
     return (
       <div
-        className="group relative min-w-[150px] cursor-pointer rounded-lg border-2 border-indigo-200 bg-indigo-50 px-4 py-2 shadow-lg transition-shadow hover:shadow-xl"
+        className="group relative min-w-37.5 cursor-pointer rounded-lg border-2 border-indigo-200 bg-indigo-50 px-4 py-2 shadow-lg transition-shadow hover:shadow-xl"
         onClick={handleNodeClick}
       >
         <Button
@@ -99,13 +99,13 @@ export const LoopNode = memo(
         <Handle
           type="target"
           position={Position.Top}
-          className="!bg-indigo-500 h-3 w-3"
+          className="h-3 w-3 bg-indigo-500!"
         />
         <Handle
           type="source"
           position={Position.Bottom}
           id="body"
-          className="!bg-indigo-500 h-3 w-3"
+          className="h-3 w-3 bg-indigo-500!"
           style={{ left: "30%" }}
         />
         <Handle

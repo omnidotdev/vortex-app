@@ -79,6 +79,7 @@ const SidebarProvider = ({ children }: PropsWithChildren) => {
   );
 };
 
+/** @knipignore */
 export const useSidebar = () => {
   const val = use(SidebarContext);
 

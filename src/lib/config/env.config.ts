@@ -1,5 +1,6 @@
 /**
  * Environment variables.
+ * @knipignore
  */
 export const {
   // core

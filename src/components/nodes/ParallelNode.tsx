@@ -39,7 +39,7 @@ export const ParallelNode = memo(
 
     return (
       <div
-        className="group relative min-w-[180px] cursor-pointer rounded-lg border-2 border-violet-200 bg-violet-50 px-4 py-2 shadow-lg transition-shadow hover:shadow-xl"
+        className="group relative min-w-45 cursor-pointer rounded-lg border-2 border-violet-200 bg-violet-50 px-4 py-2 shadow-lg transition-shadow hover:shadow-xl"
         onClick={handleNodeClick}
       >
         <Button
@@ -75,7 +75,7 @@ export const ParallelNode = memo(
         <Handle
           type="target"
           position={Position.Top}
-          className="!bg-violet-500 h-3 w-3"
+          className="h-3 w-3 bg-violet-500!"
         />
 
         {/* Dynamic branch handles */}
@@ -87,7 +87,7 @@ export const ParallelNode = memo(
               type="source"
               position={Position.Bottom}
               id={`branch_${index}`}
-              className="!bg-violet-500 h-3 w-3"
+              className="h-3 w-3 bg-violet-500!"
               style={{ left: `${offset}%` }}
             />
           );
