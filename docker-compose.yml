@@ -26,7 +26,7 @@ services:
 
   temporal-ui:
     container_name: temporal-ui
-    image: temporalio/ui:2.21.3
+    image: temporalio/ui:2.44.0
     ports:
       - "8080:8080"
     environment:
