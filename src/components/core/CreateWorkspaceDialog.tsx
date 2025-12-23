@@ -13,11 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import {
-  WorkspaceRole,
-  useCreateWorkspaceMutation,
-  useCreateWorkspaceUserMutation,
-} from "@/generated/graphql";
+import { useCreateWorkspaceMutation } from "@/generated/graphql";
 import useDialogStore, { DialogType } from "@/lib/hooks/store/useDialogStore";
 import useForm from "@/lib/hooks/useForm";
 import workspacesOptions from "@/lib/options/workspaces.options";
@@ -34,26 +30,13 @@ const CreateWorkspaceDialog = () => {
       type: DialogType.CreateWorkspace,
     });
 
-  const { mutateAsync: createTeamMember } = useCreateWorkspaceUserMutation();
-
   const { mutateAsync: createNewWorkspace } = useCreateWorkspaceMutation({
     meta: {
       invalidates: [
         workspacesOptions({ userId: session?.user?.rowId! }).queryKey,
       ],
     },
-    onSuccess: async ({ createWorkspace }) => {
-      // Create team member as owner
-      await createTeamMember({
-        input: {
-          workspaceUser: {
-            userId: session?.user?.rowId!,
-            workspaceId: createWorkspace?.workspace?.rowId!,
-            role: WorkspaceRole.Owner,
-          },
-        },
-      });
-
+    onSuccess: ({ createWorkspace }) => {
       navigate({
         to: "/workspaces/$workspaceSlug",
         params: { workspaceSlug: createWorkspace?.workspace?.slug! },
