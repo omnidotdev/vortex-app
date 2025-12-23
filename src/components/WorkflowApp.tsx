@@ -17,8 +17,8 @@ import "reactflow/dist/style.css";
 import { ChevronDown, Loader2, PlayCircle, Save } from "lucide-react";
 import { toast } from "sonner";
 
-import { DebugPane } from "@/components/debug-pane";
-import { NodeEditor } from "@/components/node-editor";
+import DebugPane from "@/components/DebugPane";
+import NodeEditor from "@/components/NodeEditor";
 import { ActionNode } from "@/components/nodes/ActionNode";
 import { ConditionNode } from "@/components/nodes/ConditionNode";
 import { SwitchNode } from "@/components/nodes/SwitchNode";
@@ -32,7 +32,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { WorkflowSidebar } from "@/components/workflow-sidebar";
+import WorkflowSidebar from "@/components/WorkflowSidebar";
 import {
   createEmptyWorkflow,
   getAllWorkflowNames,

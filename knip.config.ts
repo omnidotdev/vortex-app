@@ -26,11 +26,9 @@ const knipConfig: KnipConfig = {
     // Standalone components not yet integrated
     "src/components/AppWrapper.tsx",
     "src/components/LandingPage.tsx",
-    "src/components/node-editor.tsx",
     "src/components/UserProfile.tsx",
     "src/components/WorkflowApp.tsx",
     "src/components/WorkflowList.tsx",
-    "src/components/theme-provider.tsx",
     "src/contexts/AuthContext.tsx",
     "src/hooks/use-toast.ts",
     // Auth utilities
@@ -49,6 +47,8 @@ const knipConfig: KnipConfig = {
     "src/providers/index.ts",
     // Utility files
     "src/lib/config/app.config.ts",
+    "src/lib/config/env.config.ts",
+    "src/lib/hooks/store/useDialogStore.ts",
     "src/lib/graphql/getSdk.ts",
     "src/lib/hooks/store/useWorkflowEditorStore.ts",
     "src/lib/options/integrations.options.ts",

@@ -5446,7 +5446,7 @@ export type PluginsQueryVariables = Exact<{
 }>;
 
 
-export type PluginsQuery = { __typename?: 'Query', plugins?: { __typename?: 'PluginConnection', totalCount: number, nodes: Array<{ __typename?: 'Plugin', rowId: string, name: string, version: string, manifest: Record<string, unknown>, wasmUrl: string, isEnabled: boolean, createdAt?: Date | null, updatedAt?: Date | null }> } | null };
+export type PluginsQuery = { __typename?: 'Query', plugins?: { __typename?: 'PluginConnection', totalCount: number, nodes: Array<{ __typename?: 'Plugin', rowId: string, name: string, version: string, manifest: Record<string, unknown>, wasmUrl: string, isEnabled: boolean, isVerified: boolean, createdAt?: Date | null, updatedAt?: Date | null }> } | null };
 
 export type UserByIdentityProviderIdQueryVariables = Exact<{
   identityProviderId: Scalars['UUID']['input'];
@@ -6039,7 +6039,7 @@ useInvitationsQuery.fetcher = (variables?: InvitationsQueryVariables, options?: 
 export const PluginsDocument = `
     query Plugins($workspaceId: UUID!, $limit: Int) {
   plugins(
-    condition: {workspaceId: $workspaceId}
+    condition: {workspaceId: $workspaceId, isEnabled: true}
     orderBy: NAME_ASC
     first: $limit
   ) {
@@ -6050,6 +6050,7 @@ export const PluginsDocument = `
       manifest
       wasmUrl
       isEnabled
+      isVerified
       createdAt
       updatedAt
     }

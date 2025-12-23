@@ -19,7 +19,7 @@ interface DebugEntry {
   };
 }
 
-export function DebugPane() {
+function DebugPane() {
   const [logs, setLogs] = useState<DebugEntry[]>([]);
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -34,7 +34,6 @@ export function DebugPane() {
       details?: DebugEntry["details"],
     ) => {
       setLogs((prev) => [
-        ...prev,
         {
           timestamp: new Date().toISOString(),
           type,
@@ -42,6 +41,7 @@ export function DebugPane() {
           payload,
           details,
         },
+        ...prev,
       ]);
     };
   }
@@ -124,3 +124,5 @@ export function DebugPane() {
     </div>
   );
 }
+
+export default DebugPane;

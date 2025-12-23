@@ -2,7 +2,6 @@ import { createStore } from "zustand";
 import { shallow } from "zustand/shallow";
 import { useStoreWithEqualityFn } from "zustand/traditional";
 
-/** @knipignore */
 export enum DialogType {
   CreateWorkspace = "create_workspace",
   DeleteWorkspace = "delete_workspace",

@@ -20,7 +20,7 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { ThemeToggle } from "@/components/theme-toggle";
+import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import {
   Card,
