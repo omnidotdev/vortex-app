@@ -18,7 +18,7 @@ import { ChevronDown, Loader2, PlayCircle, Save } from "lucide-react";
 import { toast } from "sonner";
 
 import DebugPane from "@/components/DebugPane";
-import NodeEditor from "@/components/NodeEditor";
+import { NodeConfigPanel } from "@/components/workflow/NodeConfigPanel";
 import { ActionNode } from "@/components/nodes/ActionNode";
 import { ConditionNode } from "@/components/nodes/ConditionNode";
 import { SwitchNode } from "@/components/nodes/SwitchNode";
@@ -641,11 +641,11 @@ export function WorkflowApp() {
         <DebugPane />
       </div>
 
-      <NodeEditor
+      <NodeConfigPanel
         node={selectedNode}
         isOpen={!!selectedNode}
         onClose={() => setSelectedNode(null)}
-        onUpdate={(nodeId, data) => {
+        onUpdate={(nodeId: string, data: Record<string, unknown>) => {
           setNodes((nds) =>
             nds.map((n) => (n.id === nodeId ? { ...n, data } : n)),
           );
@@ -655,7 +655,7 @@ export function WorkflowApp() {
           if (typeof window !== "undefined" && (window as any).logToDebugPane) {
             (window as any).logToDebugPane("action", "Node updated", data, {
               nodeType: "Node Editor",
-              nodeName: data.label,
+              nodeName: data.label as string,
               expectedOutcome: "Node configuration saved",
             });
           }
