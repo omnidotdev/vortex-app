@@ -2,7 +2,7 @@ services:
   # Temporal
   temporal:
     container_name: temporal
-    image: temporalio/auto-setup:1.22.3
+    image: temporalio/auto-setup:1.29.1
     ports:
       - "7233:7233"
       - "7234:7234"
