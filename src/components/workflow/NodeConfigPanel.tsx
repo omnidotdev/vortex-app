@@ -80,7 +80,7 @@ export function NodeConfigPanel({
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-[450px] overflow-y-auto">
+      <SheetContent className="w-112.5 overflow-y-auto">
         <SheetHeader>
           <div className="flex items-center gap-2">
             <SheetTitle>

@@ -25,7 +25,7 @@ export const ConditionNode = memo(({ data, id }: { data: any; id: string }) => {
 
   return (
     <div
-      className="group relative min-w-[150px] cursor-pointer rounded-lg border-2 border-yellow-500 bg-card px-4 py-2 shadow-lg transition-shadow hover:shadow-xl"
+      className="group relative min-w-37.5 cursor-pointer rounded-lg border-2 border-yellow-500 bg-card px-4 py-2 shadow-lg transition-shadow hover:shadow-xl"
       onClick={handleNodeClick}
     >
       <Button
@@ -50,19 +50,19 @@ export const ConditionNode = memo(({ data, id }: { data: any; id: string }) => {
       <Handle
         type="target"
         position={Position.Top}
-        className="!bg-yellow-500 h-3 w-3"
+        className="h-3 w-3 bg-yellow-500!"
       />
       <Handle
         type="source"
         position={Position.Bottom}
         id="true"
-        className="!bg-green-500 h-3 w-3"
+        className="h-3 w-3 bg-green-500!"
       />
       <Handle
         type="source"
         position={Position.Right}
         id="false"
-        className="!bg-red-500 h-3 w-3"
+        className="h-3 w-3 bg-red-500!"
       />
     </div>
   );

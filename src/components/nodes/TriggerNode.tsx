@@ -57,7 +57,7 @@ export const TriggerNode = memo(({ data, id }: { data: any; id: string }) => {
 
   return (
     <div
-      className="group relative min-w-[150px] cursor-pointer rounded-lg border-2 border-blue-200 bg-blue-50 px-4 py-2 shadow-lg transition-shadow hover:shadow-xl"
+      className="group relative min-w-37.5 cursor-pointer rounded-lg border-2 border-blue-200 bg-blue-50 px-4 py-2 shadow-lg transition-shadow hover:shadow-xl"
       onClick={handleNodeClick}
     >
       <Button
@@ -98,7 +98,7 @@ export const TriggerNode = memo(({ data, id }: { data: any; id: string }) => {
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!bg-blue-500 h-3 w-3"
+        className="h-3 w-3 bg-blue-500!"
       />
     </div>
   );

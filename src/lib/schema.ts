@@ -160,11 +160,19 @@ export const workflowSchema = z.object({
   edges: z.array(edgeSchema),
 });
 
+/** @knipignore */
 export type Workflow = z.infer<typeof workflowSchema>;
+/** @knipignore */
 export type TriggerNode = z.infer<typeof triggerNodeSchema>;
+/** @knipignore */
 export type ActionNode = z.infer<typeof actionNodeSchema>;
+/** @knipignore */
 export type ConditionNode = z.infer<typeof conditionNodeSchema>;
+/** @knipignore */
 export type SwitchNode = z.infer<typeof switchNodeSchema>;
+/** @knipignore */
 export type DelayNode = z.infer<typeof delayNodeSchema>;
+/** @knipignore */
 export type LoopNode = z.infer<typeof loopNodeSchema>;
+/** @knipignore */
 export type Edge = z.infer<typeof edgeSchema>;

@@ -33,7 +33,7 @@ export const PluginNode = memo(
 
     return (
       <div
-        className="group relative min-w-[150px] cursor-pointer rounded-lg border-2 border-emerald-200 bg-emerald-50 px-4 py-2 shadow-lg transition-shadow hover:shadow-xl"
+        className="group relative min-w-37.5 cursor-pointer rounded-lg border-2 border-emerald-200 bg-emerald-50 px-4 py-2 shadow-lg transition-shadow hover:shadow-xl"
         onClick={handleNodeClick}
       >
         <Button
@@ -86,12 +86,12 @@ export const PluginNode = memo(
         <Handle
           type="target"
           position={Position.Top}
-          className="!bg-emerald-500 h-3 w-3"
+          className="h-3 w-3 bg-emerald-500!"
         />
         <Handle
           type="source"
           position={Position.Bottom}
-          className="!bg-emerald-500 h-3 w-3"
+          className="h-3 w-3 bg-emerald-500!"
         />
       </div>
     );

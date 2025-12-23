@@ -5,8 +5,15 @@ import {
   notFound,
   useNavigate,
 } from "@tanstack/react-router";
-import { Loader2, PlayCircle, Save } from "lucide-react";
-import { useCallback, useMemo, useRef, useState } from "react";
+import {
+  Download,
+  Grid3X3,
+  Loader2,
+  PlayCircle,
+  Save,
+  Upload,
+} from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ReactFlow, {
   Background,
   Controls,
@@ -15,6 +22,7 @@ import ReactFlow, {
   useEdgesState,
   useNodesState,
 } from "reactflow";
+
 import type { Connection, Edge, Node, ReactFlowInstance } from "reactflow";
 import "reactflow/dist/style.css";
 
@@ -29,6 +37,12 @@ import { PluginNode } from "@/components/nodes/PluginNode";
 import { SwitchNode } from "@/components/nodes/SwitchNode";
 import { TriggerNode } from "@/components/nodes/TriggerNode";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { NodeConfigPanel } from "@/components/workflow/NodeConfigPanel";
 import { WorkflowSidebar } from "@/components/workflow-sidebar";
 import {
@@ -36,8 +50,8 @@ import {
   useWorkflowQuery,
   useWorkflowsQuery,
 } from "@/generated/graphql";
-import { NodeTypes } from "@/lib/schema";
 import workflowOptions from "@/lib/options/workflow.options";
+import { NodeTypes } from "@/lib/schema";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
 
 export const Route = createFileRoute(
@@ -109,6 +123,7 @@ function WorkflowEditorPage() {
   const [isExecuting, setIsExecuting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+  const [snapToGrid, setSnapToGrid] = useState(true);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
@@ -299,6 +314,21 @@ function WorkflowEditorPage() {
     }
   };
 
+  // Handle node deletion
+  const handleDeleteNode = useCallback(
+    (nodeId: string) => {
+      setNodes((nds) => nds.filter((n) => n.id !== nodeId));
+      setEdges((eds) =>
+        eds.filter((e) => e.source !== nodeId && e.target !== nodeId),
+      );
+      if (selectedNode?.id === nodeId) {
+        setSelectedNode(null);
+      }
+      logToDebugPane("action", "Node deleted", { nodeId });
+    },
+    [setNodes, setEdges, selectedNode, logToDebugPane],
+  );
+
   // Handle drag over for drop zone
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
@@ -332,8 +362,9 @@ function WorkflowEditorPage() {
           y: event.clientY - reactFlowBounds.top,
         });
 
+        const nodeId = getNodeId();
         const newNode: Node = {
-          id: getNodeId(),
+          id: nodeId,
           type: nodeType,
           position,
           data: {
@@ -341,6 +372,7 @@ function WorkflowEditorPage() {
             description,
             iconName,
             config,
+            onDelete: () => handleDeleteNode(nodeId),
           },
         };
 
@@ -355,13 +387,30 @@ function WorkflowEditorPage() {
         console.error("Failed to parse dropped node data:", e);
       }
     },
-    [reactFlowInstance, setNodes, logToDebugPane],
+    [reactFlowInstance, setNodes, logToDebugPane, handleDeleteNode],
   );
 
   // Handle node click to open config panel
   const onNodeClick = useCallback((_event: React.MouseEvent, node: Node) => {
     setSelectedNode(node);
   }, []);
+
+  // Keyboard delete support
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (
+        (event.key === "Delete" || event.key === "Backspace") &&
+        selectedNode &&
+        !(event.target instanceof HTMLInputElement) &&
+        !(event.target instanceof HTMLTextAreaElement)
+      ) {
+        handleDeleteNode(selectedNode.id);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [selectedNode, handleDeleteNode]);
 
   // Handle node update from config panel
   const handleNodeUpdate = useCallback(
@@ -383,13 +432,15 @@ function WorkflowEditorPage() {
       type: string,
       data: { label: string; description: string; iconName?: string },
     ) => {
+      const nodeId = getNodeId();
       const newNode: Node = {
-        id: getNodeId(),
+        id: nodeId,
         type,
         position: { x: 250, y: nodes.length * 100 + 50 },
         data: {
           ...data,
           config: {},
+          onDelete: () => handleDeleteNode(nodeId),
         },
       };
       setNodes((nds) => [...nds, newNode]);
@@ -400,7 +451,7 @@ function WorkflowEditorPage() {
         expectedOutcome: `Added ${data.label} node to workflow`,
       });
     },
-    [nodes.length, setNodes, logToDebugPane],
+    [nodes.length, setNodes, logToDebugPane, handleDeleteNode],
   );
 
   return (
@@ -428,6 +479,36 @@ function WorkflowEditorPage() {
         </div>
         <div className="flex items-center gap-2">
           {error && <span className="text-red-500 text-sm">{error}</span>}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="outline" size="sm" disabled>
+                  <Upload className="mr-1 h-4 w-4" />
+                  Import
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Coming Soon</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="outline" size="sm" disabled>
+                  <Download className="mr-1 h-4 w-4" />
+                  Export
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Coming Soon</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <Button
+            variant={snapToGrid ? "default" : "outline"}
+            size="sm"
+            onClick={() => setSnapToGrid(!snapToGrid)}
+          >
+            <Grid3X3 className="mr-1 h-4 w-4" />
+            Snap
+          </Button>
           <Button
             variant="outline"
             size="sm"
@@ -435,9 +516,9 @@ function WorkflowEditorPage() {
             disabled={isExecuting}
           >
             {isExecuting ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="mr-1 h-4 w-4 animate-spin" />
             ) : (
-              <PlayCircle className="mr-2 h-4 w-4" />
+              <PlayCircle className="mr-1 h-4 w-4" />
             )}
             Execute
           </Button>
@@ -455,9 +536,9 @@ function WorkflowEditorPage() {
           </Button>
           <Button size="sm" onClick={handleSave} disabled={isSaving}>
             {isSaving ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="mr-1 h-4 w-4 animate-spin" />
             ) : (
-              <Save className="mr-2 h-4 w-4" />
+              <Save className="mr-1 h-4 w-4" />
             )}
             Save
           </Button>
@@ -490,6 +571,8 @@ function WorkflowEditorPage() {
               onDragOver={onDragOver}
               onDrop={onDrop}
               onNodeClick={onNodeClick}
+              snapToGrid={snapToGrid}
+              snapGrid={[15, 15]}
               fitView
               className="bg-background"
             >

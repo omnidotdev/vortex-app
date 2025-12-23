@@ -209,7 +209,7 @@ export function IntegrationsSettings({ trigger }: IntegrationsSettingsProps) {
           </DialogDescription>
           <DialogCloseTrigger />
 
-          <div className="flex h-[600px] gap-4">
+          <div className="flex h-150 gap-4">
             {/* Sidebar */}
             <div className="w-64 border-r pr-4">
               <ScrollArea className="h-full">

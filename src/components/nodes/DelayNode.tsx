@@ -36,7 +36,7 @@ export const DelayNode = memo(
 
     return (
       <div
-        className="group relative min-w-[150px] cursor-pointer rounded-lg border-2 border-cyan-200 bg-cyan-50 px-4 py-2 shadow-lg transition-shadow hover:shadow-xl"
+        className="group relative min-w-37.5 cursor-pointer rounded-lg border-2 border-cyan-200 bg-cyan-50 px-4 py-2 shadow-lg transition-shadow hover:shadow-xl"
         onClick={handleNodeClick}
       >
         <Button
