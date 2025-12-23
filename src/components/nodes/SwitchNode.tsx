@@ -16,11 +16,40 @@ export const SwitchNode = memo(({ data, id }: { data: any; id: string }) => {
       }>)
     : null;
   const cases = data.config?.cases || [];
+  const expression = data.config?.expression || data.expression;
 
   const handleNodeClick = (event: React.MouseEvent) => {
     // Open sidebar for node editing
     if (data.onNodeSelect) {
       data.onNodeSelect({ id, data, type: "switchNode" });
+    }
+  };
+
+  const handleTestSwitch = (event: React.MouseEvent) => {
+    event.stopPropagation();
+
+    // Simulate switch evaluation (random case for demo)
+    const selectedCase =
+      cases.length > 0
+        ? cases[Math.floor(Math.random() * cases.length)]
+        : { label: "default" };
+
+    if (typeof window !== "undefined" && (window as any).logToDebugPane) {
+      (window as any).logToDebugPane(
+        "action",
+        `Switch evaluated: ${selectedCase.label || "default"}`,
+        {
+          switchId: id,
+          expression: expression || "(no expression)",
+          selectedCase: selectedCase.label,
+          allCases: cases.map((c: any) => c.label),
+        },
+        {
+          nodeType: "Switch",
+          nodeName: data.label,
+          expectedOutcome: `Follow ${selectedCase.label || "default"} branch`,
+        },
+      );
     }
   };
 
@@ -47,6 +76,22 @@ export const SwitchNode = memo(({ data, id }: { data: any; id: string }) => {
       </div>
       <div className="mt-1 text-muted-foreground text-sm">
         {data.description}
+      </div>
+      {expression && (
+        <div className="mt-2 rounded bg-muted px-2 py-1 font-mono text-xs">
+          {expression}
+        </div>
+      )}
+      {cases.length > 0 && (
+        <div className="mt-1 text-muted-foreground text-xs">
+          Cases: {cases.map((c: any) => c.label || c.value).join(", ")}
+        </div>
+      )}
+      <div
+        className="mt-2 cursor-pointer rounded bg-purple-100 px-2 py-1 font-medium text-purple-700 text-xs transition-colors hover:bg-purple-200"
+        onClick={handleTestSwitch}
+      >
+        Test Switch
       </div>
       <Handle
         type="target"

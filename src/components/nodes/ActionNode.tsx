@@ -147,6 +147,11 @@ export const ActionNode = memo(({ data, id }: { data: any; id: string }) => {
         position={Position.Top}
         className="h-3 w-3 bg-green-500!"
       />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        className="h-3 w-3 bg-yellow-500!"
+      />
     </div>
   );
 });

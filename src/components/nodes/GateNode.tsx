@@ -31,6 +31,46 @@ export const GateNode = memo(
       }
     };
 
+    const handleApprove = (event: React.MouseEvent) => {
+      event.stopPropagation();
+      if (typeof window !== "undefined" && (window as any).logToDebugPane) {
+        (window as any).logToDebugPane(
+          "action",
+          "Gate APPROVED",
+          {
+            gateId: id,
+            gateType: data.gateType,
+            approvers: data.approvers,
+          },
+          {
+            nodeType: "Gate",
+            nodeName: data.label || "Gate",
+            expectedOutcome: "Continue via approved branch",
+          },
+        );
+      }
+    };
+
+    const handleReject = (event: React.MouseEvent) => {
+      event.stopPropagation();
+      if (typeof window !== "undefined" && (window as any).logToDebugPane) {
+        (window as any).logToDebugPane(
+          "action",
+          "Gate REJECTED",
+          {
+            gateId: id,
+            gateType: data.gateType,
+            approvers: data.approvers,
+          },
+          {
+            nodeType: "Gate",
+            nodeName: data.label || "Gate",
+            expectedOutcome: "Continue via rejected branch",
+          },
+        );
+      }
+    };
+
     const isApproval = data.gateType === "approval";
     const Icon = isApproval ? ShieldCheck : Signal;
 
@@ -106,9 +146,19 @@ export const GateNode = memo(
           style={{ left: "70%" }}
         />
 
-        <div className="mt-2 flex justify-between px-2 text-[10px] text-muted-foreground">
-          <span className="text-green-600">Approved</span>
-          <span className="text-red-600">Rejected</span>
+        <div className="mt-2 flex justify-between gap-2">
+          <div
+            className="flex-1 cursor-pointer rounded bg-green-100 px-2 py-1 text-center font-medium text-green-700 text-xs transition-colors hover:bg-green-200"
+            onClick={handleApprove}
+          >
+            Approve
+          </div>
+          <div
+            className="flex-1 cursor-pointer rounded bg-red-100 px-2 py-1 text-center font-medium text-red-700 text-xs transition-colors hover:bg-red-200"
+            onClick={handleReject}
+          >
+            Reject
+          </div>
         </div>
       </div>
     );

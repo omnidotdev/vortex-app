@@ -16,10 +16,38 @@ export const ConditionNode = memo(({ data, id }: { data: any; id: string }) => {
       }>)
     : null;
 
+  const expression = data.config?.expression || data.expression;
+
   const handleNodeClick = (event: React.MouseEvent) => {
     // Open sidebar for node editing
     if (data.onNodeSelect) {
       data.onNodeSelect({ id, data, type: "conditionNode" });
+    }
+  };
+
+  const handleTestCondition = (event: React.MouseEvent) => {
+    event.stopPropagation();
+
+    // Simulate condition evaluation (random true/false for demo)
+    const result = Math.random() > 0.5;
+
+    if (typeof window !== "undefined" && (window as any).logToDebugPane) {
+      (window as any).logToDebugPane(
+        "action",
+        `Condition evaluated: ${result ? "TRUE" : "FALSE"}`,
+        {
+          conditionId: id,
+          expression: expression || "(no expression)",
+          result,
+        },
+        {
+          nodeType: "Condition",
+          nodeName: data.label,
+          expectedOutcome: result
+            ? "Follow TRUE branch"
+            : "Follow FALSE branch",
+        },
+      );
     }
   };
 
@@ -46,6 +74,17 @@ export const ConditionNode = memo(({ data, id }: { data: any; id: string }) => {
       </div>
       <div className="mt-1 text-muted-foreground text-sm">
         {data.description}
+      </div>
+      {expression && (
+        <div className="mt-2 rounded bg-muted px-2 py-1 font-mono text-xs">
+          {expression}
+        </div>
+      )}
+      <div
+        className="mt-2 cursor-pointer rounded bg-yellow-100 px-2 py-1 font-medium text-yellow-700 text-xs transition-colors hover:bg-yellow-200"
+        onClick={handleTestCondition}
+      >
+        Test Condition
       </div>
       <Handle
         type="target"

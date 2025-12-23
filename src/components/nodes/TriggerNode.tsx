@@ -15,37 +15,6 @@ export const TriggerNode = memo(({ data, id }: { data: any; id: string }) => {
       }>)
     : null;
 
-  const handleTriggerClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-
-    // Execute connected downstream actions
-    if (data.executeConnectedActions) {
-      data.executeConnectedActions(id);
-    }
-
-    // Log to debug pane
-    if (typeof window !== "undefined" && (window as any).logToDebugPane) {
-      (window as any).logToDebugPane(
-        "trigger",
-        "Click trigger activated - executing connected actions",
-        {
-          triggerId: id,
-          timestamp: new Date().toISOString(),
-        },
-        {
-          nodeType: "Click Trigger",
-          nodeName: data.label,
-          expectedOutcome: "Execute downstream workflow actions",
-        },
-      );
-    }
-
-    // Also call the onClick handler if it exists
-    if (data.onClick) {
-      data.onClick(event);
-    }
-  };
-
   const handleNodeClick = (event: React.MouseEvent) => {
     event.stopPropagation();
     if (data.onNodeSelect) {
@@ -53,7 +22,37 @@ export const TriggerNode = memo(({ data, id }: { data: any; id: string }) => {
     }
   };
 
-  const isClickTrigger = data.label === "Click";
+  const handleTestTrigger = (event: React.MouseEvent) => {
+    event.stopPropagation();
+
+    // Log to debug pane
+    if (typeof window !== "undefined" && (window as any).logToDebugPane) {
+      (window as any).logToDebugPane(
+        "trigger",
+        `Test: ${data.label} trigger activated`,
+        {
+          triggerId: id,
+          triggerType: data.label,
+          timestamp: new Date().toISOString(),
+        },
+        {
+          nodeType: `${data.label} Trigger`,
+          nodeName: data.label,
+          expectedOutcome: "Simulated trigger execution",
+        },
+      );
+    }
+
+    // Execute connected downstream actions if available
+    if (data.executeConnectedActions) {
+      data.executeConnectedActions(id);
+    }
+
+    // Also call the onClick handler if it exists
+    if (data.onClick) {
+      data.onClick(event);
+    }
+  };
 
   return (
     <div
@@ -87,14 +86,12 @@ export const TriggerNode = memo(({ data, id }: { data: any; id: string }) => {
         <span className="text-gray-600 text-xs">Active</span>
         <div className="h-2 w-2 rounded-full bg-green-400" />
       </div>
-      {isClickTrigger && (
-        <div
-          className="mt-1 cursor-pointer rounded bg-blue-50 px-2 py-1 font-medium text-blue-600 text-xs transition-colors hover:bg-blue-100 hover:text-blue-800"
-          onClick={handleTriggerClick}
-        >
-          Click to trigger
-        </div>
-      )}
+      <div
+        className="mt-1 cursor-pointer rounded bg-blue-50 px-2 py-1 font-medium text-blue-600 text-xs transition-colors hover:bg-blue-100 hover:text-blue-800"
+        onClick={handleTestTrigger}
+      >
+        Test Trigger
+      </div>
       <Handle
         type="source"
         position={Position.Bottom}
