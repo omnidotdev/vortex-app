@@ -18,44 +18,7 @@ const knipConfig: KnipConfig = {
   },
   // used for proper management of Thornberry components, see https://knip.dev/reference/configuration#ignoreexportsusedinfile
   ignoreExportsUsedInFile: true,
-  ignore: [
-    "src/generated/**",
-    "src/routeTree.gen.ts",
-    // UI component library (may not all be used yet)
-    "src/components/ui/**",
-    // Standalone components not yet integrated
-    "src/components/AppWrapper.tsx",
-    "src/components/LandingPage.tsx",
-    "src/components/UserProfile.tsx",
-    "src/components/WorkflowApp.tsx",
-    "src/components/WorkflowList.tsx",
-    "src/contexts/AuthContext.tsx",
-    "src/hooks/use-toast.ts",
-    // Auth utilities
-    "src/lib/auth/**",
-    // Sample data and workflow utilities
-    "src/lib/sample-workflows.ts",
-    "src/lib/workflow/**",
-    "src/lib/db/workflow-store.ts",
-    // Temporal workers (run separately)
-    "src/temporal/**",
-    // Unused entry point
-    "src/app.tsx",
-    // Index files
-    "src/components/nodes/index.ts",
-    "src/components/workflow/index.ts",
-    "src/providers/index.ts",
-    // Utility files
-    "src/lib/config/app.config.ts",
-    "src/lib/config/env.config.ts",
-    "src/lib/hooks/store/useDialogStore.ts",
-    "src/lib/graphql/getSdk.ts",
-    "src/lib/hooks/store/useWorkflowEditorStore.ts",
-    "src/lib/options/integrations.options.ts",
-    "src/lib/options/plugins.options.ts",
-    "src/lib/options/workspace.options.ts",
-    "src/lib/query-client.ts",
-  ],
+  ignore: ["src/generated/**", "src/routeTree.gen.ts"],
   ignoreDependencies: [
     // used by GraphQL Code Generator scripts
     "dotenv",
@@ -64,12 +27,8 @@ const knipConfig: KnipConfig = {
     "date-fns",
     "ms",
     "react-hotkeys-hook",
-    "resend",
     "stripe",
     "ts-pattern",
-    "usehooks-ts",
-    // Radix UI components (used by UI components)
-    "@radix-ui/react-dropdown-menu",
   ],
   tags: ["-knipignore"],
 };

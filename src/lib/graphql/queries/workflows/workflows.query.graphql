@@ -8,7 +8,6 @@ query Workflows($workspaceId: UUID!, $limit: Int) {
       rowId
       name
       description
-      triggerType
       cronExpression
       isActive
       createdAt

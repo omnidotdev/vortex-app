@@ -44,7 +44,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import WorkflowSidebar from "@/components/WorkflowSidebar";
-import { NodeConfigPanel } from "@/components/workflow/NodeConfigPanel";
+import { NodeConfigSidebar } from "@/components/workflow/NodeConfigSidebar";
 import {
   useUpdateWorkflowMutation,
   useWorkflowQuery,
@@ -103,7 +103,7 @@ const getNodeId = () => `node_${Date.now()}_${nodeIdCounter++}`;
  */
 function WorkflowEditorPage() {
   const { workspaceSlug, workflowId } = Route.useParams();
-  const navigate = useNavigate();
+  const _navigate = useNavigate();
 
   const { data: workflow } = useSuspenseQuery({
     ...workflowOptions({ rowId: workflowId }),
@@ -207,7 +207,7 @@ function WorkflowEditorPage() {
         if (params.sourceHandle?.startsWith("case_")) {
           const parts = params.sourceHandle.split("_");
           if (parts.length > 1 && parts[1]) {
-            const caseIndex = parseInt(parts[1]);
+            const caseIndex = parseInt(parts[1], 10);
             const cases = sourceNode.data.config?.cases || [];
             if (cases[caseIndex]) {
               edge.label = cases[caseIndex].label || `Case ${caseIndex + 1}`;
@@ -226,16 +226,36 @@ function WorkflowEditorPage() {
     setIsSaving(true);
     setError(null);
 
+    // Extract trigger configuration from trigger node
+    const triggerNode = nodes.find((n) => n.type === "triggerNode");
+    const triggerType = triggerNode?.data?.triggerType || "manual";
+    const triggerConfig = triggerNode?.data?.config || {};
+
+    // Build patch with trigger-specific fields
+    const patch: Record<string, unknown> = {
+      definition: {
+        nodes,
+        edges,
+        version: "1.0",
+      },
+    };
+
+    // Set cron expression if trigger is cron
+    if (triggerType === "cron" && triggerConfig.expression) {
+      patch.cronExpression = triggerConfig.expression;
+    } else {
+      patch.cronExpression = null;
+    }
+
+    // Generate webhook secret if trigger is webhook and none exists
+    if (triggerType === "webhook" && !workflow.webhookSecret) {
+      patch.webhookSecret = crypto.randomUUID();
+    }
+
     updateWorkflow({
       input: {
         rowId: workflowId,
-        patch: {
-          definition: {
-            nodes,
-            edges,
-            version: "1.0",
-          },
-        },
+        patch,
       },
     });
   };
@@ -272,7 +292,6 @@ function WorkflowEditorPage() {
         })),
       };
 
-      // Try to execute via Temporal API
       const response = await fetch("/api/execute-workflow", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -285,7 +304,8 @@ function WorkflowEditorPage() {
 
       if (response.ok) {
         const result = await response.json();
-        logToDebugPane("action", "Workflow executed via Temporal", result, {
+        // TODO vendor agnostic
+        logToDebugPane("action", "Workflow executed via executor", result, {
           nodeType: "Workflow",
           nodeName: workflow.name,
           expectedOutcome: "Temporal workflow completed",
@@ -476,18 +496,13 @@ function WorkflowEditorPage() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [selectedNode, handleDeleteNode]);
 
-  // Handle node update from config panel
+  // Handle node update from config sidebar (auto-save)
   const handleNodeUpdate = useCallback(
     (nodeId: string, data: Record<string, unknown>) => {
       setNodes((nds) => nds.map((n) => (n.id === nodeId ? { ...n, data } : n)));
-      setSelectedNode(null);
-      logToDebugPane("action", "Node updated", data, {
-        nodeType: "Node Editor",
-        nodeName: data.label as string,
-        expectedOutcome: "Node configuration saved",
-      });
+      // Don't close panel - auto-save keeps it open
     },
-    [setNodes, logToDebugPane],
+    [setNodes],
   );
 
   // Handle adding node from sidebar (click, not drag)
@@ -586,18 +601,7 @@ function WorkflowEditorPage() {
             )}
             Execute
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              navigate({
-                to: "/workspaces/$workspaceSlug/workflows",
-                params: { workspaceSlug },
-              })
-            }
-          >
-            Cancel
-          </Button>
+
           <Button size="sm" onClick={handleSave} disabled={isSaving}>
             {isSaving ? (
               <Loader2 className="mr-1 h-4 w-4 animate-spin" />
@@ -639,6 +643,10 @@ function WorkflowEditorPage() {
               snapGrid={[15, 15]}
               fitView
               className="bg-background"
+              proOptions={{
+                // ? look into legality, replace xyflow if an issue
+                hideAttribution: true,
+              }}
             >
               <Background />
               <Controls />
@@ -649,51 +657,57 @@ function WorkflowEditorPage() {
           <DebugPane />
         </div>
 
-        {/* Properties panel - show workflow info when no node selected */}
-        <aside className="w-80 shrink-0 overflow-y-auto border-l bg-muted/30 p-4">
-          <h2 className="font-medium text-muted-foreground text-sm">
-            Workflow Info
-          </h2>
-          <div className="mt-4 space-y-4 text-sm">
-            <div>
-              <label className="text-muted-foreground">Name</label>
-              <p className="font-medium">{workflow.name}</p>
-            </div>
-            {workflow.description && (
+        {/* Right sidebar - Node config or Workflow info */}
+        {selectedNode ? (
+          <NodeConfigSidebar
+            selectedNode={selectedNode}
+            onNodeUpdate={handleNodeUpdate}
+            onNodeDelete={handleDeleteNode}
+            onClose={() => setSelectedNode(null)}
+            workflowId={workflowId}
+            webhookSecret={workflow.webhookSecret}
+          />
+        ) : (
+          <aside className="w-100 shrink-0 overflow-y-auto border-l bg-muted/30 p-4">
+            <h2 className="font-medium text-muted-foreground text-sm">
+              Workflow Info
+            </h2>
+            <div className="mt-4 space-y-4 text-sm">
               <div>
-                <label className="text-muted-foreground">Description</label>
-                <p>{workflow.description}</p>
+                <label className="text-muted-foreground">Name</label>
+                <p className="font-medium">{workflow.name}</p>
               </div>
-            )}
-            <div>
-              <label className="text-muted-foreground">Trigger</label>
-              <p className="font-medium">{workflow.triggerType}</p>
-            </div>
-            {workflow.cronExpression && (
+              {workflow.description && (
+                <div>
+                  <label className="text-muted-foreground">Description</label>
+                  <p>{workflow.description}</p>
+                </div>
+              )}
               <div>
-                <label className="text-muted-foreground">Schedule</label>
-                <p className="font-mono text-xs">{workflow.cronExpression}</p>
+                <label className="text-muted-foreground">Trigger</label>
+                <p className="font-medium">
+                  {nodes.find((n) => n.type === "triggerNode")?.data
+                    ?.triggerType || "manual"}
+                </p>
               </div>
-            )}
-            <div>
-              <label className="text-muted-foreground">Nodes</label>
-              <p className="font-medium">{nodes.length}</p>
+              {workflow.cronExpression && (
+                <div>
+                  <label className="text-muted-foreground">Schedule</label>
+                  <p className="font-mono text-xs">{workflow.cronExpression}</p>
+                </div>
+              )}
+              <div>
+                <label className="text-muted-foreground">Nodes</label>
+                <p className="font-medium">{nodes.length}</p>
+              </div>
+              <div>
+                <label className="text-muted-foreground">Connections</label>
+                <p className="font-medium">{edges.length}</p>
+              </div>
             </div>
-            <div>
-              <label className="text-muted-foreground">Connections</label>
-              <p className="font-medium">{edges.length}</p>
-            </div>
-          </div>
-        </aside>
+          </aside>
+        )}
       </div>
-
-      {/* Node Configuration Panel (Sheet) */}
-      <NodeConfigPanel
-        node={selectedNode}
-        isOpen={!!selectedNode}
-        onClose={() => setSelectedNode(null)}
-        onUpdate={handleNodeUpdate}
-      />
     </div>
   );
 }

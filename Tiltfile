@@ -21,8 +21,10 @@ local_resource(
 
 docker_compose('docker-compose.yml')
 
+# TODO move all below to metarepo
 # Hatchet dashboard available at http://localhost:8080
 dc_resource('hatchet', labels=['hatchet'])
+dc_resource('hatchet-db', labels=['hatchet'])
 
 local_resource(
     'install-deps-vortex-worker',
