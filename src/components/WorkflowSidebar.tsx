@@ -40,6 +40,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { NodeTypes } from "@/lib/schema";
 
 // Official plugins - built-in node types that ship with Vortex
+// All nodes are backed by Extism plugins (builtin: prefix = native TypeScript)
 const officialPlugins = [
   {
     type: NodeTypes.TRIGGER,
@@ -50,18 +51,24 @@ const officialPlugins = [
         label: "Webhook",
         description: "Triggered by HTTP webhook",
         triggerType: "webhook",
+        pluginId: "builtin:trigger",
+        operation: "execute",
       },
       {
         iconName: "Clock",
         label: "Schedule",
         description: "Triggered on a schedule (cron)",
         triggerType: "cron",
+        pluginId: "builtin:trigger",
+        operation: "execute",
       },
       {
         iconName: "MousePointer",
         label: "Manual",
         description: "Triggered by a manual click",
         triggerType: "manual",
+        pluginId: "builtin:trigger",
+        operation: "execute",
       },
     ],
   },
@@ -113,24 +120,44 @@ const officialPlugins = [
         iconName: "GitBranch",
         label: "If Condition",
         description: "Branch based on a condition",
+        pluginId: "builtin:condition",
+        operation: "evaluate",
       },
       {
         iconName: "SplitSquareVertical",
         label: "Switch",
         description: "Multiple conditional branches",
+        pluginId: "builtin:switch",
+        operation: "evaluate",
       },
-      { iconName: "Timer", label: "Delay", description: "Add a time delay" },
-      { iconName: "Repeat", label: "Loop", description: "Repeat actions" },
+      {
+        iconName: "Timer",
+        label: "Delay",
+        description: "Add a time delay",
+        pluginId: "builtin:delay",
+        operation: "wait",
+      },
+      {
+        iconName: "Repeat",
+        label: "Loop",
+        description: "Repeat actions",
+        pluginId: "builtin:loop",
+        operation: "iterate",
+      },
       {
         iconName: "GitFork",
         label: "Parallel",
         description: "Run branches in parallel",
+        pluginId: "builtin:parallel",
+        operation: "execute",
         comingSoon: true,
       },
       {
         iconName: "Shield",
         label: "Gate",
         description: "Require approval to continue",
+        pluginId: "builtin:gate",
+        operation: "check",
         comingSoon: true,
       },
     ],
@@ -143,6 +170,8 @@ const officialPlugins = [
         iconName: "Cable",
         label: "MCP Tool",
         description: "Call any MCP server tool",
+        pluginId: "builtin:mcp",
+        operation: "call",
       },
     ],
   },
