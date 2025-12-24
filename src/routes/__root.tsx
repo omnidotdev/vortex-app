@@ -9,7 +9,6 @@ import {
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { Toaster } from "sonner";
 
-import { IntegrationsProvider } from "@/contexts/IntegrationsContext";
 import appCss from "@/lib/styles/globals.css?url";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { fetchSession } from "@/server/functions/auth";
@@ -88,10 +87,8 @@ function RootDocument({
       </head>
       <body className="font-sans antialiased">
         <ThemeProvider theme={theme}>
-          <IntegrationsProvider>
-            {children}
-            <Toaster position="top-center" richColors />
-          </IntegrationsProvider>
+          {children}
+          <Toaster position="top-center" richColors />
         </ThemeProvider>
 
         {/* dev tools (only included in development) */}

@@ -23,7 +23,6 @@ import {
   Repeat,
   Search,
   Send,
-  Settings as SettingsIcon,
   Shield,
   SplitSquareVertical,
   Timer,
@@ -33,7 +32,6 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { IntegrationsSettings } from "@/components/IntegrationsSettings";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -74,23 +72,9 @@ const officialPlugins = [
       {
         iconName: "Globe",
         label: "HTTP Request",
-        description: "Make any HTTP request",
+        description: "Make any HTTP request (GET, POST, PUT, DELETE, etc.)",
         pluginId: "builtin:http",
         operation: "request",
-      },
-      {
-        iconName: "Globe",
-        label: "HTTP GET",
-        description: "Fetch data from an API",
-        pluginId: "builtin:http",
-        operation: "get",
-      },
-      {
-        iconName: "Send",
-        label: "HTTP POST",
-        description: "Send data to an API",
-        pluginId: "builtin:http",
-        operation: "post",
       },
     ],
   },
@@ -141,11 +125,13 @@ const officialPlugins = [
         iconName: "GitFork",
         label: "Parallel",
         description: "Run branches in parallel",
+        comingSoon: true,
       },
       {
         iconName: "Shield",
         label: "Gate",
         description: "Require approval to continue",
+        comingSoon: true,
       },
     ],
   },
@@ -186,7 +172,6 @@ const IconMap: Record<string, React.ElementType> = {
   Hash,
   Crown,
   Ban,
-  SettingsIcon,
   ChevronDown,
   ChevronRight,
   GitFork,
@@ -330,16 +315,7 @@ function WorkflowSidebar({ onAddNode, currentWorkflow }: WorkflowSidebarProps) {
     <div className="w-64 border-border border-r bg-card p-4">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="font-bold text-foreground text-xl">Vortex</h2>
-        <div className="flex gap-2">
-          <IntegrationsSettings
-            trigger={
-              <Button variant="ghost" size="sm">
-                <SettingsIcon className="h-4 w-4" />
-              </Button>
-            }
-          />
-          <ThemeToggle />
-        </div>
+        <ThemeToggle />
       </div>
 
       {currentWorkflow ? (
@@ -397,13 +373,23 @@ function WorkflowSidebar({ onAddNode, currentWorkflow }: WorkflowSidebarProps) {
                     pluginId?: string;
                     operation?: string;
                     triggerType?: string;
+                    comingSoon?: boolean;
                   };
+                  const isComingSoon = itemWithPlugin.comingSoon;
                   return (
                     <div
                       key={item.label}
-                      className="flex cursor-move items-start rounded-md p-2 hover:bg-accent"
-                      draggable
-                      onDragStart={(e) =>
+                      className={`flex items-start rounded-md p-2 ${
+                        isComingSoon
+                          ? "cursor-not-allowed opacity-50"
+                          : "cursor-move hover:bg-accent"
+                      }`}
+                      draggable={!isComingSoon}
+                      onDragStart={(e) => {
+                        if (isComingSoon) {
+                          e.preventDefault();
+                          return;
+                        }
                         handleDragStart(e, {
                           type: category.type,
                           data: {
@@ -420,14 +406,26 @@ function WorkflowSidebar({ onAddNode, currentWorkflow }: WorkflowSidebarProps) {
                               triggerType: itemWithPlugin.triggerType,
                             }),
                           },
-                        })
-                      }
+                        });
+                      }}
                     >
                       <div className="mt-0.5 mr-2">
                         {renderIcon(item.iconName)}
                       </div>
-                      <div>
-                        <div className="font-medium text-sm">{item.label}</div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-sm">
+                            {item.label}
+                          </span>
+                          {isComingSoon && (
+                            <Badge
+                              variant="outline"
+                              className="text-[10px] text-muted-foreground"
+                            >
+                              Soon
+                            </Badge>
+                          )}
+                        </div>
                         <div className="text-muted-foreground text-xs">
                           {item.description}
                         </div>

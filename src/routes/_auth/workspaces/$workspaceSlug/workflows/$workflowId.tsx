@@ -5,14 +5,7 @@ import {
   notFound,
   useNavigate,
 } from "@tanstack/react-router";
-import {
-  Download,
-  Grid3X3,
-  Loader2,
-  PlayCircle,
-  Save,
-  Upload,
-} from "lucide-react";
+import { Grid3X3, Loader2, PlayCircle, Save } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ReactFlow, {
   Background,
@@ -32,17 +25,12 @@ import { ConditionNode } from "@/components/nodes/ConditionNode";
 import { DelayNode } from "@/components/nodes/DelayNode";
 import { GateNode } from "@/components/nodes/GateNode";
 import { LoopNode } from "@/components/nodes/LoopNode";
+import { MCPNode } from "@/components/nodes/MCPNode";
 import { ParallelNode } from "@/components/nodes/ParallelNode";
 import { PluginNode } from "@/components/nodes/PluginNode";
 import { SwitchNode } from "@/components/nodes/SwitchNode";
 import { TriggerNode } from "@/components/nodes/TriggerNode";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import WorkflowSidebar from "@/components/WorkflowSidebar";
 import { NodeConfigSidebar } from "@/components/workflow/NodeConfigSidebar";
 import {
@@ -80,6 +68,7 @@ const nodeTypes = {
   delayNode: DelayNode,
   parallelNode: ParallelNode,
   pluginNode: PluginNode,
+  mcpNode: MCPNode,
 };
 
 // Map step types to custom node types
@@ -93,6 +82,7 @@ const nodeTypeMap: Record<string, string> = {
   delay: "delayNode",
   parallel: "parallelNode",
   plugin: "pluginNode",
+  mcp: "mcpNode",
 };
 
 let nodeIdCounter = 0;
@@ -558,28 +548,6 @@ function WorkflowEditorPage() {
         </div>
         <div className="flex items-center gap-2">
           {error && <span className="text-red-500 text-sm">{error}</span>}
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline" size="sm" disabled>
-                  <Upload className="mr-1 h-4 w-4" />
-                  Import
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Coming Soon</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline" size="sm" disabled>
-                  <Download className="mr-1 h-4 w-4" />
-                  Export
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Coming Soon</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
           <Button
             variant={snapToGrid ? "default" : "outline"}
             size="sm"

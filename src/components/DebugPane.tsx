@@ -48,15 +48,12 @@ function DebugPane() {
 
   if (!isExpanded) {
     return (
-      <Button
-        variant="ghost"
-        size="sm"
-        className="fixed right-4 bottom-4 bg-card shadow-lg"
-        onClick={() => setIsExpanded(true)}
-      >
-        <ChevronUp className="mr-2 h-4 w-4" />
-        Show Debug Output
-      </Button>
+      <div className="flex h-8 items-center justify-between border-t bg-muted px-4">
+        <span className="text-muted-foreground text-sm">Debug Output</span>
+        <Button variant="ghost" size="sm" onClick={() => setIsExpanded(true)}>
+          <ChevronUp className="h-4 w-4" />
+        </Button>
+      </div>
     );
   }
 

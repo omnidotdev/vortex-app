@@ -4,6 +4,7 @@ import {
   createFileRoute,
   notFound,
   redirect,
+  useMatches,
   useParams,
 } from "@tanstack/react-router";
 
@@ -69,11 +70,17 @@ export const Route = createFileRoute("/_auth")({
 });
 
 function AuthenticatedLayout() {
+  // Hide AppSidebar when in workflow editor (it has its own sidebar)
+  const matches = useMatches();
+  const isWorkflowEditor = matches.some((match) =>
+    match.routeId.includes("/workflows/$workflowId"),
+  );
+
   return (
     <SidebarProvider>
       <div className="flex h-dvh w-full">
-        {/* Sidebar */}
-        <AppSidebar />
+        {/* Sidebar - hidden in workflow editor */}
+        {!isWorkflowEditor && <AppSidebar />}
 
         {/* Main content */}
         <main className="flex-1 overflow-auto">
@@ -139,21 +146,14 @@ function AppSidebar() {
                 Workflows
               </Link>
               <Link
-                to="/workspaces/$workspaceSlug/integrations"
+                to="/workspaces/$workspaceSlug/templates"
                 params={{ workspaceSlug }}
                 className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
                 activeProps={{ className: "bg-accent" }}
               >
-                Integrations
+                Templates
               </Link>
-              <Link
-                to="/workspaces/$workspaceSlug/plugins"
-                params={{ workspaceSlug }}
-                className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
-                activeProps={{ className: "bg-accent" }}
-              >
-                Plugins
-              </Link>
+
               <Link
                 to="/workspaces/$workspaceSlug/settings"
                 params={{ workspaceSlug }}
