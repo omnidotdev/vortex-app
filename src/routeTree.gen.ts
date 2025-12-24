@@ -18,10 +18,9 @@ import { Route as PublicPricingRouteImport } from './routes/_public/pricing'
 import { Route as AuthWorkspacesIndexRouteImport } from './routes/_auth/workspaces/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AuthWorkspacesWorkspaceSlugIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/index'
+import { Route as AuthWorkspacesWorkspaceSlugTemplatesRouteImport } from './routes/_auth/workspaces/$workspaceSlug/templates'
 import { Route as AuthWorkspacesWorkspaceSlugSettingsRouteImport } from './routes/_auth/workspaces/$workspaceSlug/settings'
 import { Route as AuthWorkspacesWorkspaceSlugWorkflowsIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/workflows/index'
-import { Route as AuthWorkspacesWorkspaceSlugPluginsIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/plugins/index'
-import { Route as AuthWorkspacesWorkspaceSlugIntegrationsIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/integrations/index'
 import { Route as AuthWorkspacesWorkspaceSlugWorkflowsNewRouteImport } from './routes/_auth/workspaces/$workspaceSlug/workflows/new'
 import { Route as AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRouteImport } from './routes/_auth/workspaces/$workspaceSlug/workflows/$workflowId'
 
@@ -69,6 +68,12 @@ const AuthWorkspacesWorkspaceSlugIndexRoute =
     path: '/workspaces/$workspaceSlug/',
     getParentRoute: () => AuthRoute,
   } as any)
+const AuthWorkspacesWorkspaceSlugTemplatesRoute =
+  AuthWorkspacesWorkspaceSlugTemplatesRouteImport.update({
+    id: '/workspaces/$workspaceSlug/templates',
+    path: '/workspaces/$workspaceSlug/templates',
+    getParentRoute: () => AuthRoute,
+  } as any)
 const AuthWorkspacesWorkspaceSlugSettingsRoute =
   AuthWorkspacesWorkspaceSlugSettingsRouteImport.update({
     id: '/workspaces/$workspaceSlug/settings',
@@ -79,18 +84,6 @@ const AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute =
   AuthWorkspacesWorkspaceSlugWorkflowsIndexRouteImport.update({
     id: '/workspaces/$workspaceSlug/workflows/',
     path: '/workspaces/$workspaceSlug/workflows/',
-    getParentRoute: () => AuthRoute,
-  } as any)
-const AuthWorkspacesWorkspaceSlugPluginsIndexRoute =
-  AuthWorkspacesWorkspaceSlugPluginsIndexRouteImport.update({
-    id: '/workspaces/$workspaceSlug/plugins/',
-    path: '/workspaces/$workspaceSlug/plugins/',
-    getParentRoute: () => AuthRoute,
-  } as any)
-const AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute =
-  AuthWorkspacesWorkspaceSlugIntegrationsIndexRouteImport.update({
-    id: '/workspaces/$workspaceSlug/integrations/',
-    path: '/workspaces/$workspaceSlug/integrations/',
     getParentRoute: () => AuthRoute,
   } as any)
 const AuthWorkspacesWorkspaceSlugWorkflowsNewRoute =
@@ -114,11 +107,10 @@ export interface FileRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/workspaces': typeof AuthWorkspacesIndexRoute
   '/workspaces/$workspaceSlug/settings': typeof AuthWorkspacesWorkspaceSlugSettingsRoute
+  '/workspaces/$workspaceSlug/templates': typeof AuthWorkspacesWorkspaceSlugTemplatesRoute
   '/workspaces/$workspaceSlug': typeof AuthWorkspacesWorkspaceSlugIndexRoute
   '/workspaces/$workspaceSlug/workflows/$workflowId': typeof AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute
   '/workspaces/$workspaceSlug/workflows/new': typeof AuthWorkspacesWorkspaceSlugWorkflowsNewRoute
-  '/workspaces/$workspaceSlug/integrations': typeof AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute
-  '/workspaces/$workspaceSlug/plugins': typeof AuthWorkspacesWorkspaceSlugPluginsIndexRoute
   '/workspaces/$workspaceSlug/workflows': typeof AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -129,11 +121,10 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/workspaces': typeof AuthWorkspacesIndexRoute
   '/workspaces/$workspaceSlug/settings': typeof AuthWorkspacesWorkspaceSlugSettingsRoute
+  '/workspaces/$workspaceSlug/templates': typeof AuthWorkspacesWorkspaceSlugTemplatesRoute
   '/workspaces/$workspaceSlug': typeof AuthWorkspacesWorkspaceSlugIndexRoute
   '/workspaces/$workspaceSlug/workflows/$workflowId': typeof AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute
   '/workspaces/$workspaceSlug/workflows/new': typeof AuthWorkspacesWorkspaceSlugWorkflowsNewRoute
-  '/workspaces/$workspaceSlug/integrations': typeof AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute
-  '/workspaces/$workspaceSlug/plugins': typeof AuthWorkspacesWorkspaceSlugPluginsIndexRoute
   '/workspaces/$workspaceSlug/workflows': typeof AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute
 }
 export interface FileRoutesById {
@@ -147,11 +138,10 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_auth/workspaces/': typeof AuthWorkspacesIndexRoute
   '/_auth/workspaces/$workspaceSlug/settings': typeof AuthWorkspacesWorkspaceSlugSettingsRoute
+  '/_auth/workspaces/$workspaceSlug/templates': typeof AuthWorkspacesWorkspaceSlugTemplatesRoute
   '/_auth/workspaces/$workspaceSlug/': typeof AuthWorkspacesWorkspaceSlugIndexRoute
   '/_auth/workspaces/$workspaceSlug/workflows/$workflowId': typeof AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute
   '/_auth/workspaces/$workspaceSlug/workflows/new': typeof AuthWorkspacesWorkspaceSlugWorkflowsNewRoute
-  '/_auth/workspaces/$workspaceSlug/integrations/': typeof AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute
-  '/_auth/workspaces/$workspaceSlug/plugins/': typeof AuthWorkspacesWorkspaceSlugPluginsIndexRoute
   '/_auth/workspaces/$workspaceSlug/workflows/': typeof AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute
 }
 export interface FileRouteTypes {
@@ -164,11 +154,10 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/workspaces'
     | '/workspaces/$workspaceSlug/settings'
+    | '/workspaces/$workspaceSlug/templates'
     | '/workspaces/$workspaceSlug'
     | '/workspaces/$workspaceSlug/workflows/$workflowId'
     | '/workspaces/$workspaceSlug/workflows/new'
-    | '/workspaces/$workspaceSlug/integrations'
-    | '/workspaces/$workspaceSlug/plugins'
     | '/workspaces/$workspaceSlug/workflows'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -179,11 +168,10 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/workspaces'
     | '/workspaces/$workspaceSlug/settings'
+    | '/workspaces/$workspaceSlug/templates'
     | '/workspaces/$workspaceSlug'
     | '/workspaces/$workspaceSlug/workflows/$workflowId'
     | '/workspaces/$workspaceSlug/workflows/new'
-    | '/workspaces/$workspaceSlug/integrations'
-    | '/workspaces/$workspaceSlug/plugins'
     | '/workspaces/$workspaceSlug/workflows'
   id:
     | '__root__'
@@ -196,11 +184,10 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/_auth/workspaces/'
     | '/_auth/workspaces/$workspaceSlug/settings'
+    | '/_auth/workspaces/$workspaceSlug/templates'
     | '/_auth/workspaces/$workspaceSlug/'
     | '/_auth/workspaces/$workspaceSlug/workflows/$workflowId'
     | '/_auth/workspaces/$workspaceSlug/workflows/new'
-    | '/_auth/workspaces/$workspaceSlug/integrations/'
-    | '/_auth/workspaces/$workspaceSlug/plugins/'
     | '/_auth/workspaces/$workspaceSlug/workflows/'
   fileRoutesById: FileRoutesById
 }
@@ -277,6 +264,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugIndexRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/workspaces/$workspaceSlug/templates': {
+      id: '/_auth/workspaces/$workspaceSlug/templates'
+      path: '/workspaces/$workspaceSlug/templates'
+      fullPath: '/workspaces/$workspaceSlug/templates'
+      preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugTemplatesRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_auth/workspaces/$workspaceSlug/settings': {
       id: '/_auth/workspaces/$workspaceSlug/settings'
       path: '/workspaces/$workspaceSlug/settings'
@@ -289,20 +283,6 @@ declare module '@tanstack/react-router' {
       path: '/workspaces/$workspaceSlug/workflows'
       fullPath: '/workspaces/$workspaceSlug/workflows'
       preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugWorkflowsIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/workspaces/$workspaceSlug/plugins/': {
-      id: '/_auth/workspaces/$workspaceSlug/plugins/'
-      path: '/workspaces/$workspaceSlug/plugins'
-      fullPath: '/workspaces/$workspaceSlug/plugins'
-      preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugPluginsIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/workspaces/$workspaceSlug/integrations/': {
-      id: '/_auth/workspaces/$workspaceSlug/integrations/'
-      path: '/workspaces/$workspaceSlug/integrations'
-      fullPath: '/workspaces/$workspaceSlug/integrations'
-      preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugIntegrationsIndexRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/workspaces/$workspaceSlug/workflows/new': {
@@ -325,11 +305,10 @@ declare module '@tanstack/react-router' {
 interface AuthRouteChildren {
   AuthWorkspacesIndexRoute: typeof AuthWorkspacesIndexRoute
   AuthWorkspacesWorkspaceSlugSettingsRoute: typeof AuthWorkspacesWorkspaceSlugSettingsRoute
+  AuthWorkspacesWorkspaceSlugTemplatesRoute: typeof AuthWorkspacesWorkspaceSlugTemplatesRoute
   AuthWorkspacesWorkspaceSlugIndexRoute: typeof AuthWorkspacesWorkspaceSlugIndexRoute
   AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute: typeof AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute
   AuthWorkspacesWorkspaceSlugWorkflowsNewRoute: typeof AuthWorkspacesWorkspaceSlugWorkflowsNewRoute
-  AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute: typeof AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute
-  AuthWorkspacesWorkspaceSlugPluginsIndexRoute: typeof AuthWorkspacesWorkspaceSlugPluginsIndexRoute
   AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute: typeof AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute
 }
 
@@ -337,15 +316,13 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthWorkspacesIndexRoute: AuthWorkspacesIndexRoute,
   AuthWorkspacesWorkspaceSlugSettingsRoute:
     AuthWorkspacesWorkspaceSlugSettingsRoute,
+  AuthWorkspacesWorkspaceSlugTemplatesRoute:
+    AuthWorkspacesWorkspaceSlugTemplatesRoute,
   AuthWorkspacesWorkspaceSlugIndexRoute: AuthWorkspacesWorkspaceSlugIndexRoute,
   AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute:
     AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute,
   AuthWorkspacesWorkspaceSlugWorkflowsNewRoute:
     AuthWorkspacesWorkspaceSlugWorkflowsNewRoute,
-  AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute:
-    AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute,
-  AuthWorkspacesWorkspaceSlugPluginsIndexRoute:
-    AuthWorkspacesWorkspaceSlugPluginsIndexRoute,
   AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute:
     AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute,
 }
