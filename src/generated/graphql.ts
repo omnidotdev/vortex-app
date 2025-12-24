@@ -4143,7 +4143,7 @@ export type WorkflowRun = Node & {
   status: Scalars['String']['output'];
   /** Reads a single `Workflow` that is related to this `WorkflowRun`. */
   workflow?: Maybe<Workflow>;
-  workflowId: Scalars['UUID']['output'];
+  workflowId?: Maybe<Scalars['UUID']['output']>;
   /** Reads and enables pagination through a set of `WorkflowStepLog`. */
   workflowStepLogs: WorkflowStepLogConnection;
 };
@@ -4299,6 +4299,8 @@ export type WorkflowRunFilter = {
   status?: InputMaybe<StringFilter>;
   /** Filter by the object’s `workflow` relation. */
   workflow?: InputMaybe<WorkflowFilter>;
+  /** A related `workflow` exists. */
+  workflowExists?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `workflowId` field. */
   workflowId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `workflowStepLogs` relation. */
@@ -4408,7 +4410,7 @@ export type WorkflowRunInput = {
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   startedAt?: InputMaybe<Scalars['Datetime']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
-  workflowId: Scalars['UUID']['input'];
+  workflowId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** Methods to use when ordering `WorkflowRun`. */

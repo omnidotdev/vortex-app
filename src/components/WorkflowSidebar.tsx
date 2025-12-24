@@ -392,33 +392,49 @@ function WorkflowSidebar({ onAddNode, currentWorkflow }: WorkflowSidebarProps) {
                 {category.category}
               </h4>
               <div className="space-y-1">
-                {category.items.map((item) => (
-                  <div
-                    key={item.label}
-                    className="flex cursor-move items-start rounded-md p-2 hover:bg-accent"
-                    draggable
-                    onDragStart={(e) =>
-                      handleDragStart(e, {
-                        type: category.type,
-                        data: {
-                          label: item.label,
-                          description: item.description,
-                          iconName: item.iconName,
-                        },
-                      })
-                    }
-                  >
-                    <div className="mt-0.5 mr-2">
-                      {renderIcon(item.iconName)}
-                    </div>
-                    <div>
-                      <div className="font-medium text-sm">{item.label}</div>
-                      <div className="text-muted-foreground text-xs">
-                        {item.description}
+                {category.items.map((item) => {
+                  const itemWithPlugin = item as typeof item & {
+                    pluginId?: string;
+                    operation?: string;
+                    triggerType?: string;
+                  };
+                  return (
+                    <div
+                      key={item.label}
+                      className="flex cursor-move items-start rounded-md p-2 hover:bg-accent"
+                      draggable
+                      onDragStart={(e) =>
+                        handleDragStart(e, {
+                          type: category.type,
+                          data: {
+                            label: item.label,
+                            description: item.description,
+                            iconName: item.iconName,
+                            // Pass plugin info for action nodes
+                            ...(itemWithPlugin.pluginId && {
+                              pluginId: itemWithPlugin.pluginId,
+                              operation: itemWithPlugin.operation,
+                            }),
+                            // Pass trigger type for trigger nodes
+                            ...(itemWithPlugin.triggerType && {
+                              triggerType: itemWithPlugin.triggerType,
+                            }),
+                          },
+                        })
+                      }
+                    >
+                      <div className="mt-0.5 mr-2">
+                        {renderIcon(item.iconName)}
+                      </div>
+                      <div>
+                        <div className="font-medium text-sm">{item.label}</div>
+                        <div className="text-muted-foreground text-xs">
+                          {item.description}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ))}
