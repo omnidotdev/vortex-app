@@ -5,7 +5,6 @@ query Workflow($rowId: UUID!) {
     name
     description
     definition
-    triggerType
     cronExpression
     webhookSecret
     isActive
@@ -20,7 +19,7 @@ query Workflow($rowId: UUID!) {
     workflowRuns(orderBy: CREATED_AT_DESC, first: 10) {
       nodes {
         rowId
-        temporalWorkflowId
+        engineWorkflowId
         status
         startedAt
         completedAt

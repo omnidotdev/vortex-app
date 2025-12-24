@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Hatchet } from "@hatchet-dev/typescript-sdk";
 
+import { reactFlowToDsl } from "../../lib/workflow/reactFlowToDsl";
 import type { WorkflowDefinition } from "../../lib/workflow/types";
 
 export const Route = createFileRoute("/api/execute-workflow")({
@@ -14,28 +16,37 @@ export const Route = createFileRoute("/api/execute-workflow")({
           const workflowRunId = `wf-run-${Date.now()}-${Math.random().toString(36).substring(7)}`;
           const hatchetWorkflowId = workflowId || `wf-${Date.now()}`;
 
+          // Convert ReactFlow format (nodes/edges) to DSL format (steps/edges)
+          const dslDefinition = reactFlowToDsl(
+            workflowDefinition.nodes || [],
+            workflowDefinition.edges || [],
+          );
+
           console.log("Starting Vortex workflow via Hatchet");
           console.log("Workflow Run ID:", workflowRunId);
           console.log("Workflow ID:", hatchetWorkflowId);
+          console.log(
+            "DSL Definition:",
+            JSON.stringify(dslDefinition, null, 2),
+          );
 
-          // TODO: Integrate with Hatchet client once vortex-worker is connected
-          // For now, return a placeholder response
-          // const hatchet = Hatchet.init();
-          // const run = await hatchet.workflow.run("dsl-workflow", {
-          //   workflowId: hatchetWorkflowId,
-          //   triggerData,
-          //   definition: workflowDefinition,
-          // });
+          // Initialize Hatchet client
+          const hatchet = Hatchet.init();
+
+          // Trigger the DSL workflow via event
+          await hatchet.event.push("workflow:execute", {
+            workflowId: hatchetWorkflowId,
+            triggerData,
+            definition: dslDefinition,
+          });
 
           return Response.json({
             success: true,
             workflowId: hatchetWorkflowId,
             workflowRunId,
             status: "pending",
-            hatchetUI: "http://localhost:8080",
-            message:
-              "Workflow execution API ready. Connect Hatchet client to enable execution.",
-            note: "Check Hatchet dashboard at http://localhost:8080 to monitor workflows",
+            hatchetUI: "http://localhost:8888",
+            message: "Workflow execution triggered via Hatchet",
           });
         } catch (error) {
           console.error("Workflow execution failed:", error);
@@ -74,7 +85,7 @@ export const Route = createFileRoute("/api/execute-workflow")({
             variables: "optional variable definitions",
             settings: "optional workflow settings",
           },
-          hatchetUI: "http://localhost:8080",
+          hatchetUI: "http://localhost:8888",
         });
       },
     },

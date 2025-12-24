@@ -16,6 +16,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  BigFloat: { input: any; output: any; }
   BigInt: { input: string; output: string; }
   Cursor: { input: string; output: string; }
   Datetime: { input: Date; output: Date; }
@@ -73,6 +74,39 @@ export type BooleanFilter = {
   notEqualTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+};
+
+/** All input for the create `_DrizzleMigration` mutation. */
+export type CreateDrizzleMigrationInput = {
+  /** The `_DrizzleMigration` to be created by this mutation. */
+  _drizzleMigration: _DrizzleMigrationInput;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** The output of our create `_DrizzleMigration` mutation. */
+export type CreateDrizzleMigrationPayload = {
+  __typename?: 'CreateDrizzleMigrationPayload';
+  /** The `_DrizzleMigration` that was created by this mutation. */
+  _drizzleMigration?: Maybe<_DrizzleMigration>;
+  /** An edge for our `_DrizzleMigration`. May be used by Relay 1. */
+  _drizzleMigrationEdge?: Maybe<_DrizzleMigrationEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `_DrizzleMigration` mutation. */
+export type CreateDrizzleMigrationPayload_DrizzleMigrationEdgeArgs = {
+  orderBy?: Array<_DrizzleMigrationOrderBy>;
 };
 
 /** All input for the create `Integration` mutation. */
@@ -396,6 +430,50 @@ export type DatetimeFilter = {
   notEqualTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<Scalars['Datetime']['input']>>;
+};
+
+/** All input for the `deleteDrizzleMigrationById` mutation. */
+export type DeleteDrizzleMigrationByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `_DrizzleMigration` to be deleted. */
+  id: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteDrizzleMigration` mutation. */
+export type DeleteDrizzleMigrationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  rowId: Scalars['Int']['input'];
+};
+
+/** The output of our delete `_DrizzleMigration` mutation. */
+export type DeleteDrizzleMigrationPayload = {
+  __typename?: 'DeleteDrizzleMigrationPayload';
+  /** The `_DrizzleMigration` that was deleted by this mutation. */
+  _drizzleMigration?: Maybe<_DrizzleMigration>;
+  /** An edge for our `_DrizzleMigration`. May be used by Relay 1. */
+  _drizzleMigrationEdge?: Maybe<_DrizzleMigrationEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedDrizzleMigrationId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `_DrizzleMigration` mutation. */
+export type DeleteDrizzleMigrationPayload_DrizzleMigrationEdgeArgs = {
+  orderBy?: Array<_DrizzleMigrationOrderBy>;
 };
 
 /** All input for the `deleteIntegrationById` mutation. */
@@ -825,6 +903,15 @@ export type DeleteWorkspaceUserPayloadWorkspaceUserEdgeArgs = {
   orderBy?: Array<WorkspaceUserOrderBy>;
 };
 
+export type HavingBigintFilter = {
+  equalTo?: InputMaybe<Scalars['BigInt']['input']>;
+  greaterThan?: InputMaybe<Scalars['BigInt']['input']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['BigInt']['input']>;
+  lessThan?: InputMaybe<Scalars['BigInt']['input']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['BigInt']['input']>;
+  notEqualTo?: InputMaybe<Scalars['BigInt']['input']>;
+};
+
 export type HavingDatetimeFilter = {
   equalTo?: InputMaybe<Scalars['Datetime']['input']>;
   greaterThan?: InputMaybe<Scalars['Datetime']['input']>;
@@ -832,6 +919,41 @@ export type HavingDatetimeFilter = {
   lessThan?: InputMaybe<Scalars['Datetime']['input']>;
   lessThanOrEqualTo?: InputMaybe<Scalars['Datetime']['input']>;
   notEqualTo?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+export type HavingIntFilter = {
+  equalTo?: InputMaybe<Scalars['Int']['input']>;
+  greaterThan?: InputMaybe<Scalars['Int']['input']>;
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Int']['input']>;
+  lessThan?: InputMaybe<Scalars['Int']['input']>;
+  lessThanOrEqualTo?: InputMaybe<Scalars['Int']['input']>;
+  notEqualTo?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** A filter to be used against Int fields. All fields are combined with a logical ‘and.’ */
+export type IntFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<Scalars['Int']['input']>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<Scalars['Int']['input']>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<Scalars['Int']['input']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<Scalars['Int']['input']>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<Scalars['Int']['input']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<Scalars['Int']['input']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<Scalars['Int']['input']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<Scalars['Int']['input']>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
 
 export type Integration = Node & {
@@ -1380,6 +1502,8 @@ export type InvitationPatch = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Creates a single `_DrizzleMigration`. */
+  createDrizzleMigration?: Maybe<CreateDrizzleMigrationPayload>;
   /** Creates a single `Integration`. */
   createIntegration?: Maybe<CreateIntegrationPayload>;
   /** Creates a single `Invitation`. */
@@ -1398,6 +1522,10 @@ export type Mutation = {
   createWorkspace?: Maybe<CreateWorkspacePayload>;
   /** Creates a single `WorkspaceUser`. */
   createWorkspaceUser?: Maybe<CreateWorkspaceUserPayload>;
+  /** Deletes a single `_DrizzleMigration` using a unique key. */
+  deleteDrizzleMigration?: Maybe<DeleteDrizzleMigrationPayload>;
+  /** Deletes a single `_DrizzleMigration` using its globally unique id. */
+  deleteDrizzleMigrationById?: Maybe<DeleteDrizzleMigrationPayload>;
   /** Deletes a single `Integration` using a unique key. */
   deleteIntegration?: Maybe<DeleteIntegrationPayload>;
   /** Deletes a single `Integration` using its globally unique id. */
@@ -1440,6 +1568,10 @@ export type Mutation = {
   deleteWorkspaceUser?: Maybe<DeleteWorkspaceUserPayload>;
   /** Deletes a single `WorkspaceUser` using its globally unique id. */
   deleteWorkspaceUserById?: Maybe<DeleteWorkspaceUserPayload>;
+  /** Updates a single `_DrizzleMigration` using a unique key and a patch. */
+  updateDrizzleMigration?: Maybe<UpdateDrizzleMigrationPayload>;
+  /** Updates a single `_DrizzleMigration` using its globally unique id and a patch. */
+  updateDrizzleMigrationById?: Maybe<UpdateDrizzleMigrationPayload>;
   /** Updates a single `Integration` using a unique key and a patch. */
   updateIntegration?: Maybe<UpdateIntegrationPayload>;
   /** Updates a single `Integration` using its globally unique id and a patch. */
@@ -1482,6 +1614,12 @@ export type Mutation = {
   updateWorkspaceUser?: Maybe<UpdateWorkspaceUserPayload>;
   /** Updates a single `WorkspaceUser` using its globally unique id and a patch. */
   updateWorkspaceUserById?: Maybe<UpdateWorkspaceUserPayload>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDrizzleMigrationArgs = {
+  input: CreateDrizzleMigrationInput;
 };
 
 
@@ -1536,6 +1674,18 @@ export type MutationCreateWorkspaceArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateWorkspaceUserArgs = {
   input: CreateWorkspaceUserInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDrizzleMigrationArgs = {
+  input: DeleteDrizzleMigrationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDrizzleMigrationByIdArgs = {
+  input: DeleteDrizzleMigrationByIdInput;
 };
 
 
@@ -1662,6 +1812,18 @@ export type MutationDeleteWorkspaceUserArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteWorkspaceUserByIdArgs = {
   input: DeleteWorkspaceUserByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDrizzleMigrationArgs = {
+  input: UpdateDrizzleMigrationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDrizzleMigrationByIdArgs = {
+  input: UpdateDrizzleMigrationByIdInput;
 };
 
 
@@ -2149,6 +2311,12 @@ export type PluginPatch = {
 /** The root query type which gives access points into the data universe. */
 export type Query = Node & {
   __typename?: 'Query';
+  /** Get a single `_DrizzleMigration`. */
+  _drizzleMigration?: Maybe<_DrizzleMigration>;
+  /** Reads a single `_DrizzleMigration` using its globally unique `ID`. */
+  _drizzleMigrationById?: Maybe<_DrizzleMigration>;
+  /** Reads and enables pagination through a set of `_DrizzleMigration`. */
+  _drizzleMigrations?: Maybe<_DrizzleMigrationConnection>;
   /** The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`. */
   id: Scalars['ID']['output'];
   /** Get a single `Integration`. */
@@ -2218,6 +2386,31 @@ export type Query = Node & {
   workspaceUsers?: Maybe<WorkspaceUserConnection>;
   /** Reads and enables pagination through a set of `Workspace`. */
   workspaces?: Maybe<WorkspaceConnection>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type Query_DrizzleMigrationArgs = {
+  rowId: Scalars['Int']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type Query_DrizzleMigrationByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type Query_DrizzleMigrationsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<_DrizzleMigrationCondition>;
+  filter?: InputMaybe<_DrizzleMigrationFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<_DrizzleMigrationOrderBy>>;
 };
 
 
@@ -2604,6 +2797,53 @@ export type UuidFilter = {
   notEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<Scalars['UUID']['input']>>;
+};
+
+/** All input for the `updateDrizzleMigrationById` mutation. */
+export type UpdateDrizzleMigrationByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `_DrizzleMigration` to be updated. */
+  id: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `_DrizzleMigration` being updated. */
+  patch: _DrizzleMigrationPatch;
+};
+
+/** All input for the `updateDrizzleMigration` mutation. */
+export type UpdateDrizzleMigrationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** An object where the defined keys will be set on the `_DrizzleMigration` being updated. */
+  patch: _DrizzleMigrationPatch;
+  rowId: Scalars['Int']['input'];
+};
+
+/** The output of our update `_DrizzleMigration` mutation. */
+export type UpdateDrizzleMigrationPayload = {
+  __typename?: 'UpdateDrizzleMigrationPayload';
+  /** The `_DrizzleMigration` that was updated by this mutation. */
+  _drizzleMigration?: Maybe<_DrizzleMigration>;
+  /** An edge for our `_DrizzleMigration`. May be used by Relay 1. */
+  _drizzleMigrationEdge?: Maybe<_DrizzleMigrationEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `_DrizzleMigration` mutation. */
+export type UpdateDrizzleMigrationPayload_DrizzleMigrationEdgeArgs = {
+  orderBy?: Array<_DrizzleMigrationOrderBy>;
 };
 
 /** All input for the `updateIntegrationById` mutation. */
@@ -3423,8 +3663,6 @@ export enum UserOrderBy {
   WorkflowsByCreatedByDistinctCountNameDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_NAME_DESC',
   WorkflowsByCreatedByDistinctCountRowIdAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_ROW_ID_ASC',
   WorkflowsByCreatedByDistinctCountRowIdDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_ROW_ID_DESC',
-  WorkflowsByCreatedByDistinctCountTriggerTypeAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_TRIGGER_TYPE_ASC',
-  WorkflowsByCreatedByDistinctCountTriggerTypeDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_TRIGGER_TYPE_DESC',
   WorkflowsByCreatedByDistinctCountUpdatedAtAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_UPDATED_AT_ASC',
   WorkflowsByCreatedByDistinctCountUpdatedAtDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_UPDATED_AT_DESC',
   WorkflowsByCreatedByDistinctCountWebhookSecretAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_WEBHOOK_SECRET_ASC',
@@ -3518,7 +3756,6 @@ export type Workflow = Node & {
   lastRunStatus?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   rowId: Scalars['UUID']['output'];
-  triggerType: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `User` that is related to this `Workflow`. */
   user?: Maybe<User>;
@@ -3580,8 +3817,6 @@ export type WorkflowCondition = {
   name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
-  /** Checks for equality with the object’s `triggerType` field. */
-  triggerType?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `webhookSecret` field. */
@@ -3625,7 +3860,6 @@ export type WorkflowDistinctCountAggregateFilter = {
   lastRunStatus?: InputMaybe<BigIntFilter>;
   name?: InputMaybe<BigIntFilter>;
   rowId?: InputMaybe<BigIntFilter>;
-  triggerType?: InputMaybe<BigIntFilter>;
   updatedAt?: InputMaybe<BigIntFilter>;
   webhookSecret?: InputMaybe<BigIntFilter>;
   workspaceId?: InputMaybe<BigIntFilter>;
@@ -3653,8 +3887,6 @@ export type WorkflowDistinctCountAggregates = {
   name?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of rowId across the matching connection */
   rowId?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of triggerType across the matching connection */
-  triggerType?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of updatedAt across the matching connection */
   updatedAt?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of webhookSecret across the matching connection */
@@ -3698,8 +3930,6 @@ export type WorkflowFilter = {
   or?: InputMaybe<Array<WorkflowFilter>>;
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<UuidFilter>;
-  /** Filter by the object’s `triggerType` field. */
-  triggerType?: InputMaybe<StringFilter>;
   /** Filter by the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `user` relation. */
@@ -3733,7 +3963,6 @@ export enum WorkflowGroupBy {
   LastRunAtTruncatedToHour = 'LAST_RUN_AT_TRUNCATED_TO_HOUR',
   LastRunStatus = 'LAST_RUN_STATUS',
   Name = 'NAME',
-  TriggerType = 'TRIGGER_TYPE',
   UpdatedAt = 'UPDATED_AT',
   UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
   UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR',
@@ -3822,7 +4051,6 @@ export type WorkflowInput = {
   lastRunStatus?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   rowId?: InputMaybe<Scalars['UUID']['input']>;
-  triggerType?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   webhookSecret?: InputMaybe<Scalars['String']['input']>;
   workspaceId: Scalars['UUID']['input'];
@@ -3851,8 +4079,6 @@ export enum WorkflowOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RowIdAsc = 'ROW_ID_ASC',
   RowIdDesc = 'ROW_ID_DESC',
-  TriggerTypeAsc = 'TRIGGER_TYPE_ASC',
-  TriggerTypeDesc = 'TRIGGER_TYPE_DESC',
   UpdatedAtAsc = 'UPDATED_AT_ASC',
   UpdatedAtDesc = 'UPDATED_AT_DESC',
   WebhookSecretAsc = 'WEBHOOK_SECRET_ASC',
@@ -3863,6 +4089,10 @@ export enum WorkflowOrderBy {
   WorkflowRunsDistinctCountCompletedAtDesc = 'WORKFLOW_RUNS_DISTINCT_COUNT_COMPLETED_AT_DESC',
   WorkflowRunsDistinctCountCreatedAtAsc = 'WORKFLOW_RUNS_DISTINCT_COUNT_CREATED_AT_ASC',
   WorkflowRunsDistinctCountCreatedAtDesc = 'WORKFLOW_RUNS_DISTINCT_COUNT_CREATED_AT_DESC',
+  WorkflowRunsDistinctCountEngineRunIdAsc = 'WORKFLOW_RUNS_DISTINCT_COUNT_ENGINE_RUN_ID_ASC',
+  WorkflowRunsDistinctCountEngineRunIdDesc = 'WORKFLOW_RUNS_DISTINCT_COUNT_ENGINE_RUN_ID_DESC',
+  WorkflowRunsDistinctCountEngineWorkflowIdAsc = 'WORKFLOW_RUNS_DISTINCT_COUNT_ENGINE_WORKFLOW_ID_ASC',
+  WorkflowRunsDistinctCountEngineWorkflowIdDesc = 'WORKFLOW_RUNS_DISTINCT_COUNT_ENGINE_WORKFLOW_ID_DESC',
   WorkflowRunsDistinctCountErrorAsc = 'WORKFLOW_RUNS_DISTINCT_COUNT_ERROR_ASC',
   WorkflowRunsDistinctCountErrorDesc = 'WORKFLOW_RUNS_DISTINCT_COUNT_ERROR_DESC',
   WorkflowRunsDistinctCountInputAsc = 'WORKFLOW_RUNS_DISTINCT_COUNT_INPUT_ASC',
@@ -3875,10 +4105,6 @@ export enum WorkflowOrderBy {
   WorkflowRunsDistinctCountStartedAtDesc = 'WORKFLOW_RUNS_DISTINCT_COUNT_STARTED_AT_DESC',
   WorkflowRunsDistinctCountStatusAsc = 'WORKFLOW_RUNS_DISTINCT_COUNT_STATUS_ASC',
   WorkflowRunsDistinctCountStatusDesc = 'WORKFLOW_RUNS_DISTINCT_COUNT_STATUS_DESC',
-  WorkflowRunsDistinctCountTemporalRunIdAsc = 'WORKFLOW_RUNS_DISTINCT_COUNT_TEMPORAL_RUN_ID_ASC',
-  WorkflowRunsDistinctCountTemporalRunIdDesc = 'WORKFLOW_RUNS_DISTINCT_COUNT_TEMPORAL_RUN_ID_DESC',
-  WorkflowRunsDistinctCountTemporalWorkflowIdAsc = 'WORKFLOW_RUNS_DISTINCT_COUNT_TEMPORAL_WORKFLOW_ID_ASC',
-  WorkflowRunsDistinctCountTemporalWorkflowIdDesc = 'WORKFLOW_RUNS_DISTINCT_COUNT_TEMPORAL_WORKFLOW_ID_DESC',
   WorkflowRunsDistinctCountWorkflowIdAsc = 'WORKFLOW_RUNS_DISTINCT_COUNT_WORKFLOW_ID_ASC',
   WorkflowRunsDistinctCountWorkflowIdDesc = 'WORKFLOW_RUNS_DISTINCT_COUNT_WORKFLOW_ID_DESC',
   WorkspaceIdAsc = 'WORKSPACE_ID_ASC',
@@ -3897,7 +4123,6 @@ export type WorkflowPatch = {
   lastRunStatus?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
-  triggerType?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   webhookSecret?: InputMaybe<Scalars['String']['input']>;
   workspaceId?: InputMaybe<Scalars['UUID']['input']>;
@@ -3907,6 +4132,8 @@ export type WorkflowRun = Node & {
   __typename?: 'WorkflowRun';
   completedAt?: Maybe<Scalars['Datetime']['output']>;
   createdAt?: Maybe<Scalars['Datetime']['output']>;
+  engineRunId: Scalars['String']['output'];
+  engineWorkflowId: Scalars['String']['output'];
   error?: Maybe<Scalars['String']['output']>;
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   id: Scalars['ID']['output'];
@@ -3915,8 +4142,6 @@ export type WorkflowRun = Node & {
   rowId: Scalars['UUID']['output'];
   startedAt?: Maybe<Scalars['Datetime']['output']>;
   status: Scalars['String']['output'];
-  temporalRunId: Scalars['String']['output'];
-  temporalWorkflowId: Scalars['String']['output'];
   /** Reads a single `Workflow` that is related to this `WorkflowRun`. */
   workflow?: Maybe<Workflow>;
   workflowId: Scalars['UUID']['output'];
@@ -3960,6 +4185,10 @@ export type WorkflowRunCondition = {
   completedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `engineRunId` field. */
+  engineRunId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `engineWorkflowId` field. */
+  engineWorkflowId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `error` field. */
   error?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `rowId` field. */
@@ -3968,10 +4197,6 @@ export type WorkflowRunCondition = {
   startedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `status` field. */
   status?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `temporalRunId` field. */
-  temporalRunId?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `temporalWorkflowId` field. */
-  temporalWorkflowId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `workflowId` field. */
   workflowId?: InputMaybe<Scalars['UUID']['input']>;
 };
@@ -4003,14 +4228,14 @@ export type WorkflowRunConnectionGroupedAggregatesArgs = {
 export type WorkflowRunDistinctCountAggregateFilter = {
   completedAt?: InputMaybe<BigIntFilter>;
   createdAt?: InputMaybe<BigIntFilter>;
+  engineRunId?: InputMaybe<BigIntFilter>;
+  engineWorkflowId?: InputMaybe<BigIntFilter>;
   error?: InputMaybe<BigIntFilter>;
   input?: InputMaybe<BigIntFilter>;
   output?: InputMaybe<BigIntFilter>;
   rowId?: InputMaybe<BigIntFilter>;
   startedAt?: InputMaybe<BigIntFilter>;
   status?: InputMaybe<BigIntFilter>;
-  temporalRunId?: InputMaybe<BigIntFilter>;
-  temporalWorkflowId?: InputMaybe<BigIntFilter>;
   workflowId?: InputMaybe<BigIntFilter>;
 };
 
@@ -4020,6 +4245,10 @@ export type WorkflowRunDistinctCountAggregates = {
   completedAt?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of createdAt across the matching connection */
   createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of engineRunId across the matching connection */
+  engineRunId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of engineWorkflowId across the matching connection */
+  engineWorkflowId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of error across the matching connection */
   error?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of input across the matching connection */
@@ -4032,10 +4261,6 @@ export type WorkflowRunDistinctCountAggregates = {
   startedAt?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of status across the matching connection */
   status?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of temporalRunId across the matching connection */
-  temporalRunId?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of temporalWorkflowId across the matching connection */
-  temporalWorkflowId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of workflowId across the matching connection */
   workflowId?: Maybe<Scalars['BigInt']['output']>;
 };
@@ -4057,6 +4282,10 @@ export type WorkflowRunFilter = {
   completedAt?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdAt` field. */
   createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `engineRunId` field. */
+  engineRunId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `engineWorkflowId` field. */
+  engineWorkflowId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `error` field. */
   error?: InputMaybe<StringFilter>;
   /** Negates the expression. */
@@ -4069,10 +4298,6 @@ export type WorkflowRunFilter = {
   startedAt?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `status` field. */
   status?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `temporalRunId` field. */
-  temporalRunId?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `temporalWorkflowId` field. */
-  temporalWorkflowId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `workflow` relation. */
   workflow?: InputMaybe<WorkflowFilter>;
   /** Filter by the object’s `workflowId` field. */
@@ -4091,6 +4316,8 @@ export enum WorkflowRunGroupBy {
   CreatedAt = 'CREATED_AT',
   CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
   CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  EngineRunId = 'ENGINE_RUN_ID',
+  EngineWorkflowId = 'ENGINE_WORKFLOW_ID',
   Error = 'ERROR',
   Input = 'INPUT',
   Output = 'OUTPUT',
@@ -4098,8 +4325,6 @@ export enum WorkflowRunGroupBy {
   StartedAtTruncatedToDay = 'STARTED_AT_TRUNCATED_TO_DAY',
   StartedAtTruncatedToHour = 'STARTED_AT_TRUNCATED_TO_HOUR',
   Status = 'STATUS',
-  TemporalRunId = 'TEMPORAL_RUN_ID',
-  TemporalWorkflowId = 'TEMPORAL_WORKFLOW_ID',
   WorkflowId = 'WORKFLOW_ID'
 }
 
@@ -4176,14 +4401,14 @@ export type WorkflowRunHavingVarianceSampleInput = {
 export type WorkflowRunInput = {
   completedAt?: InputMaybe<Scalars['Datetime']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  engineRunId: Scalars['String']['input'];
+  engineWorkflowId: Scalars['String']['input'];
   error?: InputMaybe<Scalars['String']['input']>;
   input?: InputMaybe<Scalars['JSON']['input']>;
   output?: InputMaybe<Scalars['JSON']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   startedAt?: InputMaybe<Scalars['Datetime']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
-  temporalRunId: Scalars['String']['input'];
-  temporalWorkflowId: Scalars['String']['input'];
   workflowId: Scalars['UUID']['input'];
 };
 
@@ -4193,6 +4418,10 @@ export enum WorkflowRunOrderBy {
   CompletedAtDesc = 'COMPLETED_AT_DESC',
   CreatedAtAsc = 'CREATED_AT_ASC',
   CreatedAtDesc = 'CREATED_AT_DESC',
+  EngineRunIdAsc = 'ENGINE_RUN_ID_ASC',
+  EngineRunIdDesc = 'ENGINE_RUN_ID_DESC',
+  EngineWorkflowIdAsc = 'ENGINE_WORKFLOW_ID_ASC',
+  EngineWorkflowIdDesc = 'ENGINE_WORKFLOW_ID_DESC',
   ErrorAsc = 'ERROR_ASC',
   ErrorDesc = 'ERROR_DESC',
   Natural = 'NATURAL',
@@ -4204,10 +4433,6 @@ export enum WorkflowRunOrderBy {
   StartedAtDesc = 'STARTED_AT_DESC',
   StatusAsc = 'STATUS_ASC',
   StatusDesc = 'STATUS_DESC',
-  TemporalRunIdAsc = 'TEMPORAL_RUN_ID_ASC',
-  TemporalRunIdDesc = 'TEMPORAL_RUN_ID_DESC',
-  TemporalWorkflowIdAsc = 'TEMPORAL_WORKFLOW_ID_ASC',
-  TemporalWorkflowIdDesc = 'TEMPORAL_WORKFLOW_ID_DESC',
   WorkflowIdAsc = 'WORKFLOW_ID_ASC',
   WorkflowIdDesc = 'WORKFLOW_ID_DESC',
   WorkflowStepLogsCountAsc = 'WORKFLOW_STEP_LOGS_COUNT_ASC',
@@ -4242,14 +4467,14 @@ export enum WorkflowRunOrderBy {
 export type WorkflowRunPatch = {
   completedAt?: InputMaybe<Scalars['Datetime']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  engineRunId?: InputMaybe<Scalars['String']['input']>;
+  engineWorkflowId?: InputMaybe<Scalars['String']['input']>;
   error?: InputMaybe<Scalars['String']['input']>;
   input?: InputMaybe<Scalars['JSON']['input']>;
   output?: InputMaybe<Scalars['JSON']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   startedAt?: InputMaybe<Scalars['Datetime']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
-  temporalRunId?: InputMaybe<Scalars['String']['input']>;
-  temporalWorkflowId?: InputMaybe<Scalars['String']['input']>;
   workflowId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
@@ -4991,8 +5216,6 @@ export enum WorkspaceOrderBy {
   WorkflowsDistinctCountNameDesc = 'WORKFLOWS_DISTINCT_COUNT_NAME_DESC',
   WorkflowsDistinctCountRowIdAsc = 'WORKFLOWS_DISTINCT_COUNT_ROW_ID_ASC',
   WorkflowsDistinctCountRowIdDesc = 'WORKFLOWS_DISTINCT_COUNT_ROW_ID_DESC',
-  WorkflowsDistinctCountTriggerTypeAsc = 'WORKFLOWS_DISTINCT_COUNT_TRIGGER_TYPE_ASC',
-  WorkflowsDistinctCountTriggerTypeDesc = 'WORKFLOWS_DISTINCT_COUNT_TRIGGER_TYPE_DESC',
   WorkflowsDistinctCountUpdatedAtAsc = 'WORKFLOWS_DISTINCT_COUNT_UPDATED_AT_ASC',
   WorkflowsDistinctCountUpdatedAtDesc = 'WORKFLOWS_DISTINCT_COUNT_UPDATED_AT_DESC',
   WorkflowsDistinctCountWebhookSecretAsc = 'WORKFLOWS_DISTINCT_COUNT_WEBHOOK_SECRET_ASC',
@@ -5348,6 +5571,267 @@ export type WorkspaceUserPatch = {
   workspaceId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
+export type _DrizzleMigration = Node & {
+  __typename?: '_DrizzleMigration';
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  hash: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  rowId: Scalars['Int']['output'];
+};
+
+export type _DrizzleMigrationAggregates = {
+  __typename?: '_DrizzleMigrationAggregates';
+  /** Mean average aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  average?: Maybe<_DrizzleMigrationAverageAggregates>;
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<_DrizzleMigrationDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** Maximum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  max?: Maybe<_DrizzleMigrationMaxAggregates>;
+  /** Minimum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  min?: Maybe<_DrizzleMigrationMinAggregates>;
+  /** Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevPopulation?: Maybe<_DrizzleMigrationStddevPopulationAggregates>;
+  /** Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevSample?: Maybe<_DrizzleMigrationStddevSampleAggregates>;
+  /** Sum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  sum?: Maybe<_DrizzleMigrationSumAggregates>;
+  /** Population variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  variancePopulation?: Maybe<_DrizzleMigrationVariancePopulationAggregates>;
+  /** Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  varianceSample?: Maybe<_DrizzleMigrationVarianceSampleAggregates>;
+};
+
+export type _DrizzleMigrationAverageAggregates = {
+  __typename?: '_DrizzleMigrationAverageAggregates';
+  /** Mean average of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigFloat']['output']>;
+  /** Mean average of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+/**
+ * A condition to be used against `_DrizzleMigration` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type _DrizzleMigrationCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['BigInt']['input']>;
+  /** Checks for equality with the object’s `hash` field. */
+  hash?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** A connection to a list of `_DrizzleMigration` values. */
+export type _DrizzleMigrationConnection = {
+  __typename?: '_DrizzleMigrationConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<_DrizzleMigrationAggregates>;
+  /** A list of edges which contains the `_DrizzleMigration` and cursor to aid in pagination. */
+  edges: Array<_DrizzleMigrationEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<_DrizzleMigrationAggregates>>;
+  /** A list of `_DrizzleMigration` objects. */
+  nodes: Array<_DrizzleMigration>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `_DrizzleMigration` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `_DrizzleMigration` values. */
+export type _DrizzleMigrationConnectionGroupedAggregatesArgs = {
+  groupBy: Array<_DrizzleMigrationGroupBy>;
+  having?: InputMaybe<_DrizzleMigrationHavingInput>;
+};
+
+export type _DrizzleMigrationDistinctCountAggregates = {
+  __typename?: '_DrizzleMigrationDistinctCountAggregates';
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of hash across the matching connection */
+  hash?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `_DrizzleMigration` edge in the connection. */
+export type _DrizzleMigrationEdge = {
+  __typename?: '_DrizzleMigrationEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `_DrizzleMigration` at the end of the edge. */
+  node: _DrizzleMigration;
+};
+
+/** A filter to be used against `_DrizzleMigration` object types. All fields are combined with a logical ‘and.’ */
+export type _DrizzleMigrationFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<_DrizzleMigrationFilter>>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<BigIntFilter>;
+  /** Filter by the object’s `hash` field. */
+  hash?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<_DrizzleMigrationFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<_DrizzleMigrationFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<IntFilter>;
+};
+
+/** Grouping methods for `_DrizzleMigration` for usage during aggregation. */
+export enum _DrizzleMigrationGroupBy {
+  CreatedAt = 'CREATED_AT',
+  Hash = 'HASH'
+}
+
+export type _DrizzleMigrationHavingAverageInput = {
+  createdAt?: InputMaybe<HavingBigintFilter>;
+  rowId?: InputMaybe<HavingIntFilter>;
+};
+
+export type _DrizzleMigrationHavingDistinctCountInput = {
+  createdAt?: InputMaybe<HavingBigintFilter>;
+  rowId?: InputMaybe<HavingIntFilter>;
+};
+
+/** Conditions for `_DrizzleMigration` aggregates. */
+export type _DrizzleMigrationHavingInput = {
+  AND?: InputMaybe<Array<_DrizzleMigrationHavingInput>>;
+  OR?: InputMaybe<Array<_DrizzleMigrationHavingInput>>;
+  average?: InputMaybe<_DrizzleMigrationHavingAverageInput>;
+  distinctCount?: InputMaybe<_DrizzleMigrationHavingDistinctCountInput>;
+  max?: InputMaybe<_DrizzleMigrationHavingMaxInput>;
+  min?: InputMaybe<_DrizzleMigrationHavingMinInput>;
+  stddevPopulation?: InputMaybe<_DrizzleMigrationHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<_DrizzleMigrationHavingStddevSampleInput>;
+  sum?: InputMaybe<_DrizzleMigrationHavingSumInput>;
+  variancePopulation?: InputMaybe<_DrizzleMigrationHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<_DrizzleMigrationHavingVarianceSampleInput>;
+};
+
+export type _DrizzleMigrationHavingMaxInput = {
+  createdAt?: InputMaybe<HavingBigintFilter>;
+  rowId?: InputMaybe<HavingIntFilter>;
+};
+
+export type _DrizzleMigrationHavingMinInput = {
+  createdAt?: InputMaybe<HavingBigintFilter>;
+  rowId?: InputMaybe<HavingIntFilter>;
+};
+
+export type _DrizzleMigrationHavingStddevPopulationInput = {
+  createdAt?: InputMaybe<HavingBigintFilter>;
+  rowId?: InputMaybe<HavingIntFilter>;
+};
+
+export type _DrizzleMigrationHavingStddevSampleInput = {
+  createdAt?: InputMaybe<HavingBigintFilter>;
+  rowId?: InputMaybe<HavingIntFilter>;
+};
+
+export type _DrizzleMigrationHavingSumInput = {
+  createdAt?: InputMaybe<HavingBigintFilter>;
+  rowId?: InputMaybe<HavingIntFilter>;
+};
+
+export type _DrizzleMigrationHavingVariancePopulationInput = {
+  createdAt?: InputMaybe<HavingBigintFilter>;
+  rowId?: InputMaybe<HavingIntFilter>;
+};
+
+export type _DrizzleMigrationHavingVarianceSampleInput = {
+  createdAt?: InputMaybe<HavingBigintFilter>;
+  rowId?: InputMaybe<HavingIntFilter>;
+};
+
+/** An input for mutations affecting `_DrizzleMigration` */
+export type _DrizzleMigrationInput = {
+  createdAt?: InputMaybe<Scalars['BigInt']['input']>;
+  hash: Scalars['String']['input'];
+  rowId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type _DrizzleMigrationMaxAggregates = {
+  __typename?: '_DrizzleMigrationMaxAggregates';
+  /** Maximum of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Maximum of rowId across the matching connection */
+  rowId?: Maybe<Scalars['Int']['output']>;
+};
+
+export type _DrizzleMigrationMinAggregates = {
+  __typename?: '_DrizzleMigrationMinAggregates';
+  /** Minimum of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Minimum of rowId across the matching connection */
+  rowId?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Methods to use when ordering `_DrizzleMigration`. */
+export enum _DrizzleMigrationOrderBy {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  HashAsc = 'HASH_ASC',
+  HashDesc = 'HASH_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+/** Represents an update to a `_DrizzleMigration`. Fields that are set will be updated. */
+export type _DrizzleMigrationPatch = {
+  createdAt?: InputMaybe<Scalars['BigInt']['input']>;
+  hash?: InputMaybe<Scalars['String']['input']>;
+  rowId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type _DrizzleMigrationStddevPopulationAggregates = {
+  __typename?: '_DrizzleMigrationStddevPopulationAggregates';
+  /** Population standard deviation of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigFloat']['output']>;
+  /** Population standard deviation of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type _DrizzleMigrationStddevSampleAggregates = {
+  __typename?: '_DrizzleMigrationStddevSampleAggregates';
+  /** Sample standard deviation of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigFloat']['output']>;
+  /** Sample standard deviation of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type _DrizzleMigrationSumAggregates = {
+  __typename?: '_DrizzleMigrationSumAggregates';
+  /** Sum of createdAt across the matching connection */
+  createdAt: Scalars['BigFloat']['output'];
+  /** Sum of rowId across the matching connection */
+  rowId: Scalars['BigInt']['output'];
+};
+
+export type _DrizzleMigrationVariancePopulationAggregates = {
+  __typename?: '_DrizzleMigrationVariancePopulationAggregates';
+  /** Population variance of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigFloat']['output']>;
+  /** Population variance of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type _DrizzleMigrationVarianceSampleAggregates = {
+  __typename?: '_DrizzleMigrationVarianceSampleAggregates';
+  /** Sample variance of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigFloat']['output']>;
+  /** Sample variance of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigFloat']['output']>;
+};
+
 export type CreateInvitationMutationVariables = Exact<{
   input: CreateInvitationInput;
 }>;
@@ -5367,7 +5851,7 @@ export type CreateWorkflowMutationVariables = Exact<{
 }>;
 
 
-export type CreateWorkflowMutation = { __typename?: 'Mutation', createWorkflow?: { __typename?: 'CreateWorkflowPayload', workflow?: { __typename?: 'Workflow', rowId: string, workspaceId: string, name: string, description?: string | null, definition: Record<string, unknown>, triggerType: string, cronExpression?: string | null, isActive: boolean, createdAt?: Date | null } | null } | null };
+export type CreateWorkflowMutation = { __typename?: 'Mutation', createWorkflow?: { __typename?: 'CreateWorkflowPayload', workflow?: { __typename?: 'Workflow', rowId: string, workspaceId: string, name: string, description?: string | null, definition: Record<string, unknown>, cronExpression?: string | null, isActive: boolean, createdAt?: Date | null } | null } | null };
 
 export type DeleteWorkflowMutationVariables = Exact<{
   input: DeleteWorkflowInput;
@@ -5381,7 +5865,7 @@ export type UpdateWorkflowMutationVariables = Exact<{
 }>;
 
 
-export type UpdateWorkflowMutation = { __typename?: 'Mutation', updateWorkflow?: { __typename?: 'UpdateWorkflowPayload', workflow?: { __typename?: 'Workflow', rowId: string, workspaceId: string, name: string, description?: string | null, definition: Record<string, unknown>, triggerType: string, cronExpression?: string | null, isActive: boolean, updatedAt?: Date | null } | null } | null };
+export type UpdateWorkflowMutation = { __typename?: 'Mutation', updateWorkflow?: { __typename?: 'UpdateWorkflowPayload', workflow?: { __typename?: 'Workflow', rowId: string, workspaceId: string, name: string, description?: string | null, definition: Record<string, unknown>, cronExpression?: string | null, isActive: boolean, updatedAt?: Date | null } | null } | null };
 
 export type CreateWorkspaceUserMutationVariables = Exact<{
   input: CreateWorkspaceUserInput;
@@ -5461,7 +5945,7 @@ export type WorkflowQueryVariables = Exact<{
 }>;
 
 
-export type WorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', rowId: string, workspaceId: string, name: string, description?: string | null, definition: Record<string, unknown>, triggerType: string, cronExpression?: string | null, webhookSecret?: string | null, isActive: boolean, createdAt?: Date | null, updatedAt?: Date | null, workspace?: { __typename?: 'Workspace', rowId: string, name: string, slug: string, tier: Tier } | null, workflowRuns: { __typename?: 'WorkflowRunConnection', totalCount: number, nodes: Array<{ __typename?: 'WorkflowRun', rowId: string, temporalWorkflowId: string, status: string, startedAt?: Date | null, completedAt?: Date | null, error?: string | null, createdAt?: Date | null, workflowStepLogs: { __typename?: 'WorkflowStepLogConnection', nodes: Array<{ __typename?: 'WorkflowStepLog', rowId: string, stepId: string, stepType: string, status: string, input?: Record<string, unknown> | null, output?: Record<string, unknown> | null, error?: string | null, startedAt?: Date | null, completedAt?: Date | null }> } }> } } | null };
+export type WorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', rowId: string, workspaceId: string, name: string, description?: string | null, definition: Record<string, unknown>, cronExpression?: string | null, webhookSecret?: string | null, isActive: boolean, createdAt?: Date | null, updatedAt?: Date | null, workspace?: { __typename?: 'Workspace', rowId: string, name: string, slug: string, tier: Tier } | null, workflowRuns: { __typename?: 'WorkflowRunConnection', totalCount: number, nodes: Array<{ __typename?: 'WorkflowRun', rowId: string, engineWorkflowId: string, status: string, startedAt?: Date | null, completedAt?: Date | null, error?: string | null, createdAt?: Date | null, workflowStepLogs: { __typename?: 'WorkflowStepLogConnection', nodes: Array<{ __typename?: 'WorkflowStepLog', rowId: string, stepId: string, stepType: string, status: string, input?: Record<string, unknown> | null, output?: Record<string, unknown> | null, error?: string | null, startedAt?: Date | null, completedAt?: Date | null }> } }> } } | null };
 
 export type WorkflowsQueryVariables = Exact<{
   workspaceId: Scalars['UUID']['input'];
@@ -5469,7 +5953,7 @@ export type WorkflowsQueryVariables = Exact<{
 }>;
 
 
-export type WorkflowsQuery = { __typename?: 'Query', workflows?: { __typename?: 'WorkflowConnection', totalCount: number, nodes: Array<{ __typename?: 'Workflow', rowId: string, name: string, description?: string | null, triggerType: string, cronExpression?: string | null, isActive: boolean, createdAt?: Date | null, updatedAt?: Date | null, workflowRuns: { __typename?: 'WorkflowRunConnection', nodes: Array<{ __typename?: 'WorkflowRun', rowId: string, status: string, createdAt?: Date | null }> } }> } | null };
+export type WorkflowsQuery = { __typename?: 'Query', workflows?: { __typename?: 'WorkflowConnection', totalCount: number, nodes: Array<{ __typename?: 'Workflow', rowId: string, name: string, description?: string | null, cronExpression?: string | null, isActive: boolean, createdAt?: Date | null, updatedAt?: Date | null, workflowRuns: { __typename?: 'WorkflowRunConnection', nodes: Array<{ __typename?: 'WorkflowRun', rowId: string, status: string, createdAt?: Date | null }> } }> } | null };
 
 export type WorkspaceUsersQueryVariables = Exact<{
   workspaceId: Scalars['UUID']['input'];
@@ -5486,7 +5970,7 @@ export type WorkspaceQueryVariables = Exact<{
 }>;
 
 
-export type WorkspaceQuery = { __typename?: 'Query', workspace?: { __typename?: 'Workspace', rowId: string, name: string, slug: string, tier: Tier, subscriptionId?: string | null, workspaceUsers: { __typename?: 'WorkspaceUserConnection', nodes: Array<{ __typename?: 'WorkspaceUser', role: WorkspaceRole }> }, workflows: { __typename?: 'WorkflowConnection', totalCount: number, nodes: Array<{ __typename?: 'Workflow', rowId: string, name: string, triggerType: string, isActive: boolean, createdAt?: Date | null, updatedAt?: Date | null }> }, integrations: { __typename?: 'IntegrationConnection', totalCount: number, nodes: Array<{ __typename?: 'Integration', rowId: string, name: string, type: string, isEnabled: boolean }> }, plugins: { __typename?: 'PluginConnection', totalCount: number, nodes: Array<{ __typename?: 'Plugin', rowId: string, name: string, version: string, isEnabled: boolean }> } } | null };
+export type WorkspaceQuery = { __typename?: 'Query', workspace?: { __typename?: 'Workspace', rowId: string, name: string, slug: string, tier: Tier, subscriptionId?: string | null, workspaceUsers: { __typename?: 'WorkspaceUserConnection', nodes: Array<{ __typename?: 'WorkspaceUser', role: WorkspaceRole }> }, workflows: { __typename?: 'WorkflowConnection', totalCount: number, nodes: Array<{ __typename?: 'Workflow', rowId: string, name: string, isActive: boolean, createdAt?: Date | null, updatedAt?: Date | null }> }, integrations: { __typename?: 'IntegrationConnection', totalCount: number, nodes: Array<{ __typename?: 'Integration', rowId: string, name: string, type: string, isEnabled: boolean }> }, plugins: { __typename?: 'PluginConnection', totalCount: number, nodes: Array<{ __typename?: 'Plugin', rowId: string, name: string, version: string, isEnabled: boolean }> } } | null };
 
 export type WorkspaceBySlugQueryVariables = Exact<{
   slug: Scalars['String']['input'];
@@ -5494,7 +5978,7 @@ export type WorkspaceBySlugQueryVariables = Exact<{
 }>;
 
 
-export type WorkspaceBySlugQuery = { __typename?: 'Query', workspaceBySlug?: { __typename?: 'Workspace', rowId: string, name: string, slug: string, tier: Tier, subscriptionId?: string | null, workspaceUsers: { __typename?: 'WorkspaceUserConnection', nodes: Array<{ __typename?: 'WorkspaceUser', role: WorkspaceRole }> }, workflows: { __typename?: 'WorkflowConnection', totalCount: number, nodes: Array<{ __typename?: 'Workflow', rowId: string, name: string, triggerType: string, isActive: boolean, createdAt?: Date | null, updatedAt?: Date | null }> }, integrations: { __typename?: 'IntegrationConnection', totalCount: number, nodes: Array<{ __typename?: 'Integration', rowId: string, name: string, type: string, isEnabled: boolean }> }, plugins: { __typename?: 'PluginConnection', totalCount: number, nodes: Array<{ __typename?: 'Plugin', rowId: string, name: string, version: string, isEnabled: boolean }> } } | null };
+export type WorkspaceBySlugQuery = { __typename?: 'Query', workspaceBySlug?: { __typename?: 'Workspace', rowId: string, name: string, slug: string, tier: Tier, subscriptionId?: string | null, workspaceUsers: { __typename?: 'WorkspaceUserConnection', nodes: Array<{ __typename?: 'WorkspaceUser', role: WorkspaceRole }> }, workflows: { __typename?: 'WorkflowConnection', totalCount: number, nodes: Array<{ __typename?: 'Workflow', rowId: string, name: string, isActive: boolean, createdAt?: Date | null, updatedAt?: Date | null }> }, integrations: { __typename?: 'IntegrationConnection', totalCount: number, nodes: Array<{ __typename?: 'Integration', rowId: string, name: string, type: string, isEnabled: boolean }> }, plugins: { __typename?: 'PluginConnection', totalCount: number, nodes: Array<{ __typename?: 'Plugin', rowId: string, name: string, version: string, isEnabled: boolean }> } } | null };
 
 export type WorkspacesQueryVariables = Exact<{
   userId: Scalars['UUID']['input'];
@@ -5532,7 +6016,6 @@ export const CreateWorkflowDocument = gql`
       name
       description
       definition
-      triggerType
       cronExpression
       isActive
       createdAt
@@ -5558,7 +6041,6 @@ export const UpdateWorkflowDocument = gql`
       name
       description
       definition
-      triggerType
       cronExpression
       isActive
       updatedAt
@@ -5704,7 +6186,6 @@ export const WorkflowDocument = gql`
     name
     description
     definition
-    triggerType
     cronExpression
     webhookSecret
     isActive
@@ -5719,7 +6200,7 @@ export const WorkflowDocument = gql`
     workflowRuns(orderBy: CREATED_AT_DESC, first: 10) {
       nodes {
         rowId
-        temporalWorkflowId
+        engineWorkflowId
         status
         startedAt
         completedAt
@@ -5755,7 +6236,6 @@ export const WorkflowsDocument = gql`
       rowId
       name
       description
-      triggerType
       cronExpression
       isActive
       createdAt
@@ -5810,7 +6290,6 @@ export const WorkspaceDocument = gql`
       nodes {
         rowId
         name
-        triggerType
         isActive
         createdAt
         updatedAt
@@ -5855,7 +6334,6 @@ export const WorkspaceBySlugDocument = gql`
       nodes {
         rowId
         name
-        triggerType
         isActive
         createdAt
         updatedAt

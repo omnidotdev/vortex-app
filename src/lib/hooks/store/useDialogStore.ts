@@ -4,11 +4,6 @@ import { useStoreWithEqualityFn } from "zustand/traditional";
 
 export enum DialogType {
   CreateWorkspace = "create_workspace",
-  DeleteWorkspace = "delete_workspace",
-  CreateWorkflow = "create_workflow",
-  DeleteWorkflow = "delete_workflow",
-  InviteTeamMember = "invite_team_member",
-  DeleteTeamMember = "delete_team_member",
 }
 
 interface DialogState {

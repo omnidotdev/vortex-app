@@ -6,7 +6,6 @@ mutation UpdateWorkflow($input: UpdateWorkflowInput!) {
       name
       description
       definition
-      triggerType
       cronExpression
       isActive
       updatedAt

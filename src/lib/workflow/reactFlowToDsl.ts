@@ -286,12 +286,3 @@ export function reactFlowToDsl(
     edges: dslEdges,
   };
 }
-
-/**
- * Serialize workflow definition to JSON string
- */
-export function serializeWorkflowDefinition(
-  definition: WorkflowDefinition,
-): string {
-  return JSON.stringify(definition, null, 2);
-}

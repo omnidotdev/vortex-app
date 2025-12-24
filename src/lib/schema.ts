@@ -11,6 +11,7 @@ export const NodeTypes = {
   GATE: "gateNode",
   PARALLEL: "parallelNode",
   PLUGIN: "pluginNode",
+  MCP: "mcpNode",
 } as const;
 
 // Base node schema

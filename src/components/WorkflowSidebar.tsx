@@ -4,6 +4,7 @@ import {
   AlertTriangle,
   Ban,
   Bell,
+  Cable,
   CheckCircle,
   ChevronDown,
   ChevronRight,
@@ -47,51 +48,76 @@ const officialPlugins = [
     category: "Triggers",
     items: [
       {
-        iconName: "Mail",
-        label: "Email Received",
-        description: "Triggered when an email is received",
-      },
-      {
         iconName: "Webhook",
         label: "Webhook",
         description: "Triggered by HTTP webhook",
+        triggerType: "webhook",
       },
       {
         iconName: "Clock",
         label: "Schedule",
-        description: "Triggered on a schedule",
+        description: "Triggered on a schedule (cron)",
+        triggerType: "cron",
       },
       {
         iconName: "MousePointer",
-        label: "Click",
+        label: "Manual",
         description: "Triggered by a manual click",
+        triggerType: "manual",
       },
     ],
   },
   {
     type: NodeTypes.ACTION,
-    category: "Actions",
+    category: "HTTP",
     items: [
       {
-        iconName: "AlertTriangle",
-        label: "Browser Alert",
-        description: "Show a browser alert for debugging",
+        iconName: "Globe",
+        label: "HTTP Request",
+        description: "Make any HTTP request",
+        pluginId: "builtin:http",
+        operation: "request",
       },
-      { iconName: "Send", label: "Send Email", description: "Send an email" },
       {
         iconName: "Globe",
-        label: "HTTP Call",
-        description: "Make an HTTP request to an API",
+        label: "HTTP GET",
+        description: "Fetch data from an API",
+        pluginId: "builtin:http",
+        operation: "get",
       },
       {
-        iconName: "Database",
-        label: "Update Database",
-        description: "Update database records",
+        iconName: "Send",
+        label: "HTTP POST",
+        description: "Send data to an API",
+        pluginId: "builtin:http",
+        operation: "post",
+      },
+    ],
+  },
+  {
+    type: NodeTypes.ACTION,
+    category: "Transform",
+    items: [
+      {
+        iconName: "FileJson",
+        label: "JSONPath Extract",
+        description: "Extract data using JSONPath",
+        pluginId: "builtin:transform",
+        operation: "jsonPath",
       },
       {
         iconName: "FileJson",
-        label: "Transform Data",
-        description: "Transform data format",
+        label: "Template",
+        description: "Render template with variables",
+        pluginId: "builtin:transform",
+        operation: "template",
+      },
+      {
+        iconName: "FileJson",
+        label: "Map Data",
+        description: "Map source to target structure",
+        pluginId: "builtin:transform",
+        operation: "map",
       },
     ],
   },
@@ -123,12 +149,24 @@ const officialPlugins = [
       },
     ],
   },
+  {
+    type: NodeTypes.MCP,
+    category: "MCP Integrations",
+    items: [
+      {
+        iconName: "Cable",
+        label: "MCP Tool",
+        description: "Call any MCP server tool",
+      },
+    ],
+  },
 ];
 
 const IconMap: Record<string, React.ElementType> = {
   Mail,
   Send,
   Bell,
+  Cable,
   Clock,
   Database,
   FileJson,
@@ -238,7 +276,11 @@ function WorkflowSidebar({ onAddNode, currentWorkflow }: WorkflowSidebarProps) {
           ? NodeTypes.DELAY
           : nodeData.data.label === "Loop"
             ? NodeTypes.LOOP
-            : nodeData.type;
+            : nodeData.data.label === "Parallel"
+              ? NodeTypes.PARALLEL
+              : nodeData.data.label === "Gate"
+                ? NodeTypes.GATE
+                : nodeData.type;
 
     const config = (() => {
       if (type === NodeTypes.SWITCH) {
@@ -250,18 +292,30 @@ function WorkflowSidebar({ onAddNode, currentWorkflow }: WorkflowSidebarProps) {
       if (type === NodeTypes.LOOP) {
         return { type: "count", count: 5 };
       }
+      if (type === NodeTypes.TRIGGER) {
+        return { triggerType: nodeData.data.triggerType || "manual" };
+      }
       return {};
     })();
+
+    // Build node data with plugin info for action nodes
+    const enrichedData = {
+      ...nodeData.data,
+      config,
+    };
+
+    // Add plugin info if present (for action nodes)
+    if (nodeData.data.pluginId) {
+      enrichedData.pluginId = nodeData.data.pluginId;
+      enrichedData.operation = nodeData.data.operation;
+    }
 
     event.dataTransfer.setData(
       "application/reactflow",
       JSON.stringify({
         ...nodeData,
         type,
-        data: {
-          ...nodeData.data,
-          config,
-        },
+        data: enrichedData,
       }),
     );
     event.dataTransfer.effectAllowed = "move";
