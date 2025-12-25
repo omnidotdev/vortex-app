@@ -21,9 +21,12 @@ import "reactflow/dist/style.css";
 
 import DebugPane from "@/components/DebugPane";
 import { ActionNode } from "@/components/nodes/ActionNode";
+import { CodeNode } from "@/components/nodes/CodeNode";
 import { ConditionNode } from "@/components/nodes/ConditionNode";
+import { DatabaseNode } from "@/components/nodes/DatabaseNode";
 import { DelayNode } from "@/components/nodes/DelayNode";
 import { GateNode } from "@/components/nodes/GateNode";
+import { LLMNode } from "@/components/nodes/LLMNode";
 import { LoopNode } from "@/components/nodes/LoopNode";
 import { MCPNode } from "@/components/nodes/MCPNode";
 import { ParallelNode } from "@/components/nodes/ParallelNode";
@@ -69,6 +72,9 @@ const nodeTypes = {
   parallelNode: ParallelNode,
   pluginNode: PluginNode,
   mcpNode: MCPNode,
+  llmNode: LLMNode,
+  codeNode: CodeNode,
+  databaseNode: DatabaseNode,
 };
 
 // Map step types to custom node types
@@ -83,6 +89,9 @@ const nodeTypeMap: Record<string, string> = {
   parallel: "parallelNode",
   plugin: "pluginNode",
   mcp: "mcpNode",
+  llm: "llmNode",
+  code: "codeNode",
+  database: "databaseNode",
 };
 
 let nodeIdCounter = 0;

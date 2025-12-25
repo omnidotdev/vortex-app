@@ -104,6 +104,30 @@ export const nodeThemes = {
     accent: "text-rose-600 dark:text-rose-400",
     handleColor: "!bg-rose-500",
   },
+  llm: {
+    border: "border-pink-200 dark:border-pink-800",
+    bg: "bg-pink-50 dark:bg-pink-950",
+    iconBg: "bg-pink-100 dark:bg-pink-900",
+    iconText: "text-pink-600 dark:text-pink-400",
+    accent: "text-pink-600 dark:text-pink-400",
+    handleColor: "!bg-pink-500",
+  },
+  code: {
+    border: "border-slate-200 dark:border-slate-800",
+    bg: "bg-slate-50 dark:bg-slate-950",
+    iconBg: "bg-slate-100 dark:bg-slate-900",
+    iconText: "text-slate-600 dark:text-slate-400",
+    accent: "text-slate-600 dark:text-slate-400",
+    handleColor: "!bg-slate-500",
+  },
+  database: {
+    border: "border-teal-200 dark:border-teal-800",
+    bg: "bg-teal-50 dark:bg-teal-950",
+    iconBg: "bg-teal-100 dark:bg-teal-900",
+    iconText: "text-teal-600 dark:text-teal-400",
+    accent: "text-teal-600 dark:text-teal-400",
+    handleColor: "!bg-teal-500",
+  },
 } as const;
 
 export type NodeThemeKey = keyof typeof nodeThemes;
