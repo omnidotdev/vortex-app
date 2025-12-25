@@ -93,9 +93,7 @@ export const DatabaseNode = memo(
           <NodeInfoRow
             label="Output"
             value={
-              <code className="text-xs">
-                {"{{" + data.outputVariable + "}}"}
-              </code>
+              <code className="text-xs">{`{{${data.outputVariable}}}`}</code>
             }
           />
         )}
