@@ -5,7 +5,6 @@ import { memo } from "react";
 import { Position } from "reactflow";
 
 import { Badge } from "@/components/ui/badge";
-
 import { BaseNode, NodeCodeBlock, NodeInfoRow } from "./BaseNode";
 
 interface LLMNodeData {
@@ -63,17 +62,15 @@ export const LLMNode = memo(
         {data.serverName && (
           <NodeInfoRow label="Provider" value={data.serverName} />
         )}
-        {data.model && (
-          <NodeCodeBlock>{data.model}</NodeCodeBlock>
-        )}
+        {data.model && <NodeCodeBlock>{data.model}</NodeCodeBlock>}
         {data.systemPrompt && (
-          <div className="text-xs text-muted-foreground">
+          <div className="text-muted-foreground text-xs">
             <span className="font-medium">System: </span>
             {truncateText(data.systemPrompt, 40)}
           </div>
         )}
         {data.userPrompt && (
-          <div className="text-xs text-muted-foreground">
+          <div className="text-muted-foreground text-xs">
             <span className="font-medium">Prompt: </span>
             {truncateText(data.userPrompt, 40)}
           </div>
@@ -87,7 +84,11 @@ export const LLMNode = memo(
         {data.outputVariable && (
           <NodeInfoRow
             label="Output"
-            value={<code className="text-xs">{"{{" + data.outputVariable + "}}"}</code>}
+            value={
+              <code className="text-xs">
+                {"{{" + data.outputVariable + "}}"}
+              </code>
+            }
           />
         )}
       </BaseNode>

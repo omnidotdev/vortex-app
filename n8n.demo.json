@@ -1,274 +1,248 @@
 {
-"name": "Chat to Web Receipt Itemizer",
-"nodes": [
-{
-"parameters": {
-"public": true,
-"initialMessages": "Hi there! 👋\nPlease upload an image of your receipt!",
-"options": {
-"allowFileUploads": true
-}
-},
-"type": "@n8n/n8n-nodes-langchain.chatTrigger",
-"typeVersion": 1.3,
-"position": [
-0,
-0
-],
-"id": "8d5e1ef2-35bc-47c5-9476-5f93bf0e66ac",
-"name": "When chat message received",
-"webhookId": "94ab21c7-b967-4f9b-b395-0e14c2b37f10"
-},
-{
-"parameters": {
-"promptType": "define",
-"text": "You are an AI assistant that extracts structured data from receipts for entry into a Google Sheets database. The receipts can come from any vendor or buiness type (e.g., restaurants, grocery stores, etc.).\n\n## TASK\nExtract the following fields from the receipt text input. Return the output as a valid JSON object inside a markdown code block.\n\n## OUTPUT FORMAT\n```json\n{\n    \"purchase_date\": \"YYYY-MM-DD\",\n    \"vendor\": \"string\",\n    \"items\": { // store all found items in here\n        \"item_name\": number // number will be the total cost of the time, if there are multiple items of the same name then add the same name items together and combine the total cost.\n    }\n}\n```\n\n## RULES \nIf any value is not available or clearly shown, return null for that field.\n\nAlways format the JSON inside a single code block.\n\nDates must be ISO format (YYYY-MM-DD).\n\nDo not include any explanations or additional text outside the code block.",
-"hasOutputParser": true,
-"options": {}
-},
-"type": "@n8n/n8n-nodes-langchain.agent",
-"typeVersion": 2.2,
-"position": [
-304,
-0
-],
-"id": "068acd86-912c-41a0-95f4-d10dba1e51b6",
-"name": "AI Agent"
-},
-{
-"parameters": {
-"model": "google/gemini-2.5-flash-preview-09-2025",
-"options": {}
-},
-"type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
-"typeVersion": 1,
-"position": [
-304,
-192
-],
-"id": "4eb5c826-7196-4128-9d8f-a1417690f9bb",
-"name": "OpenRouter Chat Model",
-"credentials": {
-"openRouterApi": {
-"id": "EJN0VOs5CCL2UCOe",
-"name": "OpenRouter account"
-}
-}
-},
-{
-"parameters": {
-"jsCode": "/*\n===================================================================\n N8N Code Node Snippet: Parse JSON from Markdown\n===================================================================\nINSTRUCTIONS:\n1. Set your n8n \"Code\" node's \"Mode\" to \"Run Once for All Items\".\n2. This code assumes the incoming item has a field named 'output'\n   that contains the string with the markdown code block.\n   Example input string: \"\n3. The node will output the parsed JSON object.\n\n*/\n\n// This array will hold the output items from this node.\nconst outputItems = [];\n\n// Loop through each item passed to this node.\n// $input.all() gets all incoming items.\nfor (const item of $input.all()) {\n  // Get the string from the 'output' field of the incoming JSON.\n  const rawString = item.json.output;\n\n  // Check if the input string is valid.\n  if (typeof rawString !== 'string') {\n    // If the input isn't a string, create an error entry and skip to the next item.\n    outputItems.push({\n      json: {\n        error: \"The 'output' field is not a string.\",\n        originalItem: item.json\n      }\n    });\n    continue;\n  }\n\n  // Use a regular expression to remove the markdown code block fences.\n  // This removes \"```json\" from the beginning and \"```\" from the end.\n  // The \\s* parts handle any whitespace like newlines around the fences.\n  const jsonString = rawString\n    .replace(/^```json\\s*/, '')\n    .replace(/\\s*```$/, '');\n\n  try {\n    // Parse the cleaned string into a JavaScript object.\n    const parsedJson = JSON.parse(jsonString);\n\n    // Add the successfully parsed object to our output.\n    // Each object pushed here will become a separate output item from this node.\n    outputItems.push({\n      json: parsedJson\n    });\n\n  } catch (error) {\n    // If JSON.parse fails, create an error entry with details.\n    outputItems.push({\n      json: {\n        error: \"Failed to parse the JSON string after cleaning.\",\n        details: error.message,\n        processedString: jsonString\n      }\n    });\n  }\n}\n\n// Return the array of processed items.\nreturn outputItems;\n"
-},
-"type": "n8n-nodes-base.code",
-"typeVersion": 2,
-"position": [
-656,
-0
-],
-"id": "8321b073-c140-4b29-9958-55798c6e8cee",
-"name": "Convert to JSON"
-},
-{
-"parameters": {
-"jsCode": "// Get the single incoming item from the previous node.\nconst inputData = items[0].json;\n\n// Extract the common information from the top level.\nconst purchaseDate = inputData.purchase_date;\nconst vendor = inputData.vendor;\n\n// Get the nested object that contains the line items.\nconst itemizedList = inputData.items;\n\n// Create a new array to hold our structured row items.\nconst newItems = [];\n\n// Loop directly through each key (the item name) in the 'items' object.\n// This is more robust than the previous method.\nfor (const itemName in itemizedList) {\n  \n  // Create a new, flat object for this specific item.\n  const newItem = {\n    json: {\n      date: purchaseDate,\n      vendor: vendor,\n      item: itemName,\n      cost: itemizedList[itemName] // Get the value (cost) for the current item name.\n    }\n  };\n\n  // Add the newly created item to our results array.\n  newItems.push(newItem);\n}\n\n// Return the array. n8n will split this into multiple items for the next node.\nreturn newItems;"
-},
-"type": "n8n-nodes-base.code",
-"typeVersion": 2,
-"position": [
-864,
-0
-],
-"id": "5353eefa-c615-4f74-ae79-4bb013f4b760",
-"name": "Convert JSON to Itemized JSON"
-},
-{
-"parameters": {
-"content": "## Output Triggers\n- Google Sheets (requires Google oauth and enable Gsheets api)\n- Postgres and web app image",
-"height": 384,
-"width": 400
-},
-"type": "n8n-nodes-base.stickyNote",
-"position": [
--480,
--352
-],
-"typeVersion": 1,
-"id": "376cedee-2159-413c-b9d3-b79485f43602",
-"name": "Sticky Note"
-},
-{
-"parameters": {
-"content": "## Input Triggers\n- Chat Model\n- Twilio\n"
-},
-"type": "n8n-nodes-base.stickyNote",
-"position": [
--480,
-48
-],
-"typeVersion": 1,
-"id": "5a38e03f-039e-43a5-ba1e-0b5f44fef965",
-"name": "Sticky Note1"
-},
-{
-"parameters": {
-"schema": {
-"__rl": true,
-"mode": "list",
-"value": "public"
-},
-"table": {
-"__rl": true,
-"value": "items",
-"mode": "list",
-"cachedResultName": "items"
-},
-"columns": {
-"mappingMode": "defineBelow",
-"value": {
-"cost": "={{ $json.cost }}",
-"item_name": "={{ $json.item }}",
-"vendor": "={{ $json.vendor }}",
-"purchase_date": "={{ $json.date }}"
-},
-"matchingColumns": [
-"id"
-],
-"schema": [
-{
-"id": "id",
-"displayName": "id",
-"required": false,
-"defaultMatch": true,
-"display": true,
-"type": "number",
-"canBeUsedToMatch": true,
-"removed": true
-},
-{
-"id": "item_name",
-"displayName": "item_name",
-"required": true,
-"defaultMatch": false,
-"display": true,
-"type": "string",
-"canBeUsedToMatch": true
-},
-{
-"id": "purchase_date",
-"displayName": "purchase_date",
-"required": false,
-"defaultMatch": false,
-"display": true,
-"type": "dateTime",
-"canBeUsedToMatch": true
-},
-{
-"id": "vendor",
-"displayName": "vendor",
-"required": false,
-"defaultMatch": false,
-"display": true,
-"type": "string",
-"canBeUsedToMatch": true
-},
-{
-"id": "cost",
-"displayName": "cost",
-"required": true,
-"defaultMatch": false,
-"display": true,
-"type": "number",
-"canBeUsedToMatch": true
-}
-],
-"attemptToConvertTypes": false,
-"convertFieldsToString": false
-},
-"options": {}
-},
-"type": "n8n-nodes-base.postgres",
-"typeVersion": 2.6,
-"position": [
-1072,
-0
-],
-"id": "94db14f6-4c60-44c8-8bd5-7a1d3810ea84",
-"name": "Insert rows in a table",
-"credentials": {
-"postgres": {
-"id": "Jk5A6JOePvG6SaB8",
-"name": "Postgres account"
-}
-}
-}
-],
-"pinData": {},
-"connections": {
-"When chat message received": {
-"main": [
-[
-{
-"node": "AI Agent",
-"type": "main",
-"index": 0
-}
-]
-]
-},
-"OpenRouter Chat Model": {
-"ai_languageModel": [
-[
-{
-"node": "AI Agent",
-"type": "ai_languageModel",
-"index": 0
-}
-]
-]
-},
-"AI Agent": {
-"main": [
-[
-{
-"node": "Convert to JSON",
-"type": "main",
-"index": 0
-}
-]
-]
-},
-"Convert to JSON": {
-"main": [
-[
-{
-"node": "Convert JSON to Itemized JSON",
-"type": "main",
-"index": 0
-}
-]
-]
-},
-"Convert JSON to Itemized JSON": {
-"main": [
-[
-{
-"node": "Insert rows in a table",
-"type": "main",
-"index": 0
-}
-]
-]
-}
-},
-"active": true,
-"settings": {
-"executionOrder": "v1"
-},
-"versionId": "f3647ea7-8f4a-43dc-af43-7eaa76a7a694",
-"meta": {
-"templateCredsSetupCompleted": true,
-"instanceId": "3451868f0e4d1713462a43e2e33d29ba8914e2aab03a242ca1789f0d87598037"
-},
-"id": "yE27dCDHrOFn1WDr",
-"tags": []
+  "name": "Chat to Web Receipt Itemizer",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋\nPlease upload an image of your receipt!",
+        "options": {
+          "allowFileUploads": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [0, 0],
+      "id": "8d5e1ef2-35bc-47c5-9476-5f93bf0e66ac",
+      "name": "When chat message received",
+      "webhookId": "94ab21c7-b967-4f9b-b395-0e14c2b37f10"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are an AI assistant that extracts structured data from receipts for entry into a Google Sheets database. The receipts can come from any vendor or buiness type (e.g., restaurants, grocery stores, etc.).\n\n## TASK\nExtract the following fields from the receipt text input. Return the output as a valid JSON object inside a markdown code block.\n\n## OUTPUT FORMAT\n```json\n{\n    \"purchase_date\": \"YYYY-MM-DD\",\n    \"vendor\": \"string\",\n    \"items\": { // store all found items in here\n        \"item_name\": number // number will be the total cost of the time, if there are multiple items of the same name then add the same name items together and combine the total cost.\n    }\n}\n```\n\n## RULES \nIf any value is not available or clearly shown, return null for that field.\n\nAlways format the JSON inside a single code block.\n\nDates must be ISO format (YYYY-MM-DD).\n\nDo not include any explanations or additional text outside the code block.",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [304, 0],
+      "id": "068acd86-912c-41a0-95f4-d10dba1e51b6",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.5-flash-preview-09-2025",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [304, 192],
+      "id": "4eb5c826-7196-4128-9d8f-a1417690f9bb",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "EJN0VOs5CCL2UCOe",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "/*\n===================================================================\n N8N Code Node Snippet: Parse JSON from Markdown\n===================================================================\nINSTRUCTIONS:\n1. Set your n8n \"Code\" node's \"Mode\" to \"Run Once for All Items\".\n2. This code assumes the incoming item has a field named 'output'\n   that contains the string with the markdown code block.\n   Example input string: \"\n3. The node will output the parsed JSON object.\n\n*/\n\n// This array will hold the output items from this node.\nconst outputItems = [];\n\n// Loop through each item passed to this node.\n// $input.all() gets all incoming items.\nfor (const item of $input.all()) {\n  // Get the string from the 'output' field of the incoming JSON.\n  const rawString = item.json.output;\n\n  // Check if the input string is valid.\n  if (typeof rawString !== 'string') {\n    // If the input isn't a string, create an error entry and skip to the next item.\n    outputItems.push({\n      json: {\n        error: \"The 'output' field is not a string.\",\n        originalItem: item.json\n      }\n    });\n    continue;\n  }\n\n  // Use a regular expression to remove the markdown code block fences.\n  // This removes \"```json\" from the beginning and \"```\" from the end.\n  // The \\s* parts handle any whitespace like newlines around the fences.\n  const jsonString = rawString\n    .replace(/^```json\\s*/, '')\n    .replace(/\\s*```$/, '');\n\n  try {\n    // Parse the cleaned string into a JavaScript object.\n    const parsedJson = JSON.parse(jsonString);\n\n    // Add the successfully parsed object to our output.\n    // Each object pushed here will become a separate output item from this node.\n    outputItems.push({\n      json: parsedJson\n    });\n\n  } catch (error) {\n    // If JSON.parse fails, create an error entry with details.\n    outputItems.push({\n      json: {\n        error: \"Failed to parse the JSON string after cleaning.\",\n        details: error.message,\n        processedString: jsonString\n      }\n    });\n  }\n}\n\n// Return the array of processed items.\nreturn outputItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [656, 0],
+      "id": "8321b073-c140-4b29-9958-55798c6e8cee",
+      "name": "Convert to JSON"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the single incoming item from the previous node.\nconst inputData = items[0].json;\n\n// Extract the common information from the top level.\nconst purchaseDate = inputData.purchase_date;\nconst vendor = inputData.vendor;\n\n// Get the nested object that contains the line items.\nconst itemizedList = inputData.items;\n\n// Create a new array to hold our structured row items.\nconst newItems = [];\n\n// Loop directly through each key (the item name) in the 'items' object.\n// This is more robust than the previous method.\nfor (const itemName in itemizedList) {\n  \n  // Create a new, flat object for this specific item.\n  const newItem = {\n    json: {\n      date: purchaseDate,\n      vendor: vendor,\n      item: itemName,\n      cost: itemizedList[itemName] // Get the value (cost) for the current item name.\n    }\n  };\n\n  // Add the newly created item to our results array.\n  newItems.push(newItem);\n}\n\n// Return the array. n8n will split this into multiple items for the next node.\nreturn newItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [864, 0],
+      "id": "5353eefa-c615-4f74-ae79-4bb013f4b760",
+      "name": "Convert JSON to Itemized JSON"
+    },
+    {
+      "parameters": {
+        "content": "## Output Triggers\n- Google Sheets (requires Google oauth and enable Gsheets api)\n- Postgres and web app image",
+        "height": 384,
+        "width": 400
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [-480, -352],
+      "typeVersion": 1,
+      "id": "376cedee-2159-413c-b9d3-b79485f43602",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Input Triggers\n- Chat Model\n- Twilio\n"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [-480, 48],
+      "typeVersion": 1,
+      "id": "5a38e03f-039e-43a5-ba1e-0b5f44fef965",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "items",
+          "mode": "list",
+          "cachedResultName": "items"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "cost": "={{ $json.cost }}",
+            "item_name": "={{ $json.item }}",
+            "vendor": "={{ $json.vendor }}",
+            "purchase_date": "={{ $json.date }}"
+          },
+          "matchingColumns": ["id"],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "item_name",
+              "displayName": "item_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "purchase_date",
+              "displayName": "purchase_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "vendor",
+              "displayName": "vendor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "cost",
+              "displayName": "cost",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [1072, 0],
+      "id": "94db14f6-4c60-44c8-8bd5-7a1d3810ea84",
+      "name": "Insert rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "Jk5A6JOePvG6SaB8",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Convert to JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to JSON": {
+      "main": [
+        [
+          {
+            "node": "Convert JSON to Itemized JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert JSON to Itemized JSON": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f3647ea7-8f4a-43dc-af43-7eaa76a7a694",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3451868f0e4d1713462a43e2e33d29ba8914e2aab03a242ca1789f0d87598037"
+  },
+  "id": "yE27dCDHrOFn1WDr",
+  "tags": []
 }

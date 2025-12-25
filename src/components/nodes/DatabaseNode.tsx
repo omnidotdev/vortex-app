@@ -5,7 +5,6 @@ import { memo } from "react";
 import { Position } from "reactflow";
 
 import { Badge } from "@/components/ui/badge";
-
 import { BaseNode, NodeCodeBlock, NodeInfoRow } from "./BaseNode";
 
 type DatabaseOperation = "query" | "insert" | "update" | "delete";
@@ -77,16 +76,13 @@ export const DatabaseNode = memo(
           <NodeInfoRow label="Database" value={data.serverName} />
         )}
         {data.operation && (
-          <Badge
-            variant="outline"
-            className={operationColors[data.operation]}
-          >
+          <Badge variant="outline" className={operationColors[data.operation]}>
             {operationLabels[data.operation]}
           </Badge>
         )}
         {queryPreview && <NodeCodeBlock>{queryPreview}</NodeCodeBlock>}
         {data.params && Object.keys(data.params).length > 0 && (
-          <div className="text-xs text-muted-foreground">
+          <div className="text-muted-foreground text-xs">
             <span className="font-medium">Params: </span>
             {Object.keys(data.params).slice(0, 3).join(", ")}
             {Object.keys(data.params).length > 3 &&

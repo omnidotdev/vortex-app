@@ -61,7 +61,7 @@ export const CodeNode = memo(
         )}
         {codePreview && <NodeCodeBlock>{codePreview}</NodeCodeBlock>}
         {data.dependencies && data.dependencies.length > 0 && (
-          <div className="text-xs text-muted-foreground">
+          <div className="text-muted-foreground text-xs">
             <span className="font-medium">Deps: </span>
             {data.dependencies.slice(0, 3).join(", ")}
             {data.dependencies.length > 3 &&
