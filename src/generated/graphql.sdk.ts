@@ -175,6 +175,39 @@ export type CreateInvitationPayloadInvitationEdgeArgs = {
   orderBy?: Array<InvitationOrderBy>;
 };
 
+/** All input for the create `McpServer` mutation. */
+export type CreateMcpServerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `McpServer` to be created by this mutation. */
+  mcpServer: McpServerInput;
+};
+
+/** The output of our create `McpServer` mutation. */
+export type CreateMcpServerPayload = {
+  __typename?: 'CreateMcpServerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `McpServer` that was created by this mutation. */
+  mcpServer?: Maybe<McpServer>;
+  /** An edge for our `McpServer`. May be used by Relay 1. */
+  mcpServerEdge?: Maybe<McpServerEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `McpServer` mutation. */
+export type CreateMcpServerPayloadMcpServerEdgeArgs = {
+  orderBy?: Array<McpServerOrderBy>;
+};
+
 /** All input for the create `Plugin` mutation. */
 export type CreatePluginInput = {
   /**
@@ -562,6 +595,50 @@ export type DeleteInvitationPayload = {
 /** The output of our delete `Invitation` mutation. */
 export type DeleteInvitationPayloadInvitationEdgeArgs = {
   orderBy?: Array<InvitationOrderBy>;
+};
+
+/** All input for the `deleteMcpServerById` mutation. */
+export type DeleteMcpServerByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `McpServer` to be deleted. */
+  id: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteMcpServer` mutation. */
+export type DeleteMcpServerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  rowId: Scalars['UUID']['input'];
+};
+
+/** The output of our delete `McpServer` mutation. */
+export type DeleteMcpServerPayload = {
+  __typename?: 'DeleteMcpServerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedMcpServerId?: Maybe<Scalars['ID']['output']>;
+  /** The `McpServer` that was deleted by this mutation. */
+  mcpServer?: Maybe<McpServer>;
+  /** An edge for our `McpServer`. May be used by Relay 1. */
+  mcpServerEdge?: Maybe<McpServerEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `McpServer` mutation. */
+export type DeleteMcpServerPayloadMcpServerEdgeArgs = {
+  orderBy?: Array<McpServerOrderBy>;
 };
 
 /** All input for the `deletePluginById` mutation. */
@@ -1499,6 +1576,301 @@ export type InvitationPatch = {
   workspaceId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
+export type McpServer = Node & {
+  __typename?: 'McpServer';
+  args: Scalars['JSON']['output'];
+  command: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  cwd?: Maybe<Scalars['String']['output']>;
+  env: Scalars['JSON']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  isEnabled: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  type: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `Workspace` that is related to this `McpServer`. */
+  workspace?: Maybe<Workspace>;
+  workspaceId: Scalars['UUID']['output'];
+};
+
+export type McpServerAggregates = {
+  __typename?: 'McpServerAggregates';
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<McpServerDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+/** A filter to be used against aggregates of `McpServer` object types. */
+export type McpServerAggregatesFilter = {
+  /** Distinct count aggregate over matching `McpServer` objects. */
+  distinctCount?: InputMaybe<McpServerDistinctCountAggregateFilter>;
+  /** A filter that must pass for the relevant `McpServer` object to be included within the aggregate. */
+  filter?: InputMaybe<McpServerFilter>;
+};
+
+/**
+ * A condition to be used against `McpServer` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type McpServerCondition = {
+  /** Checks for equality with the object’s `command` field. */
+  command?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `cwd` field. */
+  cwd?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `isEnabled` field. */
+  isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `type` field. */
+  type?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `workspaceId` field. */
+  workspaceId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `McpServer` values. */
+export type McpServerConnection = {
+  __typename?: 'McpServerConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<McpServerAggregates>;
+  /** A list of edges which contains the `McpServer` and cursor to aid in pagination. */
+  edges: Array<McpServerEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<McpServerAggregates>>;
+  /** A list of `McpServer` objects. */
+  nodes: Array<McpServer>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `McpServer` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `McpServer` values. */
+export type McpServerConnectionGroupedAggregatesArgs = {
+  groupBy: Array<McpServerGroupBy>;
+  having?: InputMaybe<McpServerHavingInput>;
+};
+
+export type McpServerDistinctCountAggregateFilter = {
+  args?: InputMaybe<BigIntFilter>;
+  command?: InputMaybe<BigIntFilter>;
+  createdAt?: InputMaybe<BigIntFilter>;
+  cwd?: InputMaybe<BigIntFilter>;
+  env?: InputMaybe<BigIntFilter>;
+  isEnabled?: InputMaybe<BigIntFilter>;
+  name?: InputMaybe<BigIntFilter>;
+  rowId?: InputMaybe<BigIntFilter>;
+  type?: InputMaybe<BigIntFilter>;
+  updatedAt?: InputMaybe<BigIntFilter>;
+  workspaceId?: InputMaybe<BigIntFilter>;
+};
+
+export type McpServerDistinctCountAggregates = {
+  __typename?: 'McpServerDistinctCountAggregates';
+  /** Distinct count of args across the matching connection */
+  args?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of command across the matching connection */
+  command?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of cwd across the matching connection */
+  cwd?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of env across the matching connection */
+  env?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of isEnabled across the matching connection */
+  isEnabled?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of name across the matching connection */
+  name?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of type across the matching connection */
+  type?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of updatedAt across the matching connection */
+  updatedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of workspaceId across the matching connection */
+  workspaceId?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `McpServer` edge in the connection. */
+export type McpServerEdge = {
+  __typename?: 'McpServerEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `McpServer` at the end of the edge. */
+  node: McpServer;
+};
+
+/** A filter to be used against `McpServer` object types. All fields are combined with a logical ‘and.’ */
+export type McpServerFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<McpServerFilter>>;
+  /** Filter by the object’s `command` field. */
+  command?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `cwd` field. */
+  cwd?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `isEnabled` field. */
+  isEnabled?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<McpServerFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<McpServerFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `type` field. */
+  type?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `workspace` relation. */
+  workspace?: InputMaybe<WorkspaceFilter>;
+  /** Filter by the object’s `workspaceId` field. */
+  workspaceId?: InputMaybe<UuidFilter>;
+};
+
+/** Grouping methods for `McpServer` for usage during aggregation. */
+export enum McpServerGroupBy {
+  Args = 'ARGS',
+  Command = 'COMMAND',
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  Cwd = 'CWD',
+  Env = 'ENV',
+  IsEnabled = 'IS_ENABLED',
+  Name = 'NAME',
+  Type = 'TYPE',
+  UpdatedAt = 'UPDATED_AT',
+  UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
+  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR',
+  WorkspaceId = 'WORKSPACE_ID'
+}
+
+export type McpServerHavingAverageInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type McpServerHavingDistinctCountInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `McpServer` aggregates. */
+export type McpServerHavingInput = {
+  AND?: InputMaybe<Array<McpServerHavingInput>>;
+  OR?: InputMaybe<Array<McpServerHavingInput>>;
+  average?: InputMaybe<McpServerHavingAverageInput>;
+  distinctCount?: InputMaybe<McpServerHavingDistinctCountInput>;
+  max?: InputMaybe<McpServerHavingMaxInput>;
+  min?: InputMaybe<McpServerHavingMinInput>;
+  stddevPopulation?: InputMaybe<McpServerHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<McpServerHavingStddevSampleInput>;
+  sum?: InputMaybe<McpServerHavingSumInput>;
+  variancePopulation?: InputMaybe<McpServerHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<McpServerHavingVarianceSampleInput>;
+};
+
+export type McpServerHavingMaxInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type McpServerHavingMinInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type McpServerHavingStddevPopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type McpServerHavingStddevSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type McpServerHavingSumInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type McpServerHavingVariancePopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type McpServerHavingVarianceSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** An input for mutations affecting `McpServer` */
+export type McpServerInput = {
+  args?: InputMaybe<Scalars['JSON']['input']>;
+  command: Scalars['String']['input'];
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  cwd?: InputMaybe<Scalars['String']['input']>;
+  env?: InputMaybe<Scalars['JSON']['input']>;
+  isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  name: Scalars['String']['input'];
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  workspaceId: Scalars['UUID']['input'];
+};
+
+/** Methods to use when ordering `McpServer`. */
+export enum McpServerOrderBy {
+  CommandAsc = 'COMMAND_ASC',
+  CommandDesc = 'COMMAND_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  CwdAsc = 'CWD_ASC',
+  CwdDesc = 'CWD_DESC',
+  IsEnabledAsc = 'IS_ENABLED_ASC',
+  IsEnabledDesc = 'IS_ENABLED_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC',
+  WorkspaceIdAsc = 'WORKSPACE_ID_ASC',
+  WorkspaceIdDesc = 'WORKSPACE_ID_DESC'
+}
+
+/** Represents an update to a `McpServer`. Fields that are set will be updated. */
+export type McpServerPatch = {
+  args?: InputMaybe<Scalars['JSON']['input']>;
+  command?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  cwd?: InputMaybe<Scalars['String']['input']>;
+  env?: InputMaybe<Scalars['JSON']['input']>;
+  isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  workspaceId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -1508,6 +1880,8 @@ export type Mutation = {
   createIntegration?: Maybe<CreateIntegrationPayload>;
   /** Creates a single `Invitation`. */
   createInvitation?: Maybe<CreateInvitationPayload>;
+  /** Creates a single `McpServer`. */
+  createMcpServer?: Maybe<CreateMcpServerPayload>;
   /** Creates a single `Plugin`. */
   createPlugin?: Maybe<CreatePluginPayload>;
   /** Creates a single `User`. */
@@ -1534,6 +1908,10 @@ export type Mutation = {
   deleteInvitation?: Maybe<DeleteInvitationPayload>;
   /** Deletes a single `Invitation` using its globally unique id. */
   deleteInvitationById?: Maybe<DeleteInvitationPayload>;
+  /** Deletes a single `McpServer` using a unique key. */
+  deleteMcpServer?: Maybe<DeleteMcpServerPayload>;
+  /** Deletes a single `McpServer` using its globally unique id. */
+  deleteMcpServerById?: Maybe<DeleteMcpServerPayload>;
   /** Deletes a single `Plugin` using a unique key. */
   deletePlugin?: Maybe<DeletePluginPayload>;
   /** Deletes a single `Plugin` using its globally unique id. */
@@ -1580,6 +1958,10 @@ export type Mutation = {
   updateInvitation?: Maybe<UpdateInvitationPayload>;
   /** Updates a single `Invitation` using its globally unique id and a patch. */
   updateInvitationById?: Maybe<UpdateInvitationPayload>;
+  /** Updates a single `McpServer` using a unique key and a patch. */
+  updateMcpServer?: Maybe<UpdateMcpServerPayload>;
+  /** Updates a single `McpServer` using its globally unique id and a patch. */
+  updateMcpServerById?: Maybe<UpdateMcpServerPayload>;
   /** Updates a single `Plugin` using a unique key and a patch. */
   updatePlugin?: Maybe<UpdatePluginPayload>;
   /** Updates a single `Plugin` using its globally unique id and a patch. */
@@ -1632,6 +2014,12 @@ export type MutationCreateIntegrationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateInvitationArgs = {
   input: CreateInvitationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateMcpServerArgs = {
+  input: CreateMcpServerInput;
 };
 
 
@@ -1710,6 +2098,18 @@ export type MutationDeleteInvitationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteInvitationByIdArgs = {
   input: DeleteInvitationByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteMcpServerArgs = {
+  input: DeleteMcpServerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteMcpServerByIdArgs = {
+  input: DeleteMcpServerByIdInput;
 };
 
 
@@ -1848,6 +2248,18 @@ export type MutationUpdateInvitationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateInvitationByIdArgs = {
   input: UpdateInvitationByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateMcpServerArgs = {
+  input: UpdateMcpServerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateMcpServerByIdArgs = {
+  input: UpdateMcpServerByIdInput;
 };
 
 
@@ -2331,6 +2743,12 @@ export type Query = Node & {
   invitationById?: Maybe<Invitation>;
   /** Reads and enables pagination through a set of `Invitation`. */
   invitations?: Maybe<InvitationConnection>;
+  /** Get a single `McpServer`. */
+  mcpServer?: Maybe<McpServer>;
+  /** Reads a single `McpServer` using its globally unique `ID`. */
+  mcpServerById?: Maybe<McpServer>;
+  /** Reads and enables pagination through a set of `McpServer`. */
+  mcpServers?: Maybe<McpServerConnection>;
   /** Fetches an object given its globally unique `ID`. */
   node?: Maybe<Node>;
   /** Get a single `Plugin`. */
@@ -2461,6 +2879,31 @@ export type QueryInvitationsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<InvitationOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryMcpServerArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryMcpServerByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryMcpServersArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<McpServerCondition>;
+  filter?: InputMaybe<McpServerFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<McpServerOrderBy>>;
 };
 
 
@@ -2938,6 +3381,53 @@ export type UpdateInvitationPayload = {
 /** The output of our update `Invitation` mutation. */
 export type UpdateInvitationPayloadInvitationEdgeArgs = {
   orderBy?: Array<InvitationOrderBy>;
+};
+
+/** All input for the `updateMcpServerById` mutation. */
+export type UpdateMcpServerByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `McpServer` to be updated. */
+  id: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `McpServer` being updated. */
+  patch: McpServerPatch;
+};
+
+/** All input for the `updateMcpServer` mutation. */
+export type UpdateMcpServerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** An object where the defined keys will be set on the `McpServer` being updated. */
+  patch: McpServerPatch;
+  rowId: Scalars['UUID']['input'];
+};
+
+/** The output of our update `McpServer` mutation. */
+export type UpdateMcpServerPayload = {
+  __typename?: 'UpdateMcpServerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `McpServer` that was updated by this mutation. */
+  mcpServer?: Maybe<McpServer>;
+  /** An edge for our `McpServer`. May be used by Relay 1. */
+  mcpServerEdge?: Maybe<McpServerEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `McpServer` mutation. */
+export type UpdateMcpServerPayloadMcpServerEdgeArgs = {
+  orderBy?: Array<McpServerOrderBy>;
 };
 
 /** All input for the `updatePluginById` mutation. */
@@ -4832,6 +5322,8 @@ export type Workspace = Node & {
   integrations: IntegrationConnection;
   /** Reads and enables pagination through a set of `Invitation`. */
   invitations: InvitationConnection;
+  /** Reads and enables pagination through a set of `McpServer`. */
+  mcpServers: McpServerConnection;
   name: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `Plugin`. */
   plugins: PluginConnection;
@@ -4868,6 +5360,18 @@ export type WorkspaceInvitationsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<InvitationOrderBy>>;
+};
+
+
+export type WorkspaceMcpServersArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<McpServerCondition>;
+  filter?: InputMaybe<McpServerFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<McpServerOrderBy>>;
 };
 
 
@@ -4999,6 +5503,10 @@ export type WorkspaceFilter = {
   invitations?: InputMaybe<WorkspaceToManyInvitationFilter>;
   /** Some related `invitations` exist. */
   invitationsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `mcpServers` relation. */
+  mcpServers?: InputMaybe<WorkspaceToManyMcpServerFilter>;
+  /** Some related `mcpServers` exist. */
+  mcpServersExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `name` field. */
   name?: InputMaybe<StringFilter>;
   /** Negates the expression. */
@@ -5153,6 +5661,30 @@ export enum WorkspaceOrderBy {
   InvitationsDistinctCountRowIdDesc = 'INVITATIONS_DISTINCT_COUNT_ROW_ID_DESC',
   InvitationsDistinctCountWorkspaceIdAsc = 'INVITATIONS_DISTINCT_COUNT_WORKSPACE_ID_ASC',
   InvitationsDistinctCountWorkspaceIdDesc = 'INVITATIONS_DISTINCT_COUNT_WORKSPACE_ID_DESC',
+  McpServersCountAsc = 'MCP_SERVERS_COUNT_ASC',
+  McpServersCountDesc = 'MCP_SERVERS_COUNT_DESC',
+  McpServersDistinctCountArgsAsc = 'MCP_SERVERS_DISTINCT_COUNT_ARGS_ASC',
+  McpServersDistinctCountArgsDesc = 'MCP_SERVERS_DISTINCT_COUNT_ARGS_DESC',
+  McpServersDistinctCountCommandAsc = 'MCP_SERVERS_DISTINCT_COUNT_COMMAND_ASC',
+  McpServersDistinctCountCommandDesc = 'MCP_SERVERS_DISTINCT_COUNT_COMMAND_DESC',
+  McpServersDistinctCountCreatedAtAsc = 'MCP_SERVERS_DISTINCT_COUNT_CREATED_AT_ASC',
+  McpServersDistinctCountCreatedAtDesc = 'MCP_SERVERS_DISTINCT_COUNT_CREATED_AT_DESC',
+  McpServersDistinctCountCwdAsc = 'MCP_SERVERS_DISTINCT_COUNT_CWD_ASC',
+  McpServersDistinctCountCwdDesc = 'MCP_SERVERS_DISTINCT_COUNT_CWD_DESC',
+  McpServersDistinctCountEnvAsc = 'MCP_SERVERS_DISTINCT_COUNT_ENV_ASC',
+  McpServersDistinctCountEnvDesc = 'MCP_SERVERS_DISTINCT_COUNT_ENV_DESC',
+  McpServersDistinctCountIsEnabledAsc = 'MCP_SERVERS_DISTINCT_COUNT_IS_ENABLED_ASC',
+  McpServersDistinctCountIsEnabledDesc = 'MCP_SERVERS_DISTINCT_COUNT_IS_ENABLED_DESC',
+  McpServersDistinctCountNameAsc = 'MCP_SERVERS_DISTINCT_COUNT_NAME_ASC',
+  McpServersDistinctCountNameDesc = 'MCP_SERVERS_DISTINCT_COUNT_NAME_DESC',
+  McpServersDistinctCountRowIdAsc = 'MCP_SERVERS_DISTINCT_COUNT_ROW_ID_ASC',
+  McpServersDistinctCountRowIdDesc = 'MCP_SERVERS_DISTINCT_COUNT_ROW_ID_DESC',
+  McpServersDistinctCountTypeAsc = 'MCP_SERVERS_DISTINCT_COUNT_TYPE_ASC',
+  McpServersDistinctCountTypeDesc = 'MCP_SERVERS_DISTINCT_COUNT_TYPE_DESC',
+  McpServersDistinctCountUpdatedAtAsc = 'MCP_SERVERS_DISTINCT_COUNT_UPDATED_AT_ASC',
+  McpServersDistinctCountUpdatedAtDesc = 'MCP_SERVERS_DISTINCT_COUNT_UPDATED_AT_DESC',
+  McpServersDistinctCountWorkspaceIdAsc = 'MCP_SERVERS_DISTINCT_COUNT_WORKSPACE_ID_ASC',
+  McpServersDistinctCountWorkspaceIdDesc = 'MCP_SERVERS_DISTINCT_COUNT_WORKSPACE_ID_DESC',
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
   Natural = 'NATURAL',
@@ -5303,6 +5835,18 @@ export type WorkspaceToManyInvitationFilter = {
   none?: InputMaybe<InvitationFilter>;
   /** Some related `Invitation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<InvitationFilter>;
+};
+
+/** A filter to be used against many `McpServer` object types. All fields are combined with a logical ‘and.’ */
+export type WorkspaceToManyMcpServerFilter = {
+  /** Aggregates across related `McpServer` match the filter criteria. */
+  aggregates?: InputMaybe<McpServerAggregatesFilter>;
+  /** Every related `McpServer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<McpServerFilter>;
+  /** No related `McpServer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<McpServerFilter>;
+  /** Some related `McpServer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<McpServerFilter>;
 };
 
 /** A filter to be used against many `Plugin` object types. All fields are combined with a logical ‘and.’ */
