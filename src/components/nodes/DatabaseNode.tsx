@@ -1,5 +1,3 @@
-"use client";
-
 import { Database } from "lucide-react";
 import { memo } from "react";
 import { Position } from "reactflow";

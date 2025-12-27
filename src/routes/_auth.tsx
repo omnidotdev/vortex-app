@@ -153,6 +153,14 @@ function AppSidebar() {
               >
                 Templates
               </Link>
+              <Link
+                to="/workspaces/$workspaceSlug/integrations"
+                params={{ workspaceSlug }}
+                className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
+                activeProps={{ className: "bg-accent" }}
+              >
+                Integrations
+              </Link>
 
               <Link
                 to="/workspaces/$workspaceSlug/settings"

@@ -1,5 +1,3 @@
-"use client";
-
 import { Route } from "lucide-react";
 import { memo } from "react";
 import { Handle, Position } from "reactflow";

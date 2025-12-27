@@ -1,5 +1,3 @@
-"use client";
-
 import { Trash2 } from "lucide-react";
 import { memo } from "react";
 import { Handle } from "reactflow";

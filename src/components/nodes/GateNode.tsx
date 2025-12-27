@@ -1,5 +1,3 @@
-"use client";
-
 import { ShieldCheck, Signal } from "lucide-react";
 import { memo } from "react";
 import { Position } from "reactflow";
