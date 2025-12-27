@@ -1,5 +1,3 @@
-"use client";
-
 import { AlertCircle, Check, Loader2 } from "lucide-react";
 
 import type { SaveStatus } from "./hooks/useAutoSave";

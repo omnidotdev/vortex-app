@@ -1,0 +1,63 @@
+query IntegrationDefinitions(
+  $isFeatured: Boolean
+  $category: String
+  $limit: Int
+) {
+  integrationDefinitions(
+    condition: { isEnabled: true, isFeatured: $isFeatured, category: $category }
+    orderBy: NAME_ASC
+    first: $limit
+  ) {
+    nodes {
+      id
+      name
+      description
+      iconUrl
+      category
+      authType
+      authFields
+      mcpPackage
+      keepAlive
+      isFeatured
+    }
+    totalCount
+  }
+}
+
+query IntegrationDefinition($id: String!) {
+  integrationDefinition(id: $id) {
+    id
+    name
+    description
+    iconUrl
+    category
+    authType
+    authFields
+    mcpPackage
+    mcpCommand
+    mcpArgs
+    keepAlive
+    idleTimeoutMs
+    isFeatured
+    isEnabled
+  }
+}
+
+query FeaturedIntegrationDefinitions {
+  integrationDefinitions(
+    condition: { isEnabled: true, isFeatured: true }
+    orderBy: NAME_ASC
+  ) {
+    nodes {
+      id
+      name
+      description
+      iconUrl
+      category
+      authType
+      authFields
+      mcpPackage
+      keepAlive
+    }
+  }
+}

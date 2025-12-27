@@ -1,5 +1,3 @@
-"use client";
-
 import { Cable } from "lucide-react";
 import { memo } from "react";
 import { Position } from "reactflow";

@@ -1,0 +1,40 @@
+mutation CreateIntegration($input: CreateIntegrationInput!) {
+  createIntegration(input: $input) {
+    integration {
+      rowId
+      name
+      type
+      definitionId
+      isEnabled
+      createdAt
+      integrationDefinition {
+        id
+        name
+        iconUrl
+        category
+      }
+    }
+  }
+}
+
+mutation UpdateIntegration($input: UpdateIntegrationInput!) {
+  updateIntegration(input: $input) {
+    integration {
+      rowId
+      name
+      type
+      definitionId
+      isEnabled
+      updatedAt
+    }
+  }
+}
+
+mutation DeleteIntegration($input: DeleteIntegrationInput!) {
+  deleteIntegration(input: $input) {
+    integration {
+      rowId
+      name
+    }
+  }
+}
