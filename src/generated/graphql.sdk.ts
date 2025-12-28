@@ -6781,7 +6781,7 @@ export type IntegrationDefinitionsQueryVariables = Exact<{
 }>;
 
 
-export type IntegrationDefinitionsQuery = { __typename?: 'Query', integrationDefinitions?: { __typename?: 'IntegrationDefinitionConnection', totalCount: number, nodes: Array<{ __typename?: 'IntegrationDefinition', id: string, name: string, description?: string | null, iconUrl?: string | null, category: string, authType: string, authFields: Record<string, unknown>, isFeatured: boolean, keepAlive: boolean }> } | null };
+export type IntegrationDefinitionsQuery = { __typename?: 'Query', integrationDefinitions?: { __typename?: 'IntegrationDefinitionConnection', totalCount: number, nodes: Array<{ __typename?: 'IntegrationDefinition', id: string, rowId: string, name: string, description?: string | null, iconUrl?: string | null, category: string, authType: string, authFields: Record<string, unknown>, isFeatured: boolean, keepAlive: boolean }> } | null };
 
 export type IntegrationDefinitionQueryVariables = Exact<{
   rowId: Scalars['String']['input'];
@@ -7077,6 +7077,7 @@ export const IntegrationDefinitionsDocument = gql`
   ) {
     nodes {
       id
+      rowId
       name
       description
       iconUrl
