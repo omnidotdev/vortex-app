@@ -10,13 +10,13 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import {
+  AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogRoot,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
@@ -269,9 +269,9 @@ function IntegrationDetailPage() {
                 undone.
               </p>
             </div>
-            <AlertDialogRoot
+            <AlertDialog
               open={deleteDialogOpen}
-              onOpenChange={({ open }) => setDeleteDialogOpen(open)}
+              onOpenChange={(open: boolean) => setDeleteDialogOpen(open)}
             >
               <AlertDialogTrigger asChild>
                 <Button variant="destructive" size="sm">
@@ -302,7 +302,7 @@ function IntegrationDetailPage() {
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
-            </AlertDialogRoot>
+            </AlertDialog>
           </div>
         </div>
       </section>

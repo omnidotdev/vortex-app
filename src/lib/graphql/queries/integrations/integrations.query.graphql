@@ -9,6 +9,7 @@ query Integrations($workspaceId: UUID!, $limit: Int) {
       name
       type
       isEnabled
+      mcpServerId
       createdAt
       updatedAt
     }

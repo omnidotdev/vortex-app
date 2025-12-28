@@ -1,12 +1,17 @@
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 import {
   AlertTriangle,
   Ban,
   Bell,
+  Bot,
   Cable,
   CheckCircle,
   ChevronDown,
   ChevronRight,
   Clock,
+  Code,
+  CreditCard,
   Crown,
   Database,
   FileJson,
@@ -17,10 +22,12 @@ import {
   Mail,
   MessageCircle,
   MousePointer,
+  Phone,
   Puzzle,
   Repeat,
   Search,
   Send,
+  Sheet,
   Shield,
   SplitSquareVertical,
   Timer,
@@ -36,6 +43,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { NodeTypes } from "@/lib/schema";
+import {
+  integrationsOptions,
+  integrationDefinitionsOptions,
+} from "@/lib/options/integrations.options";
 
 // Official plugins - built-in node types that ship with Vortex
 // All nodes are backed by Extism plugins (builtin: prefix = native TypeScript)
@@ -208,12 +219,26 @@ const IconMap: Record<string, React.ElementType> = {
 
 interface WorkflowSidebarProps {
   onAddNode: (type: string, data: any) => void;
+  workspaceId: string;
+  workspaceSlug: string;
   currentWorkflow?: {
     id: string;
     name: string;
     description?: string;
   };
 }
+
+// Category icons for integrations
+const integrationCategoryIcons: Record<string, React.ElementType> = {
+  developer: Code,
+  communication: MessageCircle,
+  ai: Bot,
+  payments: CreditCard,
+  productivity: Sheet,
+  email: Mail,
+  sms: Phone,
+  custom: Cable,
+};
 
 // Placeholder for community plugins - will be fetched from API
 interface CommunityPlugin {
@@ -223,9 +248,30 @@ interface CommunityPlugin {
   isVerified: boolean;
 }
 
-function WorkflowSidebar({ onAddNode, currentWorkflow }: WorkflowSidebarProps) {
+function WorkflowSidebar({
+  onAddNode,
+  workspaceId,
+  workspaceSlug,
+  currentWorkflow,
+}: WorkflowSidebarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [showCommunity, setShowCommunity] = useState(true);
+  const [showIntegrations, setShowIntegrations] = useState(true);
+
+  // Fetch connected integrations for the workspace
+  const { data: integrationsData } = useQuery({
+    ...integrationsOptions({ workspaceId }),
+    select: (data) => data?.integrations?.nodes ?? [],
+  });
+
+  // Fetch integration definitions for icons/metadata
+  const { data: definitionsData } = useQuery({
+    ...integrationDefinitionsOptions({}),
+    select: (data) => data?.integrationDefinitions?.nodes ?? [],
+  });
+
+  const connectedIntegrations = integrationsData ?? [];
+  const definitions = definitionsData ?? [];
 
   // TODO: Fetch community plugins from API using usePluginsQuery
   const communityPlugins: CommunityPlugin[] = [];
@@ -254,6 +300,20 @@ function WorkflowSidebar({ onAddNode, currentWorkflow }: WorkflowSidebarProps) {
         plugin.description?.toLowerCase().includes(searchQuery.toLowerCase()),
     );
   }, [searchQuery]);
+
+  // Filter connected integrations based on search
+  const filteredIntegrations = useMemo(() => {
+    if (!searchQuery.trim()) return connectedIntegrations;
+
+    return connectedIntegrations.filter((integration) => {
+      const def = definitions.find((d) => d.id === integration.type);
+      return (
+        integration.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        def?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        def?.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    });
+  }, [searchQuery, connectedIntegrations, definitions]);
 
   const handleDragStart = (event: React.DragEvent, nodeData: any) => {
     // Create custom drag preview
@@ -463,6 +523,111 @@ function WorkflowSidebar({ onAddNode, currentWorkflow }: WorkflowSidebarProps) {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Connected Integrations Section */}
+        <div className="border-border border-t pt-4">
+          <button
+            type="button"
+            className="mb-2 flex w-full items-center justify-between"
+            onClick={() => setShowIntegrations(!showIntegrations)}
+          >
+            <div className="flex items-center gap-2">
+              <h3 className="font-semibold text-foreground text-sm">
+                Integrations
+              </h3>
+              <Badge variant="outline" className="text-[10px]">
+                {filteredIntegrations.length}
+              </Badge>
+            </div>
+            {showIntegrations ? (
+              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+            ) : (
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            )}
+          </button>
+
+          {showIntegrations && (
+            <div className="space-y-1">
+              {filteredIntegrations.length > 0 ? (
+                filteredIntegrations.map((integration) => {
+                  const def = definitions.find(
+                    (d) => d.id === integration.type,
+                  );
+                  const CategoryIcon =
+                    integrationCategoryIcons[def?.category ?? "custom"] ??
+                    Cable;
+                  return (
+                    <div
+                      key={integration.rowId}
+                      className="flex cursor-move items-start rounded-md p-2 hover:bg-accent"
+                      draggable
+                      onDragStart={(e) =>
+                        handleDragStart(e, {
+                          type: NodeTypes.MCP,
+                          data: {
+                            label: integration.name,
+                            description:
+                              def?.description ?? "Connected integration",
+                            iconName: "Cable",
+                            integrationId: integration.rowId,
+                            mcpServerId: (integration as any).mcpServerId,
+                          },
+                        })
+                      }
+                    >
+                      <div className="mt-0.5 mr-2">
+                        {def?.iconUrl ? (
+                          <img
+                            src={def.iconUrl}
+                            alt={def.name}
+                            className="h-4 w-4 rounded"
+                          />
+                        ) : (
+                          <CategoryIcon className="h-4 w-4" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-1">
+                          <span className="font-medium text-sm">
+                            {integration.name}
+                          </span>
+                        </div>
+                        <div className="text-muted-foreground text-xs">
+                          {def?.name ?? integration.type}
+                        </div>
+                      </div>
+                      <Badge
+                        variant="secondary"
+                        className="ml-1 text-[10px] text-muted-foreground"
+                      >
+                        MCP
+                      </Badge>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="py-4 text-center text-muted-foreground text-xs">
+                  No integrations connected
+                </div>
+              )}
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className="mt-2 w-full text-muted-foreground"
+                asChild
+              >
+                <Link
+                  to="/workspaces/$workspaceSlug/integrations"
+                  params={{ workspaceSlug }}
+                >
+                  <Cable className="mr-2 h-4 w-4" />
+                  Browse Integrations
+                </Link>
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Community Plugins Section */}
