@@ -5,6 +5,7 @@ query IntegrationDefinitions($isFeatured: Boolean) {
   ) {
     nodes {
       id
+      rowId
       name
       description
       iconUrl

@@ -95,11 +95,11 @@ export function ConnectIntegrationDialog({
           integration: {
             workspaceId,
             name: definition.name,
-            type: definition.id,
+            type: definition.rowId,
             isEnabled: true,
             config: {}, // Credentials are stored in MCP server env
             mcpServerId,
-            definitionId: definition.id,
+            definitionId: definition.rowId,
           },
         },
       });
@@ -202,7 +202,7 @@ export function ConnectIntegrationDialog({
             ))}
 
             {error && (
-              <div className="overflow-hidden rounded-md bg-destructive/10 p-3 text-destructive text-sm break-words">
+              <div className="overflow-hidden wrap-break-word rounded-md bg-destructive/10 p-3 text-destructive text-sm">
                 {error}
               </div>
             )}
