@@ -1,6 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
 import {
   Bot,
   Cable,
@@ -12,14 +11,15 @@ import {
   Phone,
   Sheet,
 } from "lucide-react";
+import { useState } from "react";
 
+import { ConnectIntegrationDialog } from "@/components/integrations/ConnectIntegrationDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  integrationsOptions,
   integrationDefinitionsOptions,
+  integrationsOptions,
 } from "@/lib/options/integrations.options";
-import { ConnectIntegrationDialog } from "@/components/integrations/ConnectIntegrationDialog";
 
 import type { IntegrationDefinitionsQuery } from "@/generated/graphql";
 
@@ -159,7 +159,7 @@ function IntegrationsPage() {
                       </Badge>
                     </div>
                   </div>
-                  <p className="mt-3 text-muted-foreground text-sm line-clamp-2">
+                  <p className="mt-3 line-clamp-2 text-muted-foreground text-sm">
                     {definition.description}
                   </p>
                   <div className="mt-4">

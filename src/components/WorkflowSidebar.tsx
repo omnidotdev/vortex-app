@@ -42,11 +42,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { NodeTypes } from "@/lib/schema";
 import {
-  integrationsOptions,
   integrationDefinitionsOptions,
+  integrationsOptions,
 } from "@/lib/options/integrations.options";
+import { NodeTypes } from "@/lib/schema";
 
 // Official plugins - built-in node types that ship with Vortex
 // All nodes are backed by Extism plugins (builtin: prefix = native TypeScript)
@@ -439,7 +439,7 @@ function WorkflowSidebar({
         />
       </div>
 
-      <ScrollArea className="h-[calc(100vh-180px)]">
+      <ScrollArea className="h-[calc(100vh-220px)]">
         {/* Official Plugins Section */}
         <div className="mb-4">
           <div className="mb-2 flex items-center gap-2">
