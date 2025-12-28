@@ -8,19 +8,9 @@ query Integrations($workspaceId: UUID!, $limit: Int) {
       rowId
       name
       type
-      definitionId
       isEnabled
       createdAt
       updatedAt
-      integrationDefinition {
-        id
-        name
-        description
-        iconUrl
-        category
-        authType
-        keepAlive
-      }
     }
     totalCount
   }
@@ -31,31 +21,9 @@ query Integration($id: UUID!) {
     rowId
     name
     type
-    definitionId
     isEnabled
     config
     createdAt
     updatedAt
-    integrationDefinition {
-      id
-      name
-      description
-      iconUrl
-      category
-      authType
-      authFields
-      keepAlive
-    }
-  }
-}
-
-query WorkspaceIntegrationsByType($workspaceId: UUID!) {
-  integrations(condition: { workspaceId: $workspaceId }) {
-    nodes {
-      rowId
-      type
-      definitionId
-      isEnabled
-    }
   }
 }

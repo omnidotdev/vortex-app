@@ -8,6 +8,72 @@ import { graphql, type GraphQLResponseResolver, type RequestHandlerOptions } fro
  * @param options Options object to customize the behavior of the mock. ([see more](https://mswjs.io/docs/api/graphql#handler-options))
  * @see https://mswjs.io/docs/basics/response-resolver
  * @example
+ * mockCreateIntegrationMutation(
+ *   ({ query, variables }) => {
+ *     const { input } = variables;
+ *     return HttpResponse.json({
+ *       data: { createIntegration }
+ *     })
+ *   },
+ *   requestOptions
+ * )
+ */
+export const mockCreateIntegrationMutation = (resolver: GraphQLResponseResolver<Types.CreateIntegrationMutation, Types.CreateIntegrationMutationVariables>, options?: RequestHandlerOptions) =>
+  graphql.mutation<Types.CreateIntegrationMutation, Types.CreateIntegrationMutationVariables>(
+    'CreateIntegration',
+    resolver,
+    options
+  )
+
+/**
+ * @param resolver A function that accepts [resolver arguments](https://mswjs.io/docs/api/graphql#resolver-argument) and must always return the instruction on what to do with the intercepted request. ([see more](https://mswjs.io/docs/concepts/response-resolver#resolver-instructions))
+ * @param options Options object to customize the behavior of the mock. ([see more](https://mswjs.io/docs/api/graphql#handler-options))
+ * @see https://mswjs.io/docs/basics/response-resolver
+ * @example
+ * mockUpdateIntegrationMutation(
+ *   ({ query, variables }) => {
+ *     const { input } = variables;
+ *     return HttpResponse.json({
+ *       data: { updateIntegration }
+ *     })
+ *   },
+ *   requestOptions
+ * )
+ */
+export const mockUpdateIntegrationMutation = (resolver: GraphQLResponseResolver<Types.UpdateIntegrationMutation, Types.UpdateIntegrationMutationVariables>, options?: RequestHandlerOptions) =>
+  graphql.mutation<Types.UpdateIntegrationMutation, Types.UpdateIntegrationMutationVariables>(
+    'UpdateIntegration',
+    resolver,
+    options
+  )
+
+/**
+ * @param resolver A function that accepts [resolver arguments](https://mswjs.io/docs/api/graphql#resolver-argument) and must always return the instruction on what to do with the intercepted request. ([see more](https://mswjs.io/docs/concepts/response-resolver#resolver-instructions))
+ * @param options Options object to customize the behavior of the mock. ([see more](https://mswjs.io/docs/api/graphql#handler-options))
+ * @see https://mswjs.io/docs/basics/response-resolver
+ * @example
+ * mockDeleteIntegrationMutation(
+ *   ({ query, variables }) => {
+ *     const { input } = variables;
+ *     return HttpResponse.json({
+ *       data: { deleteIntegration }
+ *     })
+ *   },
+ *   requestOptions
+ * )
+ */
+export const mockDeleteIntegrationMutation = (resolver: GraphQLResponseResolver<Types.DeleteIntegrationMutation, Types.DeleteIntegrationMutationVariables>, options?: RequestHandlerOptions) =>
+  graphql.mutation<Types.DeleteIntegrationMutation, Types.DeleteIntegrationMutationVariables>(
+    'DeleteIntegration',
+    resolver,
+    options
+  )
+
+/**
+ * @param resolver A function that accepts [resolver arguments](https://mswjs.io/docs/api/graphql#resolver-argument) and must always return the instruction on what to do with the intercepted request. ([see more](https://mswjs.io/docs/concepts/response-resolver#resolver-instructions))
+ * @param options Options object to customize the behavior of the mock. ([see more](https://mswjs.io/docs/api/graphql#handler-options))
+ * @see https://mswjs.io/docs/basics/response-resolver
+ * @example
  * mockCreateInvitationMutation(
  *   ({ query, variables }) => {
  *     const { input } = variables;
@@ -263,6 +329,28 @@ export const mockUpdateWorkspaceMutation = (resolver: GraphQLResponseResolver<Ty
 export const mockIntegrationsQuery = (resolver: GraphQLResponseResolver<Types.IntegrationsQuery, Types.IntegrationsQueryVariables>, options?: RequestHandlerOptions) =>
   graphql.query<Types.IntegrationsQuery, Types.IntegrationsQueryVariables>(
     'Integrations',
+    resolver,
+    options
+  )
+
+/**
+ * @param resolver A function that accepts [resolver arguments](https://mswjs.io/docs/api/graphql#resolver-argument) and must always return the instruction on what to do with the intercepted request. ([see more](https://mswjs.io/docs/concepts/response-resolver#resolver-instructions))
+ * @param options Options object to customize the behavior of the mock. ([see more](https://mswjs.io/docs/api/graphql#handler-options))
+ * @see https://mswjs.io/docs/basics/response-resolver
+ * @example
+ * mockIntegrationQuery(
+ *   ({ query, variables }) => {
+ *     const { id } = variables;
+ *     return HttpResponse.json({
+ *       data: { integration }
+ *     })
+ *   },
+ *   requestOptions
+ * )
+ */
+export const mockIntegrationQuery = (resolver: GraphQLResponseResolver<Types.IntegrationQuery, Types.IntegrationQueryVariables>, options?: RequestHandlerOptions) =>
+  graphql.query<Types.IntegrationQuery, Types.IntegrationQueryVariables>(
+    'Integration',
     resolver,
     options
   )
