@@ -123,7 +123,7 @@ export function ConnectIntegrationDialog({
     <DialogRoot open onOpenChange={(e) => !e.open && onClose()}>
       <DialogBackdrop />
       <DialogPositioner>
-        <DialogContent>
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Connect {definition.name}</DialogTitle>
             <DialogDescription>
@@ -132,7 +132,7 @@ export function ConnectIntegrationDialog({
           </DialogHeader>
           <DialogCloseTrigger />
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 overflow-hidden">
             {Object.entries(authFields).map(([fieldName, field]) => (
               <div key={fieldName} className="space-y-2">
                 <Label htmlFor={fieldName}>
@@ -155,10 +155,10 @@ export function ConnectIntegrationDialog({
                     placeholder={field.placeholder}
                     required={field.required}
                     rows={4}
-                    className="font-mono text-sm"
+                    className="w-full font-mono text-sm"
                   />
                 ) : (
-                  <div className="relative">
+                  <div className="relative w-full">
                     <Input
                       id={fieldName}
                       type={
@@ -175,7 +175,7 @@ export function ConnectIntegrationDialog({
                       }
                       placeholder={field.placeholder}
                       required={field.required}
-                      className={field.secret ? "pr-10" : ""}
+                      className={`w-full ${field.secret ? "pr-10" : ""}`}
                     />
                     {field.secret && (
                       <button
@@ -202,7 +202,7 @@ export function ConnectIntegrationDialog({
             ))}
 
             {error && (
-              <div className="rounded-md bg-destructive/10 p-3 text-destructive text-sm">
+              <div className="overflow-hidden rounded-md bg-destructive/10 p-3 text-destructive text-sm break-words">
                 {error}
               </div>
             )}
