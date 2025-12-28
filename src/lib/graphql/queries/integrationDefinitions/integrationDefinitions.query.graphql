@@ -1,0 +1,38 @@
+query IntegrationDefinitions($isFeatured: Boolean) {
+  integrationDefinitions(
+    condition: { isFeatured: $isFeatured, isEnabled: true }
+    orderBy: NAME_ASC
+  ) {
+    nodes {
+      id
+      name
+      description
+      iconUrl
+      category
+      authType
+      authFields
+      isFeatured
+      keepAlive
+    }
+    totalCount
+  }
+}
+
+query IntegrationDefinition($rowId: String!) {
+  integrationDefinition(rowId: $rowId) {
+    id
+    name
+    description
+    iconUrl
+    category
+    authType
+    authFields
+    mcpPackage
+    mcpCommand
+    mcpArgs
+    keepAlive
+    idleTimeoutMs
+    isFeatured
+    isEnabled
+  }
+}

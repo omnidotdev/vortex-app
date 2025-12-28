@@ -102,6 +102,7 @@ const getNodeId = () => `node_${Date.now()}_${nodeIdCounter++}`;
  */
 function WorkflowEditorPage() {
   const { workspaceSlug, workflowId } = Route.useParams();
+  const { workspaceId } = Route.useLoaderData();
   const _navigate = useNavigate();
 
   const { data: workflow } = useSuspenseQuery({
@@ -600,6 +601,8 @@ function WorkflowEditorPage() {
             description: workflow.description || undefined,
           }}
           onAddNode={handleAddNode}
+          workspaceId={workspaceId}
+          workspaceSlug={workspaceSlug}
         />
 
         {/* Canvas */}

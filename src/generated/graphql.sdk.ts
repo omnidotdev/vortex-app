@@ -76,39 +76,6 @@ export type BooleanFilter = {
   notIn?: InputMaybe<Array<Scalars['Boolean']['input']>>;
 };
 
-/** All input for the create `_DrizzleMigration` mutation. */
-export type CreateDrizzleMigrationInput = {
-  /** The `_DrizzleMigration` to be created by this mutation. */
-  _drizzleMigration: _DrizzleMigrationInput;
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** The output of our create `_DrizzleMigration` mutation. */
-export type CreateDrizzleMigrationPayload = {
-  __typename?: 'CreateDrizzleMigrationPayload';
-  /** The `_DrizzleMigration` that was created by this mutation. */
-  _drizzleMigration?: Maybe<_DrizzleMigration>;
-  /** An edge for our `_DrizzleMigration`. May be used by Relay 1. */
-  _drizzleMigrationEdge?: Maybe<_DrizzleMigrationEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `_DrizzleMigration` mutation. */
-export type CreateDrizzleMigrationPayload_DrizzleMigrationEdgeArgs = {
-  orderBy?: Array<_DrizzleMigrationOrderBy>;
-};
-
 /** All input for the create `IntegrationDefinition` mutation. */
 export type CreateIntegrationDefinitionInput = {
   /**
@@ -496,50 +463,6 @@ export type DatetimeFilter = {
   notEqualTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<Scalars['Datetime']['input']>>;
-};
-
-/** All input for the `deleteDrizzleMigrationById` mutation. */
-export type DeleteDrizzleMigrationByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `_DrizzleMigration` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteDrizzleMigration` mutation. */
-export type DeleteDrizzleMigrationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['Int']['input'];
-};
-
-/** The output of our delete `_DrizzleMigration` mutation. */
-export type DeleteDrizzleMigrationPayload = {
-  __typename?: 'DeleteDrizzleMigrationPayload';
-  /** The `_DrizzleMigration` that was deleted by this mutation. */
-  _drizzleMigration?: Maybe<_DrizzleMigration>;
-  /** An edge for our `_DrizzleMigration`. May be used by Relay 1. */
-  _drizzleMigrationEdge?: Maybe<_DrizzleMigrationEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedDrizzleMigrationId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `_DrizzleMigration` mutation. */
-export type DeleteDrizzleMigrationPayload_DrizzleMigrationEdgeArgs = {
-  orderBy?: Array<_DrizzleMigrationOrderBy>;
 };
 
 /** All input for the `deleteIntegrationById` mutation. */
@@ -1055,15 +978,6 @@ export type DeleteWorkspaceUserPayload = {
 /** The output of our delete `WorkspaceUser` mutation. */
 export type DeleteWorkspaceUserPayloadWorkspaceUserEdgeArgs = {
   orderBy?: Array<WorkspaceUserOrderBy>;
-};
-
-export type HavingBigintFilter = {
-  equalTo?: InputMaybe<Scalars['BigInt']['input']>;
-  greaterThan?: InputMaybe<Scalars['BigInt']['input']>;
-  greaterThanOrEqualTo?: InputMaybe<Scalars['BigInt']['input']>;
-  lessThan?: InputMaybe<Scalars['BigInt']['input']>;
-  lessThanOrEqualTo?: InputMaybe<Scalars['BigInt']['input']>;
-  notEqualTo?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
 export type HavingDatetimeFilter = {
@@ -2495,8 +2409,6 @@ export type McpServerToManyIntegrationFilter = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
-  /** Creates a single `_DrizzleMigration`. */
-  createDrizzleMigration?: Maybe<CreateDrizzleMigrationPayload>;
   /** Creates a single `Integration`. */
   createIntegration?: Maybe<CreateIntegrationPayload>;
   /** Creates a single `IntegrationDefinition`. */
@@ -2519,10 +2431,6 @@ export type Mutation = {
   createWorkspace?: Maybe<CreateWorkspacePayload>;
   /** Creates a single `WorkspaceUser`. */
   createWorkspaceUser?: Maybe<CreateWorkspaceUserPayload>;
-  /** Deletes a single `_DrizzleMigration` using a unique key. */
-  deleteDrizzleMigration?: Maybe<DeleteDrizzleMigrationPayload>;
-  /** Deletes a single `_DrizzleMigration` using its globally unique id. */
-  deleteDrizzleMigrationById?: Maybe<DeleteDrizzleMigrationPayload>;
   /** Deletes a single `Integration` using a unique key. */
   deleteIntegration?: Maybe<DeleteIntegrationPayload>;
   /** Deletes a single `Integration` using its globally unique id. */
@@ -2573,10 +2481,6 @@ export type Mutation = {
   deleteWorkspaceUser?: Maybe<DeleteWorkspaceUserPayload>;
   /** Deletes a single `WorkspaceUser` using its globally unique id. */
   deleteWorkspaceUserById?: Maybe<DeleteWorkspaceUserPayload>;
-  /** Updates a single `_DrizzleMigration` using a unique key and a patch. */
-  updateDrizzleMigration?: Maybe<UpdateDrizzleMigrationPayload>;
-  /** Updates a single `_DrizzleMigration` using its globally unique id and a patch. */
-  updateDrizzleMigrationById?: Maybe<UpdateDrizzleMigrationPayload>;
   /** Updates a single `Integration` using a unique key and a patch. */
   updateIntegration?: Maybe<UpdateIntegrationPayload>;
   /** Updates a single `Integration` using its globally unique id and a patch. */
@@ -2627,12 +2531,6 @@ export type Mutation = {
   updateWorkspaceUser?: Maybe<UpdateWorkspaceUserPayload>;
   /** Updates a single `WorkspaceUser` using its globally unique id and a patch. */
   updateWorkspaceUserById?: Maybe<UpdateWorkspaceUserPayload>;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateDrizzleMigrationArgs = {
-  input: CreateDrizzleMigrationInput;
 };
 
 
@@ -2699,18 +2597,6 @@ export type MutationCreateWorkspaceArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateWorkspaceUserArgs = {
   input: CreateWorkspaceUserInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDrizzleMigrationArgs = {
-  input: DeleteDrizzleMigrationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteDrizzleMigrationByIdArgs = {
-  input: DeleteDrizzleMigrationByIdInput;
 };
 
 
@@ -2861,18 +2747,6 @@ export type MutationDeleteWorkspaceUserArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteWorkspaceUserByIdArgs = {
   input: DeleteWorkspaceUserByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDrizzleMigrationArgs = {
-  input: UpdateDrizzleMigrationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateDrizzleMigrationByIdArgs = {
-  input: UpdateDrizzleMigrationByIdInput;
 };
 
 
@@ -3384,12 +3258,6 @@ export type PluginPatch = {
 /** The root query type which gives access points into the data universe. */
 export type Query = Node & {
   __typename?: 'Query';
-  /** Get a single `_DrizzleMigration`. */
-  _drizzleMigration?: Maybe<_DrizzleMigration>;
-  /** Reads a single `_DrizzleMigration` using its globally unique `ID`. */
-  _drizzleMigrationById?: Maybe<_DrizzleMigration>;
-  /** Reads and enables pagination through a set of `_DrizzleMigration`. */
-  _drizzleMigrations?: Maybe<_DrizzleMigrationConnection>;
   /** The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`. */
   id: Scalars['ID']['output'];
   /** Get a single `Integration`. */
@@ -3471,31 +3339,6 @@ export type Query = Node & {
   workspaceUsers?: Maybe<WorkspaceUserConnection>;
   /** Reads and enables pagination through a set of `Workspace`. */
   workspaces?: Maybe<WorkspaceConnection>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type Query_DrizzleMigrationArgs = {
-  rowId: Scalars['Int']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type Query_DrizzleMigrationByIdArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type Query_DrizzleMigrationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<_DrizzleMigrationCondition>;
-  filter?: InputMaybe<_DrizzleMigrationFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<_DrizzleMigrationOrderBy>>;
 };
 
 
@@ -3932,53 +3775,6 @@ export type UuidFilter = {
   notEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<Scalars['UUID']['input']>>;
-};
-
-/** All input for the `updateDrizzleMigrationById` mutation. */
-export type UpdateDrizzleMigrationByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `_DrizzleMigration` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `_DrizzleMigration` being updated. */
-  patch: _DrizzleMigrationPatch;
-};
-
-/** All input for the `updateDrizzleMigration` mutation. */
-export type UpdateDrizzleMigrationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `_DrizzleMigration` being updated. */
-  patch: _DrizzleMigrationPatch;
-  rowId: Scalars['Int']['input'];
-};
-
-/** The output of our update `_DrizzleMigration` mutation. */
-export type UpdateDrizzleMigrationPayload = {
-  __typename?: 'UpdateDrizzleMigrationPayload';
-  /** The `_DrizzleMigration` that was updated by this mutation. */
-  _drizzleMigration?: Maybe<_DrizzleMigration>;
-  /** An edge for our `_DrizzleMigration`. May be used by Relay 1. */
-  _drizzleMigrationEdge?: Maybe<_DrizzleMigrationEdge>;
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `_DrizzleMigration` mutation. */
-export type UpdateDrizzleMigrationPayload_DrizzleMigrationEdgeArgs = {
-  orderBy?: Array<_DrizzleMigrationOrderBy>;
 };
 
 /** All input for the `updateIntegrationById` mutation. */
@@ -6860,267 +6656,6 @@ export type WorkspaceUserPatch = {
   workspaceId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-export type _DrizzleMigration = Node & {
-  __typename?: '_DrizzleMigration';
-  createdAt?: Maybe<Scalars['BigInt']['output']>;
-  hash: Scalars['String']['output'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  id: Scalars['ID']['output'];
-  rowId: Scalars['Int']['output'];
-};
-
-export type _DrizzleMigrationAggregates = {
-  __typename?: '_DrizzleMigrationAggregates';
-  /** Mean average aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  average?: Maybe<_DrizzleMigrationAverageAggregates>;
-  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  distinctCount?: Maybe<_DrizzleMigrationDistinctCountAggregates>;
-  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  /** Maximum aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  max?: Maybe<_DrizzleMigrationMaxAggregates>;
-  /** Minimum aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  min?: Maybe<_DrizzleMigrationMinAggregates>;
-  /** Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  stddevPopulation?: Maybe<_DrizzleMigrationStddevPopulationAggregates>;
-  /** Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  stddevSample?: Maybe<_DrizzleMigrationStddevSampleAggregates>;
-  /** Sum aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  sum?: Maybe<_DrizzleMigrationSumAggregates>;
-  /** Population variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  variancePopulation?: Maybe<_DrizzleMigrationVariancePopulationAggregates>;
-  /** Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  varianceSample?: Maybe<_DrizzleMigrationVarianceSampleAggregates>;
-};
-
-export type _DrizzleMigrationAverageAggregates = {
-  __typename?: '_DrizzleMigrationAverageAggregates';
-  /** Mean average of createdAt across the matching connection */
-  createdAt?: Maybe<Scalars['BigFloat']['output']>;
-  /** Mean average of rowId across the matching connection */
-  rowId?: Maybe<Scalars['BigFloat']['output']>;
-};
-
-/**
- * A condition to be used against `_DrizzleMigration` object types. All fields are
- * tested for equality and combined with a logical ‘and.’
- */
-export type _DrizzleMigrationCondition = {
-  /** Checks for equality with the object’s `createdAt` field. */
-  createdAt?: InputMaybe<Scalars['BigInt']['input']>;
-  /** Checks for equality with the object’s `hash` field. */
-  hash?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `rowId` field. */
-  rowId?: InputMaybe<Scalars['Int']['input']>;
-};
-
-/** A connection to a list of `_DrizzleMigration` values. */
-export type _DrizzleMigrationConnection = {
-  __typename?: '_DrizzleMigrationConnection';
-  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  aggregates?: Maybe<_DrizzleMigrationAggregates>;
-  /** A list of edges which contains the `_DrizzleMigration` and cursor to aid in pagination. */
-  edges: Array<_DrizzleMigrationEdge>;
-  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  groupedAggregates?: Maybe<Array<_DrizzleMigrationAggregates>>;
-  /** A list of `_DrizzleMigration` objects. */
-  nodes: Array<_DrizzleMigration>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `_DrizzleMigration` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-
-/** A connection to a list of `_DrizzleMigration` values. */
-export type _DrizzleMigrationConnectionGroupedAggregatesArgs = {
-  groupBy: Array<_DrizzleMigrationGroupBy>;
-  having?: InputMaybe<_DrizzleMigrationHavingInput>;
-};
-
-export type _DrizzleMigrationDistinctCountAggregates = {
-  __typename?: '_DrizzleMigrationDistinctCountAggregates';
-  /** Distinct count of createdAt across the matching connection */
-  createdAt?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of hash across the matching connection */
-  hash?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of rowId across the matching connection */
-  rowId?: Maybe<Scalars['BigInt']['output']>;
-};
-
-/** A `_DrizzleMigration` edge in the connection. */
-export type _DrizzleMigrationEdge = {
-  __typename?: '_DrizzleMigrationEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `_DrizzleMigration` at the end of the edge. */
-  node: _DrizzleMigration;
-};
-
-/** A filter to be used against `_DrizzleMigration` object types. All fields are combined with a logical ‘and.’ */
-export type _DrizzleMigrationFilter = {
-  /** Checks for all expressions in this list. */
-  and?: InputMaybe<Array<_DrizzleMigrationFilter>>;
-  /** Filter by the object’s `createdAt` field. */
-  createdAt?: InputMaybe<BigIntFilter>;
-  /** Filter by the object’s `hash` field. */
-  hash?: InputMaybe<StringFilter>;
-  /** Negates the expression. */
-  not?: InputMaybe<_DrizzleMigrationFilter>;
-  /** Checks for any expressions in this list. */
-  or?: InputMaybe<Array<_DrizzleMigrationFilter>>;
-  /** Filter by the object’s `rowId` field. */
-  rowId?: InputMaybe<IntFilter>;
-};
-
-/** Grouping methods for `_DrizzleMigration` for usage during aggregation. */
-export enum _DrizzleMigrationGroupBy {
-  CreatedAt = 'CREATED_AT',
-  Hash = 'HASH'
-}
-
-export type _DrizzleMigrationHavingAverageInput = {
-  createdAt?: InputMaybe<HavingBigintFilter>;
-  rowId?: InputMaybe<HavingIntFilter>;
-};
-
-export type _DrizzleMigrationHavingDistinctCountInput = {
-  createdAt?: InputMaybe<HavingBigintFilter>;
-  rowId?: InputMaybe<HavingIntFilter>;
-};
-
-/** Conditions for `_DrizzleMigration` aggregates. */
-export type _DrizzleMigrationHavingInput = {
-  AND?: InputMaybe<Array<_DrizzleMigrationHavingInput>>;
-  OR?: InputMaybe<Array<_DrizzleMigrationHavingInput>>;
-  average?: InputMaybe<_DrizzleMigrationHavingAverageInput>;
-  distinctCount?: InputMaybe<_DrizzleMigrationHavingDistinctCountInput>;
-  max?: InputMaybe<_DrizzleMigrationHavingMaxInput>;
-  min?: InputMaybe<_DrizzleMigrationHavingMinInput>;
-  stddevPopulation?: InputMaybe<_DrizzleMigrationHavingStddevPopulationInput>;
-  stddevSample?: InputMaybe<_DrizzleMigrationHavingStddevSampleInput>;
-  sum?: InputMaybe<_DrizzleMigrationHavingSumInput>;
-  variancePopulation?: InputMaybe<_DrizzleMigrationHavingVariancePopulationInput>;
-  varianceSample?: InputMaybe<_DrizzleMigrationHavingVarianceSampleInput>;
-};
-
-export type _DrizzleMigrationHavingMaxInput = {
-  createdAt?: InputMaybe<HavingBigintFilter>;
-  rowId?: InputMaybe<HavingIntFilter>;
-};
-
-export type _DrizzleMigrationHavingMinInput = {
-  createdAt?: InputMaybe<HavingBigintFilter>;
-  rowId?: InputMaybe<HavingIntFilter>;
-};
-
-export type _DrizzleMigrationHavingStddevPopulationInput = {
-  createdAt?: InputMaybe<HavingBigintFilter>;
-  rowId?: InputMaybe<HavingIntFilter>;
-};
-
-export type _DrizzleMigrationHavingStddevSampleInput = {
-  createdAt?: InputMaybe<HavingBigintFilter>;
-  rowId?: InputMaybe<HavingIntFilter>;
-};
-
-export type _DrizzleMigrationHavingSumInput = {
-  createdAt?: InputMaybe<HavingBigintFilter>;
-  rowId?: InputMaybe<HavingIntFilter>;
-};
-
-export type _DrizzleMigrationHavingVariancePopulationInput = {
-  createdAt?: InputMaybe<HavingBigintFilter>;
-  rowId?: InputMaybe<HavingIntFilter>;
-};
-
-export type _DrizzleMigrationHavingVarianceSampleInput = {
-  createdAt?: InputMaybe<HavingBigintFilter>;
-  rowId?: InputMaybe<HavingIntFilter>;
-};
-
-/** An input for mutations affecting `_DrizzleMigration` */
-export type _DrizzleMigrationInput = {
-  createdAt?: InputMaybe<Scalars['BigInt']['input']>;
-  hash: Scalars['String']['input'];
-  rowId?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type _DrizzleMigrationMaxAggregates = {
-  __typename?: '_DrizzleMigrationMaxAggregates';
-  /** Maximum of createdAt across the matching connection */
-  createdAt?: Maybe<Scalars['BigInt']['output']>;
-  /** Maximum of rowId across the matching connection */
-  rowId?: Maybe<Scalars['Int']['output']>;
-};
-
-export type _DrizzleMigrationMinAggregates = {
-  __typename?: '_DrizzleMigrationMinAggregates';
-  /** Minimum of createdAt across the matching connection */
-  createdAt?: Maybe<Scalars['BigInt']['output']>;
-  /** Minimum of rowId across the matching connection */
-  rowId?: Maybe<Scalars['Int']['output']>;
-};
-
-/** Methods to use when ordering `_DrizzleMigration`. */
-export enum _DrizzleMigrationOrderBy {
-  CreatedAtAsc = 'CREATED_AT_ASC',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  HashAsc = 'HASH_ASC',
-  HashDesc = 'HASH_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  RowIdAsc = 'ROW_ID_ASC',
-  RowIdDesc = 'ROW_ID_DESC'
-}
-
-/** Represents an update to a `_DrizzleMigration`. Fields that are set will be updated. */
-export type _DrizzleMigrationPatch = {
-  createdAt?: InputMaybe<Scalars['BigInt']['input']>;
-  hash?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type _DrizzleMigrationStddevPopulationAggregates = {
-  __typename?: '_DrizzleMigrationStddevPopulationAggregates';
-  /** Population standard deviation of createdAt across the matching connection */
-  createdAt?: Maybe<Scalars['BigFloat']['output']>;
-  /** Population standard deviation of rowId across the matching connection */
-  rowId?: Maybe<Scalars['BigFloat']['output']>;
-};
-
-export type _DrizzleMigrationStddevSampleAggregates = {
-  __typename?: '_DrizzleMigrationStddevSampleAggregates';
-  /** Sample standard deviation of createdAt across the matching connection */
-  createdAt?: Maybe<Scalars['BigFloat']['output']>;
-  /** Sample standard deviation of rowId across the matching connection */
-  rowId?: Maybe<Scalars['BigFloat']['output']>;
-};
-
-export type _DrizzleMigrationSumAggregates = {
-  __typename?: '_DrizzleMigrationSumAggregates';
-  /** Sum of createdAt across the matching connection */
-  createdAt: Scalars['BigFloat']['output'];
-  /** Sum of rowId across the matching connection */
-  rowId: Scalars['BigInt']['output'];
-};
-
-export type _DrizzleMigrationVariancePopulationAggregates = {
-  __typename?: '_DrizzleMigrationVariancePopulationAggregates';
-  /** Population variance of createdAt across the matching connection */
-  createdAt?: Maybe<Scalars['BigFloat']['output']>;
-  /** Population variance of rowId across the matching connection */
-  rowId?: Maybe<Scalars['BigFloat']['output']>;
-};
-
-export type _DrizzleMigrationVarianceSampleAggregates = {
-  __typename?: '_DrizzleMigrationVarianceSampleAggregates';
-  /** Sample variance of createdAt across the matching connection */
-  createdAt?: Maybe<Scalars['BigFloat']['output']>;
-  /** Sample variance of rowId across the matching connection */
-  rowId?: Maybe<Scalars['BigFloat']['output']>;
-};
-
 export type CreateIntegrationMutationVariables = Exact<{
   input: CreateIntegrationInput;
 }>;
@@ -7155,6 +6690,27 @@ export type DeleteInvitationMutationVariables = Exact<{
 
 
 export type DeleteInvitationMutation = { __typename?: 'Mutation', deleteInvitation?: { __typename?: 'DeleteInvitationPayload', invitation?: { __typename?: 'Invitation', rowId: string } | null } | null };
+
+export type CreateMcpServerMutationVariables = Exact<{
+  input: CreateMcpServerInput;
+}>;
+
+
+export type CreateMcpServerMutation = { __typename?: 'Mutation', createMcpServer?: { __typename?: 'CreateMcpServerPayload', mcpServer?: { __typename?: 'McpServer', rowId: string, name: string, type: string, command: string, args: Record<string, unknown>, isEnabled: boolean, createdAt?: Date | null } | null } | null };
+
+export type UpdateMcpServerMutationVariables = Exact<{
+  input: UpdateMcpServerInput;
+}>;
+
+
+export type UpdateMcpServerMutation = { __typename?: 'Mutation', updateMcpServer?: { __typename?: 'UpdateMcpServerPayload', mcpServer?: { __typename?: 'McpServer', rowId: string, name: string, type: string, command: string, args: Record<string, unknown>, isEnabled: boolean, updatedAt?: Date | null } | null } | null };
+
+export type DeleteMcpServerMutationVariables = Exact<{
+  input: DeleteMcpServerInput;
+}>;
+
+
+export type DeleteMcpServerMutation = { __typename?: 'Mutation', deleteMcpServer?: { __typename?: 'DeleteMcpServerPayload', mcpServer?: { __typename?: 'McpServer', rowId: string, name: string } | null } | null };
 
 export type CreateWorkflowMutationVariables = Exact<{
   input: CreateWorkflowInput;
@@ -7220,13 +6776,27 @@ export type UpdateWorkspaceMutationVariables = Exact<{
 
 export type UpdateWorkspaceMutation = { __typename?: 'Mutation', updateWorkspace?: { __typename?: 'UpdateWorkspacePayload', workspace?: { __typename?: 'Workspace', rowId: string, name: string, slug: string, tier: Tier } | null } | null };
 
+export type IntegrationDefinitionsQueryVariables = Exact<{
+  isFeatured?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type IntegrationDefinitionsQuery = { __typename?: 'Query', integrationDefinitions?: { __typename?: 'IntegrationDefinitionConnection', totalCount: number, nodes: Array<{ __typename?: 'IntegrationDefinition', id: string, name: string, description?: string | null, iconUrl?: string | null, category: string, authType: string, authFields: Record<string, unknown>, isFeatured: boolean, keepAlive: boolean }> } | null };
+
+export type IntegrationDefinitionQueryVariables = Exact<{
+  rowId: Scalars['String']['input'];
+}>;
+
+
+export type IntegrationDefinitionQuery = { __typename?: 'Query', integrationDefinition?: { __typename?: 'IntegrationDefinition', id: string, name: string, description?: string | null, iconUrl?: string | null, category: string, authType: string, authFields: Record<string, unknown>, mcpPackage: string, mcpCommand: string, mcpArgs: Record<string, unknown>, keepAlive: boolean, idleTimeoutMs: number, isFeatured: boolean, isEnabled: boolean } | null };
+
 export type IntegrationsQueryVariables = Exact<{
   workspaceId: Scalars['UUID']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type IntegrationsQuery = { __typename?: 'Query', integrations?: { __typename?: 'IntegrationConnection', totalCount: number, nodes: Array<{ __typename?: 'Integration', rowId: string, name: string, type: string, isEnabled: boolean, createdAt?: Date | null, updatedAt?: Date | null }> } | null };
+export type IntegrationsQuery = { __typename?: 'Query', integrations?: { __typename?: 'IntegrationConnection', totalCount: number, nodes: Array<{ __typename?: 'Integration', rowId: string, name: string, type: string, isEnabled: boolean, mcpServerId?: string | null, createdAt?: Date | null, updatedAt?: Date | null }> } | null };
 
 export type IntegrationQueryVariables = Exact<{
   id: Scalars['UUID']['input'];
@@ -7360,6 +6930,46 @@ export const DeleteInvitationDocument = gql`
   }
 }
     `;
+export const CreateMcpServerDocument = gql`
+    mutation CreateMcpServer($input: CreateMcpServerInput!) {
+  createMcpServer(input: $input) {
+    mcpServer {
+      rowId
+      name
+      type
+      command
+      args
+      isEnabled
+      createdAt
+    }
+  }
+}
+    `;
+export const UpdateMcpServerDocument = gql`
+    mutation UpdateMcpServer($input: UpdateMcpServerInput!) {
+  updateMcpServer(input: $input) {
+    mcpServer {
+      rowId
+      name
+      type
+      command
+      args
+      isEnabled
+      updatedAt
+    }
+  }
+}
+    `;
+export const DeleteMcpServerDocument = gql`
+    mutation DeleteMcpServer($input: DeleteMcpServerInput!) {
+  deleteMcpServer(input: $input) {
+    mcpServer {
+      rowId
+      name
+    }
+  }
+}
+    `;
 export const CreateWorkflowDocument = gql`
     mutation CreateWorkflow($input: CreateWorkflowInput!) {
   createWorkflow(input: $input) {
@@ -7459,6 +7069,47 @@ export const UpdateWorkspaceDocument = gql`
   }
 }
     `;
+export const IntegrationDefinitionsDocument = gql`
+    query IntegrationDefinitions($isFeatured: Boolean) {
+  integrationDefinitions(
+    condition: {isFeatured: $isFeatured, isEnabled: true}
+    orderBy: NAME_ASC
+  ) {
+    nodes {
+      id
+      name
+      description
+      iconUrl
+      category
+      authType
+      authFields
+      isFeatured
+      keepAlive
+    }
+    totalCount
+  }
+}
+    `;
+export const IntegrationDefinitionDocument = gql`
+    query IntegrationDefinition($rowId: String!) {
+  integrationDefinition(rowId: $rowId) {
+    id
+    name
+    description
+    iconUrl
+    category
+    authType
+    authFields
+    mcpPackage
+    mcpCommand
+    mcpArgs
+    keepAlive
+    idleTimeoutMs
+    isFeatured
+    isEnabled
+  }
+}
+    `;
 export const IntegrationsDocument = gql`
     query Integrations($workspaceId: UUID!, $limit: Int) {
   integrations(
@@ -7471,6 +7122,7 @@ export const IntegrationsDocument = gql`
       name
       type
       isEnabled
+      mcpServerId
       createdAt
       updatedAt
     }
@@ -7774,6 +7426,15 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     DeleteInvitation(variables: DeleteInvitationMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<DeleteInvitationMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DeleteInvitationMutation>({ document: DeleteInvitationDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'DeleteInvitation', 'mutation', variables);
     },
+    CreateMcpServer(variables: CreateMcpServerMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<CreateMcpServerMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateMcpServerMutation>({ document: CreateMcpServerDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'CreateMcpServer', 'mutation', variables);
+    },
+    UpdateMcpServer(variables: UpdateMcpServerMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<UpdateMcpServerMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateMcpServerMutation>({ document: UpdateMcpServerDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'UpdateMcpServer', 'mutation', variables);
+    },
+    DeleteMcpServer(variables: DeleteMcpServerMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<DeleteMcpServerMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteMcpServerMutation>({ document: DeleteMcpServerDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'DeleteMcpServer', 'mutation', variables);
+    },
     CreateWorkflow(variables: CreateWorkflowMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<CreateWorkflowMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateWorkflowMutation>({ document: CreateWorkflowDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'CreateWorkflow', 'mutation', variables);
     },
@@ -7800,6 +7461,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     UpdateWorkspace(variables: UpdateWorkspaceMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<UpdateWorkspaceMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateWorkspaceMutation>({ document: UpdateWorkspaceDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'UpdateWorkspace', 'mutation', variables);
+    },
+    IntegrationDefinitions(variables?: IntegrationDefinitionsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<IntegrationDefinitionsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<IntegrationDefinitionsQuery>({ document: IntegrationDefinitionsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'IntegrationDefinitions', 'query', variables);
+    },
+    IntegrationDefinition(variables: IntegrationDefinitionQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<IntegrationDefinitionQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<IntegrationDefinitionQuery>({ document: IntegrationDefinitionDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'IntegrationDefinition', 'query', variables);
     },
     Integrations(variables: IntegrationsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<IntegrationsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<IntegrationsQuery>({ document: IntegrationsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'Integrations', 'query', variables);
