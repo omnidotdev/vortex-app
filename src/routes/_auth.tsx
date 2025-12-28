@@ -7,8 +7,10 @@ import {
   useMatches,
   useParams,
 } from "@tanstack/react-router";
+import { LogOut } from "lucide-react";
 
 import CreateWorkspaceDialog from "@/components/core/CreateWorkspaceDialog";
+import { Button } from "@/components/ui/button";
 import workspaceBySlugOptions from "@/lib/options/workspaceBySlug.options";
 import workspacesOptions from "@/lib/options/workspaces.options";
 import SidebarProvider from "@/providers/SidebarProvider";
@@ -197,6 +199,15 @@ function AppSidebar() {
               </p>
             </div>
           </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="mt-3 w-full justify-start text-muted-foreground"
+            onClick={() => signOutAndRedirect()}
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Sign out
+          </Button>
         </div>
       </div>
     </aside>
