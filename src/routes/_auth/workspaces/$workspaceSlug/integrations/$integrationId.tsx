@@ -5,18 +5,10 @@ import {
   notFound,
   useNavigate,
 } from "@tanstack/react-router";
-import {
-  AlertTriangle,
-  ArrowLeft,
-  Eye,
-  EyeOff,
-  Loader2,
-  Trash2,
-} from "lucide-react";
+import { ArrowLeft, Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { IntegrationCategoryBadge } from "@/components/integrations/IntegrationCategoryBadge";
 import {
   AlertDialogAction,
   AlertDialogCancel,
@@ -31,7 +23,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   useDeleteIntegrationMutation,
   useUpdateIntegrationMutation,
@@ -62,7 +53,6 @@ function IntegrationDetailPage() {
   const { workspaceId } = Route.useLoaderData();
   const navigate = useNavigate();
 
-  const [showSecrets, setShowSecrets] = useState<Record<string, boolean>>({});
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const { data: integration } = useSuspenseQuery({
@@ -87,50 +77,13 @@ function IntegrationDetailPage() {
       },
     });
 
-  // Compute these before hooks to avoid conditional hook calls
-  const definition = integration?.integrationDefinition;
-  const authFields = (definition?.authFields || {}) as Record<
-    string,
-    {
-      type: "string" | "text" | "json";
-      label: string;
-      description?: string;
-      placeholder?: string;
-      secret?: boolean;
-      required?: boolean;
-    }
-  >;
-  const fieldNames = Object.keys(authFields);
-
-  // Parse existing config (may be encrypted string or object)
-  const existingConfig =
-    typeof integration?.config === "string"
-      ? {} // Encrypted, don't show
-      : (integration?.config as Record<string, string>) || {};
-
   const form = useForm({
     defaultValues: {
       name: integration?.name || "",
       isEnabled: integration?.isEnabled || false,
-      ...fieldNames.reduce(
-        (acc, name) => {
-          // Show placeholder for encrypted values
-          acc[name] = existingConfig[name] || "";
-          return acc;
-        },
-        {} as Record<string, string>,
-      ),
     },
     onSubmit: async ({ value }) => {
       if (!integration) return;
-
-      // Build config from field values (only include non-empty)
-      const config: Record<string, string> = {};
-      for (const fieldName of fieldNames) {
-        if (value[fieldName]) {
-          config[fieldName] = value[fieldName];
-        }
-      }
 
       try {
         await updateIntegration({
@@ -139,7 +92,6 @@ function IntegrationDetailPage() {
             patch: {
               name: value.name,
               isEnabled: value.isEnabled,
-              ...(Object.keys(config).length > 0 ? { config } : {}),
             },
           },
         });
@@ -176,13 +128,6 @@ function IntegrationDetailPage() {
     }
   };
 
-  const toggleSecretVisibility = (fieldName: string) => {
-    setShowSecrets((prev) => ({
-      ...prev,
-      [fieldName]: !prev[fieldName],
-    }));
-  };
-
   // Handle case where integration is not found
   if (!integration) {
     return (
@@ -204,8 +149,6 @@ function IntegrationDetailPage() {
     );
   }
 
-  const isConfigEncrypted = typeof integration.config === "string";
-
   return (
     <div className="p-8">
       {/* Header */}
@@ -219,24 +162,16 @@ function IntegrationDetailPage() {
         </Link>
         <div className="flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
-            {definition?.iconUrl ? (
-              <img
-                src={definition.iconUrl}
-                alt={integration.name}
-                className="h-8 w-8"
-              />
-            ) : (
-              <span className="font-bold text-lg text-muted-foreground">
-                {integration.name.charAt(0)}
-              </span>
-            )}
+            <span className="font-bold text-lg text-muted-foreground">
+              {integration.name.charAt(0)}
+            </span>
           </div>
           <div>
             <h1 className="font-bold text-2xl">{integration.name}</h1>
             <div className="flex items-center gap-2">
-              {definition && (
-                <IntegrationCategoryBadge category={definition.category} />
-              )}
+              <span className="text-muted-foreground text-sm">
+                {integration.type}
+              </span>
               <span
                 className={`inline-flex rounded-full px-2 py-0.5 text-xs ${
                   integration.isEnabled
@@ -250,13 +185,6 @@ function IntegrationDetailPage() {
           </div>
         </div>
       </div>
-
-      {/* Description */}
-      {definition?.description && (
-        <p className="mt-4 max-w-2xl text-muted-foreground">
-          {definition.description}
-        </p>
-      )}
 
       {/* Configuration Form */}
       <form
@@ -306,89 +234,6 @@ function IntegrationDetailPage() {
                 </div>
               )}
             </form.Field>
-          </div>
-        </section>
-
-        {/* Credentials Section */}
-        <section>
-          <h2 className="font-semibold text-lg">Credentials</h2>
-
-          {isConfigEncrypted && (
-            <div className="mt-2 flex items-start gap-2 rounded-md border border-yellow-200 bg-yellow-50 p-3 text-sm text-yellow-800 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-200">
-              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-              <p>
-                Credentials are encrypted. Enter new values to update them, or
-                leave blank to keep existing.
-              </p>
-            </div>
-          )}
-
-          <div className="mt-4 space-y-4">
-            {fieldNames.map((fieldName) => {
-              const fieldConfig = authFields[fieldName];
-              const isSecret = fieldConfig.secret;
-              const showValue = showSecrets[fieldName];
-
-              return (
-                <form.Field key={fieldName} name={fieldName}>
-                  {(field) => (
-                    <div className="space-y-2">
-                      <Label htmlFor={fieldName}>{fieldConfig.label}</Label>
-
-                      {fieldConfig.type === "text" ||
-                      fieldConfig.type === "json" ? (
-                        <Textarea
-                          id={fieldName}
-                          value={field.state.value}
-                          onChange={(e) => field.handleChange(e.target.value)}
-                          placeholder={
-                            isConfigEncrypted
-                              ? "Enter new value to update..."
-                              : fieldConfig.placeholder
-                          }
-                          rows={fieldConfig.type === "json" ? 6 : 3}
-                          className="font-mono text-sm"
-                        />
-                      ) : (
-                        <div className="relative">
-                          <Input
-                            id={fieldName}
-                            type={isSecret && !showValue ? "password" : "text"}
-                            value={field.state.value}
-                            onChange={(e) => field.handleChange(e.target.value)}
-                            placeholder={
-                              isConfigEncrypted
-                                ? "Enter new value to update..."
-                                : fieldConfig.placeholder
-                            }
-                            className={isSecret ? "pr-10" : ""}
-                          />
-                          {isSecret && (
-                            <button
-                              type="button"
-                              onClick={() => toggleSecretVisibility(fieldName)}
-                              className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                            >
-                              {showValue ? (
-                                <EyeOff className="h-4 w-4" />
-                              ) : (
-                                <Eye className="h-4 w-4" />
-                              )}
-                            </button>
-                          )}
-                        </div>
-                      )}
-
-                      {fieldConfig.description && (
-                        <p className="text-muted-foreground text-xs">
-                          {fieldConfig.description}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </form.Field>
-              );
-            })}
           </div>
         </section>
 

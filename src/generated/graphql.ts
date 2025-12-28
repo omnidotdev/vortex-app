@@ -108,6 +108,39 @@ export type CreateDrizzleMigrationPayload_DrizzleMigrationEdgeArgs = {
   orderBy?: Array<_DrizzleMigrationOrderBy>;
 };
 
+/** All input for the create `IntegrationDefinition` mutation. */
+export type CreateIntegrationDefinitionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `IntegrationDefinition` to be created by this mutation. */
+  integrationDefinition: IntegrationDefinitionInput;
+};
+
+/** The output of our create `IntegrationDefinition` mutation. */
+export type CreateIntegrationDefinitionPayload = {
+  __typename?: 'CreateIntegrationDefinitionPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `IntegrationDefinition` that was created by this mutation. */
+  integrationDefinition?: Maybe<IntegrationDefinition>;
+  /** An edge for our `IntegrationDefinition`. May be used by Relay 1. */
+  integrationDefinitionEdge?: Maybe<IntegrationDefinitionEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `IntegrationDefinition` mutation. */
+export type CreateIntegrationDefinitionPayloadIntegrationDefinitionEdgeArgs = {
+  orderBy?: Array<IntegrationDefinitionOrderBy>;
+};
+
 /** All input for the create `Integration` mutation. */
 export type CreateIntegrationInput = {
   /**
@@ -517,6 +550,50 @@ export type DeleteIntegrationByIdInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The globally unique `ID` which will identify a single `Integration` to be deleted. */
   id: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteIntegrationDefinitionById` mutation. */
+export type DeleteIntegrationDefinitionByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `IntegrationDefinition` to be deleted. */
+  id: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteIntegrationDefinition` mutation. */
+export type DeleteIntegrationDefinitionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  rowId: Scalars['String']['input'];
+};
+
+/** The output of our delete `IntegrationDefinition` mutation. */
+export type DeleteIntegrationDefinitionPayload = {
+  __typename?: 'DeleteIntegrationDefinitionPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedIntegrationDefinitionId?: Maybe<Scalars['ID']['output']>;
+  /** The `IntegrationDefinition` that was deleted by this mutation. */
+  integrationDefinition?: Maybe<IntegrationDefinition>;
+  /** An edge for our `IntegrationDefinition`. May be used by Relay 1. */
+  integrationDefinitionEdge?: Maybe<IntegrationDefinitionEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `IntegrationDefinition` mutation. */
+export type DeleteIntegrationDefinitionPayloadIntegrationDefinitionEdgeArgs = {
+  orderBy?: Array<IntegrationDefinitionOrderBy>;
 };
 
 /** All input for the `deleteIntegration` mutation. */
@@ -1036,9 +1113,15 @@ export type Integration = Node & {
   __typename?: 'Integration';
   config: Scalars['JSON']['output'];
   createdAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `IntegrationDefinition` that is related to this `Integration`. */
+  definition?: Maybe<IntegrationDefinition>;
+  definitionId?: Maybe<Scalars['String']['output']>;
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   id: Scalars['ID']['output'];
   isEnabled: Scalars['Boolean']['output'];
+  /** Reads a single `McpServer` that is related to this `Integration`. */
+  mcpServer?: Maybe<McpServer>;
+  mcpServerId?: Maybe<Scalars['UUID']['output']>;
   name: Scalars['String']['output'];
   rowId: Scalars['UUID']['output'];
   type: Scalars['String']['output'];
@@ -1070,8 +1153,12 @@ export type IntegrationAggregatesFilter = {
 export type IntegrationCondition = {
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `definitionId` field. */
+  definitionId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `isEnabled` field. */
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `mcpServerId` field. */
+  mcpServerId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `rowId` field. */
@@ -1108,10 +1195,466 @@ export type IntegrationConnectionGroupedAggregatesArgs = {
   having?: InputMaybe<IntegrationHavingInput>;
 };
 
+export type IntegrationDefinition = Node & {
+  __typename?: 'IntegrationDefinition';
+  authFields: Scalars['JSON']['output'];
+  authType: Scalars['String']['output'];
+  category: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  iconUrl?: Maybe<Scalars['String']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  idleTimeoutMs: Scalars['Int']['output'];
+  /** Reads and enables pagination through a set of `Integration`. */
+  integrationsByDefinitionId: IntegrationConnection;
+  isEnabled: Scalars['Boolean']['output'];
+  isFeatured: Scalars['Boolean']['output'];
+  keepAlive: Scalars['Boolean']['output'];
+  mcpArgs: Scalars['JSON']['output'];
+  mcpCommand: Scalars['String']['output'];
+  mcpPackage: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  rowId: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+
+export type IntegrationDefinitionIntegrationsByDefinitionIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<IntegrationCondition>;
+  filter?: InputMaybe<IntegrationFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<IntegrationOrderBy>>;
+};
+
+export type IntegrationDefinitionAggregates = {
+  __typename?: 'IntegrationDefinitionAggregates';
+  /** Mean average aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  average?: Maybe<IntegrationDefinitionAverageAggregates>;
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<IntegrationDefinitionDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** Maximum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  max?: Maybe<IntegrationDefinitionMaxAggregates>;
+  /** Minimum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  min?: Maybe<IntegrationDefinitionMinAggregates>;
+  /** Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevPopulation?: Maybe<IntegrationDefinitionStddevPopulationAggregates>;
+  /** Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevSample?: Maybe<IntegrationDefinitionStddevSampleAggregates>;
+  /** Sum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  sum?: Maybe<IntegrationDefinitionSumAggregates>;
+  /** Population variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  variancePopulation?: Maybe<IntegrationDefinitionVariancePopulationAggregates>;
+  /** Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  varianceSample?: Maybe<IntegrationDefinitionVarianceSampleAggregates>;
+};
+
+export type IntegrationDefinitionAverageAggregates = {
+  __typename?: 'IntegrationDefinitionAverageAggregates';
+  /** Mean average of idleTimeoutMs across the matching connection */
+  idleTimeoutMs?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+/**
+ * A condition to be used against `IntegrationDefinition` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type IntegrationDefinitionCondition = {
+  /** Checks for equality with the object’s `authType` field. */
+  authType?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `category` field. */
+  category?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `iconUrl` field. */
+  iconUrl?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `idleTimeoutMs` field. */
+  idleTimeoutMs?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `isEnabled` field. */
+  isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isFeatured` field. */
+  isFeatured?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `keepAlive` field. */
+  keepAlive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `mcpCommand` field. */
+  mcpCommand?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `mcpPackage` field. */
+  mcpPackage?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** A connection to a list of `IntegrationDefinition` values. */
+export type IntegrationDefinitionConnection = {
+  __typename?: 'IntegrationDefinitionConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<IntegrationDefinitionAggregates>;
+  /** A list of edges which contains the `IntegrationDefinition` and cursor to aid in pagination. */
+  edges: Array<IntegrationDefinitionEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<IntegrationDefinitionAggregates>>;
+  /** A list of `IntegrationDefinition` objects. */
+  nodes: Array<IntegrationDefinition>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `IntegrationDefinition` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `IntegrationDefinition` values. */
+export type IntegrationDefinitionConnectionGroupedAggregatesArgs = {
+  groupBy: Array<IntegrationDefinitionGroupBy>;
+  having?: InputMaybe<IntegrationDefinitionHavingInput>;
+};
+
+export type IntegrationDefinitionDistinctCountAggregates = {
+  __typename?: 'IntegrationDefinitionDistinctCountAggregates';
+  /** Distinct count of authFields across the matching connection */
+  authFields?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of authType across the matching connection */
+  authType?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of category across the matching connection */
+  category?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of description across the matching connection */
+  description?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of iconUrl across the matching connection */
+  iconUrl?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of idleTimeoutMs across the matching connection */
+  idleTimeoutMs?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of isEnabled across the matching connection */
+  isEnabled?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of isFeatured across the matching connection */
+  isFeatured?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of keepAlive across the matching connection */
+  keepAlive?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of mcpArgs across the matching connection */
+  mcpArgs?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of mcpCommand across the matching connection */
+  mcpCommand?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of mcpPackage across the matching connection */
+  mcpPackage?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of name across the matching connection */
+  name?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of updatedAt across the matching connection */
+  updatedAt?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `IntegrationDefinition` edge in the connection. */
+export type IntegrationDefinitionEdge = {
+  __typename?: 'IntegrationDefinitionEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `IntegrationDefinition` at the end of the edge. */
+  node: IntegrationDefinition;
+};
+
+/** A filter to be used against `IntegrationDefinition` object types. All fields are combined with a logical ‘and.’ */
+export type IntegrationDefinitionFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<IntegrationDefinitionFilter>>;
+  /** Filter by the object’s `authType` field. */
+  authType?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `category` field. */
+  category?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `iconUrl` field. */
+  iconUrl?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `idleTimeoutMs` field. */
+  idleTimeoutMs?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `integrationsByDefinitionId` relation. */
+  integrationsByDefinitionId?: InputMaybe<IntegrationDefinitionToManyIntegrationFilter>;
+  /** Some related `integrationsByDefinitionId` exist. */
+  integrationsByDefinitionIdExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `isEnabled` field. */
+  isEnabled?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `isFeatured` field. */
+  isFeatured?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `keepAlive` field. */
+  keepAlive?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `mcpCommand` field. */
+  mcpCommand?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `mcpPackage` field. */
+  mcpPackage?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<IntegrationDefinitionFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<IntegrationDefinitionFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<DatetimeFilter>;
+};
+
+/** Grouping methods for `IntegrationDefinition` for usage during aggregation. */
+export enum IntegrationDefinitionGroupBy {
+  AuthFields = 'AUTH_FIELDS',
+  AuthType = 'AUTH_TYPE',
+  Category = 'CATEGORY',
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  Description = 'DESCRIPTION',
+  IconUrl = 'ICON_URL',
+  IdleTimeoutMs = 'IDLE_TIMEOUT_MS',
+  IsEnabled = 'IS_ENABLED',
+  IsFeatured = 'IS_FEATURED',
+  KeepAlive = 'KEEP_ALIVE',
+  McpArgs = 'MCP_ARGS',
+  McpCommand = 'MCP_COMMAND',
+  McpPackage = 'MCP_PACKAGE',
+  Name = 'NAME',
+  UpdatedAt = 'UPDATED_AT',
+  UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
+  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR'
+}
+
+export type IntegrationDefinitionHavingAverageInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  idleTimeoutMs?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type IntegrationDefinitionHavingDistinctCountInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  idleTimeoutMs?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `IntegrationDefinition` aggregates. */
+export type IntegrationDefinitionHavingInput = {
+  AND?: InputMaybe<Array<IntegrationDefinitionHavingInput>>;
+  OR?: InputMaybe<Array<IntegrationDefinitionHavingInput>>;
+  average?: InputMaybe<IntegrationDefinitionHavingAverageInput>;
+  distinctCount?: InputMaybe<IntegrationDefinitionHavingDistinctCountInput>;
+  max?: InputMaybe<IntegrationDefinitionHavingMaxInput>;
+  min?: InputMaybe<IntegrationDefinitionHavingMinInput>;
+  stddevPopulation?: InputMaybe<IntegrationDefinitionHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<IntegrationDefinitionHavingStddevSampleInput>;
+  sum?: InputMaybe<IntegrationDefinitionHavingSumInput>;
+  variancePopulation?: InputMaybe<IntegrationDefinitionHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<IntegrationDefinitionHavingVarianceSampleInput>;
+};
+
+export type IntegrationDefinitionHavingMaxInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  idleTimeoutMs?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type IntegrationDefinitionHavingMinInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  idleTimeoutMs?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type IntegrationDefinitionHavingStddevPopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  idleTimeoutMs?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type IntegrationDefinitionHavingStddevSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  idleTimeoutMs?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type IntegrationDefinitionHavingSumInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  idleTimeoutMs?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type IntegrationDefinitionHavingVariancePopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  idleTimeoutMs?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type IntegrationDefinitionHavingVarianceSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  idleTimeoutMs?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** An input for mutations affecting `IntegrationDefinition` */
+export type IntegrationDefinitionInput = {
+  authFields?: InputMaybe<Scalars['JSON']['input']>;
+  authType?: InputMaybe<Scalars['String']['input']>;
+  category?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  iconUrl?: InputMaybe<Scalars['String']['input']>;
+  idleTimeoutMs?: InputMaybe<Scalars['Int']['input']>;
+  isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  isFeatured?: InputMaybe<Scalars['Boolean']['input']>;
+  keepAlive?: InputMaybe<Scalars['Boolean']['input']>;
+  mcpArgs?: InputMaybe<Scalars['JSON']['input']>;
+  mcpCommand?: InputMaybe<Scalars['String']['input']>;
+  mcpPackage: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  rowId: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+export type IntegrationDefinitionMaxAggregates = {
+  __typename?: 'IntegrationDefinitionMaxAggregates';
+  /** Maximum of idleTimeoutMs across the matching connection */
+  idleTimeoutMs?: Maybe<Scalars['Int']['output']>;
+};
+
+export type IntegrationDefinitionMinAggregates = {
+  __typename?: 'IntegrationDefinitionMinAggregates';
+  /** Minimum of idleTimeoutMs across the matching connection */
+  idleTimeoutMs?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Methods to use when ordering `IntegrationDefinition`. */
+export enum IntegrationDefinitionOrderBy {
+  AuthTypeAsc = 'AUTH_TYPE_ASC',
+  AuthTypeDesc = 'AUTH_TYPE_DESC',
+  CategoryAsc = 'CATEGORY_ASC',
+  CategoryDesc = 'CATEGORY_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
+  IconUrlAsc = 'ICON_URL_ASC',
+  IconUrlDesc = 'ICON_URL_DESC',
+  IdleTimeoutMsAsc = 'IDLE_TIMEOUT_MS_ASC',
+  IdleTimeoutMsDesc = 'IDLE_TIMEOUT_MS_DESC',
+  IntegrationsByDefinitionIdCountAsc = 'INTEGRATIONS_BY_DEFINITION_ID_COUNT_ASC',
+  IntegrationsByDefinitionIdCountDesc = 'INTEGRATIONS_BY_DEFINITION_ID_COUNT_DESC',
+  IntegrationsByDefinitionIdDistinctCountConfigAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_CONFIG_ASC',
+  IntegrationsByDefinitionIdDistinctCountConfigDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_CONFIG_DESC',
+  IntegrationsByDefinitionIdDistinctCountCreatedAtAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_CREATED_AT_ASC',
+  IntegrationsByDefinitionIdDistinctCountCreatedAtDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_CREATED_AT_DESC',
+  IntegrationsByDefinitionIdDistinctCountDefinitionIdAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_DEFINITION_ID_ASC',
+  IntegrationsByDefinitionIdDistinctCountDefinitionIdDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_DEFINITION_ID_DESC',
+  IntegrationsByDefinitionIdDistinctCountIsEnabledAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_IS_ENABLED_ASC',
+  IntegrationsByDefinitionIdDistinctCountIsEnabledDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_IS_ENABLED_DESC',
+  IntegrationsByDefinitionIdDistinctCountMcpServerIdAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_MCP_SERVER_ID_ASC',
+  IntegrationsByDefinitionIdDistinctCountMcpServerIdDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_MCP_SERVER_ID_DESC',
+  IntegrationsByDefinitionIdDistinctCountNameAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_NAME_ASC',
+  IntegrationsByDefinitionIdDistinctCountNameDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_NAME_DESC',
+  IntegrationsByDefinitionIdDistinctCountRowIdAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_ROW_ID_ASC',
+  IntegrationsByDefinitionIdDistinctCountRowIdDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_ROW_ID_DESC',
+  IntegrationsByDefinitionIdDistinctCountTypeAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_TYPE_ASC',
+  IntegrationsByDefinitionIdDistinctCountTypeDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_TYPE_DESC',
+  IntegrationsByDefinitionIdDistinctCountUpdatedAtAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_UPDATED_AT_ASC',
+  IntegrationsByDefinitionIdDistinctCountUpdatedAtDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_UPDATED_AT_DESC',
+  IntegrationsByDefinitionIdDistinctCountWorkspaceIdAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_WORKSPACE_ID_ASC',
+  IntegrationsByDefinitionIdDistinctCountWorkspaceIdDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_WORKSPACE_ID_DESC',
+  IsEnabledAsc = 'IS_ENABLED_ASC',
+  IsEnabledDesc = 'IS_ENABLED_DESC',
+  IsFeaturedAsc = 'IS_FEATURED_ASC',
+  IsFeaturedDesc = 'IS_FEATURED_DESC',
+  KeepAliveAsc = 'KEEP_ALIVE_ASC',
+  KeepAliveDesc = 'KEEP_ALIVE_DESC',
+  McpCommandAsc = 'MCP_COMMAND_ASC',
+  McpCommandDesc = 'MCP_COMMAND_DESC',
+  McpPackageAsc = 'MCP_PACKAGE_ASC',
+  McpPackageDesc = 'MCP_PACKAGE_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
+
+/** Represents an update to a `IntegrationDefinition`. Fields that are set will be updated. */
+export type IntegrationDefinitionPatch = {
+  authFields?: InputMaybe<Scalars['JSON']['input']>;
+  authType?: InputMaybe<Scalars['String']['input']>;
+  category?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  iconUrl?: InputMaybe<Scalars['String']['input']>;
+  idleTimeoutMs?: InputMaybe<Scalars['Int']['input']>;
+  isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  isFeatured?: InputMaybe<Scalars['Boolean']['input']>;
+  keepAlive?: InputMaybe<Scalars['Boolean']['input']>;
+  mcpArgs?: InputMaybe<Scalars['JSON']['input']>;
+  mcpCommand?: InputMaybe<Scalars['String']['input']>;
+  mcpPackage?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  rowId?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+export type IntegrationDefinitionStddevPopulationAggregates = {
+  __typename?: 'IntegrationDefinitionStddevPopulationAggregates';
+  /** Population standard deviation of idleTimeoutMs across the matching connection */
+  idleTimeoutMs?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type IntegrationDefinitionStddevSampleAggregates = {
+  __typename?: 'IntegrationDefinitionStddevSampleAggregates';
+  /** Sample standard deviation of idleTimeoutMs across the matching connection */
+  idleTimeoutMs?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type IntegrationDefinitionSumAggregates = {
+  __typename?: 'IntegrationDefinitionSumAggregates';
+  /** Sum of idleTimeoutMs across the matching connection */
+  idleTimeoutMs: Scalars['BigInt']['output'];
+};
+
+/** A filter to be used against many `Integration` object types. All fields are combined with a logical ‘and.’ */
+export type IntegrationDefinitionToManyIntegrationFilter = {
+  /** Aggregates across related `Integration` match the filter criteria. */
+  aggregates?: InputMaybe<IntegrationAggregatesFilter>;
+  /** Every related `Integration` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<IntegrationFilter>;
+  /** No related `Integration` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<IntegrationFilter>;
+  /** Some related `Integration` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<IntegrationFilter>;
+};
+
+export type IntegrationDefinitionVariancePopulationAggregates = {
+  __typename?: 'IntegrationDefinitionVariancePopulationAggregates';
+  /** Population variance of idleTimeoutMs across the matching connection */
+  idleTimeoutMs?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type IntegrationDefinitionVarianceSampleAggregates = {
+  __typename?: 'IntegrationDefinitionVarianceSampleAggregates';
+  /** Sample variance of idleTimeoutMs across the matching connection */
+  idleTimeoutMs?: Maybe<Scalars['BigFloat']['output']>;
+};
+
 export type IntegrationDistinctCountAggregateFilter = {
   config?: InputMaybe<BigIntFilter>;
   createdAt?: InputMaybe<BigIntFilter>;
+  definitionId?: InputMaybe<BigIntFilter>;
   isEnabled?: InputMaybe<BigIntFilter>;
+  mcpServerId?: InputMaybe<BigIntFilter>;
   name?: InputMaybe<BigIntFilter>;
   rowId?: InputMaybe<BigIntFilter>;
   type?: InputMaybe<BigIntFilter>;
@@ -1125,8 +1668,12 @@ export type IntegrationDistinctCountAggregates = {
   config?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of createdAt across the matching connection */
   createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of definitionId across the matching connection */
+  definitionId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of isEnabled across the matching connection */
   isEnabled?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of mcpServerId across the matching connection */
+  mcpServerId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of name across the matching connection */
   name?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of rowId across the matching connection */
@@ -1154,8 +1701,20 @@ export type IntegrationFilter = {
   and?: InputMaybe<Array<IntegrationFilter>>;
   /** Filter by the object’s `createdAt` field. */
   createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `definition` relation. */
+  definition?: InputMaybe<IntegrationDefinitionFilter>;
+  /** A related `definition` exists. */
+  definitionExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `definitionId` field. */
+  definitionId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `isEnabled` field. */
   isEnabled?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `mcpServer` relation. */
+  mcpServer?: InputMaybe<McpServerFilter>;
+  /** A related `mcpServer` exists. */
+  mcpServerExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `mcpServerId` field. */
+  mcpServerId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `name` field. */
   name?: InputMaybe<StringFilter>;
   /** Negates the expression. */
@@ -1180,7 +1739,9 @@ export enum IntegrationGroupBy {
   CreatedAt = 'CREATED_AT',
   CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
   CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  DefinitionId = 'DEFINITION_ID',
   IsEnabled = 'IS_ENABLED',
+  McpServerId = 'MCP_SERVER_ID',
   Name = 'NAME',
   Type = 'TYPE',
   UpdatedAt = 'UPDATED_AT',
@@ -1253,7 +1814,9 @@ export type IntegrationHavingVarianceSampleInput = {
 export type IntegrationInput = {
   config?: InputMaybe<Scalars['JSON']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  definitionId?: InputMaybe<Scalars['String']['input']>;
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  mcpServerId?: InputMaybe<Scalars['UUID']['input']>;
   name: Scalars['String']['input'];
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   type: Scalars['String']['input'];
@@ -1265,8 +1828,12 @@ export type IntegrationInput = {
 export enum IntegrationOrderBy {
   CreatedAtAsc = 'CREATED_AT_ASC',
   CreatedAtDesc = 'CREATED_AT_DESC',
+  DefinitionIdAsc = 'DEFINITION_ID_ASC',
+  DefinitionIdDesc = 'DEFINITION_ID_DESC',
   IsEnabledAsc = 'IS_ENABLED_ASC',
   IsEnabledDesc = 'IS_ENABLED_DESC',
+  McpServerIdAsc = 'MCP_SERVER_ID_ASC',
+  McpServerIdDesc = 'MCP_SERVER_ID_DESC',
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
   Natural = 'NATURAL',
@@ -1286,7 +1853,9 @@ export enum IntegrationOrderBy {
 export type IntegrationPatch = {
   config?: InputMaybe<Scalars['JSON']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  definitionId?: InputMaybe<Scalars['String']['input']>;
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  mcpServerId?: InputMaybe<Scalars['UUID']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
@@ -1584,6 +2153,8 @@ export type McpServer = Node & {
   env: Scalars['JSON']['output'];
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   id: Scalars['ID']['output'];
+  /** Reads and enables pagination through a set of `Integration`. */
+  integrations: IntegrationConnection;
   isEnabled: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   rowId: Scalars['UUID']['output'];
@@ -1592,6 +2163,18 @@ export type McpServer = Node & {
   /** Reads a single `Workspace` that is related to this `McpServer`. */
   workspace?: Maybe<Workspace>;
   workspaceId: Scalars['UUID']['output'];
+};
+
+
+export type McpServerIntegrationsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<IntegrationCondition>;
+  filter?: InputMaybe<IntegrationFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<IntegrationOrderBy>>;
 };
 
 export type McpServerAggregates = {
@@ -1717,6 +2300,10 @@ export type McpServerFilter = {
   createdAt?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `cwd` field. */
   cwd?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `integrations` relation. */
+  integrations?: InputMaybe<McpServerToManyIntegrationFilter>;
+  /** Some related `integrations` exist. */
+  integrationsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `isEnabled` field. */
   isEnabled?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `name` field. */
@@ -1838,6 +2425,28 @@ export enum McpServerOrderBy {
   CreatedAtDesc = 'CREATED_AT_DESC',
   CwdAsc = 'CWD_ASC',
   CwdDesc = 'CWD_DESC',
+  IntegrationsCountAsc = 'INTEGRATIONS_COUNT_ASC',
+  IntegrationsCountDesc = 'INTEGRATIONS_COUNT_DESC',
+  IntegrationsDistinctCountConfigAsc = 'INTEGRATIONS_DISTINCT_COUNT_CONFIG_ASC',
+  IntegrationsDistinctCountConfigDesc = 'INTEGRATIONS_DISTINCT_COUNT_CONFIG_DESC',
+  IntegrationsDistinctCountCreatedAtAsc = 'INTEGRATIONS_DISTINCT_COUNT_CREATED_AT_ASC',
+  IntegrationsDistinctCountCreatedAtDesc = 'INTEGRATIONS_DISTINCT_COUNT_CREATED_AT_DESC',
+  IntegrationsDistinctCountDefinitionIdAsc = 'INTEGRATIONS_DISTINCT_COUNT_DEFINITION_ID_ASC',
+  IntegrationsDistinctCountDefinitionIdDesc = 'INTEGRATIONS_DISTINCT_COUNT_DEFINITION_ID_DESC',
+  IntegrationsDistinctCountIsEnabledAsc = 'INTEGRATIONS_DISTINCT_COUNT_IS_ENABLED_ASC',
+  IntegrationsDistinctCountIsEnabledDesc = 'INTEGRATIONS_DISTINCT_COUNT_IS_ENABLED_DESC',
+  IntegrationsDistinctCountMcpServerIdAsc = 'INTEGRATIONS_DISTINCT_COUNT_MCP_SERVER_ID_ASC',
+  IntegrationsDistinctCountMcpServerIdDesc = 'INTEGRATIONS_DISTINCT_COUNT_MCP_SERVER_ID_DESC',
+  IntegrationsDistinctCountNameAsc = 'INTEGRATIONS_DISTINCT_COUNT_NAME_ASC',
+  IntegrationsDistinctCountNameDesc = 'INTEGRATIONS_DISTINCT_COUNT_NAME_DESC',
+  IntegrationsDistinctCountRowIdAsc = 'INTEGRATIONS_DISTINCT_COUNT_ROW_ID_ASC',
+  IntegrationsDistinctCountRowIdDesc = 'INTEGRATIONS_DISTINCT_COUNT_ROW_ID_DESC',
+  IntegrationsDistinctCountTypeAsc = 'INTEGRATIONS_DISTINCT_COUNT_TYPE_ASC',
+  IntegrationsDistinctCountTypeDesc = 'INTEGRATIONS_DISTINCT_COUNT_TYPE_DESC',
+  IntegrationsDistinctCountUpdatedAtAsc = 'INTEGRATIONS_DISTINCT_COUNT_UPDATED_AT_ASC',
+  IntegrationsDistinctCountUpdatedAtDesc = 'INTEGRATIONS_DISTINCT_COUNT_UPDATED_AT_DESC',
+  IntegrationsDistinctCountWorkspaceIdAsc = 'INTEGRATIONS_DISTINCT_COUNT_WORKSPACE_ID_ASC',
+  IntegrationsDistinctCountWorkspaceIdDesc = 'INTEGRATIONS_DISTINCT_COUNT_WORKSPACE_ID_DESC',
   IsEnabledAsc = 'IS_ENABLED_ASC',
   IsEnabledDesc = 'IS_ENABLED_DESC',
   NameAsc = 'NAME_ASC',
@@ -1870,6 +2479,18 @@ export type McpServerPatch = {
   workspaceId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
+/** A filter to be used against many `Integration` object types. All fields are combined with a logical ‘and.’ */
+export type McpServerToManyIntegrationFilter = {
+  /** Aggregates across related `Integration` match the filter criteria. */
+  aggregates?: InputMaybe<IntegrationAggregatesFilter>;
+  /** Every related `Integration` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<IntegrationFilter>;
+  /** No related `Integration` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<IntegrationFilter>;
+  /** Some related `Integration` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<IntegrationFilter>;
+};
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -1877,6 +2498,8 @@ export type Mutation = {
   createDrizzleMigration?: Maybe<CreateDrizzleMigrationPayload>;
   /** Creates a single `Integration`. */
   createIntegration?: Maybe<CreateIntegrationPayload>;
+  /** Creates a single `IntegrationDefinition`. */
+  createIntegrationDefinition?: Maybe<CreateIntegrationDefinitionPayload>;
   /** Creates a single `Invitation`. */
   createInvitation?: Maybe<CreateInvitationPayload>;
   /** Creates a single `McpServer`. */
@@ -1903,6 +2526,10 @@ export type Mutation = {
   deleteIntegration?: Maybe<DeleteIntegrationPayload>;
   /** Deletes a single `Integration` using its globally unique id. */
   deleteIntegrationById?: Maybe<DeleteIntegrationPayload>;
+  /** Deletes a single `IntegrationDefinition` using a unique key. */
+  deleteIntegrationDefinition?: Maybe<DeleteIntegrationDefinitionPayload>;
+  /** Deletes a single `IntegrationDefinition` using its globally unique id. */
+  deleteIntegrationDefinitionById?: Maybe<DeleteIntegrationDefinitionPayload>;
   /** Deletes a single `Invitation` using a unique key. */
   deleteInvitation?: Maybe<DeleteInvitationPayload>;
   /** Deletes a single `Invitation` using its globally unique id. */
@@ -1953,6 +2580,10 @@ export type Mutation = {
   updateIntegration?: Maybe<UpdateIntegrationPayload>;
   /** Updates a single `Integration` using its globally unique id and a patch. */
   updateIntegrationById?: Maybe<UpdateIntegrationPayload>;
+  /** Updates a single `IntegrationDefinition` using a unique key and a patch. */
+  updateIntegrationDefinition?: Maybe<UpdateIntegrationDefinitionPayload>;
+  /** Updates a single `IntegrationDefinition` using its globally unique id and a patch. */
+  updateIntegrationDefinitionById?: Maybe<UpdateIntegrationDefinitionPayload>;
   /** Updates a single `Invitation` using a unique key and a patch. */
   updateInvitation?: Maybe<UpdateInvitationPayload>;
   /** Updates a single `Invitation` using its globally unique id and a patch. */
@@ -2007,6 +2638,12 @@ export type MutationCreateDrizzleMigrationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateIntegrationArgs = {
   input: CreateIntegrationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateIntegrationDefinitionArgs = {
+  input: CreateIntegrationDefinitionInput;
 };
 
 
@@ -2085,6 +2722,18 @@ export type MutationDeleteIntegrationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteIntegrationByIdArgs = {
   input: DeleteIntegrationByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteIntegrationDefinitionArgs = {
+  input: DeleteIntegrationDefinitionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteIntegrationDefinitionByIdArgs = {
+  input: DeleteIntegrationDefinitionByIdInput;
 };
 
 
@@ -2235,6 +2884,18 @@ export type MutationUpdateIntegrationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateIntegrationByIdArgs = {
   input: UpdateIntegrationByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateIntegrationDefinitionArgs = {
+  input: UpdateIntegrationDefinitionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateIntegrationDefinitionByIdArgs = {
+  input: UpdateIntegrationDefinitionByIdInput;
 };
 
 
@@ -2734,6 +3395,12 @@ export type Query = Node & {
   integration?: Maybe<Integration>;
   /** Reads a single `Integration` using its globally unique `ID`. */
   integrationById?: Maybe<Integration>;
+  /** Get a single `IntegrationDefinition`. */
+  integrationDefinition?: Maybe<IntegrationDefinition>;
+  /** Reads a single `IntegrationDefinition` using its globally unique `ID`. */
+  integrationDefinitionById?: Maybe<IntegrationDefinition>;
+  /** Reads and enables pagination through a set of `IntegrationDefinition`. */
+  integrationDefinitions?: Maybe<IntegrationDefinitionConnection>;
   /** Reads and enables pagination through a set of `Integration`. */
   integrations?: Maybe<IntegrationConnection>;
   /** Get a single `Invitation`. */
@@ -2840,6 +3507,31 @@ export type QueryIntegrationArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryIntegrationByIdArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryIntegrationDefinitionArgs = {
+  rowId: Scalars['String']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryIntegrationDefinitionByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryIntegrationDefinitionsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<IntegrationDefinitionCondition>;
+  filter?: InputMaybe<IntegrationDefinitionFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<IntegrationDefinitionOrderBy>>;
 };
 
 
@@ -3299,6 +3991,53 @@ export type UpdateIntegrationByIdInput = {
   id: Scalars['ID']['input'];
   /** An object where the defined keys will be set on the `Integration` being updated. */
   patch: IntegrationPatch;
+};
+
+/** All input for the `updateIntegrationDefinitionById` mutation. */
+export type UpdateIntegrationDefinitionByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `IntegrationDefinition` to be updated. */
+  id: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `IntegrationDefinition` being updated. */
+  patch: IntegrationDefinitionPatch;
+};
+
+/** All input for the `updateIntegrationDefinition` mutation. */
+export type UpdateIntegrationDefinitionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** An object where the defined keys will be set on the `IntegrationDefinition` being updated. */
+  patch: IntegrationDefinitionPatch;
+  rowId: Scalars['String']['input'];
+};
+
+/** The output of our update `IntegrationDefinition` mutation. */
+export type UpdateIntegrationDefinitionPayload = {
+  __typename?: 'UpdateIntegrationDefinitionPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `IntegrationDefinition` that was updated by this mutation. */
+  integrationDefinition?: Maybe<IntegrationDefinition>;
+  /** An edge for our `IntegrationDefinition`. May be used by Relay 1. */
+  integrationDefinitionEdge?: Maybe<IntegrationDefinitionEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `IntegrationDefinition` mutation. */
+export type UpdateIntegrationDefinitionPayloadIntegrationDefinitionEdgeArgs = {
+  orderBy?: Array<IntegrationDefinitionOrderBy>;
 };
 
 /** All input for the `updateIntegration` mutation. */
@@ -5630,8 +6369,12 @@ export enum WorkspaceOrderBy {
   IntegrationsDistinctCountConfigDesc = 'INTEGRATIONS_DISTINCT_COUNT_CONFIG_DESC',
   IntegrationsDistinctCountCreatedAtAsc = 'INTEGRATIONS_DISTINCT_COUNT_CREATED_AT_ASC',
   IntegrationsDistinctCountCreatedAtDesc = 'INTEGRATIONS_DISTINCT_COUNT_CREATED_AT_DESC',
+  IntegrationsDistinctCountDefinitionIdAsc = 'INTEGRATIONS_DISTINCT_COUNT_DEFINITION_ID_ASC',
+  IntegrationsDistinctCountDefinitionIdDesc = 'INTEGRATIONS_DISTINCT_COUNT_DEFINITION_ID_DESC',
   IntegrationsDistinctCountIsEnabledAsc = 'INTEGRATIONS_DISTINCT_COUNT_IS_ENABLED_ASC',
   IntegrationsDistinctCountIsEnabledDesc = 'INTEGRATIONS_DISTINCT_COUNT_IS_ENABLED_DESC',
+  IntegrationsDistinctCountMcpServerIdAsc = 'INTEGRATIONS_DISTINCT_COUNT_MCP_SERVER_ID_ASC',
+  IntegrationsDistinctCountMcpServerIdDesc = 'INTEGRATIONS_DISTINCT_COUNT_MCP_SERVER_ID_DESC',
   IntegrationsDistinctCountNameAsc = 'INTEGRATIONS_DISTINCT_COUNT_NAME_ASC',
   IntegrationsDistinctCountNameDesc = 'INTEGRATIONS_DISTINCT_COUNT_NAME_DESC',
   IntegrationsDistinctCountRowIdAsc = 'INTEGRATIONS_DISTINCT_COUNT_ROW_ID_ASC',
@@ -6377,6 +7120,27 @@ export type _DrizzleMigrationVarianceSampleAggregates = {
   rowId?: Maybe<Scalars['BigFloat']['output']>;
 };
 
+export type CreateIntegrationMutationVariables = Exact<{
+  input: CreateIntegrationInput;
+}>;
+
+
+export type CreateIntegrationMutation = { __typename?: 'Mutation', createIntegration?: { __typename?: 'CreateIntegrationPayload', integration?: { __typename?: 'Integration', rowId: string, name: string, type: string, isEnabled: boolean, createdAt?: Date | null } | null } | null };
+
+export type UpdateIntegrationMutationVariables = Exact<{
+  input: UpdateIntegrationInput;
+}>;
+
+
+export type UpdateIntegrationMutation = { __typename?: 'Mutation', updateIntegration?: { __typename?: 'UpdateIntegrationPayload', integration?: { __typename?: 'Integration', rowId: string, name: string, type: string, isEnabled: boolean, updatedAt?: Date | null } | null } | null };
+
+export type DeleteIntegrationMutationVariables = Exact<{
+  input: DeleteIntegrationInput;
+}>;
+
+
+export type DeleteIntegrationMutation = { __typename?: 'Mutation', deleteIntegration?: { __typename?: 'DeleteIntegrationPayload', integration?: { __typename?: 'Integration', rowId: string, name: string } | null } | null };
+
 export type CreateInvitationMutationVariables = Exact<{
   input: CreateInvitationInput;
 }>;
@@ -6463,6 +7227,13 @@ export type IntegrationsQueryVariables = Exact<{
 
 export type IntegrationsQuery = { __typename?: 'Query', integrations?: { __typename?: 'IntegrationConnection', totalCount: number, nodes: Array<{ __typename?: 'Integration', rowId: string, name: string, type: string, isEnabled: boolean, createdAt?: Date | null, updatedAt?: Date | null }> } | null };
 
+export type IntegrationQueryVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type IntegrationQuery = { __typename?: 'Query', integration?: { __typename?: 'Integration', rowId: string, name: string, type: string, isEnabled: boolean, config: Record<string, unknown>, createdAt?: Date | null, updatedAt?: Date | null } | null };
+
 export type InvitationsQueryVariables = Exact<{
   email?: InputMaybe<Scalars['String']['input']>;
 }>;
@@ -6534,6 +7305,99 @@ export type WorkspacesQueryVariables = Exact<{
 export type WorkspacesQuery = { __typename?: 'Query', workspaces?: { __typename?: 'WorkspaceConnection', nodes: Array<{ __typename?: 'Workspace', rowId: string, name: string, slug: string, subscriptionId?: string | null, tier: Tier, workspaceUsers: { __typename?: 'WorkspaceUserConnection', totalCount: number }, currentUser: { __typename?: 'WorkspaceUserConnection', nodes: Array<{ __typename?: 'WorkspaceUser', role: WorkspaceRole }> } }> } | null };
 
 
+
+export const CreateIntegrationDocument = `
+    mutation CreateIntegration($input: CreateIntegrationInput!) {
+  createIntegration(input: $input) {
+    integration {
+      rowId
+      name
+      type
+      isEnabled
+      createdAt
+    }
+  }
+}
+    `;
+
+export const useCreateIntegrationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateIntegrationMutation, TError, CreateIntegrationMutationVariables, TContext>) => {
+    
+    return useMutation<CreateIntegrationMutation, TError, CreateIntegrationMutationVariables, TContext>(
+      {
+    mutationKey: ['CreateIntegration'],
+    mutationFn: (variables?: CreateIntegrationMutationVariables) => graphqlFetch<CreateIntegrationMutation, CreateIntegrationMutationVariables>(CreateIntegrationDocument, variables)(),
+    ...options
+  }
+    )};
+
+useCreateIntegrationMutation.getKey = () => ['CreateIntegration'];
+
+
+useCreateIntegrationMutation.fetcher = (variables: CreateIntegrationMutationVariables, options?: RequestInit['headers']) => graphqlFetch<CreateIntegrationMutation, CreateIntegrationMutationVariables>(CreateIntegrationDocument, variables, options);
+
+export const UpdateIntegrationDocument = `
+    mutation UpdateIntegration($input: UpdateIntegrationInput!) {
+  updateIntegration(input: $input) {
+    integration {
+      rowId
+      name
+      type
+      isEnabled
+      updatedAt
+    }
+  }
+}
+    `;
+
+export const useUpdateIntegrationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<UpdateIntegrationMutation, TError, UpdateIntegrationMutationVariables, TContext>) => {
+    
+    return useMutation<UpdateIntegrationMutation, TError, UpdateIntegrationMutationVariables, TContext>(
+      {
+    mutationKey: ['UpdateIntegration'],
+    mutationFn: (variables?: UpdateIntegrationMutationVariables) => graphqlFetch<UpdateIntegrationMutation, UpdateIntegrationMutationVariables>(UpdateIntegrationDocument, variables)(),
+    ...options
+  }
+    )};
+
+useUpdateIntegrationMutation.getKey = () => ['UpdateIntegration'];
+
+
+useUpdateIntegrationMutation.fetcher = (variables: UpdateIntegrationMutationVariables, options?: RequestInit['headers']) => graphqlFetch<UpdateIntegrationMutation, UpdateIntegrationMutationVariables>(UpdateIntegrationDocument, variables, options);
+
+export const DeleteIntegrationDocument = `
+    mutation DeleteIntegration($input: DeleteIntegrationInput!) {
+  deleteIntegration(input: $input) {
+    integration {
+      rowId
+      name
+    }
+  }
+}
+    `;
+
+export const useDeleteIntegrationMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<DeleteIntegrationMutation, TError, DeleteIntegrationMutationVariables, TContext>) => {
+    
+    return useMutation<DeleteIntegrationMutation, TError, DeleteIntegrationMutationVariables, TContext>(
+      {
+    mutationKey: ['DeleteIntegration'],
+    mutationFn: (variables?: DeleteIntegrationMutationVariables) => graphqlFetch<DeleteIntegrationMutation, DeleteIntegrationMutationVariables>(DeleteIntegrationDocument, variables)(),
+    ...options
+  }
+    )};
+
+useDeleteIntegrationMutation.getKey = () => ['DeleteIntegration'];
+
+
+useDeleteIntegrationMutation.fetcher = (variables: DeleteIntegrationMutationVariables, options?: RequestInit['headers']) => graphqlFetch<DeleteIntegrationMutation, DeleteIntegrationMutationVariables>(DeleteIntegrationDocument, variables, options);
 
 export const CreateInvitationDocument = `
     mutation CreateInvitation($input: CreateInvitationInput!) {
@@ -6961,6 +7825,101 @@ useSuspenseInfiniteIntegrationsQuery.getKey = (variables: IntegrationsQueryVaria
 
 
 useIntegrationsQuery.fetcher = (variables: IntegrationsQueryVariables, options?: RequestInit['headers']) => graphqlFetch<IntegrationsQuery, IntegrationsQueryVariables>(IntegrationsDocument, variables, options);
+
+export const IntegrationDocument = `
+    query Integration($id: UUID!) {
+  integration(rowId: $id) {
+    rowId
+    name
+    type
+    isEnabled
+    config
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+export const useIntegrationQuery = <
+      TData = IntegrationQuery,
+      TError = unknown
+    >(
+      variables: IntegrationQueryVariables,
+      options?: Omit<UseQueryOptions<IntegrationQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<IntegrationQuery, TError, TData>['queryKey'] }
+    ) => {
+    
+    return useQuery<IntegrationQuery, TError, TData>(
+      {
+    queryKey: ['Integration', variables],
+    queryFn: graphqlFetch<IntegrationQuery, IntegrationQueryVariables>(IntegrationDocument, variables),
+    ...options
+  }
+    )};
+
+useIntegrationQuery.getKey = (variables: IntegrationQueryVariables) => ['Integration', variables];
+
+export const useSuspenseIntegrationQuery = <
+      TData = IntegrationQuery,
+      TError = unknown
+    >(
+      variables: IntegrationQueryVariables,
+      options?: Omit<UseSuspenseQueryOptions<IntegrationQuery, TError, TData>, 'queryKey'> & { queryKey?: UseSuspenseQueryOptions<IntegrationQuery, TError, TData>['queryKey'] }
+    ) => {
+    
+    return useSuspenseQuery<IntegrationQuery, TError, TData>(
+      {
+    queryKey: ['IntegrationSuspense', variables],
+    queryFn: graphqlFetch<IntegrationQuery, IntegrationQueryVariables>(IntegrationDocument, variables),
+    ...options
+  }
+    )};
+
+useSuspenseIntegrationQuery.getKey = (variables: IntegrationQueryVariables) => ['IntegrationSuspense', variables];
+
+export const useInfiniteIntegrationQuery = <
+      TData = InfiniteData<IntegrationQuery>,
+      TError = unknown
+    >(
+      variables: IntegrationQueryVariables,
+      options: Omit<UseInfiniteQueryOptions<IntegrationQuery, TError, TData>, 'queryKey'> & { queryKey?: UseInfiniteQueryOptions<IntegrationQuery, TError, TData>['queryKey'] }
+    ) => {
+    
+    return useInfiniteQuery<IntegrationQuery, TError, TData>(
+      (() => {
+    const { queryKey: optionsQueryKey, ...restOptions } = options;
+    return {
+      queryKey: optionsQueryKey ?? ['Integration.infinite', variables],
+      queryFn: (metaData) => graphqlFetch<IntegrationQuery, IntegrationQueryVariables>(IntegrationDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      ...restOptions
+    }
+  })()
+    )};
+
+useInfiniteIntegrationQuery.getKey = (variables: IntegrationQueryVariables) => ['Integration.infinite', variables];
+
+export const useSuspenseInfiniteIntegrationQuery = <
+      TData = InfiniteData<IntegrationQuery>,
+      TError = unknown
+    >(
+      variables: IntegrationQueryVariables,
+      options: Omit<UseSuspenseInfiniteQueryOptions<IntegrationQuery, TError, TData>, 'queryKey'> & { queryKey?: UseSuspenseInfiniteQueryOptions<IntegrationQuery, TError, TData>['queryKey'] }
+    ) => {
+    
+    return useSuspenseInfiniteQuery<IntegrationQuery, TError, TData>(
+      (() => {
+    const { queryKey: optionsQueryKey, ...restOptions } = options;
+    return {
+      queryKey: optionsQueryKey ?? ['Integration.infiniteSuspense', variables],
+      queryFn: (metaData) => graphqlFetch<IntegrationQuery, IntegrationQueryVariables>(IntegrationDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      ...restOptions
+    }
+  })()
+    )};
+
+useSuspenseInfiniteIntegrationQuery.getKey = (variables: IntegrationQueryVariables) => ['Integration.infiniteSuspense', variables];
+
+
+useIntegrationQuery.fetcher = (variables: IntegrationQueryVariables, options?: RequestInit['headers']) => graphqlFetch<IntegrationQuery, IntegrationQueryVariables>(IntegrationDocument, variables, options);
 
 export const InvitationsDocument = `
     query Invitations($email: String) {

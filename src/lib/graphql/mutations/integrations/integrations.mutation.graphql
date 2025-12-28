@@ -4,15 +4,8 @@ mutation CreateIntegration($input: CreateIntegrationInput!) {
       rowId
       name
       type
-      definitionId
       isEnabled
       createdAt
-      integrationDefinition {
-        id
-        name
-        iconUrl
-        category
-      }
     }
   }
 }
@@ -23,7 +16,6 @@ mutation UpdateIntegration($input: UpdateIntegrationInput!) {
       rowId
       name
       type
-      definitionId
       isEnabled
       updatedAt
     }
