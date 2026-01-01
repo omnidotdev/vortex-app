@@ -71,7 +71,7 @@ function PricingPage() {
           </Link>
           <button
             onClick={handleSignIn}
-            className="rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm hover:bg-primary/90"
+            className="cursor-pointer rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm hover:bg-primary/90"
           >
             Sign In
           </button>
@@ -133,7 +133,7 @@ function PricingPage() {
 
                 <button
                   onClick={handleSignIn}
-                  className={`mt-8 w-full rounded-md px-4 py-2 font-medium text-sm ${
+                  className={`cursor-pointer mt-8 w-full rounded-md px-4 py-2 font-medium text-sm ${
                     plan.highlighted
                       ? "bg-primary text-primary-foreground hover:bg-primary/90"
                       : "border hover:bg-accent"

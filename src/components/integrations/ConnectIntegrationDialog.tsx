@@ -1,5 +1,14 @@
+import { Collapsible } from "@ark-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  ExternalLink,
+  Eye,
+  EyeOff,
+  Info,
+  Loader2,
+} from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -36,6 +45,7 @@ interface AuthFieldSchema {
   placeholder?: string;
   secret?: boolean;
   required?: boolean;
+  helpUrl?: string;
 }
 
 interface ConnectIntegrationDialogProps {
@@ -53,6 +63,10 @@ export function ConnectIntegrationDialog({
   const [credentials, setCredentials] = useState<Record<string, string>>({});
   const [showSecrets, setShowSecrets] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
+  const [jsonErrors, setJsonErrors] = useState<Record<string, string | null>>(
+    {},
+  );
+  const [instructionsOpen, setInstructionsOpen] = useState(true);
 
   const createMcpServer = useCreateMcpServerMutation();
   const createIntegration = useCreateIntegrationMutation();
@@ -62,11 +76,44 @@ export function ConnectIntegrationDialog({
     AuthFieldSchema
   >;
 
+  // Type-safe access to new fields (may be undefined until types are regenerated)
+  const setupSteps = (definition as { setupSteps?: string[] }).setupSteps;
+  const docsUrl = (definition as { docsUrl?: string }).docsUrl;
+  const supportsOAuth = (definition as { supportsOauth?: boolean })
+    .supportsOauth;
+
   const isSubmitting = createMcpServer.isPending || createIntegration.isPending;
+
+  const validateJson = (value: string): string | null => {
+    if (!value.trim()) return null;
+    try {
+      JSON.parse(value);
+      return null;
+    } catch {
+      return "Invalid JSON format";
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    // Validate all JSON fields before submission
+    const jsonFieldErrors: Record<string, string | null> = {};
+    for (const [fieldName, field] of Object.entries(authFields)) {
+      if (field.type === "json" && credentials[fieldName]) {
+        const error = validateJson(credentials[fieldName]);
+        if (error) {
+          jsonFieldErrors[fieldName] = error;
+        }
+      }
+    }
+
+    if (Object.values(jsonFieldErrors).some((err) => err !== null)) {
+      setJsonErrors(jsonFieldErrors);
+      setError("Please fix the JSON errors before submitting");
+      return;
+    }
 
     try {
       // First create the MCP server
@@ -123,14 +170,73 @@ export function ConnectIntegrationDialog({
     <DialogRoot open onOpenChange={(e) => !e.open && onClose()}>
       <DialogBackdrop />
       <DialogPositioner>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Connect {definition.name}</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              {definition.iconUrl && (
+                <img
+                  src={definition.iconUrl}
+                  alt=""
+                  className="h-6 w-6"
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                  }}
+                />
+              )}
+              Connect {definition.name}
+            </DialogTitle>
             <DialogDescription>
               Enter your credentials to connect this integration.
             </DialogDescription>
           </DialogHeader>
           <DialogCloseTrigger />
+
+          {/* OAuth Coming Soon Badge */}
+          {supportsOAuth && (
+            <div className="flex items-center gap-2 rounded-md bg-muted p-2 text-muted-foreground text-sm">
+              <Info className="h-4 w-4" />
+              <span>
+                OAuth support coming soon - use manual credentials for now
+              </span>
+            </div>
+          )}
+
+          {/* Setup Instructions */}
+          {setupSteps && setupSteps.length > 0 && (
+            <Collapsible.Root
+              open={instructionsOpen}
+              onOpenChange={(details) => setInstructionsOpen(details.open)}
+            >
+              <Collapsible.Trigger className="flex w-full cursor-pointer items-center gap-2 rounded-md bg-muted/50 p-3 text-left text-sm font-medium hover:bg-muted">
+                {instructionsOpen ? (
+                  <ChevronDown className="h-4 w-4" />
+                ) : (
+                  <ChevronRight className="h-4 w-4" />
+                )}
+                Setup Instructions
+              </Collapsible.Trigger>
+              <Collapsible.Content>
+                <div className="rounded-b-md border border-t-0 bg-background p-3">
+                  <ol className="ml-4 list-decimal space-y-1.5 text-muted-foreground text-sm">
+                    {setupSteps.map((step, i) => (
+                      <li key={i}>{step}</li>
+                    ))}
+                  </ol>
+                  {docsUrl && (
+                    <a
+                      href={docsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 inline-flex cursor-pointer items-center gap-1 text-primary text-sm hover:underline"
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                      Open {definition.name} Developer Portal
+                    </a>
+                  )}
+                </div>
+              </Collapsible.Content>
+            </Collapsible.Root>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4 overflow-hidden">
             {Object.entries(authFields).map(([fieldName, field]) => (
@@ -143,20 +249,48 @@ export function ConnectIntegrationDialog({
                 </Label>
 
                 {field.type === "json" || field.type === "text" ? (
-                  <Textarea
-                    id={fieldName}
-                    value={credentials[fieldName] || ""}
-                    onChange={(e) =>
-                      setCredentials((prev) => ({
-                        ...prev,
-                        [fieldName]: e.target.value,
-                      }))
-                    }
-                    placeholder={field.placeholder}
-                    required={field.required}
-                    rows={4}
-                    className="w-full font-mono text-sm"
-                  />
+                  <>
+                    <Textarea
+                      id={fieldName}
+                      value={credentials[fieldName] || ""}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setCredentials((prev) => ({
+                          ...prev,
+                          [fieldName]: value,
+                        }));
+                        // Validate JSON on change for json fields
+                        if (field.type === "json") {
+                          setJsonErrors((prev) => ({
+                            ...prev,
+                            [fieldName]: validateJson(value),
+                          }));
+                        }
+                      }}
+                      onBlur={(e) => {
+                        // Re-validate on blur for json fields
+                        if (field.type === "json") {
+                          setJsonErrors((prev) => ({
+                            ...prev,
+                            [fieldName]: validateJson(e.target.value),
+                          }));
+                        }
+                      }}
+                      placeholder={field.placeholder}
+                      required={field.required}
+                      rows={6}
+                      className={`w-full font-mono text-sm ${
+                        jsonErrors[fieldName]
+                          ? "border-destructive focus-visible:ring-destructive"
+                          : ""
+                      }`}
+                    />
+                    {jsonErrors[fieldName] && (
+                      <p className="text-destructive text-xs">
+                        {jsonErrors[fieldName]}
+                      </p>
+                    )}
+                  </>
                 ) : (
                   <div className="relative w-full">
                     <Input
@@ -202,7 +336,7 @@ export function ConnectIntegrationDialog({
             ))}
 
             {error && (
-              <div className="overflow-hidden wrap-break-word rounded-md bg-destructive/10 p-3 text-destructive text-sm">
+              <div className="wrap-break-word overflow-hidden rounded-md bg-destructive/10 p-3 text-destructive text-sm">
                 {error}
               </div>
             )}

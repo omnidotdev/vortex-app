@@ -7,6 +7,7 @@ import {
   createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { useEffect } from "react";
 import { Toaster } from "sonner";
 
 import appCss from "@/lib/styles/globals.css?url";
@@ -18,6 +19,22 @@ import type { QueryClient } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import type { AuthSession } from "@/lib/auth/getAuth";
 import type { Theme } from "@/providers/ThemeProvider";
+
+/**
+ * Log errors in a structured format for debugging and future Sentry integration.
+ */
+function logError(error: Error, context?: Record<string, unknown>) {
+  // Structured error logging - can be replaced with Sentry or other error tracking
+  // eslint-disable-next-line no-console
+  console.error("[App Error]", {
+    message: error.message,
+    name: error.name,
+    stack: error.stack,
+    timestamp: new Date().toISOString(),
+    url: typeof window !== "undefined" ? window.location.href : "server",
+    ...context,
+  });
+}
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -51,7 +68,16 @@ export const Route = createRootRouteWithContext<{
       { rel: "stylesheet", href: appCss },
     ],
   }),
-  errorComponent: ({ error }) => (
+  errorComponent: ErrorComponent,
+  component: RootComponent,
+});
+
+function ErrorComponent({ error }: { error: Error }) {
+  useEffect(() => {
+    logError(error, { component: "RootErrorBoundary" });
+  }, [error]);
+
+  return (
     <RootDocument theme="system">
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
@@ -62,9 +88,8 @@ export const Route = createRootRouteWithContext<{
         </div>
       </div>
     </RootDocument>
-  ),
-  component: RootComponent,
-});
+  );
+}
 
 function RootComponent() {
   const theme = Route.useLoaderData();

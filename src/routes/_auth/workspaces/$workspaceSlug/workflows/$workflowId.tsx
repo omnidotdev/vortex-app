@@ -311,7 +311,7 @@ function WorkflowEditorPage() {
           expectedOutcome: "Temporal workflow completed",
         });
       } else {
-        // Fallback to direct execution
+        // fall back to direct execution
         logToDebugPane(
           "action",
           "Temporal unavailable, executing directly",
