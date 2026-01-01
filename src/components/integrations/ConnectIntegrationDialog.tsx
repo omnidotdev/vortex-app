@@ -207,7 +207,7 @@ export function ConnectIntegrationDialog({
               open={instructionsOpen}
               onOpenChange={(details) => setInstructionsOpen(details.open)}
             >
-              <Collapsible.Trigger className="flex w-full cursor-pointer items-center gap-2 rounded-md bg-muted/50 p-3 text-left text-sm font-medium hover:bg-muted">
+              <Collapsible.Trigger className="flex w-full cursor-pointer items-center gap-2 rounded-md bg-muted/50 p-3 text-left font-medium text-sm hover:bg-muted">
                 {instructionsOpen ? (
                   <ChevronDown className="h-4 w-4" />
                 ) : (
