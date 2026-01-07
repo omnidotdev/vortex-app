@@ -1,7 +1,10 @@
-import { formatDistanceToNow } from "date-fns";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { ChevronRight, Clock, History } from "lucide-react";
 
 import { RunStatusBadge } from "./RunStatusBadge";
+
+dayjs.extend(relativeTime);
 
 interface RunData {
   rowId: string;
@@ -103,11 +106,7 @@ export function WorkflowRunsList({
                   {formatDuration(run.startedAt, run.completedAt)}
                 </span>
                 {run.createdAt && (
-                  <span>
-                    {formatDistanceToNow(toDate(run.createdAt)!, {
-                      addSuffix: true,
-                    })}
-                  </span>
+                  <span>{dayjs(toDate(run.createdAt)).fromNow()}</span>
                 )}
               </div>
 

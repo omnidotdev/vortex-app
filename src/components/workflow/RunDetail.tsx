@@ -1,10 +1,13 @@
-import { formatDistanceToNow } from "date-fns";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { ArrowLeft, Calendar, Clock, Hash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RunStatusBadge } from "./RunStatusBadge";
 import { StepLogItem } from "./StepLogItem";
+
+dayjs.extend(relativeTime);
 
 interface StepLogData {
   rowId: string;
@@ -96,11 +99,7 @@ export function RunDetail({ run, onBack }: RunDetailProps) {
           {run.createdAt && (
             <div className="col-span-2 flex items-center gap-2 text-muted-foreground">
               <Calendar className="h-4 w-4" />
-              <span>
-                {formatDistanceToNow(toDate(run.createdAt)!, {
-                  addSuffix: true,
-                })}
-              </span>
+              <span>{dayjs(toDate(run.createdAt)).fromNow()}</span>
             </div>
           )}
         </div>
