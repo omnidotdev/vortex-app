@@ -1,4 +1,5 @@
-import { formatDistanceToNow } from "date-fns";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import {
   AlertCircle,
   CheckCircle2,
@@ -11,6 +12,8 @@ import {
 import { useState } from "react";
 
 import { cn } from "@/lib/utils";
+
+dayjs.extend(relativeTime);
 
 interface StepLogData {
   rowId: string;
@@ -115,11 +118,7 @@ export function StepLogItem({ step, index }: StepLogItemProps) {
                 {formatDuration(step.startedAt, step.completedAt)}
               </span>
               {step.startedAt && (
-                <span>
-                  {formatDistanceToNow(toDate(step.startedAt)!, {
-                    addSuffix: true,
-                  })}
-                </span>
+                <span>{dayjs(toDate(step.startedAt)).fromNow()}</span>
               )}
             </div>
 
