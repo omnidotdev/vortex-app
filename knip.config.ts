@@ -24,7 +24,6 @@ const knipConfig: KnipConfig = {
     "dotenv",
     // Future use dependencies
     "@tanstack/zod-adapter",
-    "date-fns",
     "ms",
     "react-hotkeys-hook",
     "stripe",

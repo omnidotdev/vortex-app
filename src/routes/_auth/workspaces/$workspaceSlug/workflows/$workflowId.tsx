@@ -5,7 +5,7 @@ import {
   notFound,
   useNavigate,
 } from "@tanstack/react-router";
-import { Grid3X3, Loader2, PlayCircle, Save } from "lucide-react";
+import { Grid3X3, History, Loader2, PlayCircle, Save } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ReactFlow, {
   Background,
@@ -36,6 +36,7 @@ import { TriggerNode } from "@/components/nodes/TriggerNode";
 import { Button } from "@/components/ui/button";
 import WorkflowSidebar from "@/components/WorkflowSidebar";
 import { NodeConfigSidebar } from "@/components/workflow/NodeConfigSidebar";
+import { WorkflowRunsPanel } from "@/components/workflow/WorkflowRunsPanel";
 import {
   useUpdateWorkflowMutation,
   useWorkflowQuery,
@@ -123,6 +124,7 @@ function WorkflowEditorPage() {
   const [isExecuting, setIsExecuting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+  const [showRunsPanel, setShowRunsPanel] = useState(false);
   const [snapToGrid, setSnapToGrid] = useState(true);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [reactFlowInstance, setReactFlowInstance] =
@@ -579,6 +581,17 @@ function WorkflowEditorPage() {
             )}
             Execute
           </Button>
+          <Button
+            variant={showRunsPanel ? "default" : "outline"}
+            size="sm"
+            onClick={() => {
+              setShowRunsPanel(!showRunsPanel);
+              if (!showRunsPanel) setSelectedNode(null);
+            }}
+          >
+            <History className="mr-1 h-4 w-4" />
+            History
+          </Button>
 
           <Button size="sm" onClick={handleSave} disabled={isSaving}>
             {isSaving ? (
@@ -637,8 +650,15 @@ function WorkflowEditorPage() {
           <DebugPane />
         </div>
 
-        {/* Right sidebar - Node config or Workflow info */}
-        {selectedNode ? (
+        {/* Right sidebar - Node config, Runs panel, or Workflow info */}
+        {showRunsPanel ? (
+          <aside className="w-100 shrink-0 overflow-hidden border-l bg-muted/30">
+            <WorkflowRunsPanel
+              runs={workflow.workflowRuns?.nodes || []}
+              totalCount={workflow.workflowRuns?.totalCount || 0}
+            />
+          </aside>
+        ) : selectedNode ? (
           <NodeConfigSidebar
             selectedNode={selectedNode}
             onNodeUpdate={handleNodeUpdate}
