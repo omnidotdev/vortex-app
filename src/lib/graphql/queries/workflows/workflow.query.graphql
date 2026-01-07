@@ -23,12 +23,15 @@ query Workflow($rowId: UUID!) {
         status
         startedAt
         completedAt
+        input
+        output
         error
         createdAt
         workflowStepLogs(orderBy: STARTED_AT_ASC) {
           nodes {
             rowId
             stepId
+            stepName
             stepType
             status
             input

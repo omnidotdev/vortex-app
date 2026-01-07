@@ -22,9 +22,14 @@ import type { Theme } from "@/providers/ThemeProvider";
 
 /**
  * Log errors in a structured format for debugging and future Sentry integration.
+ *
+ * TODO: Integrate Sentry for production error tracking
+ * - Install @sentry/react and @sentry/bun
+ * - Initialize Sentry in app entry point
+ * - Replace console.error with Sentry.captureException(error, { extra: context })
  */
 function logError(error: Error, context?: Record<string, unknown>) {
-  // Structured error logging - can be replaced with Sentry or other error tracking
+  // TODO: Replace with Sentry.captureException(error, { extra: context })
   // eslint-disable-next-line no-console
   console.error("[App Error]", {
     message: error.message,
