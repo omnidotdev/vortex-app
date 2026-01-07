@@ -10,6 +10,7 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { useEffect } from "react";
 import { Toaster } from "sonner";
 
+import { isDevEnv } from "@/lib/config/env.config";
 import appCss from "@/lib/styles/globals.css?url";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { fetchSession } from "@/server/functions/auth";
@@ -46,6 +47,8 @@ export const Route = createRootRouteWithContext<{
   session: AuthSession | null;
 }>()({
   beforeLoad: async () => {
+    // Skip auth in production (coming soon page)
+    if (!isDevEnv) return { session: null };
     const { session } = await fetchSession();
     return { session };
   },
@@ -60,12 +63,11 @@ export const Route = createRootRouteWithContext<{
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "Vortex - Workflow Automation Platform",
+        title: "Vortex",
       },
       {
         name: "description",
-        content:
-          "A powerful open-source workflow automation engine. Dev-first, JSON-first.",
+        content: "Coming soon",
       },
     ],
     links: [
@@ -96,8 +98,27 @@ function ErrorComponent({ error }: { error: Error }) {
   );
 }
 
+function ComingSoon() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800">
+      <div className="text-center">
+        <div className="text-9xl">🌪️</div>
+      </div>
+    </div>
+  );
+}
+
 function RootComponent() {
   const theme = Route.useLoaderData();
+
+  // Show coming soon page in production
+  if (!isDevEnv) {
+    return (
+      <RootDocument theme={theme}>
+        <ComingSoon />
+      </RootDocument>
+    );
+  }
 
   return (
     <RootDocument theme={theme}>
@@ -122,19 +143,21 @@ function RootDocument({
         </ThemeProvider>
 
         {/* dev tools (only included in development) */}
-        <TanStackDevtools
-          plugins={[
-            {
-              name: "Router",
-              render: <TanStackRouterDevtoolsPanel />,
-              defaultOpen: true,
-            },
-            {
-              name: "Query",
-              render: <ReactQueryDevtoolsPanel />,
-            },
-          ]}
-        />
+        {isDevEnv && (
+          <TanStackDevtools
+            plugins={[
+              {
+                name: "Router",
+                render: <TanStackRouterDevtoolsPanel />,
+                defaultOpen: true,
+              },
+              {
+                name: "Query",
+                render: <ReactQueryDevtoolsPanel />,
+              },
+            ]}
+          />
+        )}
 
         <Scripts />
       </body>
