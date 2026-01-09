@@ -16,4 +16,3 @@ export const AUTH_ISSUER_URL = `${AUTH_BASE_URL}/api/auth`;
 
 // environment helpers
 export const isDevEnv = import.meta.env.DEV;
-
