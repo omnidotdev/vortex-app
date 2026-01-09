@@ -100,7 +100,7 @@ function ErrorComponent({ error }: { error: Error }) {
 
 function ComingSoon() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800">
+    <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-slate-900 to-slate-800">
       <div className="text-center">
         <div className="text-9xl">🌪️</div>
       </div>
