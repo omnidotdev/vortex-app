@@ -18,30 +18,3 @@ local_resource(
     labels=[project_name],
     env=env_local,
 )
-
-docker_compose('docker-compose.yml')
-
-# TODO move all below to metarepo
-# Hatchet dashboard available at http://localhost:8080
-dc_resource('hatchet', labels=['hatchet'])
-dc_resource('hatchet-db', labels=['hatchet'])
-
-local_resource(
-    'install-deps-vortex-worker',
-    cmd='bun i',
-    dir='../vortex-worker',
-    deps=['../vortex-worker/package.json'],
-    labels=['worker'],
-)
-
-worker_env = dotenv_values("../vortex-worker/.env.local")
-
-local_resource(
-    'vortex-worker',
-    serve_cmd='bun run dev',
-    serve_dir='../vortex-worker',
-    deps=['../vortex-worker/src'],
-    resource_deps=['hatchet', 'install-deps-vortex-worker'],
-    labels=['worker'],
-    env=worker_env,
-)
