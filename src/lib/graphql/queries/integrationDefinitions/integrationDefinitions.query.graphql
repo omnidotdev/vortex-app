@@ -16,7 +16,7 @@ query IntegrationDefinitions($isFeatured: Boolean) {
       keepAlive
       setupSteps
       docsUrl
-      supportsOauth
+      supportsOAuth
     }
     totalCount
   }
@@ -41,6 +41,6 @@ query IntegrationDefinition($rowId: String!) {
     isEnabled
     setupSteps
     docsUrl
-    supportsOauth
+    supportsOAuth
   }
 }

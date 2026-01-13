@@ -1117,6 +1117,7 @@ export type IntegrationDefinition = Node & {
   category: Scalars['String']['output'];
   createdAt?: Maybe<Scalars['Datetime']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  docsUrl?: Maybe<Scalars['String']['output']>;
   iconUrl?: Maybe<Scalars['String']['output']>;
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   id: Scalars['ID']['output'];
@@ -1131,6 +1132,8 @@ export type IntegrationDefinition = Node & {
   mcpPackage: Scalars['String']['output'];
   name: Scalars['String']['output'];
   rowId: Scalars['String']['output'];
+  setupSteps?: Maybe<Scalars['JSON']['output']>;
+  supportsOAuth: Scalars['Boolean']['output'];
   updatedAt?: Maybe<Scalars['Datetime']['output']>;
 };
 
@@ -1188,6 +1191,8 @@ export type IntegrationDefinitionCondition = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `description` field. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `docsUrl` field. */
+  docsUrl?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `iconUrl` field. */
   iconUrl?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `idleTimeoutMs` field. */
@@ -1206,6 +1211,8 @@ export type IntegrationDefinitionCondition = {
   name?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `supportsOAuth` field. */
+  supportsOAuth?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
@@ -1246,6 +1253,8 @@ export type IntegrationDefinitionDistinctCountAggregates = {
   createdAt?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of description across the matching connection */
   description?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of docsUrl across the matching connection */
+  docsUrl?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of iconUrl across the matching connection */
   iconUrl?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of idleTimeoutMs across the matching connection */
@@ -1266,6 +1275,10 @@ export type IntegrationDefinitionDistinctCountAggregates = {
   name?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of rowId across the matching connection */
   rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of setupSteps across the matching connection */
+  setupSteps?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of supportsOAuth across the matching connection */
+  supportsOAuth?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of updatedAt across the matching connection */
   updatedAt?: Maybe<Scalars['BigInt']['output']>;
 };
@@ -1291,6 +1304,8 @@ export type IntegrationDefinitionFilter = {
   createdAt?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `description` field. */
   description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `docsUrl` field. */
+  docsUrl?: InputMaybe<StringFilter>;
   /** Filter by the object’s `iconUrl` field. */
   iconUrl?: InputMaybe<StringFilter>;
   /** Filter by the object’s `idleTimeoutMs` field. */
@@ -1317,6 +1332,8 @@ export type IntegrationDefinitionFilter = {
   or?: InputMaybe<Array<IntegrationDefinitionFilter>>;
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `supportsOAuth` field. */
+  supportsOAuth?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<DatetimeFilter>;
 };
@@ -1330,6 +1347,7 @@ export enum IntegrationDefinitionGroupBy {
   CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
   CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
   Description = 'DESCRIPTION',
+  DocsUrl = 'DOCS_URL',
   IconUrl = 'ICON_URL',
   IdleTimeoutMs = 'IDLE_TIMEOUT_MS',
   IsEnabled = 'IS_ENABLED',
@@ -1339,6 +1357,8 @@ export enum IntegrationDefinitionGroupBy {
   McpCommand = 'MCP_COMMAND',
   McpPackage = 'MCP_PACKAGE',
   Name = 'NAME',
+  SetupSteps = 'SETUP_STEPS',
+  SupportsOAuth = 'SUPPORTS_O_AUTH',
   UpdatedAt = 'UPDATED_AT',
   UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
   UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR'
@@ -1420,6 +1440,7 @@ export type IntegrationDefinitionInput = {
   category?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  docsUrl?: InputMaybe<Scalars['String']['input']>;
   iconUrl?: InputMaybe<Scalars['String']['input']>;
   idleTimeoutMs?: InputMaybe<Scalars['Int']['input']>;
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1430,6 +1451,8 @@ export type IntegrationDefinitionInput = {
   mcpPackage: Scalars['String']['input'];
   name: Scalars['String']['input'];
   rowId: Scalars['String']['input'];
+  setupSteps?: InputMaybe<Scalars['JSON']['input']>;
+  supportsOAuth?: InputMaybe<Scalars['Boolean']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -1455,6 +1478,8 @@ export enum IntegrationDefinitionOrderBy {
   CreatedAtDesc = 'CREATED_AT_DESC',
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
+  DocsUrlAsc = 'DOCS_URL_ASC',
+  DocsUrlDesc = 'DOCS_URL_DESC',
   IconUrlAsc = 'ICON_URL_ASC',
   IconUrlDesc = 'ICON_URL_DESC',
   IdleTimeoutMsAsc = 'IDLE_TIMEOUT_MS_ASC',
@@ -1498,6 +1523,8 @@ export enum IntegrationDefinitionOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RowIdAsc = 'ROW_ID_ASC',
   RowIdDesc = 'ROW_ID_DESC',
+  SupportsOAuthAsc = 'SUPPORTS_O_AUTH_ASC',
+  SupportsOAuthDesc = 'SUPPORTS_O_AUTH_DESC',
   UpdatedAtAsc = 'UPDATED_AT_ASC',
   UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
@@ -1509,6 +1536,7 @@ export type IntegrationDefinitionPatch = {
   category?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  docsUrl?: InputMaybe<Scalars['String']['input']>;
   iconUrl?: InputMaybe<Scalars['String']['input']>;
   idleTimeoutMs?: InputMaybe<Scalars['Int']['input']>;
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1519,6 +1547,8 @@ export type IntegrationDefinitionPatch = {
   mcpPackage?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['String']['input']>;
+  setupSteps?: InputMaybe<Scalars['JSON']['input']>;
+  supportsOAuth?: InputMaybe<Scalars['Boolean']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -5851,6 +5881,8 @@ export type WorkflowToManyWorkflowRunFilter = {
 export type Workspace = Node & {
   __typename?: 'Workspace';
   createdAt?: Maybe<Scalars['Datetime']['output']>;
+  deletedAt?: Maybe<Scalars['Datetime']['output']>;
+  deletionReason?: Maybe<Scalars['String']['output']>;
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   id: Scalars['ID']['output'];
   /** Reads and enables pagination through a set of `Integration`. */
@@ -5860,6 +5892,7 @@ export type Workspace = Node & {
   /** Reads and enables pagination through a set of `McpServer`. */
   mcpServers: McpServerConnection;
   name: Scalars['String']['output'];
+  organizationId: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `Plugin`. */
   plugins: PluginConnection;
   rowId: Scalars['UUID']['output'];
@@ -5959,8 +5992,14 @@ export type WorkspaceAggregates = {
 export type WorkspaceCondition = {
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `deletedAt` field. */
+  deletedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `deletionReason` field. */
+  deletionReason?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `slug` field. */
@@ -6001,8 +6040,14 @@ export type WorkspaceDistinctCountAggregates = {
   __typename?: 'WorkspaceDistinctCountAggregates';
   /** Distinct count of createdAt across the matching connection */
   createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of deletedAt across the matching connection */
+  deletedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of deletionReason across the matching connection */
+  deletionReason?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of name across the matching connection */
   name?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of rowId across the matching connection */
   rowId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of slug across the matching connection */
@@ -6030,6 +6075,10 @@ export type WorkspaceFilter = {
   and?: InputMaybe<Array<WorkspaceFilter>>;
   /** Filter by the object’s `createdAt` field. */
   createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `deletedAt` field. */
+  deletedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `deletionReason` field. */
+  deletionReason?: InputMaybe<StringFilter>;
   /** Filter by the object’s `integrations` relation. */
   integrations?: InputMaybe<WorkspaceToManyIntegrationFilter>;
   /** Some related `integrations` exist. */
@@ -6048,6 +6097,8 @@ export type WorkspaceFilter = {
   not?: InputMaybe<WorkspaceFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<WorkspaceFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `plugins` relation. */
   plugins?: InputMaybe<WorkspaceToManyPluginFilter>;
   /** Some related `plugins` exist. */
@@ -6077,7 +6128,12 @@ export enum WorkspaceGroupBy {
   CreatedAt = 'CREATED_AT',
   CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
   CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  DeletedAt = 'DELETED_AT',
+  DeletedAtTruncatedToDay = 'DELETED_AT_TRUNCATED_TO_DAY',
+  DeletedAtTruncatedToHour = 'DELETED_AT_TRUNCATED_TO_HOUR',
+  DeletionReason = 'DELETION_REASON',
   Name = 'NAME',
+  OrganizationId = 'ORGANIZATION_ID',
   SubscriptionId = 'SUBSCRIPTION_ID',
   Tier = 'TIER',
   UpdatedAt = 'UPDATED_AT',
@@ -6087,11 +6143,13 @@ export enum WorkspaceGroupBy {
 
 export type WorkspaceHavingAverageInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  deletedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
 export type WorkspaceHavingDistinctCountInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  deletedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
@@ -6112,43 +6170,53 @@ export type WorkspaceHavingInput = {
 
 export type WorkspaceHavingMaxInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  deletedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
 export type WorkspaceHavingMinInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  deletedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
 export type WorkspaceHavingStddevPopulationInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  deletedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
 export type WorkspaceHavingStddevSampleInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  deletedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
 export type WorkspaceHavingSumInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  deletedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
 export type WorkspaceHavingVariancePopulationInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  deletedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
 export type WorkspaceHavingVarianceSampleInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  deletedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
 /** An input for mutations affecting `Workspace` */
 export type WorkspaceInput = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  deletedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  deletionReason?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
+  organizationId: Scalars['String']['input'];
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   slug: Scalars['String']['input'];
   subscriptionId?: InputMaybe<Scalars['String']['input']>;
@@ -6160,6 +6228,10 @@ export type WorkspaceInput = {
 export enum WorkspaceOrderBy {
   CreatedAtAsc = 'CREATED_AT_ASC',
   CreatedAtDesc = 'CREATED_AT_DESC',
+  DeletedAtAsc = 'DELETED_AT_ASC',
+  DeletedAtDesc = 'DELETED_AT_DESC',
+  DeletionReasonAsc = 'DELETION_REASON_ASC',
+  DeletionReasonDesc = 'DELETION_REASON_DESC',
   IntegrationsCountAsc = 'INTEGRATIONS_COUNT_ASC',
   IntegrationsCountDesc = 'INTEGRATIONS_COUNT_DESC',
   IntegrationsDistinctCountConfigAsc = 'INTEGRATIONS_DISTINCT_COUNT_CONFIG_ASC',
@@ -6227,6 +6299,8 @@ export enum WorkspaceOrderBy {
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
   Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
   PluginsCountAsc = 'PLUGINS_COUNT_ASC',
   PluginsCountDesc = 'PLUGINS_COUNT_DESC',
   PluginsDistinctCountAuthorIdAsc = 'PLUGINS_DISTINCT_COUNT_AUTHOR_ID_ASC',
@@ -6312,7 +6386,10 @@ export enum WorkspaceOrderBy {
 /** Represents an update to a `Workspace`. Fields that are set will be updated. */
 export type WorkspacePatch = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  deletedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  deletionReason?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  organizationId?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
   subscriptionId?: InputMaybe<Scalars['String']['input']>;
@@ -6781,14 +6858,14 @@ export type IntegrationDefinitionsQueryVariables = Exact<{
 }>;
 
 
-export type IntegrationDefinitionsQuery = { __typename?: 'Query', integrationDefinitions?: { __typename?: 'IntegrationDefinitionConnection', totalCount: number, nodes: Array<{ __typename?: 'IntegrationDefinition', id: string, rowId: string, name: string, description?: string | null, iconUrl?: string | null, category: string, authType: string, authFields: Record<string, unknown>, isFeatured: boolean, keepAlive: boolean }> } | null };
+export type IntegrationDefinitionsQuery = { __typename?: 'Query', integrationDefinitions?: { __typename?: 'IntegrationDefinitionConnection', totalCount: number, nodes: Array<{ __typename?: 'IntegrationDefinition', id: string, rowId: string, name: string, description?: string | null, iconUrl?: string | null, category: string, authType: string, authFields: Record<string, unknown>, isFeatured: boolean, keepAlive: boolean, setupSteps?: Record<string, unknown> | null, docsUrl?: string | null, supportsOAuth: boolean }> } | null };
 
 export type IntegrationDefinitionQueryVariables = Exact<{
   rowId: Scalars['String']['input'];
 }>;
 
 
-export type IntegrationDefinitionQuery = { __typename?: 'Query', integrationDefinition?: { __typename?: 'IntegrationDefinition', id: string, name: string, description?: string | null, iconUrl?: string | null, category: string, authType: string, authFields: Record<string, unknown>, mcpPackage: string, mcpCommand: string, mcpArgs: Record<string, unknown>, keepAlive: boolean, idleTimeoutMs: number, isFeatured: boolean, isEnabled: boolean } | null };
+export type IntegrationDefinitionQuery = { __typename?: 'Query', integrationDefinition?: { __typename?: 'IntegrationDefinition', id: string, rowId: string, name: string, description?: string | null, iconUrl?: string | null, category: string, authType: string, authFields: Record<string, unknown>, mcpPackage: string, mcpCommand: string, mcpArgs: Record<string, unknown>, keepAlive: boolean, idleTimeoutMs: number, isFeatured: boolean, isEnabled: boolean, setupSteps?: Record<string, unknown> | null, docsUrl?: string | null, supportsOAuth: boolean } | null };
 
 export type IntegrationsQueryVariables = Exact<{
   workspaceId: Scalars['UUID']['input'];
@@ -6832,7 +6909,7 @@ export type WorkflowQueryVariables = Exact<{
 }>;
 
 
-export type WorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', rowId: string, workspaceId: string, name: string, description?: string | null, definition: Record<string, unknown>, cronExpression?: string | null, webhookSecret?: string | null, isActive: boolean, createdAt?: Date | null, updatedAt?: Date | null, workspace?: { __typename?: 'Workspace', rowId: string, name: string, slug: string, tier: Tier } | null, workflowRuns: { __typename?: 'WorkflowRunConnection', totalCount: number, nodes: Array<{ __typename?: 'WorkflowRun', rowId: string, engineWorkflowId: string, status: string, startedAt?: Date | null, completedAt?: Date | null, error?: string | null, createdAt?: Date | null, workflowStepLogs: { __typename?: 'WorkflowStepLogConnection', nodes: Array<{ __typename?: 'WorkflowStepLog', rowId: string, stepId: string, stepType: string, status: string, input?: Record<string, unknown> | null, output?: Record<string, unknown> | null, error?: string | null, startedAt?: Date | null, completedAt?: Date | null }> } }> } } | null };
+export type WorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', rowId: string, workspaceId: string, name: string, description?: string | null, definition: Record<string, unknown>, cronExpression?: string | null, webhookSecret?: string | null, isActive: boolean, createdAt?: Date | null, updatedAt?: Date | null, workspace?: { __typename?: 'Workspace', rowId: string, name: string, slug: string, tier: Tier } | null, workflowRuns: { __typename?: 'WorkflowRunConnection', totalCount: number, nodes: Array<{ __typename?: 'WorkflowRun', rowId: string, engineWorkflowId: string, status: string, startedAt?: Date | null, completedAt?: Date | null, input?: Record<string, unknown> | null, output?: Record<string, unknown> | null, error?: string | null, createdAt?: Date | null, workflowStepLogs: { __typename?: 'WorkflowStepLogConnection', nodes: Array<{ __typename?: 'WorkflowStepLog', rowId: string, stepId: string, stepName: string, stepType: string, status: string, input?: Record<string, unknown> | null, output?: Record<string, unknown> | null, error?: string | null, startedAt?: Date | null, completedAt?: Date | null }> } }> } } | null };
 
 export type WorkflowsQueryVariables = Exact<{
   workspaceId: Scalars['UUID']['input'];
@@ -7086,6 +7163,9 @@ export const IntegrationDefinitionsDocument = gql`
       authFields
       isFeatured
       keepAlive
+      setupSteps
+      docsUrl
+      supportsOAuth
     }
     totalCount
   }
@@ -7095,6 +7175,7 @@ export const IntegrationDefinitionDocument = gql`
     query IntegrationDefinition($rowId: String!) {
   integrationDefinition(rowId: $rowId) {
     id
+    rowId
     name
     description
     iconUrl
@@ -7108,6 +7189,9 @@ export const IntegrationDefinitionDocument = gql`
     idleTimeoutMs
     isFeatured
     isEnabled
+    setupSteps
+    docsUrl
+    supportsOAuth
   }
 }
     `;
@@ -7223,12 +7307,15 @@ export const WorkflowDocument = gql`
         status
         startedAt
         completedAt
+        input
+        output
         error
         createdAt
         workflowStepLogs(orderBy: STARTED_AT_ASC) {
           nodes {
             rowId
             stepId
+            stepName
             stepType
             status
             input
