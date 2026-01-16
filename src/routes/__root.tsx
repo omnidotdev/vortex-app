@@ -114,7 +114,7 @@ function MaintenancePage() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white">
       <div className="text-center">
         <div className="mb-6 text-9xl">🌪️</div>
-        <h1 className="mb-4 text-4xl font-bold">Caught in a Whirlwind</h1>
+        <h1 className="mb-4 font-bold text-4xl">Caught in a Whirlwind</h1>
         <p className="max-w-md text-lg text-slate-300">
           We're spinning up some improvements. Vortex will be back shortly.
         </p>
