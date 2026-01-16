@@ -16,6 +16,9 @@ const {
   AUTH_CLIENT_ID,
   AUTH_CLIENT_SECRET,
   AUTH_SECRET,
+  // Feature flags
+  VITE_FLAGS_API_HOST,
+  VITE_FLAGS_CLIENT_KEY,
 } = env;
 
 // Environment helpers
@@ -66,3 +69,7 @@ export const API_GRAPHQL_URL = `${API_BASE_URL}/graphql`;
 export const AUTH_ISSUER_URL = `${AUTH_BASE_URL}/api/auth`;
 
 export { AUTH_CLIENT_ID, AUTH_CLIENT_SECRET, AUTH_SECRET };
+
+// Feature flags (optional - graceful fallback if not set)
+export const FLAGS_API_HOST = VITE_FLAGS_API_HOST;
+export const FLAGS_CLIENT_KEY = VITE_FLAGS_CLIENT_KEY;
