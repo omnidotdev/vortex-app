@@ -12,7 +12,7 @@ import tsConfigPaths from "vite-tsconfig-paths";
  */
 const viteConfig = defineConfig(({ command }) => ({
   server: {
-    port: 3000,
+    port: 3222,
     host: "0.0.0.0",
     allowedHosts: ["vortex.omni.dev"],
   },

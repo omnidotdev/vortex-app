@@ -7,10 +7,12 @@ import {
   createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { createServerFn } from "@tanstack/react-start";
 import { useEffect } from "react";
 import { Toaster } from "sonner";
 
 import { isDevEnv } from "@/lib/config/env.config";
+import { FLAGS, buildFlagContext, getBooleanFlag } from "@/lib/flags";
 import appCss from "@/lib/styles/globals.css?url";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { fetchSession } from "@/server/functions/auth";
@@ -20,6 +22,15 @@ import type { QueryClient } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import type { AuthSession } from "@/lib/auth/getAuth";
 import type { Theme } from "@/providers/ThemeProvider";
+
+type Session = Awaited<ReturnType<typeof fetchSession>>["session"];
+
+const fetchMaintenanceMode = createServerFn()
+  .validator((session: Session) => session)
+  .handler(async ({ data: session }) => {
+    const flagContext = buildFlagContext(session ?? undefined);
+    return getBooleanFlag(FLAGS.MAINTENANCE, false, flagContext);
+  });
 
 /**
  * Log errors in a structured format for debugging and future Sentry integration.
@@ -45,12 +56,12 @@ function logError(error: Error, context?: Record<string, unknown>) {
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   session: AuthSession | null;
+  isMaintenanceMode: boolean;
 }>()({
   beforeLoad: async () => {
-    // Skip auth in production (coming soon page)
-    if (!isDevEnv) return { session: null };
     const { session } = await fetchSession();
-    return { session };
+    const isMaintenanceMode = await fetchMaintenanceMode({ data: session });
+    return { session, isMaintenanceMode };
   },
   loader: () => getTheme(),
   head: () => ({
@@ -98,11 +109,15 @@ function ErrorComponent({ error }: { error: Error }) {
   );
 }
 
-function ComingSoon() {
+function MaintenancePage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-slate-900 to-slate-800">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white">
       <div className="text-center">
-        <div className="text-9xl">🌪️</div>
+        <div className="mb-6 text-9xl">🌪️</div>
+        <h1 className="mb-4 text-4xl font-bold">Caught in a Whirlwind</h1>
+        <p className="max-w-md text-lg text-slate-300">
+          We're spinning up some improvements. Vortex will be back shortly.
+        </p>
       </div>
     </div>
   );
@@ -110,12 +125,12 @@ function ComingSoon() {
 
 function RootComponent() {
   const theme = Route.useLoaderData();
+  const { isMaintenanceMode } = Route.useRouteContext();
 
-  // Show coming soon page in production
-  if (!isDevEnv) {
+  if (isMaintenanceMode) {
     return (
       <RootDocument theme={theme}>
-        <ComingSoon />
+        <MaintenancePage />
       </RootDocument>
     );
   }
