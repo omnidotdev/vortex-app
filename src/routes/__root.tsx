@@ -25,12 +25,12 @@ import type { Theme } from "@/providers/ThemeProvider";
 
 type Session = Awaited<ReturnType<typeof fetchSession>>["session"];
 
-const fetchMaintenanceMode = createServerFn()
-  .validator((session: Session) => session)
-  .handler(async ({ data: session }) => {
-    const flagContext = buildFlagContext(session ?? undefined);
+const fetchMaintenanceMode = createServerFn().handler(
+  async (ctx: { data: Session }) => {
+    const flagContext = buildFlagContext(ctx.data ?? undefined);
     return getBooleanFlag(FLAGS.MAINTENANCE, false, flagContext);
-  });
+  },
+);
 
 /**
  * Log errors in a structured format for debugging and future Sentry integration.
