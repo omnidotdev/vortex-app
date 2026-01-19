@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getCookie, setCookie } from "@tanstack/react-start/server";
+import { zodValidator } from "@tanstack/zod-adapter";
 import { z } from "zod";
 
 const themeValidator = z.union([
@@ -23,7 +24,7 @@ export const getTheme = createServerFn().handler(
  * Set the theme in cookies.
  */
 export const setTheme = createServerFn({ method: "POST" })
-  .inputValidator(themeValidator)
+  .validator(zodValidator(themeValidator))
   .handler(async ({ data }) => {
     setCookie(THEME_COOKIE, data, {
       path: "/",
