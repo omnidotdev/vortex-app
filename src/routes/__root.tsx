@@ -12,7 +12,7 @@ import { useEffect } from "react";
 import { Toaster } from "sonner";
 
 import { isDevEnv } from "@/lib/config/env.config";
-import { FLAGS, buildFlagContext, getBooleanFlag } from "@/lib/flags";
+import { fetchMaintenanceMode } from "@/lib/flags";
 import appCss from "@/lib/styles/globals.css?url";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { fetchSession } from "@/server/functions/auth";
@@ -24,13 +24,6 @@ import type { AuthSession } from "@/lib/auth/getAuth";
 import type { Theme } from "@/providers/ThemeProvider";
 
 type Session = Awaited<ReturnType<typeof fetchSession>>["session"];
-
-const fetchMaintenanceMode = createServerFn().handler(
-  async (ctx: { data: Session }) => {
-    const flagContext = buildFlagContext(ctx.data ?? undefined);
-    return getBooleanFlag(FLAGS.MAINTENANCE, false, flagContext);
-  },
-);
 
 /**
  * Log errors in a structured format for debugging and future Sentry integration.
@@ -60,7 +53,7 @@ export const Route = createRootRouteWithContext<{
 }>()({
   beforeLoad: async () => {
     const { session } = await fetchSession();
-    const isMaintenanceMode = await fetchMaintenanceMode({ data: session });
+    const { isMaintenanceMode } = await fetchMaintenanceMode();
     return { session, isMaintenanceMode };
   },
   loader: () => getTheme(),
