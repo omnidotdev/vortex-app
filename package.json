@@ -16,7 +16,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@growthbook/growthbook": "^1.6.0",
+    "unleash-client": "^6.3.0",
     "@ark-ui/react": "^5.30.0",
     "@hatchet-dev/typescript-sdk": "^1.10.3",
     "@radix-ui/react-alert-dialog": "^1.1.15",
