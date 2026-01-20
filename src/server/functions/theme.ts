@@ -24,7 +24,7 @@ export const getTheme = createServerFn().handler(
  * Set the theme in cookies.
  */
 export const setTheme = createServerFn({ method: "POST" })
-  .validator(zodValidator(themeValidator))
+  .inputValidator(zodValidator(themeValidator))
   .handler(async ({ data }) => {
     setCookie(THEME_COOKIE, data, {
       path: "/",
