@@ -53,12 +53,14 @@ assertEnv("VITE_BASE_URL", VITE_BASE_URL);
 assertEnv("VITE_API_BASE_URL", VITE_API_BASE_URL);
 assertEnv("VITE_AUTH_BASE_URL", VITE_AUTH_BASE_URL);
 
-// Server-side auth secrets (required always for auth to work)
-assertEnv("AUTH_CLIENT_ID", AUTH_CLIENT_ID);
-assertEnv("AUTH_CLIENT_SECRET", AUTH_CLIENT_SECRET);
+// Server-side auth secrets (only validate on server where they're available)
+if (typeof window === "undefined") {
+  assertEnv("AUTH_CLIENT_ID", AUTH_CLIENT_ID);
+  assertEnv("AUTH_CLIENT_SECRET", AUTH_CLIENT_SECRET);
 
-// Production-only requirements
-assertProdEnv("AUTH_SECRET", AUTH_SECRET);
+  // Production-only requirements
+  assertProdEnv("AUTH_SECRET", AUTH_SECRET);
+}
 
 // Export with cleaner names
 export const BASE_URL = VITE_BASE_URL;
