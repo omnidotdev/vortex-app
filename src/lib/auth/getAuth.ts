@@ -50,6 +50,8 @@ export async function getAuth(request: Request): Promise<AuthSession | null> {
         );
         const { payload } = await jwtVerify(tokenResult.idToken, jwks);
         identityProviderId = payload.sub;
+      } else {
+        console.error("[getAuth] No idToken in tokenResult");
       }
     } catch (err) {
       console.error("[getAuth] Error fetching access token:", err);
