@@ -1,9 +1,0 @@
-mutation CreateWorkspaceUser($input: CreateWorkspaceUserInput!) {
-  createWorkspaceUser(input: $input) {
-    workspaceUser {
-      workspaceId
-      userId
-      role
-    }
-  }
-}

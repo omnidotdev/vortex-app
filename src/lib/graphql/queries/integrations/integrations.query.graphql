@@ -1,6 +1,6 @@
-query Integrations($workspaceId: UUID!, $limit: Int) {
+query Integrations($organizationId: String!, $limit: Int) {
   integrations(
-    condition: { workspaceId: $workspaceId }
+    condition: { organizationId: $organizationId }
     orderBy: NAME_ASC
     first: $limit
   ) {
