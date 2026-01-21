@@ -163,7 +163,8 @@ export async function getAuth(request: Request): Promise<AuthSession | null> {
       // Handle rowId cache miss: fetch from API and populate cache
       if (!rowId && accessToken && identityProviderId) {
         rowId =
-          (await fetchRowIdFromApi(accessToken, identityProviderId)) ?? undefined;
+          (await fetchRowIdFromApi(accessToken, identityProviderId)) ??
+          undefined;
 
         // Cache the rowId for subsequent requests
         if (rowId) {
