@@ -12,9 +12,9 @@ import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
 export const Route = createFileRoute(
   "/_auth/workspaces/$workspaceSlug/templates",
 )({
-  loader: async ({ context: { workspaceBySlug } }) => {
-    if (!workspaceBySlug) throw notFound();
-    return { organizationId: workspaceBySlug.rowId };
+  loader: async ({ context: { organizationId } }) => {
+    if (!organizationId) throw notFound();
+    return { organizationId };
   },
   component: TemplatesPage,
 });

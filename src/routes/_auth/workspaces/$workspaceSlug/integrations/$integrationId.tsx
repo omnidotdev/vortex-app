@@ -36,14 +36,14 @@ import {
 export const Route = createFileRoute(
   "/_auth/workspaces/$workspaceSlug/integrations/$integrationId",
 )({
-  loader: async ({ context: { queryClient, workspaceBySlug }, params }) => {
-    if (!workspaceBySlug) throw notFound();
+  loader: async ({ context: { queryClient, organizationId }, params }) => {
+    if (!organizationId) throw notFound();
 
     await queryClient.ensureQueryData(
       integrationOptions({ id: params.integrationId }),
     );
 
-    return { organizationId: workspaceBySlug.rowId };
+    return { organizationId };
   },
   component: IntegrationDetailPage,
 });

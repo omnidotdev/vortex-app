@@ -10,10 +10,10 @@ import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
 export const Route = createFileRoute(
   "/_auth/workspaces/$workspaceSlug/workflows/new",
 )({
-  loader: async ({ context: { workspaceBySlug } }) => {
-    if (!workspaceBySlug) throw notFound();
+  loader: async ({ context: { organizationId } }) => {
+    if (!organizationId) throw notFound();
 
-    return { organizationId: workspaceBySlug.rowId };
+    return { organizationId };
   },
   component: NewWorkflowPage,
 });
