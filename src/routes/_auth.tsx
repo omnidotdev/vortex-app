@@ -9,15 +9,12 @@ import {
 } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
 
-import CreateWorkspaceDialog from "@/components/core/CreateWorkspaceDialog";
 import { Button } from "@/components/ui/button";
-import workspaceBySlugOptions from "@/lib/options/workspaceBySlug.options";
-import workspacesOptions from "@/lib/options/workspaces.options";
 import SidebarProvider from "@/providers/SidebarProvider";
 import { signOutAndRedirect } from "@/server/functions/auth";
 
 export const Route = createFileRoute("/_auth")({
-  beforeLoad: async ({ params, context: { queryClient, session } }) => {
+  beforeLoad: async ({ params, context: { session } }) => {
     // Redirect to home if not authenticated
     if (!session?.user) throw redirect({ to: "/" });
 
@@ -29,33 +26,21 @@ export const Route = createFileRoute("/_auth")({
 
     const { workspaceSlug } = params as { workspaceSlug?: string };
 
-    // If accessing a specific workspace, validate membership
-    if (workspaceSlug) {
-      const [{ workspaceBySlug }] = await Promise.all([
-        queryClient.ensureQueryData({
-          ...workspaceBySlugOptions({
-            slug: workspaceSlug,
-            userId: session.user.rowId!,
-          }),
-        }),
-        queryClient.prefetchQuery({
-          ...workspacesOptions({ userId: session.user.rowId! }),
-        }),
-      ]);
-
-      if (!workspaceBySlug) throw notFound();
-
-      return { workspaceBySlug };
+    if (!workspaceSlug) {
+      return { organizationId: undefined };
     }
 
-    await queryClient.ensureQueryData({
-      ...workspacesOptions({ userId: session.user.rowId! }),
-    });
+    // workspaceSlug in the URL is the org slug from JWT claims
+    const orgFromClaim = session?.organizations?.find(
+      (org) => org.slug === workspaceSlug,
+    );
 
-    return { workspaceBySlug: undefined };
+    if (!orgFromClaim) throw notFound();
+
+    return { organizationId: orgFromClaim.id, organization: orgFromClaim };
   },
   loader: async ({ context }) => ({
-    workspaceId: context.workspaceBySlug?.rowId,
+    organizationId: context.organizationId,
   }),
   notFoundComponent: () => (
     <div className="flex min-h-screen items-center justify-center">
@@ -89,7 +74,6 @@ function AuthenticatedLayout() {
           <Outlet />
         </main>
       </div>
-      <CreateWorkspaceDialog />
     </SidebarProvider>
   );
 }
@@ -98,7 +82,7 @@ function AuthenticatedLayout() {
  * Application sidebar for authenticated users.
  */
 function AppSidebar() {
-  const { session, workspaceBySlug } = Route.useRouteContext();
+  const { session, organization } = Route.useRouteContext();
   const params = useParams({ strict: false });
   const workspaceSlug = (params as { workspaceSlug?: string }).workspaceSlug;
 
@@ -127,7 +111,7 @@ function AppSidebar() {
             <>
               <div className="pt-4 pb-2">
                 <p className="px-3 font-medium text-muted-foreground text-xs uppercase">
-                  {workspaceBySlug?.name || workspaceSlug}
+                  {organization?.name || workspaceSlug}
                 </p>
               </div>
               <Link
