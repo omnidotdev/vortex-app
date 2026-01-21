@@ -6,14 +6,12 @@ import workflowsOptions from "@/lib/options/workflows.options";
 export const Route = createFileRoute(
   "/_auth/workspaces/$workspaceSlug/workflows/",
 )({
-  loader: async ({ context: { queryClient, workspaceBySlug } }) => {
-    if (!workspaceBySlug) throw notFound();
+  loader: async ({ context: { queryClient, organizationId } }) => {
+    if (!organizationId) throw notFound();
 
-    await queryClient.ensureQueryData(
-      workflowsOptions({ organizationId: workspaceBySlug.rowId }),
-    );
+    await queryClient.ensureQueryData(workflowsOptions({ organizationId }));
 
-    return { organizationId: workspaceBySlug.rowId };
+    return { organizationId };
   },
   component: WorkflowsPage,
 });

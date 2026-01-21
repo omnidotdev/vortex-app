@@ -30,17 +30,15 @@ type IntegrationDefinition = NonNullable<
 export const Route = createFileRoute(
   "/_auth/workspaces/$workspaceSlug/integrations/",
 )({
-  loader: async ({ context: { queryClient, workspaceBySlug } }) => {
-    if (!workspaceBySlug) throw notFound();
+  loader: async ({ context: { queryClient, organizationId } }) => {
+    if (!organizationId) throw notFound();
 
     await Promise.all([
-      queryClient.ensureQueryData(
-        integrationsOptions({ organizationId: workspaceBySlug.rowId }),
-      ),
+      queryClient.ensureQueryData(integrationsOptions({ organizationId })),
       queryClient.ensureQueryData(integrationDefinitionsOptions({})),
     ]);
 
-    return { organizationId: workspaceBySlug.rowId };
+    return { organizationId };
   },
   component: IntegrationsPage,
 });

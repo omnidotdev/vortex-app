@@ -49,14 +49,14 @@ import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
 export const Route = createFileRoute(
   "/_auth/workspaces/$workspaceSlug/workflows/$workflowId",
 )({
-  loader: async ({ params, context: { queryClient, workspaceBySlug } }) => {
-    if (!workspaceBySlug) throw notFound();
+  loader: async ({ params, context: { queryClient, organizationId } }) => {
+    if (!organizationId) throw notFound();
 
     await queryClient.ensureQueryData(
       workflowOptions({ rowId: params.workflowId }),
     );
 
-    return { organizationId: workspaceBySlug.rowId };
+    return { organizationId };
   },
   component: WorkflowEditorPage,
 });
