@@ -23,7 +23,6 @@ const knipConfig: KnipConfig = {
     // used by GraphQL Code Generator scripts
     "dotenv",
     // Future use dependencies
-    "ms",
     "react-hotkeys-hook",
     "stripe",
     "ts-pattern",

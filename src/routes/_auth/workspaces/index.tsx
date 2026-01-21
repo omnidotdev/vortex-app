@@ -1,10 +1,7 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { PlusIcon } from "lucide-react";
+import { ExternalLinkIcon, InfoIcon, LayersIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import useDialogStore, { DialogType } from "@/lib/hooks/store/useDialogStore";
-import workspacesOptions from "@/lib/options/workspaces.options";
+import { AUTH_BASE_URL } from "@/lib/config/env.config";
 
 export const Route = createFileRoute("/_auth/workspaces/")({
   component: WorkspacesPage,
@@ -12,83 +9,76 @@ export const Route = createFileRoute("/_auth/workspaces/")({
 
 /**
  * Workspaces list page.
+ * Displays Omni organizations from JWT claims as workspaces.
  */
 function WorkspacesPage() {
   const { session } = Route.useRouteContext();
 
-  // If user doesn't have a rowId yet (first login, not synced to API),
-  // show empty state
-  if (!session?.user?.rowId) {
-    return (
-      <div className="p-8">
-        <div className="flex items-center justify-between">
-          <h1 className="font-bold text-2xl">Workspaces</h1>
-        </div>
-        <div className="mt-8 rounded-lg border border-dashed p-12 text-center">
-          <h3 className="font-medium text-lg">Setting up your account...</h3>
-          <p className="mt-2 text-muted-foreground text-sm">
-            Please wait while we finish setting up your account.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  return <WorkspacesList userId={session.user.rowId} />;
-}
-
-function WorkspacesList({ userId }: { userId: string }) {
-  const { data } = useSuspenseQuery({
-    ...workspacesOptions({ userId }),
-  });
-
-  const { setIsOpen: setIsCreateWorkspaceOpen } = useDialogStore({
-    type: DialogType.CreateWorkspace,
-  });
-
-  const workspaces = data?.workspaces?.nodes ?? [];
+  // Get user's organizations from JWT claims
+  const organizations = session?.organizations ?? [];
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between">
-        <h1 className="font-bold text-2xl">Workspaces</h1>
-        <Button onClick={() => setIsCreateWorkspaceOpen(true)}>
-          <PlusIcon className="mr-2 size-4" />
-          Create Workspace
-        </Button>
+    <div className="flex h-full flex-col">
+      {/* Sticky header */}
+      <div className="shrink-0 px-12 pt-12">
+        <div className="mx-auto flex max-w-4xl flex-col items-center justify-center gap-4">
+          <LayersIcon className="size-12 text-muted-foreground" />
+
+          <h1 className="text-pretty text-center font-semibold text-2xl">
+            {organizations.length
+              ? "Select a workspace"
+              : "Create a workspace to get started"}
+          </h1>
+        </div>
       </div>
 
-      {workspaces.length === 0 ? (
-        <div className="mt-8 rounded-lg border border-dashed p-12 text-center">
-          <h3 className="font-medium text-lg">No workspaces yet</h3>
-          <p className="mt-2 text-muted-foreground text-sm">
-            Create your first workspace to get started with Vortex.
-          </p>
-          <Button
-            className="mt-4"
-            onClick={() => setIsCreateWorkspaceOpen(true)}
-          >
-            <PlusIcon className="mr-2 size-4" />
-            Create Workspace
-          </Button>
-        </div>
-      ) : (
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {workspaces.map((workspace) => (
-            <Link
-              key={workspace.rowId}
-              to="/workspaces/$workspaceSlug"
-              params={{ workspaceSlug: workspace.slug }}
-              className="block rounded-lg border p-6 hover:bg-accent"
-            >
-              <h3 className="font-semibold">{workspace.name}</h3>
-              <p className="mt-1 text-muted-foreground text-sm">
-                {workspace.tier.toLowerCase()} plan
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto px-12 py-8">
+        <div className="mx-auto w-full max-w-4xl">
+          {!!organizations.length && (
+            <div className="mb-8 grid grid-cols-[repeat(auto-fit,minmax(16rem,1fr))] justify-center gap-6">
+              {organizations.map((org) => (
+                <Link
+                  key={org.id}
+                  to="/workspaces/$workspaceSlug"
+                  params={{ workspaceSlug: org.slug }}
+                  preload="intent"
+                  className="relative flex h-32 flex-col items-center justify-center rounded-lg border p-4 hover:bg-accent"
+                >
+                  <div className="flex size-12 items-center justify-center rounded-full bg-primary/10 font-semibold text-lg uppercase">
+                    {org.name?.charAt(0)}
+                  </div>
+
+                  <h3 className="mt-3 truncate font-semibold">{org.name}</h3>
+                  <p className="text-muted-foreground text-xs">{org.type}</p>
+                </Link>
+              ))}
+            </div>
+          )}
+
+          {/* Info about organization management */}
+          <div className="flex flex-col items-center gap-4 rounded-lg border border-dashed bg-muted/50 p-8 text-center">
+            <InfoIcon className="size-6 text-muted-foreground" />
+            <div className="space-y-2">
+              <p className="text-muted-foreground text-sm">
+                Workspaces are currently managed via Omni Organizations.
               </p>
-            </Link>
-          ))}
+              <p className="text-muted-foreground text-xs">
+                This experience will be improved soon.
+              </p>
+            </div>
+            <a
+              href={AUTH_BASE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-primary text-sm hover:underline"
+            >
+              Manage Organizations
+              <ExternalLinkIcon className="size-3" />
+            </a>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
