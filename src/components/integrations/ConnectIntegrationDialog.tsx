@@ -50,13 +50,13 @@ interface AuthFieldSchema {
 
 interface ConnectIntegrationDialogProps {
   definition: IntegrationDefinition;
-  workspaceId: string;
+  organizationId: string;
   onClose: () => void;
 }
 
 export function ConnectIntegrationDialog({
   definition,
-  workspaceId,
+  organizationId,
   onClose,
 }: ConnectIntegrationDialogProps) {
   const queryClient = useQueryClient();
@@ -120,7 +120,7 @@ export function ConnectIntegrationDialog({
       const mcpResult = await createMcpServer.mutateAsync({
         input: {
           mcpServer: {
-            workspaceId,
+            organizationId,
             name: definition.name,
             type: definition.id,
             command: "npx",
@@ -140,7 +140,7 @@ export function ConnectIntegrationDialog({
       await createIntegration.mutateAsync({
         input: {
           integration: {
-            workspaceId,
+            organizationId,
             name: definition.name,
             type: definition.rowId,
             isEnabled: true,
@@ -153,7 +153,7 @@ export function ConnectIntegrationDialog({
 
       // Invalidate queries to refresh the list
       await queryClient.invalidateQueries({
-        queryKey: integrationsOptions({ workspaceId }).queryKey,
+        queryKey: integrationsOptions({ organizationId }).queryKey,
       });
 
       onClose();

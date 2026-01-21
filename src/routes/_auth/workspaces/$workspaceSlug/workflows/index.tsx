@@ -10,10 +10,10 @@ export const Route = createFileRoute(
     if (!workspaceBySlug) throw notFound();
 
     await queryClient.ensureQueryData(
-      workflowsOptions({ workspaceId: workspaceBySlug.rowId }),
+      workflowsOptions({ organizationId: workspaceBySlug.rowId }),
     );
 
-    return { workspaceId: workspaceBySlug.rowId };
+    return { organizationId: workspaceBySlug.rowId };
   },
   component: WorkflowsPage,
 });
@@ -23,10 +23,10 @@ export const Route = createFileRoute(
  */
 function WorkflowsPage() {
   const { workspaceSlug } = Route.useParams();
-  const { workspaceId } = Route.useLoaderData();
+  const { organizationId } = Route.useLoaderData();
 
   const { data: workflows } = useSuspenseQuery({
-    ...workflowsOptions({ workspaceId }),
+    ...workflowsOptions({ organizationId }),
     select: (data) => data?.workflows?.nodes ?? [],
   });
 

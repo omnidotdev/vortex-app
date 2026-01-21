@@ -37,7 +37,7 @@ function LandingPage() {
       </header>
 
       {/* Hero */}
-      <main className="flex flex-1 flex-col items-center justify-center px-4 text-center">
+      <main className="flex flex-1 flex-col items-center justify-center px-4 pt-16 text-center">
         <h1 className="font-bold text-5xl tracking-tight sm:text-6xl">
           Workflow Automation
           <br />
