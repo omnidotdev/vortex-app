@@ -17,6 +17,8 @@ import { Route as ApiExecuteWorkflowRouteImport } from './routes/api/execute-wor
 import { Route as PublicPricingRouteImport } from './routes/_public/pricing'
 import { Route as AuthWorkspacesIndexRouteImport } from './routes/_auth/workspaces/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as PublicOauthErrorRouteImport } from './routes/_public/oauth/error'
+import { Route as PublicOauthCallbackRouteImport } from './routes/_public/oauth/callback'
 import { Route as AuthWorkspacesWorkspaceSlugIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/index'
 import { Route as AuthWorkspacesWorkspaceSlugTemplatesRouteImport } from './routes/_auth/workspaces/$workspaceSlug/templates'
 import { Route as AuthWorkspacesWorkspaceSlugSettingsRouteImport } from './routes/_auth/workspaces/$workspaceSlug/settings'
@@ -63,6 +65,16 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
+} as any)
+const PublicOauthErrorRoute = PublicOauthErrorRouteImport.update({
+  id: '/oauth/error',
+  path: '/oauth/error',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicOauthCallbackRoute = PublicOauthCallbackRouteImport.update({
+  id: '/oauth/callback',
+  path: '/oauth/callback',
+  getParentRoute: () => PublicRoute,
 } as any)
 const AuthWorkspacesWorkspaceSlugIndexRoute =
   AuthWorkspacesWorkspaceSlugIndexRouteImport.update({
@@ -118,6 +130,8 @@ export interface FileRoutesByFullPath {
   '/api/execute-workflow': typeof ApiExecuteWorkflowRoute
   '/api/send-email': typeof ApiSendEmailRoute
   '/': typeof PublicIndexRoute
+  '/oauth/callback': typeof PublicOauthCallbackRoute
+  '/oauth/error': typeof PublicOauthErrorRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/workspaces': typeof AuthWorkspacesIndexRoute
   '/workspaces/$workspaceSlug/settings': typeof AuthWorkspacesWorkspaceSlugSettingsRoute
@@ -134,6 +148,8 @@ export interface FileRoutesByTo {
   '/api/execute-workflow': typeof ApiExecuteWorkflowRoute
   '/api/send-email': typeof ApiSendEmailRoute
   '/': typeof PublicIndexRoute
+  '/oauth/callback': typeof PublicOauthCallbackRoute
+  '/oauth/error': typeof PublicOauthErrorRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/workspaces': typeof AuthWorkspacesIndexRoute
   '/workspaces/$workspaceSlug/settings': typeof AuthWorkspacesWorkspaceSlugSettingsRoute
@@ -153,6 +169,8 @@ export interface FileRoutesById {
   '/api/execute-workflow': typeof ApiExecuteWorkflowRoute
   '/api/send-email': typeof ApiSendEmailRoute
   '/_public/': typeof PublicIndexRoute
+  '/_public/oauth/callback': typeof PublicOauthCallbackRoute
+  '/_public/oauth/error': typeof PublicOauthErrorRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_auth/workspaces/': typeof AuthWorkspacesIndexRoute
   '/_auth/workspaces/$workspaceSlug/settings': typeof AuthWorkspacesWorkspaceSlugSettingsRoute
@@ -171,6 +189,8 @@ export interface FileRouteTypes {
     | '/api/execute-workflow'
     | '/api/send-email'
     | '/'
+    | '/oauth/callback'
+    | '/oauth/error'
     | '/api/auth/$'
     | '/workspaces'
     | '/workspaces/$workspaceSlug/settings'
@@ -187,6 +207,8 @@ export interface FileRouteTypes {
     | '/api/execute-workflow'
     | '/api/send-email'
     | '/'
+    | '/oauth/callback'
+    | '/oauth/error'
     | '/api/auth/$'
     | '/workspaces'
     | '/workspaces/$workspaceSlug/settings'
@@ -205,6 +227,8 @@ export interface FileRouteTypes {
     | '/api/execute-workflow'
     | '/api/send-email'
     | '/_public/'
+    | '/_public/oauth/callback'
+    | '/_public/oauth/error'
     | '/api/auth/$'
     | '/_auth/workspaces/'
     | '/_auth/workspaces/$workspaceSlug/settings'
@@ -282,6 +306,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_public/oauth/error': {
+      id: '/_public/oauth/error'
+      path: '/oauth/error'
+      fullPath: '/oauth/error'
+      preLoaderRoute: typeof PublicOauthErrorRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/oauth/callback': {
+      id: '/_public/oauth/callback'
+      path: '/oauth/callback'
+      fullPath: '/oauth/callback'
+      preLoaderRoute: typeof PublicOauthCallbackRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/_auth/workspaces/$workspaceSlug/': {
       id: '/_auth/workspaces/$workspaceSlug/'
@@ -378,11 +416,15 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 interface PublicRouteChildren {
   PublicPricingRoute: typeof PublicPricingRoute
   PublicIndexRoute: typeof PublicIndexRoute
+  PublicOauthCallbackRoute: typeof PublicOauthCallbackRoute
+  PublicOauthErrorRoute: typeof PublicOauthErrorRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
   PublicPricingRoute: PublicPricingRoute,
   PublicIndexRoute: PublicIndexRoute,
+  PublicOauthCallbackRoute: PublicOauthCallbackRoute,
+  PublicOauthErrorRoute: PublicOauthErrorRoute,
 }
 
 const PublicRouteWithChildren =

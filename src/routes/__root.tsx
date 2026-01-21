@@ -12,6 +12,7 @@ import { Toaster } from "sonner";
 
 import { isDevEnv } from "@/lib/config/env.config";
 import { fetchMaintenanceMode } from "@/lib/flags";
+import { setAccessToken } from "@/lib/graphql/graphqlClientFactory";
 import appCss from "@/lib/styles/globals.css?url";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { fetchSession } from "@/server/functions/auth";
@@ -117,7 +118,12 @@ function MaintenancePage() {
 
 function RootComponent() {
   const theme = Route.useLoaderData();
-  const { isMaintenanceMode } = Route.useRouteContext();
+  const { isMaintenanceMode, session } = Route.useRouteContext();
+
+  // Sync access token to GraphQL client for client-side requests
+  if (session?.accessToken) {
+    setAccessToken(session.accessToken);
+  }
 
   if (isMaintenanceMode) {
     return (
