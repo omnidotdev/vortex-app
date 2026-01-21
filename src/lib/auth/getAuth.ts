@@ -45,7 +45,9 @@ export async function getAuth(request: Request): Promise<AuthSession | null> {
 
       // extract claims from the ID token
       if (tokenResult?.idToken) {
-        const jwks = createRemoteJWKSet(new URL(`${AUTH_BASE_URL}/.well-known/jwks.json`));
+        const jwks = createRemoteJWKSet(
+          new URL(`${AUTH_BASE_URL}/.well-known/jwks.json`),
+        );
         const { payload } = await jwtVerify(tokenResult.idToken, jwks);
         identityProviderId = payload.sub;
       }
