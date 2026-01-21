@@ -1,13 +1,41 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { useWorkspacesQuery } from "@/generated/graphql";
+export type WorkspacesQueryVariables = {
+  userId: string;
+  limit?: number;
+};
 
-import type { WorkspacesQueryVariables } from "@/generated/graphql";
+export type Workspace = {
+  rowId: string;
+  name: string;
+  slug: string;
+  tier: string;
+  workspaceUsers: {
+    totalCount: number;
+  };
+  currentUser: {
+    nodes: Array<{ role: string }>;
+  };
+};
 
+export type WorkspacesData = {
+  workspaces: {
+    nodes: Workspace[];
+  };
+};
+
+// TODO: Implement workspace queries when vortex-api has workspace support
+// For now, return empty workspaces
 const workspacesOptions = (variables: WorkspacesQueryVariables) =>
   queryOptions({
-    queryKey: useWorkspacesQuery.getKey(variables),
-    queryFn: useWorkspacesQuery.fetcher(variables),
+    queryKey: ["workspaces", variables],
+    queryFn: async (): Promise<WorkspacesData> => {
+      return {
+        workspaces: {
+          nodes: [],
+        },
+      };
+    },
   });
 
 export default workspacesOptions;
