@@ -1,7 +1,7 @@
 query Workflow($rowId: UUID!) {
   workflow(rowId: $rowId) {
     rowId
-    workspaceId
+    organizationId
     name
     description
     definition
@@ -10,12 +10,6 @@ query Workflow($rowId: UUID!) {
     isActive
     createdAt
     updatedAt
-    workspace {
-      rowId
-      name
-      slug
-      tier
-    }
     workflowRuns(orderBy: CREATED_AT_DESC, first: 10) {
       nodes {
         rowId

@@ -142,39 +142,6 @@ export type CreateIntegrationPayloadIntegrationEdgeArgs = {
   orderBy?: Array<IntegrationOrderBy>;
 };
 
-/** All input for the create `Invitation` mutation. */
-export type CreateInvitationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `Invitation` to be created by this mutation. */
-  invitation: InvitationInput;
-};
-
-/** The output of our create `Invitation` mutation. */
-export type CreateInvitationPayload = {
-  __typename?: 'CreateInvitationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `Invitation` that was created by this mutation. */
-  invitation?: Maybe<Invitation>;
-  /** An edge for our `Invitation`. May be used by Relay 1. */
-  invitationEdge?: Maybe<InvitationEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `Invitation` mutation. */
-export type CreateInvitationPayloadInvitationEdgeArgs = {
-  orderBy?: Array<InvitationOrderBy>;
-};
-
 /** All input for the create `McpServer` mutation. */
 export type CreateMcpServerInput = {
   /**
@@ -250,6 +217,39 @@ export type CreateUserInput = {
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   /** The `User` to be created by this mutation. */
   user: UserInput;
+};
+
+/** All input for the create `UserOrganization` mutation. */
+export type CreateUserOrganizationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `UserOrganization` to be created by this mutation. */
+  userOrganization: UserOrganizationInput;
+};
+
+/** The output of our create `UserOrganization` mutation. */
+export type CreateUserOrganizationPayload = {
+  __typename?: 'CreateUserOrganizationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `UserOrganization` that was created by this mutation. */
+  userOrganization?: Maybe<UserOrganization>;
+  /** An edge for our `UserOrganization`. May be used by Relay 1. */
+  userOrganizationEdge?: Maybe<UserOrganizationEdge>;
+};
+
+
+/** The output of our create `UserOrganization` mutation. */
+export type CreateUserOrganizationPayloadUserOrganizationEdgeArgs = {
+  orderBy?: Array<UserOrganizationOrderBy>;
 };
 
 /** The output of our create `User` mutation. */
@@ -373,72 +373,6 @@ export type CreateWorkflowStepLogPayloadWorkflowStepLogEdgeArgs = {
   orderBy?: Array<WorkflowStepLogOrderBy>;
 };
 
-/** All input for the create `Workspace` mutation. */
-export type CreateWorkspaceInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `Workspace` to be created by this mutation. */
-  workspace: WorkspaceInput;
-};
-
-/** The output of our create `Workspace` mutation. */
-export type CreateWorkspacePayload = {
-  __typename?: 'CreateWorkspacePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `Workspace` that was created by this mutation. */
-  workspace?: Maybe<Workspace>;
-  /** An edge for our `Workspace`. May be used by Relay 1. */
-  workspaceEdge?: Maybe<WorkspaceEdge>;
-};
-
-
-/** The output of our create `Workspace` mutation. */
-export type CreateWorkspacePayloadWorkspaceEdgeArgs = {
-  orderBy?: Array<WorkspaceOrderBy>;
-};
-
-/** All input for the create `WorkspaceUser` mutation. */
-export type CreateWorkspaceUserInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `WorkspaceUser` to be created by this mutation. */
-  workspaceUser: WorkspaceUserInput;
-};
-
-/** The output of our create `WorkspaceUser` mutation. */
-export type CreateWorkspaceUserPayload = {
-  __typename?: 'CreateWorkspaceUserPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `WorkspaceUser` that was created by this mutation. */
-  workspaceUser?: Maybe<WorkspaceUser>;
-  /** An edge for our `WorkspaceUser`. May be used by Relay 1. */
-  workspaceUserEdge?: Maybe<WorkspaceUserEdge>;
-};
-
-
-/** The output of our create `WorkspaceUser` mutation. */
-export type CreateWorkspaceUserPayloadWorkspaceUserEdgeArgs = {
-  orderBy?: Array<WorkspaceUserOrderBy>;
-};
-
 /** A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’ */
 export type DatetimeFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
@@ -551,50 +485,6 @@ export type DeleteIntegrationPayload = {
 /** The output of our delete `Integration` mutation. */
 export type DeleteIntegrationPayloadIntegrationEdgeArgs = {
   orderBy?: Array<IntegrationOrderBy>;
-};
-
-/** All input for the `deleteInvitationById` mutation. */
-export type DeleteInvitationByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Invitation` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteInvitation` mutation. */
-export type DeleteInvitationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `Invitation` mutation. */
-export type DeleteInvitationPayload = {
-  __typename?: 'DeleteInvitationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedInvitationId?: Maybe<Scalars['ID']['output']>;
-  /** The `Invitation` that was deleted by this mutation. */
-  invitation?: Maybe<Invitation>;
-  /** An edge for our `Invitation`. May be used by Relay 1. */
-  invitationEdge?: Maybe<InvitationEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `Invitation` mutation. */
-export type DeleteInvitationPayloadInvitationEdgeArgs = {
-  orderBy?: Array<InvitationOrderBy>;
 };
 
 /** All input for the `deleteMcpServerById` mutation. */
@@ -724,6 +614,61 @@ export type DeleteUserInput = {
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
   rowId: Scalars['UUID']['input'];
+};
+
+/** All input for the `deleteUserOrganizationById` mutation. */
+export type DeleteUserOrganizationByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `UserOrganization` to be deleted. */
+  id: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteUserOrganizationByUserIdAndOrganizationId` mutation. */
+export type DeleteUserOrganizationByUserIdAndOrganizationIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  organizationId: Scalars['String']['input'];
+  userId: Scalars['UUID']['input'];
+};
+
+/** All input for the `deleteUserOrganization` mutation. */
+export type DeleteUserOrganizationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  rowId: Scalars['UUID']['input'];
+};
+
+/** The output of our delete `UserOrganization` mutation. */
+export type DeleteUserOrganizationPayload = {
+  __typename?: 'DeleteUserOrganizationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedUserOrganizationId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `UserOrganization` that was deleted by this mutation. */
+  userOrganization?: Maybe<UserOrganization>;
+  /** An edge for our `UserOrganization`. May be used by Relay 1. */
+  userOrganizationEdge?: Maybe<UserOrganizationEdge>;
+};
+
+
+/** The output of our delete `UserOrganization` mutation. */
+export type DeleteUserOrganizationPayloadUserOrganizationEdgeArgs = {
+  orderBy?: Array<UserOrganizationOrderBy>;
 };
 
 /** The output of our delete `User` mutation. */
@@ -881,105 +826,6 @@ export type DeleteWorkflowStepLogPayloadWorkflowStepLogEdgeArgs = {
   orderBy?: Array<WorkflowStepLogOrderBy>;
 };
 
-/** All input for the `deleteWorkspaceById` mutation. */
-export type DeleteWorkspaceByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Workspace` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteWorkspaceBySlug` mutation. */
-export type DeleteWorkspaceBySlugInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  slug: Scalars['String']['input'];
-};
-
-/** All input for the `deleteWorkspace` mutation. */
-export type DeleteWorkspaceInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `Workspace` mutation. */
-export type DeleteWorkspacePayload = {
-  __typename?: 'DeleteWorkspacePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedWorkspaceId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `Workspace` that was deleted by this mutation. */
-  workspace?: Maybe<Workspace>;
-  /** An edge for our `Workspace`. May be used by Relay 1. */
-  workspaceEdge?: Maybe<WorkspaceEdge>;
-};
-
-
-/** The output of our delete `Workspace` mutation. */
-export type DeleteWorkspacePayloadWorkspaceEdgeArgs = {
-  orderBy?: Array<WorkspaceOrderBy>;
-};
-
-/** All input for the `deleteWorkspaceUserById` mutation. */
-export type DeleteWorkspaceUserByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `WorkspaceUser` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteWorkspaceUser` mutation. */
-export type DeleteWorkspaceUserInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  userId: Scalars['UUID']['input'];
-  workspaceId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `WorkspaceUser` mutation. */
-export type DeleteWorkspaceUserPayload = {
-  __typename?: 'DeleteWorkspaceUserPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedWorkspaceUserId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `WorkspaceUser` that was deleted by this mutation. */
-  workspaceUser?: Maybe<WorkspaceUser>;
-  /** An edge for our `WorkspaceUser`. May be used by Relay 1. */
-  workspaceUserEdge?: Maybe<WorkspaceUserEdge>;
-};
-
-
-/** The output of our delete `WorkspaceUser` mutation. */
-export type DeleteWorkspaceUserPayloadWorkspaceUserEdgeArgs = {
-  orderBy?: Array<WorkspaceUserOrderBy>;
-};
-
 export type HavingDatetimeFilter = {
   equalTo?: InputMaybe<Scalars['Datetime']['input']>;
   greaterThan?: InputMaybe<Scalars['Datetime']['input']>;
@@ -1038,12 +884,10 @@ export type Integration = Node & {
   mcpServer?: Maybe<McpServer>;
   mcpServerId?: Maybe<Scalars['UUID']['output']>;
   name: Scalars['String']['output'];
+  organizationId: Scalars['String']['output'];
   rowId: Scalars['UUID']['output'];
   type: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['Datetime']['output']>;
-  /** Reads a single `Workspace` that is related to this `Integration`. */
-  workspace?: Maybe<Workspace>;
-  workspaceId: Scalars['UUID']['output'];
 };
 
 export type IntegrationAggregates = {
@@ -1076,14 +920,14 @@ export type IntegrationCondition = {
   mcpServerId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `type` field. */
   type?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `workspaceId` field. */
-  workspaceId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A connection to a list of `Integration` values. */
@@ -1498,14 +1342,14 @@ export enum IntegrationDefinitionOrderBy {
   IntegrationsByDefinitionIdDistinctCountMcpServerIdDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_MCP_SERVER_ID_DESC',
   IntegrationsByDefinitionIdDistinctCountNameAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_NAME_ASC',
   IntegrationsByDefinitionIdDistinctCountNameDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_NAME_DESC',
+  IntegrationsByDefinitionIdDistinctCountOrganizationIdAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC',
+  IntegrationsByDefinitionIdDistinctCountOrganizationIdDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
   IntegrationsByDefinitionIdDistinctCountRowIdAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_ROW_ID_ASC',
   IntegrationsByDefinitionIdDistinctCountRowIdDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_ROW_ID_DESC',
   IntegrationsByDefinitionIdDistinctCountTypeAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_TYPE_ASC',
   IntegrationsByDefinitionIdDistinctCountTypeDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_TYPE_DESC',
   IntegrationsByDefinitionIdDistinctCountUpdatedAtAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_UPDATED_AT_ASC',
   IntegrationsByDefinitionIdDistinctCountUpdatedAtDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_UPDATED_AT_DESC',
-  IntegrationsByDefinitionIdDistinctCountWorkspaceIdAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_WORKSPACE_ID_ASC',
-  IntegrationsByDefinitionIdDistinctCountWorkspaceIdDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_WORKSPACE_ID_DESC',
   IsEnabledAsc = 'IS_ENABLED_ASC',
   IsEnabledDesc = 'IS_ENABLED_DESC',
   IsFeaturedAsc = 'IS_FEATURED_ASC',
@@ -1601,10 +1445,10 @@ export type IntegrationDistinctCountAggregateFilter = {
   isEnabled?: InputMaybe<BigIntFilter>;
   mcpServerId?: InputMaybe<BigIntFilter>;
   name?: InputMaybe<BigIntFilter>;
+  organizationId?: InputMaybe<BigIntFilter>;
   rowId?: InputMaybe<BigIntFilter>;
   type?: InputMaybe<BigIntFilter>;
   updatedAt?: InputMaybe<BigIntFilter>;
-  workspaceId?: InputMaybe<BigIntFilter>;
 };
 
 export type IntegrationDistinctCountAggregates = {
@@ -1621,14 +1465,14 @@ export type IntegrationDistinctCountAggregates = {
   mcpServerId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of name across the matching connection */
   name?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of rowId across the matching connection */
   rowId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of type across the matching connection */
   type?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of updatedAt across the matching connection */
   updatedAt?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of workspaceId across the matching connection */
-  workspaceId?: Maybe<Scalars['BigInt']['output']>;
 };
 
 /** A `Integration` edge in the connection. */
@@ -1666,16 +1510,14 @@ export type IntegrationFilter = {
   not?: InputMaybe<IntegrationFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<IntegrationFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `type` field. */
   type?: InputMaybe<StringFilter>;
   /** Filter by the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<DatetimeFilter>;
-  /** Filter by the object’s `workspace` relation. */
-  workspace?: InputMaybe<WorkspaceFilter>;
-  /** Filter by the object’s `workspaceId` field. */
-  workspaceId?: InputMaybe<UuidFilter>;
 };
 
 /** Grouping methods for `Integration` for usage during aggregation. */
@@ -1688,11 +1530,11 @@ export enum IntegrationGroupBy {
   IsEnabled = 'IS_ENABLED',
   McpServerId = 'MCP_SERVER_ID',
   Name = 'NAME',
+  OrganizationId = 'ORGANIZATION_ID',
   Type = 'TYPE',
   UpdatedAt = 'UPDATED_AT',
   UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
-  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR',
-  WorkspaceId = 'WORKSPACE_ID'
+  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR'
 }
 
 export type IntegrationHavingAverageInput = {
@@ -1763,10 +1605,10 @@ export type IntegrationInput = {
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   mcpServerId?: InputMaybe<Scalars['UUID']['input']>;
   name: Scalars['String']['input'];
+  organizationId: Scalars['String']['input'];
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   type: Scalars['String']['input'];
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  workspaceId: Scalars['UUID']['input'];
 };
 
 /** Methods to use when ordering `Integration`. */
@@ -1782,6 +1624,8 @@ export enum IntegrationOrderBy {
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
   Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RowIdAsc = 'ROW_ID_ASC',
@@ -1789,9 +1633,7 @@ export enum IntegrationOrderBy {
   TypeAsc = 'TYPE_ASC',
   TypeDesc = 'TYPE_DESC',
   UpdatedAtAsc = 'UPDATED_AT_ASC',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
-  WorkspaceIdAsc = 'WORKSPACE_ID_ASC',
-  WorkspaceIdDesc = 'WORKSPACE_ID_DESC'
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
 
 /** Represents an update to a `Integration`. Fields that are set will be updated. */
@@ -1802,291 +1644,10 @@ export type IntegrationPatch = {
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   mcpServerId?: InputMaybe<Scalars['UUID']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  organizationId?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  workspaceId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
-export type Invitation = Node & {
-  __typename?: 'Invitation';
-  acceptedAt?: Maybe<Scalars['Datetime']['output']>;
-  createdAt?: Maybe<Scalars['Datetime']['output']>;
-  email: Scalars['String']['output'];
-  expiresAt?: Maybe<Scalars['Datetime']['output']>;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  id: Scalars['ID']['output'];
-  invitedBy: Scalars['UUID']['output'];
-  role: WorkspaceRole;
-  rowId: Scalars['UUID']['output'];
-  /** Reads a single `User` that is related to this `Invitation`. */
-  user?: Maybe<User>;
-  /** Reads a single `Workspace` that is related to this `Invitation`. */
-  workspace?: Maybe<Workspace>;
-  workspaceId: Scalars['UUID']['output'];
-};
-
-export type InvitationAggregates = {
-  __typename?: 'InvitationAggregates';
-  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  distinctCount?: Maybe<InvitationDistinctCountAggregates>;
-  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-};
-
-/** A filter to be used against aggregates of `Invitation` object types. */
-export type InvitationAggregatesFilter = {
-  /** Distinct count aggregate over matching `Invitation` objects. */
-  distinctCount?: InputMaybe<InvitationDistinctCountAggregateFilter>;
-  /** A filter that must pass for the relevant `Invitation` object to be included within the aggregate. */
-  filter?: InputMaybe<InvitationFilter>;
-};
-
-/**
- * A condition to be used against `Invitation` object types. All fields are tested
- * for equality and combined with a logical ‘and.’
- */
-export type InvitationCondition = {
-  /** Checks for equality with the object’s `acceptedAt` field. */
-  acceptedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `createdAt` field. */
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `email` field. */
-  email?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `expiresAt` field. */
-  expiresAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `invitedBy` field. */
-  invitedBy?: InputMaybe<Scalars['UUID']['input']>;
-  /** Checks for equality with the object’s `role` field. */
-  role?: InputMaybe<WorkspaceRole>;
-  /** Checks for equality with the object’s `rowId` field. */
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  /** Checks for equality with the object’s `workspaceId` field. */
-  workspaceId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
-/** A connection to a list of `Invitation` values. */
-export type InvitationConnection = {
-  __typename?: 'InvitationConnection';
-  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  aggregates?: Maybe<InvitationAggregates>;
-  /** A list of edges which contains the `Invitation` and cursor to aid in pagination. */
-  edges: Array<InvitationEdge>;
-  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  groupedAggregates?: Maybe<Array<InvitationAggregates>>;
-  /** A list of `Invitation` objects. */
-  nodes: Array<Invitation>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Invitation` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-
-/** A connection to a list of `Invitation` values. */
-export type InvitationConnectionGroupedAggregatesArgs = {
-  groupBy: Array<InvitationGroupBy>;
-  having?: InputMaybe<InvitationHavingInput>;
-};
-
-export type InvitationDistinctCountAggregateFilter = {
-  acceptedAt?: InputMaybe<BigIntFilter>;
-  createdAt?: InputMaybe<BigIntFilter>;
-  email?: InputMaybe<BigIntFilter>;
-  expiresAt?: InputMaybe<BigIntFilter>;
-  invitedBy?: InputMaybe<BigIntFilter>;
-  role?: InputMaybe<BigIntFilter>;
-  rowId?: InputMaybe<BigIntFilter>;
-  workspaceId?: InputMaybe<BigIntFilter>;
-};
-
-export type InvitationDistinctCountAggregates = {
-  __typename?: 'InvitationDistinctCountAggregates';
-  /** Distinct count of acceptedAt across the matching connection */
-  acceptedAt?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of createdAt across the matching connection */
-  createdAt?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of email across the matching connection */
-  email?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of expiresAt across the matching connection */
-  expiresAt?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of invitedBy across the matching connection */
-  invitedBy?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of role across the matching connection */
-  role?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of rowId across the matching connection */
-  rowId?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of workspaceId across the matching connection */
-  workspaceId?: Maybe<Scalars['BigInt']['output']>;
-};
-
-/** A `Invitation` edge in the connection. */
-export type InvitationEdge = {
-  __typename?: 'InvitationEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `Invitation` at the end of the edge. */
-  node: Invitation;
-};
-
-/** A filter to be used against `Invitation` object types. All fields are combined with a logical ‘and.’ */
-export type InvitationFilter = {
-  /** Filter by the object’s `acceptedAt` field. */
-  acceptedAt?: InputMaybe<DatetimeFilter>;
-  /** Checks for all expressions in this list. */
-  and?: InputMaybe<Array<InvitationFilter>>;
-  /** Filter by the object’s `createdAt` field. */
-  createdAt?: InputMaybe<DatetimeFilter>;
-  /** Filter by the object’s `email` field. */
-  email?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `expiresAt` field. */
-  expiresAt?: InputMaybe<DatetimeFilter>;
-  /** Filter by the object’s `invitedBy` field. */
-  invitedBy?: InputMaybe<UuidFilter>;
-  /** Negates the expression. */
-  not?: InputMaybe<InvitationFilter>;
-  /** Checks for any expressions in this list. */
-  or?: InputMaybe<Array<InvitationFilter>>;
-  /** Filter by the object’s `role` field. */
-  role?: InputMaybe<WorkspaceRoleFilter>;
-  /** Filter by the object’s `rowId` field. */
-  rowId?: InputMaybe<UuidFilter>;
-  /** Filter by the object’s `user` relation. */
-  user?: InputMaybe<UserFilter>;
-  /** Filter by the object’s `workspace` relation. */
-  workspace?: InputMaybe<WorkspaceFilter>;
-  /** Filter by the object’s `workspaceId` field. */
-  workspaceId?: InputMaybe<UuidFilter>;
-};
-
-/** Grouping methods for `Invitation` for usage during aggregation. */
-export enum InvitationGroupBy {
-  AcceptedAt = 'ACCEPTED_AT',
-  AcceptedAtTruncatedToDay = 'ACCEPTED_AT_TRUNCATED_TO_DAY',
-  AcceptedAtTruncatedToHour = 'ACCEPTED_AT_TRUNCATED_TO_HOUR',
-  CreatedAt = 'CREATED_AT',
-  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
-  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
-  Email = 'EMAIL',
-  ExpiresAt = 'EXPIRES_AT',
-  ExpiresAtTruncatedToDay = 'EXPIRES_AT_TRUNCATED_TO_DAY',
-  ExpiresAtTruncatedToHour = 'EXPIRES_AT_TRUNCATED_TO_HOUR',
-  InvitedBy = 'INVITED_BY',
-  Role = 'ROLE',
-  WorkspaceId = 'WORKSPACE_ID'
-}
-
-export type InvitationHavingAverageInput = {
-  acceptedAt?: InputMaybe<HavingDatetimeFilter>;
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  expiresAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type InvitationHavingDistinctCountInput = {
-  acceptedAt?: InputMaybe<HavingDatetimeFilter>;
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  expiresAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-/** Conditions for `Invitation` aggregates. */
-export type InvitationHavingInput = {
-  AND?: InputMaybe<Array<InvitationHavingInput>>;
-  OR?: InputMaybe<Array<InvitationHavingInput>>;
-  average?: InputMaybe<InvitationHavingAverageInput>;
-  distinctCount?: InputMaybe<InvitationHavingDistinctCountInput>;
-  max?: InputMaybe<InvitationHavingMaxInput>;
-  min?: InputMaybe<InvitationHavingMinInput>;
-  stddevPopulation?: InputMaybe<InvitationHavingStddevPopulationInput>;
-  stddevSample?: InputMaybe<InvitationHavingStddevSampleInput>;
-  sum?: InputMaybe<InvitationHavingSumInput>;
-  variancePopulation?: InputMaybe<InvitationHavingVariancePopulationInput>;
-  varianceSample?: InputMaybe<InvitationHavingVarianceSampleInput>;
-};
-
-export type InvitationHavingMaxInput = {
-  acceptedAt?: InputMaybe<HavingDatetimeFilter>;
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  expiresAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type InvitationHavingMinInput = {
-  acceptedAt?: InputMaybe<HavingDatetimeFilter>;
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  expiresAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type InvitationHavingStddevPopulationInput = {
-  acceptedAt?: InputMaybe<HavingDatetimeFilter>;
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  expiresAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type InvitationHavingStddevSampleInput = {
-  acceptedAt?: InputMaybe<HavingDatetimeFilter>;
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  expiresAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type InvitationHavingSumInput = {
-  acceptedAt?: InputMaybe<HavingDatetimeFilter>;
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  expiresAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type InvitationHavingVariancePopulationInput = {
-  acceptedAt?: InputMaybe<HavingDatetimeFilter>;
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  expiresAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type InvitationHavingVarianceSampleInput = {
-  acceptedAt?: InputMaybe<HavingDatetimeFilter>;
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  expiresAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-/** An input for mutations affecting `Invitation` */
-export type InvitationInput = {
-  acceptedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  email: Scalars['String']['input'];
-  expiresAt?: InputMaybe<Scalars['Datetime']['input']>;
-  invitedBy: Scalars['UUID']['input'];
-  role?: InputMaybe<WorkspaceRole>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  workspaceId: Scalars['UUID']['input'];
-};
-
-/** Methods to use when ordering `Invitation`. */
-export enum InvitationOrderBy {
-  AcceptedAtAsc = 'ACCEPTED_AT_ASC',
-  AcceptedAtDesc = 'ACCEPTED_AT_DESC',
-  CreatedAtAsc = 'CREATED_AT_ASC',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  EmailAsc = 'EMAIL_ASC',
-  EmailDesc = 'EMAIL_DESC',
-  ExpiresAtAsc = 'EXPIRES_AT_ASC',
-  ExpiresAtDesc = 'EXPIRES_AT_DESC',
-  InvitedByAsc = 'INVITED_BY_ASC',
-  InvitedByDesc = 'INVITED_BY_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  RowIdAsc = 'ROW_ID_ASC',
-  RowIdDesc = 'ROW_ID_DESC',
-  WorkspaceIdAsc = 'WORKSPACE_ID_ASC',
-  WorkspaceIdDesc = 'WORKSPACE_ID_DESC'
-}
-
-/** Represents an update to a `Invitation`. Fields that are set will be updated. */
-export type InvitationPatch = {
-  acceptedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  expiresAt?: InputMaybe<Scalars['Datetime']['input']>;
-  invitedBy?: InputMaybe<Scalars['UUID']['input']>;
-  role?: InputMaybe<WorkspaceRole>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  workspaceId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 export type McpServer = Node & {
@@ -2102,12 +1663,10 @@ export type McpServer = Node & {
   integrations: IntegrationConnection;
   isEnabled: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
+  organizationId: Scalars['String']['output'];
   rowId: Scalars['UUID']['output'];
   type: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['Datetime']['output']>;
-  /** Reads a single `Workspace` that is related to this `McpServer`. */
-  workspace?: Maybe<Workspace>;
-  workspaceId: Scalars['UUID']['output'];
 };
 
 
@@ -2129,14 +1688,6 @@ export type McpServerAggregates = {
   keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
 };
 
-/** A filter to be used against aggregates of `McpServer` object types. */
-export type McpServerAggregatesFilter = {
-  /** Distinct count aggregate over matching `McpServer` objects. */
-  distinctCount?: InputMaybe<McpServerDistinctCountAggregateFilter>;
-  /** A filter that must pass for the relevant `McpServer` object to be included within the aggregate. */
-  filter?: InputMaybe<McpServerFilter>;
-};
-
 /**
  * A condition to be used against `McpServer` object types. All fields are tested
  * for equality and combined with a logical ‘and.’
@@ -2152,14 +1703,14 @@ export type McpServerCondition = {
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `type` field. */
   type?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `workspaceId` field. */
-  workspaceId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A connection to a list of `McpServer` values. */
@@ -2186,20 +1737,6 @@ export type McpServerConnectionGroupedAggregatesArgs = {
   having?: InputMaybe<McpServerHavingInput>;
 };
 
-export type McpServerDistinctCountAggregateFilter = {
-  args?: InputMaybe<BigIntFilter>;
-  command?: InputMaybe<BigIntFilter>;
-  createdAt?: InputMaybe<BigIntFilter>;
-  cwd?: InputMaybe<BigIntFilter>;
-  env?: InputMaybe<BigIntFilter>;
-  isEnabled?: InputMaybe<BigIntFilter>;
-  name?: InputMaybe<BigIntFilter>;
-  rowId?: InputMaybe<BigIntFilter>;
-  type?: InputMaybe<BigIntFilter>;
-  updatedAt?: InputMaybe<BigIntFilter>;
-  workspaceId?: InputMaybe<BigIntFilter>;
-};
-
 export type McpServerDistinctCountAggregates = {
   __typename?: 'McpServerDistinctCountAggregates';
   /** Distinct count of args across the matching connection */
@@ -2216,14 +1753,14 @@ export type McpServerDistinctCountAggregates = {
   isEnabled?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of name across the matching connection */
   name?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of rowId across the matching connection */
   rowId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of type across the matching connection */
   type?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of updatedAt across the matching connection */
   updatedAt?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of workspaceId across the matching connection */
-  workspaceId?: Maybe<Scalars['BigInt']['output']>;
 };
 
 /** A `McpServer` edge in the connection. */
@@ -2257,16 +1794,14 @@ export type McpServerFilter = {
   not?: InputMaybe<McpServerFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<McpServerFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `type` field. */
   type?: InputMaybe<StringFilter>;
   /** Filter by the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<DatetimeFilter>;
-  /** Filter by the object’s `workspace` relation. */
-  workspace?: InputMaybe<WorkspaceFilter>;
-  /** Filter by the object’s `workspaceId` field. */
-  workspaceId?: InputMaybe<UuidFilter>;
 };
 
 /** Grouping methods for `McpServer` for usage during aggregation. */
@@ -2280,11 +1815,11 @@ export enum McpServerGroupBy {
   Env = 'ENV',
   IsEnabled = 'IS_ENABLED',
   Name = 'NAME',
+  OrganizationId = 'ORGANIZATION_ID',
   Type = 'TYPE',
   UpdatedAt = 'UPDATED_AT',
   UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
-  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR',
-  WorkspaceId = 'WORKSPACE_ID'
+  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR'
 }
 
 export type McpServerHavingAverageInput = {
@@ -2356,10 +1891,10 @@ export type McpServerInput = {
   env?: InputMaybe<Scalars['JSON']['input']>;
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
+  organizationId: Scalars['String']['input'];
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  workspaceId: Scalars['UUID']['input'];
 };
 
 /** Methods to use when ordering `McpServer`. */
@@ -2384,19 +1919,21 @@ export enum McpServerOrderBy {
   IntegrationsDistinctCountMcpServerIdDesc = 'INTEGRATIONS_DISTINCT_COUNT_MCP_SERVER_ID_DESC',
   IntegrationsDistinctCountNameAsc = 'INTEGRATIONS_DISTINCT_COUNT_NAME_ASC',
   IntegrationsDistinctCountNameDesc = 'INTEGRATIONS_DISTINCT_COUNT_NAME_DESC',
+  IntegrationsDistinctCountOrganizationIdAsc = 'INTEGRATIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC',
+  IntegrationsDistinctCountOrganizationIdDesc = 'INTEGRATIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
   IntegrationsDistinctCountRowIdAsc = 'INTEGRATIONS_DISTINCT_COUNT_ROW_ID_ASC',
   IntegrationsDistinctCountRowIdDesc = 'INTEGRATIONS_DISTINCT_COUNT_ROW_ID_DESC',
   IntegrationsDistinctCountTypeAsc = 'INTEGRATIONS_DISTINCT_COUNT_TYPE_ASC',
   IntegrationsDistinctCountTypeDesc = 'INTEGRATIONS_DISTINCT_COUNT_TYPE_DESC',
   IntegrationsDistinctCountUpdatedAtAsc = 'INTEGRATIONS_DISTINCT_COUNT_UPDATED_AT_ASC',
   IntegrationsDistinctCountUpdatedAtDesc = 'INTEGRATIONS_DISTINCT_COUNT_UPDATED_AT_DESC',
-  IntegrationsDistinctCountWorkspaceIdAsc = 'INTEGRATIONS_DISTINCT_COUNT_WORKSPACE_ID_ASC',
-  IntegrationsDistinctCountWorkspaceIdDesc = 'INTEGRATIONS_DISTINCT_COUNT_WORKSPACE_ID_DESC',
   IsEnabledAsc = 'IS_ENABLED_ASC',
   IsEnabledDesc = 'IS_ENABLED_DESC',
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
   Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RowIdAsc = 'ROW_ID_ASC',
@@ -2404,9 +1941,7 @@ export enum McpServerOrderBy {
   TypeAsc = 'TYPE_ASC',
   TypeDesc = 'TYPE_DESC',
   UpdatedAtAsc = 'UPDATED_AT_ASC',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
-  WorkspaceIdAsc = 'WORKSPACE_ID_ASC',
-  WorkspaceIdDesc = 'WORKSPACE_ID_DESC'
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
 
 /** Represents an update to a `McpServer`. Fields that are set will be updated. */
@@ -2418,10 +1953,10 @@ export type McpServerPatch = {
   env?: InputMaybe<Scalars['JSON']['input']>;
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  organizationId?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  workspaceId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A filter to be used against many `Integration` object types. All fields are combined with a logical ‘and.’ */
@@ -2436,6 +1971,38 @@ export type McpServerToManyIntegrationFilter = {
   some?: InputMaybe<IntegrationFilter>;
 };
 
+export enum MemberRole {
+  Admin = 'admin',
+  Member = 'member',
+  Owner = 'owner'
+}
+
+/** A filter to be used against MemberRole fields. All fields are combined with a logical ‘and.’ */
+export type MemberRoleFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<MemberRole>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<MemberRole>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<MemberRole>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<MemberRole>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<MemberRole>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<MemberRole>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<MemberRole>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<MemberRole>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<MemberRole>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<MemberRole>>;
+};
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -2443,24 +2010,20 @@ export type Mutation = {
   createIntegration?: Maybe<CreateIntegrationPayload>;
   /** Creates a single `IntegrationDefinition`. */
   createIntegrationDefinition?: Maybe<CreateIntegrationDefinitionPayload>;
-  /** Creates a single `Invitation`. */
-  createInvitation?: Maybe<CreateInvitationPayload>;
   /** Creates a single `McpServer`. */
   createMcpServer?: Maybe<CreateMcpServerPayload>;
   /** Creates a single `Plugin`. */
   createPlugin?: Maybe<CreatePluginPayload>;
   /** Creates a single `User`. */
   createUser?: Maybe<CreateUserPayload>;
+  /** Creates a single `UserOrganization`. */
+  createUserOrganization?: Maybe<CreateUserOrganizationPayload>;
   /** Creates a single `Workflow`. */
   createWorkflow?: Maybe<CreateWorkflowPayload>;
   /** Creates a single `WorkflowRun`. */
   createWorkflowRun?: Maybe<CreateWorkflowRunPayload>;
   /** Creates a single `WorkflowStepLog`. */
   createWorkflowStepLog?: Maybe<CreateWorkflowStepLogPayload>;
-  /** Creates a single `Workspace`. */
-  createWorkspace?: Maybe<CreateWorkspacePayload>;
-  /** Creates a single `WorkspaceUser`. */
-  createWorkspaceUser?: Maybe<CreateWorkspaceUserPayload>;
   /** Deletes a single `Integration` using a unique key. */
   deleteIntegration?: Maybe<DeleteIntegrationPayload>;
   /** Deletes a single `Integration` using its globally unique id. */
@@ -2469,10 +2032,6 @@ export type Mutation = {
   deleteIntegrationDefinition?: Maybe<DeleteIntegrationDefinitionPayload>;
   /** Deletes a single `IntegrationDefinition` using its globally unique id. */
   deleteIntegrationDefinitionById?: Maybe<DeleteIntegrationDefinitionPayload>;
-  /** Deletes a single `Invitation` using a unique key. */
-  deleteInvitation?: Maybe<DeleteInvitationPayload>;
-  /** Deletes a single `Invitation` using its globally unique id. */
-  deleteInvitationById?: Maybe<DeleteInvitationPayload>;
   /** Deletes a single `McpServer` using a unique key. */
   deleteMcpServer?: Maybe<DeleteMcpServerPayload>;
   /** Deletes a single `McpServer` using its globally unique id. */
@@ -2489,6 +2048,12 @@ export type Mutation = {
   deleteUserById?: Maybe<DeleteUserPayload>;
   /** Deletes a single `User` using a unique key. */
   deleteUserByIdentityProviderId?: Maybe<DeleteUserPayload>;
+  /** Deletes a single `UserOrganization` using a unique key. */
+  deleteUserOrganization?: Maybe<DeleteUserOrganizationPayload>;
+  /** Deletes a single `UserOrganization` using its globally unique id. */
+  deleteUserOrganizationById?: Maybe<DeleteUserOrganizationPayload>;
+  /** Deletes a single `UserOrganization` using a unique key. */
+  deleteUserOrganizationByUserIdAndOrganizationId?: Maybe<DeleteUserOrganizationPayload>;
   /** Deletes a single `Workflow` using a unique key. */
   deleteWorkflow?: Maybe<DeleteWorkflowPayload>;
   /** Deletes a single `Workflow` using its globally unique id. */
@@ -2501,16 +2066,6 @@ export type Mutation = {
   deleteWorkflowStepLog?: Maybe<DeleteWorkflowStepLogPayload>;
   /** Deletes a single `WorkflowStepLog` using its globally unique id. */
   deleteWorkflowStepLogById?: Maybe<DeleteWorkflowStepLogPayload>;
-  /** Deletes a single `Workspace` using a unique key. */
-  deleteWorkspace?: Maybe<DeleteWorkspacePayload>;
-  /** Deletes a single `Workspace` using its globally unique id. */
-  deleteWorkspaceById?: Maybe<DeleteWorkspacePayload>;
-  /** Deletes a single `Workspace` using a unique key. */
-  deleteWorkspaceBySlug?: Maybe<DeleteWorkspacePayload>;
-  /** Deletes a single `WorkspaceUser` using a unique key. */
-  deleteWorkspaceUser?: Maybe<DeleteWorkspaceUserPayload>;
-  /** Deletes a single `WorkspaceUser` using its globally unique id. */
-  deleteWorkspaceUserById?: Maybe<DeleteWorkspaceUserPayload>;
   /** Updates a single `Integration` using a unique key and a patch. */
   updateIntegration?: Maybe<UpdateIntegrationPayload>;
   /** Updates a single `Integration` using its globally unique id and a patch. */
@@ -2519,10 +2074,6 @@ export type Mutation = {
   updateIntegrationDefinition?: Maybe<UpdateIntegrationDefinitionPayload>;
   /** Updates a single `IntegrationDefinition` using its globally unique id and a patch. */
   updateIntegrationDefinitionById?: Maybe<UpdateIntegrationDefinitionPayload>;
-  /** Updates a single `Invitation` using a unique key and a patch. */
-  updateInvitation?: Maybe<UpdateInvitationPayload>;
-  /** Updates a single `Invitation` using its globally unique id and a patch. */
-  updateInvitationById?: Maybe<UpdateInvitationPayload>;
   /** Updates a single `McpServer` using a unique key and a patch. */
   updateMcpServer?: Maybe<UpdateMcpServerPayload>;
   /** Updates a single `McpServer` using its globally unique id and a patch. */
@@ -2539,6 +2090,12 @@ export type Mutation = {
   updateUserById?: Maybe<UpdateUserPayload>;
   /** Updates a single `User` using a unique key and a patch. */
   updateUserByIdentityProviderId?: Maybe<UpdateUserPayload>;
+  /** Updates a single `UserOrganization` using a unique key and a patch. */
+  updateUserOrganization?: Maybe<UpdateUserOrganizationPayload>;
+  /** Updates a single `UserOrganization` using its globally unique id and a patch. */
+  updateUserOrganizationById?: Maybe<UpdateUserOrganizationPayload>;
+  /** Updates a single `UserOrganization` using a unique key and a patch. */
+  updateUserOrganizationByUserIdAndOrganizationId?: Maybe<UpdateUserOrganizationPayload>;
   /** Updates a single `Workflow` using a unique key and a patch. */
   updateWorkflow?: Maybe<UpdateWorkflowPayload>;
   /** Updates a single `Workflow` using its globally unique id and a patch. */
@@ -2551,16 +2108,6 @@ export type Mutation = {
   updateWorkflowStepLog?: Maybe<UpdateWorkflowStepLogPayload>;
   /** Updates a single `WorkflowStepLog` using its globally unique id and a patch. */
   updateWorkflowStepLogById?: Maybe<UpdateWorkflowStepLogPayload>;
-  /** Updates a single `Workspace` using a unique key and a patch. */
-  updateWorkspace?: Maybe<UpdateWorkspacePayload>;
-  /** Updates a single `Workspace` using its globally unique id and a patch. */
-  updateWorkspaceById?: Maybe<UpdateWorkspacePayload>;
-  /** Updates a single `Workspace` using a unique key and a patch. */
-  updateWorkspaceBySlug?: Maybe<UpdateWorkspacePayload>;
-  /** Updates a single `WorkspaceUser` using a unique key and a patch. */
-  updateWorkspaceUser?: Maybe<UpdateWorkspaceUserPayload>;
-  /** Updates a single `WorkspaceUser` using its globally unique id and a patch. */
-  updateWorkspaceUserById?: Maybe<UpdateWorkspaceUserPayload>;
 };
 
 
@@ -2573,12 +2120,6 @@ export type MutationCreateIntegrationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateIntegrationDefinitionArgs = {
   input: CreateIntegrationDefinitionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateInvitationArgs = {
-  input: CreateInvitationInput;
 };
 
 
@@ -2601,6 +2142,12 @@ export type MutationCreateUserArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateUserOrganizationArgs = {
+  input: CreateUserOrganizationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateWorkflowArgs = {
   input: CreateWorkflowInput;
 };
@@ -2615,18 +2162,6 @@ export type MutationCreateWorkflowRunArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateWorkflowStepLogArgs = {
   input: CreateWorkflowStepLogInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateWorkspaceArgs = {
-  input: CreateWorkspaceInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateWorkspaceUserArgs = {
-  input: CreateWorkspaceUserInput;
 };
 
 
@@ -2651,18 +2186,6 @@ export type MutationDeleteIntegrationDefinitionArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteIntegrationDefinitionByIdArgs = {
   input: DeleteIntegrationDefinitionByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteInvitationArgs = {
-  input: DeleteInvitationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteInvitationByIdArgs = {
-  input: DeleteInvitationByIdInput;
 };
 
 
@@ -2715,6 +2238,24 @@ export type MutationDeleteUserByIdentityProviderIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUserOrganizationArgs = {
+  input: DeleteUserOrganizationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUserOrganizationByIdArgs = {
+  input: DeleteUserOrganizationByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUserOrganizationByUserIdAndOrganizationIdArgs = {
+  input: DeleteUserOrganizationByUserIdAndOrganizationIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteWorkflowArgs = {
   input: DeleteWorkflowInput;
 };
@@ -2751,36 +2292,6 @@ export type MutationDeleteWorkflowStepLogByIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteWorkspaceArgs = {
-  input: DeleteWorkspaceInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteWorkspaceByIdArgs = {
-  input: DeleteWorkspaceByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteWorkspaceBySlugArgs = {
-  input: DeleteWorkspaceBySlugInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteWorkspaceUserArgs = {
-  input: DeleteWorkspaceUserInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteWorkspaceUserByIdArgs = {
-  input: DeleteWorkspaceUserByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateIntegrationArgs = {
   input: UpdateIntegrationInput;
 };
@@ -2801,18 +2312,6 @@ export type MutationUpdateIntegrationDefinitionArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateIntegrationDefinitionByIdArgs = {
   input: UpdateIntegrationDefinitionByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateInvitationArgs = {
-  input: UpdateInvitationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateInvitationByIdArgs = {
-  input: UpdateInvitationByIdInput;
 };
 
 
@@ -2865,6 +2364,24 @@ export type MutationUpdateUserByIdentityProviderIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUserOrganizationArgs = {
+  input: UpdateUserOrganizationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUserOrganizationByIdArgs = {
+  input: UpdateUserOrganizationByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUserOrganizationByUserIdAndOrganizationIdArgs = {
+  input: UpdateUserOrganizationByUserIdAndOrganizationIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateWorkflowArgs = {
   input: UpdateWorkflowInput;
 };
@@ -2899,40 +2416,41 @@ export type MutationUpdateWorkflowStepLogByIdArgs = {
   input: UpdateWorkflowStepLogByIdInput;
 };
 
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateWorkspaceArgs = {
-  input: UpdateWorkspaceInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateWorkspaceByIdArgs = {
-  input: UpdateWorkspaceByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateWorkspaceBySlugArgs = {
-  input: UpdateWorkspaceBySlugInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateWorkspaceUserArgs = {
-  input: UpdateWorkspaceUserInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateWorkspaceUserByIdArgs = {
-  input: UpdateWorkspaceUserByIdInput;
-};
-
 /** An object with a globally unique `ID`. */
 export type Node = {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   id: Scalars['ID']['output'];
+};
+
+export enum OrganizationType {
+  Personal = 'personal',
+  Team = 'team'
+}
+
+/** A filter to be used against OrganizationType fields. All fields are combined with a logical ‘and.’ */
+export type OrganizationTypeFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<OrganizationType>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<OrganizationType>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<OrganizationType>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<OrganizationType>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<OrganizationType>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<OrganizationType>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<OrganizationType>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<OrganizationType>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<OrganizationType>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<OrganizationType>>;
 };
 
 /** Information about pagination in a connection. */
@@ -2962,14 +2480,12 @@ export type Plugin = Node & {
   isVerified: Scalars['Boolean']['output'];
   manifest: Scalars['JSON']['output'];
   name: Scalars['String']['output'];
+  organizationId: Scalars['String']['output'];
   rowId: Scalars['UUID']['output'];
   updatedAt?: Maybe<Scalars['Datetime']['output']>;
   version: Scalars['String']['output'];
   wasmHash: Scalars['String']['output'];
   wasmUrl: Scalars['String']['output'];
-  /** Reads a single `Workspace` that is related to this `Plugin`. */
-  workspace?: Maybe<Workspace>;
-  workspaceId: Scalars['UUID']['output'];
 };
 
 export type PluginAggregates = {
@@ -3001,6 +2517,8 @@ export type PluginCondition = {
   isVerified?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
@@ -3011,8 +2529,6 @@ export type PluginCondition = {
   wasmHash?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `wasmUrl` field. */
   wasmUrl?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `workspaceId` field. */
-  workspaceId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A connection to a list of `Plugin` values. */
@@ -3048,12 +2564,12 @@ export type PluginDistinctCountAggregateFilter = {
   isVerified?: InputMaybe<BigIntFilter>;
   manifest?: InputMaybe<BigIntFilter>;
   name?: InputMaybe<BigIntFilter>;
+  organizationId?: InputMaybe<BigIntFilter>;
   rowId?: InputMaybe<BigIntFilter>;
   updatedAt?: InputMaybe<BigIntFilter>;
   version?: InputMaybe<BigIntFilter>;
   wasmHash?: InputMaybe<BigIntFilter>;
   wasmUrl?: InputMaybe<BigIntFilter>;
-  workspaceId?: InputMaybe<BigIntFilter>;
 };
 
 export type PluginDistinctCountAggregates = {
@@ -3074,6 +2590,8 @@ export type PluginDistinctCountAggregates = {
   manifest?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of name across the matching connection */
   name?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of rowId across the matching connection */
   rowId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of updatedAt across the matching connection */
@@ -3084,8 +2602,6 @@ export type PluginDistinctCountAggregates = {
   wasmHash?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of wasmUrl across the matching connection */
   wasmUrl?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of workspaceId across the matching connection */
-  workspaceId?: Maybe<Scalars['BigInt']['output']>;
 };
 
 /** A `Plugin` edge in the connection. */
@@ -3121,6 +2637,8 @@ export type PluginFilter = {
   not?: InputMaybe<PluginFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<PluginFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `updatedAt` field. */
@@ -3131,10 +2649,6 @@ export type PluginFilter = {
   wasmHash?: InputMaybe<StringFilter>;
   /** Filter by the object’s `wasmUrl` field. */
   wasmUrl?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `workspace` relation. */
-  workspace?: InputMaybe<WorkspaceFilter>;
-  /** Filter by the object’s `workspaceId` field. */
-  workspaceId?: InputMaybe<UuidFilter>;
 };
 
 /** Grouping methods for `Plugin` for usage during aggregation. */
@@ -3149,13 +2663,13 @@ export enum PluginGroupBy {
   IsVerified = 'IS_VERIFIED',
   Manifest = 'MANIFEST',
   Name = 'NAME',
+  OrganizationId = 'ORGANIZATION_ID',
   UpdatedAt = 'UPDATED_AT',
   UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
   UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR',
   Version = 'VERSION',
   WasmHash = 'WASM_HASH',
-  WasmUrl = 'WASM_URL',
-  WorkspaceId = 'WORKSPACE_ID'
+  WasmUrl = 'WASM_URL'
 }
 
 export type PluginHavingAverageInput = {
@@ -3228,12 +2742,12 @@ export type PluginInput = {
   isVerified?: InputMaybe<Scalars['Boolean']['input']>;
   manifest: Scalars['JSON']['input'];
   name: Scalars['String']['input'];
+  organizationId: Scalars['String']['input'];
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   version: Scalars['String']['input'];
   wasmHash: Scalars['String']['input'];
   wasmUrl: Scalars['String']['input'];
-  workspaceId: Scalars['UUID']['input'];
 };
 
 /** Methods to use when ordering `Plugin`. */
@@ -3251,6 +2765,8 @@ export enum PluginOrderBy {
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
   Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RowIdAsc = 'ROW_ID_ASC',
@@ -3262,9 +2778,7 @@ export enum PluginOrderBy {
   WasmHashAsc = 'WASM_HASH_ASC',
   WasmHashDesc = 'WASM_HASH_DESC',
   WasmUrlAsc = 'WASM_URL_ASC',
-  WasmUrlDesc = 'WASM_URL_DESC',
-  WorkspaceIdAsc = 'WORKSPACE_ID_ASC',
-  WorkspaceIdDesc = 'WORKSPACE_ID_DESC'
+  WasmUrlDesc = 'WASM_URL_DESC'
 }
 
 /** Represents an update to a `Plugin`. Fields that are set will be updated. */
@@ -3277,12 +2791,12 @@ export type PluginPatch = {
   isVerified?: InputMaybe<Scalars['Boolean']['input']>;
   manifest?: InputMaybe<Scalars['JSON']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  organizationId?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   version?: InputMaybe<Scalars['String']['input']>;
   wasmHash?: InputMaybe<Scalars['String']['input']>;
   wasmUrl?: InputMaybe<Scalars['String']['input']>;
-  workspaceId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** The root query type which gives access points into the data universe. */
@@ -3302,12 +2816,6 @@ export type Query = Node & {
   integrationDefinitions?: Maybe<IntegrationDefinitionConnection>;
   /** Reads and enables pagination through a set of `Integration`. */
   integrations?: Maybe<IntegrationConnection>;
-  /** Get a single `Invitation`. */
-  invitation?: Maybe<Invitation>;
-  /** Reads a single `Invitation` using its globally unique `ID`. */
-  invitationById?: Maybe<Invitation>;
-  /** Reads and enables pagination through a set of `Invitation`. */
-  invitations?: Maybe<InvitationConnection>;
   /** Get a single `McpServer`. */
   mcpServer?: Maybe<McpServer>;
   /** Reads a single `McpServer` using its globally unique `ID`. */
@@ -3335,6 +2843,14 @@ export type Query = Node & {
   userById?: Maybe<User>;
   /** Get a single `User`. */
   userByIdentityProviderId?: Maybe<User>;
+  /** Get a single `UserOrganization`. */
+  userOrganization?: Maybe<UserOrganization>;
+  /** Reads a single `UserOrganization` using its globally unique `ID`. */
+  userOrganizationById?: Maybe<UserOrganization>;
+  /** Get a single `UserOrganization`. */
+  userOrganizationByUserIdAndOrganizationId?: Maybe<UserOrganization>;
+  /** Reads and enables pagination through a set of `UserOrganization`. */
+  userOrganizations?: Maybe<UserOrganizationConnection>;
   /** Reads and enables pagination through a set of `User`. */
   users?: Maybe<UserConnection>;
   /** Get a single `Workflow`. */
@@ -3355,20 +2871,6 @@ export type Query = Node & {
   workflowStepLogs?: Maybe<WorkflowStepLogConnection>;
   /** Reads and enables pagination through a set of `Workflow`. */
   workflows?: Maybe<WorkflowConnection>;
-  /** Get a single `Workspace`. */
-  workspace?: Maybe<Workspace>;
-  /** Reads a single `Workspace` using its globally unique `ID`. */
-  workspaceById?: Maybe<Workspace>;
-  /** Get a single `Workspace`. */
-  workspaceBySlug?: Maybe<Workspace>;
-  /** Get a single `WorkspaceUser`. */
-  workspaceUser?: Maybe<WorkspaceUser>;
-  /** Reads a single `WorkspaceUser` using its globally unique `ID`. */
-  workspaceUserById?: Maybe<WorkspaceUser>;
-  /** Reads and enables pagination through a set of `WorkspaceUser`. */
-  workspaceUsers?: Maybe<WorkspaceUserConnection>;
-  /** Reads and enables pagination through a set of `Workspace`. */
-  workspaces?: Maybe<WorkspaceConnection>;
 };
 
 
@@ -3419,31 +2921,6 @@ export type QueryIntegrationsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<IntegrationOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryInvitationArgs = {
-  rowId: Scalars['UUID']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryInvitationByIdArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryInvitationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<InvitationCondition>;
-  filter?: InputMaybe<InvitationFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<InvitationOrderBy>>;
 };
 
 
@@ -3524,6 +3001,38 @@ export type QueryUserByIdArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryUserByIdentityProviderIdArgs = {
   identityProviderId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUserOrganizationArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUserOrganizationByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUserOrganizationByUserIdAndOrganizationIdArgs = {
+  organizationId: Scalars['String']['input'];
+  userId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUserOrganizationsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<UserOrganizationCondition>;
+  filter?: InputMaybe<UserOrganizationFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<UserOrganizationOrderBy>>;
 };
 
 
@@ -3614,63 +3123,6 @@ export type QueryWorkflowsArgs = {
   orderBy?: InputMaybe<Array<WorkflowOrderBy>>;
 };
 
-
-/** The root query type which gives access points into the data universe. */
-export type QueryWorkspaceArgs = {
-  rowId: Scalars['UUID']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryWorkspaceByIdArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryWorkspaceBySlugArgs = {
-  slug: Scalars['String']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryWorkspaceUserArgs = {
-  userId: Scalars['UUID']['input'];
-  workspaceId: Scalars['UUID']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryWorkspaceUserByIdArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryWorkspaceUsersArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<WorkspaceUserCondition>;
-  filter?: InputMaybe<WorkspaceUserFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<WorkspaceUserOrderBy>>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryWorkspacesArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<WorkspaceCondition>;
-  filter?: InputMaybe<WorkspaceFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<WorkspaceOrderBy>>;
-};
-
 /** A filter to be used against String fields. All fields are combined with a logical ‘and.’ */
 export type StringFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
@@ -3747,38 +3199,6 @@ export type StringFilter = {
   startsWith?: InputMaybe<Scalars['String']['input']>;
   /** Starts with the specified string (case-insensitive). */
   startsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
-};
-
-export enum Tier {
-  Basic = 'basic',
-  Free = 'free',
-  Team = 'team'
-}
-
-/** A filter to be used against Tier fields. All fields are combined with a logical ‘and.’ */
-export type TierFilter = {
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<Tier>;
-  /** Equal to the specified value. */
-  equalTo?: InputMaybe<Tier>;
-  /** Greater than the specified value. */
-  greaterThan?: InputMaybe<Tier>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<Tier>;
-  /** Included in the specified list. */
-  in?: InputMaybe<Array<Tier>>;
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Less than the specified value. */
-  lessThan?: InputMaybe<Tier>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<Tier>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<Tier>;
-  /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<Tier>;
-  /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<Tier>>;
 };
 
 /** A filter to be used against UUID fields. All fields are combined with a logical ‘and.’ */
@@ -3899,53 +3319,6 @@ export type UpdateIntegrationPayload = {
 /** The output of our update `Integration` mutation. */
 export type UpdateIntegrationPayloadIntegrationEdgeArgs = {
   orderBy?: Array<IntegrationOrderBy>;
-};
-
-/** All input for the `updateInvitationById` mutation. */
-export type UpdateInvitationByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Invitation` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `Invitation` being updated. */
-  patch: InvitationPatch;
-};
-
-/** All input for the `updateInvitation` mutation. */
-export type UpdateInvitationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `Invitation` being updated. */
-  patch: InvitationPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `Invitation` mutation. */
-export type UpdateInvitationPayload = {
-  __typename?: 'UpdateInvitationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `Invitation` that was updated by this mutation. */
-  invitation?: Maybe<Invitation>;
-  /** An edge for our `Invitation`. May be used by Relay 1. */
-  invitationEdge?: Maybe<InvitationEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `Invitation` mutation. */
-export type UpdateInvitationPayloadInvitationEdgeArgs = {
-  orderBy?: Array<InvitationOrderBy>;
 };
 
 /** All input for the `updateMcpServerById` mutation. */
@@ -4089,6 +3462,66 @@ export type UpdateUserInput = {
   /** An object where the defined keys will be set on the `User` being updated. */
   patch: UserPatch;
   rowId: Scalars['UUID']['input'];
+};
+
+/** All input for the `updateUserOrganizationById` mutation. */
+export type UpdateUserOrganizationByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `UserOrganization` to be updated. */
+  id: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `UserOrganization` being updated. */
+  patch: UserOrganizationPatch;
+};
+
+/** All input for the `updateUserOrganizationByUserIdAndOrganizationId` mutation. */
+export type UpdateUserOrganizationByUserIdAndOrganizationIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  organizationId: Scalars['String']['input'];
+  /** An object where the defined keys will be set on the `UserOrganization` being updated. */
+  patch: UserOrganizationPatch;
+  userId: Scalars['UUID']['input'];
+};
+
+/** All input for the `updateUserOrganization` mutation. */
+export type UpdateUserOrganizationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** An object where the defined keys will be set on the `UserOrganization` being updated. */
+  patch: UserOrganizationPatch;
+  rowId: Scalars['UUID']['input'];
+};
+
+/** The output of our update `UserOrganization` mutation. */
+export type UpdateUserOrganizationPayload = {
+  __typename?: 'UpdateUserOrganizationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `UserOrganization` that was updated by this mutation. */
+  userOrganization?: Maybe<UserOrganization>;
+  /** An edge for our `UserOrganization`. May be used by Relay 1. */
+  userOrganizationEdge?: Maybe<UserOrganizationEdge>;
+};
+
+
+/** The output of our update `UserOrganization` mutation. */
+export type UpdateUserOrganizationPayloadUserOrganizationEdgeArgs = {
+  orderBy?: Array<UserOrganizationOrderBy>;
 };
 
 /** The output of our update `User` mutation. */
@@ -4254,113 +3687,6 @@ export type UpdateWorkflowStepLogPayloadWorkflowStepLogEdgeArgs = {
   orderBy?: Array<WorkflowStepLogOrderBy>;
 };
 
-/** All input for the `updateWorkspaceById` mutation. */
-export type UpdateWorkspaceByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Workspace` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `Workspace` being updated. */
-  patch: WorkspacePatch;
-};
-
-/** All input for the `updateWorkspaceBySlug` mutation. */
-export type UpdateWorkspaceBySlugInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `Workspace` being updated. */
-  patch: WorkspacePatch;
-  slug: Scalars['String']['input'];
-};
-
-/** All input for the `updateWorkspace` mutation. */
-export type UpdateWorkspaceInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `Workspace` being updated. */
-  patch: WorkspacePatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `Workspace` mutation. */
-export type UpdateWorkspacePayload = {
-  __typename?: 'UpdateWorkspacePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `Workspace` that was updated by this mutation. */
-  workspace?: Maybe<Workspace>;
-  /** An edge for our `Workspace`. May be used by Relay 1. */
-  workspaceEdge?: Maybe<WorkspaceEdge>;
-};
-
-
-/** The output of our update `Workspace` mutation. */
-export type UpdateWorkspacePayloadWorkspaceEdgeArgs = {
-  orderBy?: Array<WorkspaceOrderBy>;
-};
-
-/** All input for the `updateWorkspaceUserById` mutation. */
-export type UpdateWorkspaceUserByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `WorkspaceUser` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `WorkspaceUser` being updated. */
-  patch: WorkspaceUserPatch;
-};
-
-/** All input for the `updateWorkspaceUser` mutation. */
-export type UpdateWorkspaceUserInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `WorkspaceUser` being updated. */
-  patch: WorkspaceUserPatch;
-  userId: Scalars['UUID']['input'];
-  workspaceId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `WorkspaceUser` mutation. */
-export type UpdateWorkspaceUserPayload = {
-  __typename?: 'UpdateWorkspaceUserPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `WorkspaceUser` that was updated by this mutation. */
-  workspaceUser?: Maybe<WorkspaceUser>;
-  /** An edge for our `WorkspaceUser`. May be used by Relay 1. */
-  workspaceUserEdge?: Maybe<WorkspaceUserEdge>;
-};
-
-
-/** The output of our update `WorkspaceUser` mutation. */
-export type UpdateWorkspaceUserPayloadWorkspaceUserEdgeArgs = {
-  orderBy?: Array<WorkspaceUserOrderBy>;
-};
-
 export type User = Node & {
   __typename?: 'User';
   /** Reads and enables pagination through a set of `Plugin`. */
@@ -4371,15 +3697,13 @@ export type User = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   id: Scalars['ID']['output'];
   identityProviderId: Scalars['UUID']['output'];
-  /** Reads and enables pagination through a set of `Invitation`. */
-  invitationsByInvitedBy: InvitationConnection;
   name: Scalars['String']['output'];
   rowId: Scalars['UUID']['output'];
   updatedAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads and enables pagination through a set of `UserOrganization`. */
+  userOrganizations: UserOrganizationConnection;
   /** Reads and enables pagination through a set of `Workflow`. */
   workflowsByCreatedBy: WorkflowConnection;
-  /** Reads and enables pagination through a set of `WorkspaceUser`. */
-  workspaceUsers: WorkspaceUserConnection;
 };
 
 
@@ -4395,15 +3719,15 @@ export type UserAuthoredPluginsArgs = {
 };
 
 
-export type UserInvitationsByInvitedByArgs = {
+export type UserUserOrganizationsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<InvitationCondition>;
-  filter?: InputMaybe<InvitationFilter>;
+  condition?: InputMaybe<UserOrganizationCondition>;
+  filter?: InputMaybe<UserOrganizationFilter>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<InvitationOrderBy>>;
+  orderBy?: InputMaybe<Array<UserOrganizationOrderBy>>;
 };
 
 
@@ -4416,18 +3740,6 @@ export type UserWorkflowsByCreatedByArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<WorkflowOrderBy>>;
-};
-
-
-export type UserWorkspaceUsersArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<WorkspaceUserCondition>;
-  filter?: InputMaybe<WorkspaceUserFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<WorkspaceUserOrderBy>>;
 };
 
 export type UserAggregates = {
@@ -4522,10 +3834,6 @@ export type UserFilter = {
   email?: InputMaybe<StringFilter>;
   /** Filter by the object’s `identityProviderId` field. */
   identityProviderId?: InputMaybe<UuidFilter>;
-  /** Filter by the object’s `invitationsByInvitedBy` relation. */
-  invitationsByInvitedBy?: InputMaybe<UserToManyInvitationFilter>;
-  /** Some related `invitationsByInvitedBy` exist. */
-  invitationsByInvitedByExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `name` field. */
   name?: InputMaybe<StringFilter>;
   /** Negates the expression. */
@@ -4536,14 +3844,14 @@ export type UserFilter = {
   rowId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `userOrganizations` relation. */
+  userOrganizations?: InputMaybe<UserToManyUserOrganizationFilter>;
+  /** Some related `userOrganizations` exist. */
+  userOrganizationsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `workflowsByCreatedBy` relation. */
   workflowsByCreatedBy?: InputMaybe<UserToManyWorkflowFilter>;
   /** Some related `workflowsByCreatedBy` exist. */
   workflowsByCreatedByExist?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Filter by the object’s `workspaceUsers` relation. */
-  workspaceUsers?: InputMaybe<UserToManyWorkspaceUserFilter>;
-  /** Some related `workspaceUsers` exist. */
-  workspaceUsersExist?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** Grouping methods for `User` for usage during aggregation. */
@@ -4649,6 +3957,8 @@ export enum UserOrderBy {
   AuthoredPluginsDistinctCountManifestDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_MANIFEST_DESC',
   AuthoredPluginsDistinctCountNameAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_NAME_ASC',
   AuthoredPluginsDistinctCountNameDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_NAME_DESC',
+  AuthoredPluginsDistinctCountOrganizationIdAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_ORGANIZATION_ID_ASC',
+  AuthoredPluginsDistinctCountOrganizationIdDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
   AuthoredPluginsDistinctCountRowIdAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_ROW_ID_ASC',
   AuthoredPluginsDistinctCountRowIdDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_ROW_ID_DESC',
   AuthoredPluginsDistinctCountUpdatedAtAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_UPDATED_AT_ASC',
@@ -4659,8 +3969,6 @@ export enum UserOrderBy {
   AuthoredPluginsDistinctCountWasmHashDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_WASM_HASH_DESC',
   AuthoredPluginsDistinctCountWasmUrlAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_WASM_URL_ASC',
   AuthoredPluginsDistinctCountWasmUrlDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_WASM_URL_DESC',
-  AuthoredPluginsDistinctCountWorkspaceIdAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_WORKSPACE_ID_ASC',
-  AuthoredPluginsDistinctCountWorkspaceIdDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_WORKSPACE_ID_DESC',
   AvatarUrlAsc = 'AVATAR_URL_ASC',
   AvatarUrlDesc = 'AVATAR_URL_DESC',
   CreatedAtAsc = 'CREATED_AT_ASC',
@@ -4669,24 +3977,6 @@ export enum UserOrderBy {
   EmailDesc = 'EMAIL_DESC',
   IdentityProviderIdAsc = 'IDENTITY_PROVIDER_ID_ASC',
   IdentityProviderIdDesc = 'IDENTITY_PROVIDER_ID_DESC',
-  InvitationsByInvitedByCountAsc = 'INVITATIONS_BY_INVITED_BY_COUNT_ASC',
-  InvitationsByInvitedByCountDesc = 'INVITATIONS_BY_INVITED_BY_COUNT_DESC',
-  InvitationsByInvitedByDistinctCountAcceptedAtAsc = 'INVITATIONS_BY_INVITED_BY_DISTINCT_COUNT_ACCEPTED_AT_ASC',
-  InvitationsByInvitedByDistinctCountAcceptedAtDesc = 'INVITATIONS_BY_INVITED_BY_DISTINCT_COUNT_ACCEPTED_AT_DESC',
-  InvitationsByInvitedByDistinctCountCreatedAtAsc = 'INVITATIONS_BY_INVITED_BY_DISTINCT_COUNT_CREATED_AT_ASC',
-  InvitationsByInvitedByDistinctCountCreatedAtDesc = 'INVITATIONS_BY_INVITED_BY_DISTINCT_COUNT_CREATED_AT_DESC',
-  InvitationsByInvitedByDistinctCountEmailAsc = 'INVITATIONS_BY_INVITED_BY_DISTINCT_COUNT_EMAIL_ASC',
-  InvitationsByInvitedByDistinctCountEmailDesc = 'INVITATIONS_BY_INVITED_BY_DISTINCT_COUNT_EMAIL_DESC',
-  InvitationsByInvitedByDistinctCountExpiresAtAsc = 'INVITATIONS_BY_INVITED_BY_DISTINCT_COUNT_EXPIRES_AT_ASC',
-  InvitationsByInvitedByDistinctCountExpiresAtDesc = 'INVITATIONS_BY_INVITED_BY_DISTINCT_COUNT_EXPIRES_AT_DESC',
-  InvitationsByInvitedByDistinctCountInvitedByAsc = 'INVITATIONS_BY_INVITED_BY_DISTINCT_COUNT_INVITED_BY_ASC',
-  InvitationsByInvitedByDistinctCountInvitedByDesc = 'INVITATIONS_BY_INVITED_BY_DISTINCT_COUNT_INVITED_BY_DESC',
-  InvitationsByInvitedByDistinctCountRoleAsc = 'INVITATIONS_BY_INVITED_BY_DISTINCT_COUNT_ROLE_ASC',
-  InvitationsByInvitedByDistinctCountRoleDesc = 'INVITATIONS_BY_INVITED_BY_DISTINCT_COUNT_ROLE_DESC',
-  InvitationsByInvitedByDistinctCountRowIdAsc = 'INVITATIONS_BY_INVITED_BY_DISTINCT_COUNT_ROW_ID_ASC',
-  InvitationsByInvitedByDistinctCountRowIdDesc = 'INVITATIONS_BY_INVITED_BY_DISTINCT_COUNT_ROW_ID_DESC',
-  InvitationsByInvitedByDistinctCountWorkspaceIdAsc = 'INVITATIONS_BY_INVITED_BY_DISTINCT_COUNT_WORKSPACE_ID_ASC',
-  InvitationsByInvitedByDistinctCountWorkspaceIdDesc = 'INVITATIONS_BY_INVITED_BY_DISTINCT_COUNT_WORKSPACE_ID_DESC',
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
   Natural = 'NATURAL',
@@ -4696,6 +3986,28 @@ export enum UserOrderBy {
   RowIdDesc = 'ROW_ID_DESC',
   UpdatedAtAsc = 'UPDATED_AT_ASC',
   UpdatedAtDesc = 'UPDATED_AT_DESC',
+  UserOrganizationsCountAsc = 'USER_ORGANIZATIONS_COUNT_ASC',
+  UserOrganizationsCountDesc = 'USER_ORGANIZATIONS_COUNT_DESC',
+  UserOrganizationsDistinctCountCreatedAtAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_ASC',
+  UserOrganizationsDistinctCountCreatedAtDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_DESC',
+  UserOrganizationsDistinctCountNameAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_NAME_ASC',
+  UserOrganizationsDistinctCountNameDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_NAME_DESC',
+  UserOrganizationsDistinctCountOrganizationIdAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC',
+  UserOrganizationsDistinctCountOrganizationIdDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
+  UserOrganizationsDistinctCountRoleAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_ASC',
+  UserOrganizationsDistinctCountRoleDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_DESC',
+  UserOrganizationsDistinctCountRowIdAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_ASC',
+  UserOrganizationsDistinctCountRowIdDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_DESC',
+  UserOrganizationsDistinctCountSlugAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_SLUG_ASC',
+  UserOrganizationsDistinctCountSlugDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_SLUG_DESC',
+  UserOrganizationsDistinctCountSyncedAtAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_SYNCED_AT_ASC',
+  UserOrganizationsDistinctCountSyncedAtDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_SYNCED_AT_DESC',
+  UserOrganizationsDistinctCountTypeAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_TYPE_ASC',
+  UserOrganizationsDistinctCountTypeDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_TYPE_DESC',
+  UserOrganizationsDistinctCountUpdatedAtAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_UPDATED_AT_ASC',
+  UserOrganizationsDistinctCountUpdatedAtDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_UPDATED_AT_DESC',
+  UserOrganizationsDistinctCountUserIdAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_USER_ID_ASC',
+  UserOrganizationsDistinctCountUserIdDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_USER_ID_DESC',
   WorkflowsByCreatedByCountAsc = 'WORKFLOWS_BY_CREATED_BY_COUNT_ASC',
   WorkflowsByCreatedByCountDesc = 'WORKFLOWS_BY_CREATED_BY_COUNT_DESC',
   WorkflowsByCreatedByDistinctCountCreatedAtAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_CREATED_AT_ASC',
@@ -4716,27 +4028,316 @@ export enum UserOrderBy {
   WorkflowsByCreatedByDistinctCountLastRunStatusDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_LAST_RUN_STATUS_DESC',
   WorkflowsByCreatedByDistinctCountNameAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_NAME_ASC',
   WorkflowsByCreatedByDistinctCountNameDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_NAME_DESC',
+  WorkflowsByCreatedByDistinctCountOrganizationIdAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_ORGANIZATION_ID_ASC',
+  WorkflowsByCreatedByDistinctCountOrganizationIdDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
   WorkflowsByCreatedByDistinctCountRowIdAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_ROW_ID_ASC',
   WorkflowsByCreatedByDistinctCountRowIdDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_ROW_ID_DESC',
   WorkflowsByCreatedByDistinctCountUpdatedAtAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_UPDATED_AT_ASC',
   WorkflowsByCreatedByDistinctCountUpdatedAtDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_UPDATED_AT_DESC',
   WorkflowsByCreatedByDistinctCountWebhookSecretAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_WEBHOOK_SECRET_ASC',
-  WorkflowsByCreatedByDistinctCountWebhookSecretDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_WEBHOOK_SECRET_DESC',
-  WorkflowsByCreatedByDistinctCountWorkspaceIdAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_WORKSPACE_ID_ASC',
-  WorkflowsByCreatedByDistinctCountWorkspaceIdDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_WORKSPACE_ID_DESC',
-  WorkspaceUsersCountAsc = 'WORKSPACE_USERS_COUNT_ASC',
-  WorkspaceUsersCountDesc = 'WORKSPACE_USERS_COUNT_DESC',
-  WorkspaceUsersDistinctCountCreatedAtAsc = 'WORKSPACE_USERS_DISTINCT_COUNT_CREATED_AT_ASC',
-  WorkspaceUsersDistinctCountCreatedAtDesc = 'WORKSPACE_USERS_DISTINCT_COUNT_CREATED_AT_DESC',
-  WorkspaceUsersDistinctCountRoleAsc = 'WORKSPACE_USERS_DISTINCT_COUNT_ROLE_ASC',
-  WorkspaceUsersDistinctCountRoleDesc = 'WORKSPACE_USERS_DISTINCT_COUNT_ROLE_DESC',
-  WorkspaceUsersDistinctCountUpdatedAtAsc = 'WORKSPACE_USERS_DISTINCT_COUNT_UPDATED_AT_ASC',
-  WorkspaceUsersDistinctCountUpdatedAtDesc = 'WORKSPACE_USERS_DISTINCT_COUNT_UPDATED_AT_DESC',
-  WorkspaceUsersDistinctCountUserIdAsc = 'WORKSPACE_USERS_DISTINCT_COUNT_USER_ID_ASC',
-  WorkspaceUsersDistinctCountUserIdDesc = 'WORKSPACE_USERS_DISTINCT_COUNT_USER_ID_DESC',
-  WorkspaceUsersDistinctCountWorkspaceIdAsc = 'WORKSPACE_USERS_DISTINCT_COUNT_WORKSPACE_ID_ASC',
-  WorkspaceUsersDistinctCountWorkspaceIdDesc = 'WORKSPACE_USERS_DISTINCT_COUNT_WORKSPACE_ID_DESC'
+  WorkflowsByCreatedByDistinctCountWebhookSecretDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_WEBHOOK_SECRET_DESC'
 }
+
+export type UserOrganization = Node & {
+  __typename?: 'UserOrganization';
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  organizationId: Scalars['String']['output'];
+  role: MemberRole;
+  rowId: Scalars['UUID']['output'];
+  slug: Scalars['String']['output'];
+  syncedAt?: Maybe<Scalars['Datetime']['output']>;
+  type: OrganizationType;
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `User` that is related to this `UserOrganization`. */
+  user?: Maybe<User>;
+  userId: Scalars['UUID']['output'];
+};
+
+export type UserOrganizationAggregates = {
+  __typename?: 'UserOrganizationAggregates';
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<UserOrganizationDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+/** A filter to be used against aggregates of `UserOrganization` object types. */
+export type UserOrganizationAggregatesFilter = {
+  /** Distinct count aggregate over matching `UserOrganization` objects. */
+  distinctCount?: InputMaybe<UserOrganizationDistinctCountAggregateFilter>;
+  /** A filter that must pass for the relevant `UserOrganization` object to be included within the aggregate. */
+  filter?: InputMaybe<UserOrganizationFilter>;
+};
+
+/**
+ * A condition to be used against `UserOrganization` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type UserOrganizationCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `role` field. */
+  role?: InputMaybe<MemberRole>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `slug` field. */
+  slug?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `syncedAt` field. */
+  syncedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `type` field. */
+  type?: InputMaybe<OrganizationType>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `UserOrganization` values. */
+export type UserOrganizationConnection = {
+  __typename?: 'UserOrganizationConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<UserOrganizationAggregates>;
+  /** A list of edges which contains the `UserOrganization` and cursor to aid in pagination. */
+  edges: Array<UserOrganizationEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<UserOrganizationAggregates>>;
+  /** A list of `UserOrganization` objects. */
+  nodes: Array<UserOrganization>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `UserOrganization` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `UserOrganization` values. */
+export type UserOrganizationConnectionGroupedAggregatesArgs = {
+  groupBy: Array<UserOrganizationGroupBy>;
+  having?: InputMaybe<UserOrganizationHavingInput>;
+};
+
+export type UserOrganizationDistinctCountAggregateFilter = {
+  createdAt?: InputMaybe<BigIntFilter>;
+  name?: InputMaybe<BigIntFilter>;
+  organizationId?: InputMaybe<BigIntFilter>;
+  role?: InputMaybe<BigIntFilter>;
+  rowId?: InputMaybe<BigIntFilter>;
+  slug?: InputMaybe<BigIntFilter>;
+  syncedAt?: InputMaybe<BigIntFilter>;
+  type?: InputMaybe<BigIntFilter>;
+  updatedAt?: InputMaybe<BigIntFilter>;
+  userId?: InputMaybe<BigIntFilter>;
+};
+
+export type UserOrganizationDistinctCountAggregates = {
+  __typename?: 'UserOrganizationDistinctCountAggregates';
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of name across the matching connection */
+  name?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of role across the matching connection */
+  role?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of slug across the matching connection */
+  slug?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of syncedAt across the matching connection */
+  syncedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of type across the matching connection */
+  type?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of updatedAt across the matching connection */
+  updatedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of userId across the matching connection */
+  userId?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `UserOrganization` edge in the connection. */
+export type UserOrganizationEdge = {
+  __typename?: 'UserOrganizationEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `UserOrganization` at the end of the edge. */
+  node: UserOrganization;
+};
+
+/** A filter to be used against `UserOrganization` object types. All fields are combined with a logical ‘and.’ */
+export type UserOrganizationFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<UserOrganizationFilter>>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<UserOrganizationFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<UserOrganizationFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `role` field. */
+  role?: InputMaybe<MemberRoleFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `slug` field. */
+  slug?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `syncedAt` field. */
+  syncedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `type` field. */
+  type?: InputMaybe<OrganizationTypeFilter>;
+  /** Filter by the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `user` relation. */
+  user?: InputMaybe<UserFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: InputMaybe<UuidFilter>;
+};
+
+/** Grouping methods for `UserOrganization` for usage during aggregation. */
+export enum UserOrganizationGroupBy {
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  Name = 'NAME',
+  OrganizationId = 'ORGANIZATION_ID',
+  Role = 'ROLE',
+  Slug = 'SLUG',
+  SyncedAt = 'SYNCED_AT',
+  SyncedAtTruncatedToDay = 'SYNCED_AT_TRUNCATED_TO_DAY',
+  SyncedAtTruncatedToHour = 'SYNCED_AT_TRUNCATED_TO_HOUR',
+  Type = 'TYPE',
+  UpdatedAt = 'UPDATED_AT',
+  UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
+  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR',
+  UserId = 'USER_ID'
+}
+
+export type UserOrganizationHavingAverageInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  syncedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type UserOrganizationHavingDistinctCountInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  syncedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `UserOrganization` aggregates. */
+export type UserOrganizationHavingInput = {
+  AND?: InputMaybe<Array<UserOrganizationHavingInput>>;
+  OR?: InputMaybe<Array<UserOrganizationHavingInput>>;
+  average?: InputMaybe<UserOrganizationHavingAverageInput>;
+  distinctCount?: InputMaybe<UserOrganizationHavingDistinctCountInput>;
+  max?: InputMaybe<UserOrganizationHavingMaxInput>;
+  min?: InputMaybe<UserOrganizationHavingMinInput>;
+  stddevPopulation?: InputMaybe<UserOrganizationHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<UserOrganizationHavingStddevSampleInput>;
+  sum?: InputMaybe<UserOrganizationHavingSumInput>;
+  variancePopulation?: InputMaybe<UserOrganizationHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<UserOrganizationHavingVarianceSampleInput>;
+};
+
+export type UserOrganizationHavingMaxInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  syncedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type UserOrganizationHavingMinInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  syncedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type UserOrganizationHavingStddevPopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  syncedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type UserOrganizationHavingStddevSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  syncedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type UserOrganizationHavingSumInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  syncedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type UserOrganizationHavingVariancePopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  syncedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type UserOrganizationHavingVarianceSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  syncedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** An input for mutations affecting `UserOrganization` */
+export type UserOrganizationInput = {
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  organizationId: Scalars['String']['input'];
+  role?: InputMaybe<MemberRole>;
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  slug: Scalars['String']['input'];
+  syncedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  type?: InputMaybe<OrganizationType>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userId: Scalars['UUID']['input'];
+};
+
+/** Methods to use when ordering `UserOrganization`. */
+export enum UserOrganizationOrderBy {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  SlugAsc = 'SLUG_ASC',
+  SlugDesc = 'SLUG_DESC',
+  SyncedAtAsc = 'SYNCED_AT_ASC',
+  SyncedAtDesc = 'SYNCED_AT_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC'
+}
+
+/** Represents an update to a `UserOrganization`. Fields that are set will be updated. */
+export type UserOrganizationPatch = {
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<MemberRole>;
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+  syncedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  type?: InputMaybe<OrganizationType>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+};
 
 /** Represents an update to a `User`. Fields that are set will be updated. */
 export type UserPatch = {
@@ -4747,18 +4348,6 @@ export type UserPatch = {
   name?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** A filter to be used against many `Invitation` object types. All fields are combined with a logical ‘and.’ */
-export type UserToManyInvitationFilter = {
-  /** Aggregates across related `Invitation` match the filter criteria. */
-  aggregates?: InputMaybe<InvitationAggregatesFilter>;
-  /** Every related `Invitation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<InvitationFilter>;
-  /** No related `Invitation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<InvitationFilter>;
-  /** Some related `Invitation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<InvitationFilter>;
 };
 
 /** A filter to be used against many `Plugin` object types. All fields are combined with a logical ‘and.’ */
@@ -4773,6 +4362,18 @@ export type UserToManyPluginFilter = {
   some?: InputMaybe<PluginFilter>;
 };
 
+/** A filter to be used against many `UserOrganization` object types. All fields are combined with a logical ‘and.’ */
+export type UserToManyUserOrganizationFilter = {
+  /** Aggregates across related `UserOrganization` match the filter criteria. */
+  aggregates?: InputMaybe<UserOrganizationAggregatesFilter>;
+  /** Every related `UserOrganization` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<UserOrganizationFilter>;
+  /** No related `UserOrganization` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<UserOrganizationFilter>;
+  /** Some related `UserOrganization` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<UserOrganizationFilter>;
+};
+
 /** A filter to be used against many `Workflow` object types. All fields are combined with a logical ‘and.’ */
 export type UserToManyWorkflowFilter = {
   /** Aggregates across related `Workflow` match the filter criteria. */
@@ -4783,18 +4384,6 @@ export type UserToManyWorkflowFilter = {
   none?: InputMaybe<WorkflowFilter>;
   /** Some related `Workflow` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<WorkflowFilter>;
-};
-
-/** A filter to be used against many `WorkspaceUser` object types. All fields are combined with a logical ‘and.’ */
-export type UserToManyWorkspaceUserFilter = {
-  /** Aggregates across related `WorkspaceUser` match the filter criteria. */
-  aggregates?: InputMaybe<WorkspaceUserAggregatesFilter>;
-  /** Every related `WorkspaceUser` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<WorkspaceUserFilter>;
-  /** No related `WorkspaceUser` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<WorkspaceUserFilter>;
-  /** Some related `WorkspaceUser` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<WorkspaceUserFilter>;
 };
 
 export type Workflow = Node & {
@@ -4810,6 +4399,7 @@ export type Workflow = Node & {
   lastRunAt?: Maybe<Scalars['Datetime']['output']>;
   lastRunStatus?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  organizationId: Scalars['String']['output'];
   rowId: Scalars['UUID']['output'];
   updatedAt?: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `User` that is related to this `Workflow`. */
@@ -4817,9 +4407,6 @@ export type Workflow = Node & {
   webhookSecret?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `WorkflowRun`. */
   workflowRuns: WorkflowRunConnection;
-  /** Reads a single `Workspace` that is related to this `Workflow`. */
-  workspace?: Maybe<Workspace>;
-  workspaceId: Scalars['UUID']['output'];
 };
 
 
@@ -4870,14 +4457,14 @@ export type WorkflowCondition = {
   lastRunStatus?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `webhookSecret` field. */
   webhookSecret?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `workspaceId` field. */
-  workspaceId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A connection to a list of `Workflow` values. */
@@ -4914,10 +4501,10 @@ export type WorkflowDistinctCountAggregateFilter = {
   lastRunAt?: InputMaybe<BigIntFilter>;
   lastRunStatus?: InputMaybe<BigIntFilter>;
   name?: InputMaybe<BigIntFilter>;
+  organizationId?: InputMaybe<BigIntFilter>;
   rowId?: InputMaybe<BigIntFilter>;
   updatedAt?: InputMaybe<BigIntFilter>;
   webhookSecret?: InputMaybe<BigIntFilter>;
-  workspaceId?: InputMaybe<BigIntFilter>;
 };
 
 export type WorkflowDistinctCountAggregates = {
@@ -4940,14 +4527,14 @@ export type WorkflowDistinctCountAggregates = {
   lastRunStatus?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of name across the matching connection */
   name?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of rowId across the matching connection */
   rowId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of updatedAt across the matching connection */
   updatedAt?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of webhookSecret across the matching connection */
   webhookSecret?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of workspaceId across the matching connection */
-  workspaceId?: Maybe<Scalars['BigInt']['output']>;
 };
 
 /** A `Workflow` edge in the connection. */
@@ -4983,6 +4570,8 @@ export type WorkflowFilter = {
   not?: InputMaybe<WorkflowFilter>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<WorkflowFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `updatedAt` field. */
@@ -4997,10 +4586,6 @@ export type WorkflowFilter = {
   workflowRuns?: InputMaybe<WorkflowToManyWorkflowRunFilter>;
   /** Some related `workflowRuns` exist. */
   workflowRunsExist?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Filter by the object’s `workspace` relation. */
-  workspace?: InputMaybe<WorkspaceFilter>;
-  /** Filter by the object’s `workspaceId` field. */
-  workspaceId?: InputMaybe<UuidFilter>;
 };
 
 /** Grouping methods for `Workflow` for usage during aggregation. */
@@ -5018,11 +4603,11 @@ export enum WorkflowGroupBy {
   LastRunAtTruncatedToHour = 'LAST_RUN_AT_TRUNCATED_TO_HOUR',
   LastRunStatus = 'LAST_RUN_STATUS',
   Name = 'NAME',
+  OrganizationId = 'ORGANIZATION_ID',
   UpdatedAt = 'UPDATED_AT',
   UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
   UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR',
-  WebhookSecret = 'WEBHOOK_SECRET',
-  WorkspaceId = 'WORKSPACE_ID'
+  WebhookSecret = 'WEBHOOK_SECRET'
 }
 
 export type WorkflowHavingAverageInput = {
@@ -5105,10 +4690,10 @@ export type WorkflowInput = {
   lastRunAt?: InputMaybe<Scalars['Datetime']['input']>;
   lastRunStatus?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
+  organizationId: Scalars['String']['input'];
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   webhookSecret?: InputMaybe<Scalars['String']['input']>;
-  workspaceId: Scalars['UUID']['input'];
 };
 
 /** Methods to use when ordering `Workflow`. */
@@ -5130,6 +4715,8 @@ export enum WorkflowOrderBy {
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
   Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RowIdAsc = 'ROW_ID_ASC',
@@ -5161,9 +4748,7 @@ export enum WorkflowOrderBy {
   WorkflowRunsDistinctCountStatusAsc = 'WORKFLOW_RUNS_DISTINCT_COUNT_STATUS_ASC',
   WorkflowRunsDistinctCountStatusDesc = 'WORKFLOW_RUNS_DISTINCT_COUNT_STATUS_DESC',
   WorkflowRunsDistinctCountWorkflowIdAsc = 'WORKFLOW_RUNS_DISTINCT_COUNT_WORKFLOW_ID_ASC',
-  WorkflowRunsDistinctCountWorkflowIdDesc = 'WORKFLOW_RUNS_DISTINCT_COUNT_WORKFLOW_ID_DESC',
-  WorkspaceIdAsc = 'WORKSPACE_ID_ASC',
-  WorkspaceIdDesc = 'WORKSPACE_ID_DESC'
+  WorkflowRunsDistinctCountWorkflowIdDesc = 'WORKFLOW_RUNS_DISTINCT_COUNT_WORKFLOW_ID_DESC'
 }
 
 /** Represents an update to a `Workflow`. Fields that are set will be updated. */
@@ -5177,10 +4762,10 @@ export type WorkflowPatch = {
   lastRunAt?: InputMaybe<Scalars['Datetime']['input']>;
   lastRunStatus?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  organizationId?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   webhookSecret?: InputMaybe<Scalars['String']['input']>;
-  workspaceId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 export type WorkflowRun = Node & {
@@ -5878,861 +5463,6 @@ export type WorkflowToManyWorkflowRunFilter = {
   some?: InputMaybe<WorkflowRunFilter>;
 };
 
-export type Workspace = Node & {
-  __typename?: 'Workspace';
-  createdAt?: Maybe<Scalars['Datetime']['output']>;
-  deletedAt?: Maybe<Scalars['Datetime']['output']>;
-  deletionReason?: Maybe<Scalars['String']['output']>;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  id: Scalars['ID']['output'];
-  /** Reads and enables pagination through a set of `Integration`. */
-  integrations: IntegrationConnection;
-  /** Reads and enables pagination through a set of `Invitation`. */
-  invitations: InvitationConnection;
-  /** Reads and enables pagination through a set of `McpServer`. */
-  mcpServers: McpServerConnection;
-  name: Scalars['String']['output'];
-  organizationId: Scalars['String']['output'];
-  /** Reads and enables pagination through a set of `Plugin`. */
-  plugins: PluginConnection;
-  rowId: Scalars['UUID']['output'];
-  slug: Scalars['String']['output'];
-  subscriptionId?: Maybe<Scalars['String']['output']>;
-  tier: Tier;
-  updatedAt?: Maybe<Scalars['Datetime']['output']>;
-  /** Reads and enables pagination through a set of `Workflow`. */
-  workflows: WorkflowConnection;
-  /** Reads and enables pagination through a set of `WorkspaceUser`. */
-  workspaceUsers: WorkspaceUserConnection;
-};
-
-
-export type WorkspaceIntegrationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<IntegrationCondition>;
-  filter?: InputMaybe<IntegrationFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<IntegrationOrderBy>>;
-};
-
-
-export type WorkspaceInvitationsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<InvitationCondition>;
-  filter?: InputMaybe<InvitationFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<InvitationOrderBy>>;
-};
-
-
-export type WorkspaceMcpServersArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<McpServerCondition>;
-  filter?: InputMaybe<McpServerFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<McpServerOrderBy>>;
-};
-
-
-export type WorkspacePluginsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<PluginCondition>;
-  filter?: InputMaybe<PluginFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<PluginOrderBy>>;
-};
-
-
-export type WorkspaceWorkflowsArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<WorkflowCondition>;
-  filter?: InputMaybe<WorkflowFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<WorkflowOrderBy>>;
-};
-
-
-export type WorkspaceWorkspaceUsersArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<WorkspaceUserCondition>;
-  filter?: InputMaybe<WorkspaceUserFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<WorkspaceUserOrderBy>>;
-};
-
-export type WorkspaceAggregates = {
-  __typename?: 'WorkspaceAggregates';
-  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  distinctCount?: Maybe<WorkspaceDistinctCountAggregates>;
-  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-};
-
-/**
- * A condition to be used against `Workspace` object types. All fields are tested
- * for equality and combined with a logical ‘and.’
- */
-export type WorkspaceCondition = {
-  /** Checks for equality with the object’s `createdAt` field. */
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `deletedAt` field. */
-  deletedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `deletionReason` field. */
-  deletionReason?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `name` field. */
-  name?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `organizationId` field. */
-  organizationId?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `rowId` field. */
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  /** Checks for equality with the object’s `slug` field. */
-  slug?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `subscriptionId` field. */
-  subscriptionId?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `tier` field. */
-  tier?: InputMaybe<Tier>;
-  /** Checks for equality with the object’s `updatedAt` field. */
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** A connection to a list of `Workspace` values. */
-export type WorkspaceConnection = {
-  __typename?: 'WorkspaceConnection';
-  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  aggregates?: Maybe<WorkspaceAggregates>;
-  /** A list of edges which contains the `Workspace` and cursor to aid in pagination. */
-  edges: Array<WorkspaceEdge>;
-  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  groupedAggregates?: Maybe<Array<WorkspaceAggregates>>;
-  /** A list of `Workspace` objects. */
-  nodes: Array<Workspace>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Workspace` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-
-/** A connection to a list of `Workspace` values. */
-export type WorkspaceConnectionGroupedAggregatesArgs = {
-  groupBy: Array<WorkspaceGroupBy>;
-  having?: InputMaybe<WorkspaceHavingInput>;
-};
-
-export type WorkspaceDistinctCountAggregates = {
-  __typename?: 'WorkspaceDistinctCountAggregates';
-  /** Distinct count of createdAt across the matching connection */
-  createdAt?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of deletedAt across the matching connection */
-  deletedAt?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of deletionReason across the matching connection */
-  deletionReason?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of name across the matching connection */
-  name?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of organizationId across the matching connection */
-  organizationId?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of rowId across the matching connection */
-  rowId?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of slug across the matching connection */
-  slug?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of subscriptionId across the matching connection */
-  subscriptionId?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of tier across the matching connection */
-  tier?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of updatedAt across the matching connection */
-  updatedAt?: Maybe<Scalars['BigInt']['output']>;
-};
-
-/** A `Workspace` edge in the connection. */
-export type WorkspaceEdge = {
-  __typename?: 'WorkspaceEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `Workspace` at the end of the edge. */
-  node: Workspace;
-};
-
-/** A filter to be used against `Workspace` object types. All fields are combined with a logical ‘and.’ */
-export type WorkspaceFilter = {
-  /** Checks for all expressions in this list. */
-  and?: InputMaybe<Array<WorkspaceFilter>>;
-  /** Filter by the object’s `createdAt` field. */
-  createdAt?: InputMaybe<DatetimeFilter>;
-  /** Filter by the object’s `deletedAt` field. */
-  deletedAt?: InputMaybe<DatetimeFilter>;
-  /** Filter by the object’s `deletionReason` field. */
-  deletionReason?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `integrations` relation. */
-  integrations?: InputMaybe<WorkspaceToManyIntegrationFilter>;
-  /** Some related `integrations` exist. */
-  integrationsExist?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Filter by the object’s `invitations` relation. */
-  invitations?: InputMaybe<WorkspaceToManyInvitationFilter>;
-  /** Some related `invitations` exist. */
-  invitationsExist?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Filter by the object’s `mcpServers` relation. */
-  mcpServers?: InputMaybe<WorkspaceToManyMcpServerFilter>;
-  /** Some related `mcpServers` exist. */
-  mcpServersExist?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Filter by the object’s `name` field. */
-  name?: InputMaybe<StringFilter>;
-  /** Negates the expression. */
-  not?: InputMaybe<WorkspaceFilter>;
-  /** Checks for any expressions in this list. */
-  or?: InputMaybe<Array<WorkspaceFilter>>;
-  /** Filter by the object’s `organizationId` field. */
-  organizationId?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `plugins` relation. */
-  plugins?: InputMaybe<WorkspaceToManyPluginFilter>;
-  /** Some related `plugins` exist. */
-  pluginsExist?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Filter by the object’s `rowId` field. */
-  rowId?: InputMaybe<UuidFilter>;
-  /** Filter by the object’s `slug` field. */
-  slug?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `subscriptionId` field. */
-  subscriptionId?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `tier` field. */
-  tier?: InputMaybe<TierFilter>;
-  /** Filter by the object’s `updatedAt` field. */
-  updatedAt?: InputMaybe<DatetimeFilter>;
-  /** Filter by the object’s `workflows` relation. */
-  workflows?: InputMaybe<WorkspaceToManyWorkflowFilter>;
-  /** Some related `workflows` exist. */
-  workflowsExist?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Filter by the object’s `workspaceUsers` relation. */
-  workspaceUsers?: InputMaybe<WorkspaceToManyWorkspaceUserFilter>;
-  /** Some related `workspaceUsers` exist. */
-  workspaceUsersExist?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** Grouping methods for `Workspace` for usage during aggregation. */
-export enum WorkspaceGroupBy {
-  CreatedAt = 'CREATED_AT',
-  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
-  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
-  DeletedAt = 'DELETED_AT',
-  DeletedAtTruncatedToDay = 'DELETED_AT_TRUNCATED_TO_DAY',
-  DeletedAtTruncatedToHour = 'DELETED_AT_TRUNCATED_TO_HOUR',
-  DeletionReason = 'DELETION_REASON',
-  Name = 'NAME',
-  OrganizationId = 'ORGANIZATION_ID',
-  SubscriptionId = 'SUBSCRIPTION_ID',
-  Tier = 'TIER',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
-  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR'
-}
-
-export type WorkspaceHavingAverageInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  deletedAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type WorkspaceHavingDistinctCountInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  deletedAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-/** Conditions for `Workspace` aggregates. */
-export type WorkspaceHavingInput = {
-  AND?: InputMaybe<Array<WorkspaceHavingInput>>;
-  OR?: InputMaybe<Array<WorkspaceHavingInput>>;
-  average?: InputMaybe<WorkspaceHavingAverageInput>;
-  distinctCount?: InputMaybe<WorkspaceHavingDistinctCountInput>;
-  max?: InputMaybe<WorkspaceHavingMaxInput>;
-  min?: InputMaybe<WorkspaceHavingMinInput>;
-  stddevPopulation?: InputMaybe<WorkspaceHavingStddevPopulationInput>;
-  stddevSample?: InputMaybe<WorkspaceHavingStddevSampleInput>;
-  sum?: InputMaybe<WorkspaceHavingSumInput>;
-  variancePopulation?: InputMaybe<WorkspaceHavingVariancePopulationInput>;
-  varianceSample?: InputMaybe<WorkspaceHavingVarianceSampleInput>;
-};
-
-export type WorkspaceHavingMaxInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  deletedAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type WorkspaceHavingMinInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  deletedAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type WorkspaceHavingStddevPopulationInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  deletedAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type WorkspaceHavingStddevSampleInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  deletedAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type WorkspaceHavingSumInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  deletedAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type WorkspaceHavingVariancePopulationInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  deletedAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type WorkspaceHavingVarianceSampleInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  deletedAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-/** An input for mutations affecting `Workspace` */
-export type WorkspaceInput = {
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  deletedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  deletionReason?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-  organizationId: Scalars['String']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  slug: Scalars['String']['input'];
-  subscriptionId?: InputMaybe<Scalars['String']['input']>;
-  tier?: InputMaybe<Tier>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** Methods to use when ordering `Workspace`. */
-export enum WorkspaceOrderBy {
-  CreatedAtAsc = 'CREATED_AT_ASC',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  DeletedAtAsc = 'DELETED_AT_ASC',
-  DeletedAtDesc = 'DELETED_AT_DESC',
-  DeletionReasonAsc = 'DELETION_REASON_ASC',
-  DeletionReasonDesc = 'DELETION_REASON_DESC',
-  IntegrationsCountAsc = 'INTEGRATIONS_COUNT_ASC',
-  IntegrationsCountDesc = 'INTEGRATIONS_COUNT_DESC',
-  IntegrationsDistinctCountConfigAsc = 'INTEGRATIONS_DISTINCT_COUNT_CONFIG_ASC',
-  IntegrationsDistinctCountConfigDesc = 'INTEGRATIONS_DISTINCT_COUNT_CONFIG_DESC',
-  IntegrationsDistinctCountCreatedAtAsc = 'INTEGRATIONS_DISTINCT_COUNT_CREATED_AT_ASC',
-  IntegrationsDistinctCountCreatedAtDesc = 'INTEGRATIONS_DISTINCT_COUNT_CREATED_AT_DESC',
-  IntegrationsDistinctCountDefinitionIdAsc = 'INTEGRATIONS_DISTINCT_COUNT_DEFINITION_ID_ASC',
-  IntegrationsDistinctCountDefinitionIdDesc = 'INTEGRATIONS_DISTINCT_COUNT_DEFINITION_ID_DESC',
-  IntegrationsDistinctCountIsEnabledAsc = 'INTEGRATIONS_DISTINCT_COUNT_IS_ENABLED_ASC',
-  IntegrationsDistinctCountIsEnabledDesc = 'INTEGRATIONS_DISTINCT_COUNT_IS_ENABLED_DESC',
-  IntegrationsDistinctCountMcpServerIdAsc = 'INTEGRATIONS_DISTINCT_COUNT_MCP_SERVER_ID_ASC',
-  IntegrationsDistinctCountMcpServerIdDesc = 'INTEGRATIONS_DISTINCT_COUNT_MCP_SERVER_ID_DESC',
-  IntegrationsDistinctCountNameAsc = 'INTEGRATIONS_DISTINCT_COUNT_NAME_ASC',
-  IntegrationsDistinctCountNameDesc = 'INTEGRATIONS_DISTINCT_COUNT_NAME_DESC',
-  IntegrationsDistinctCountRowIdAsc = 'INTEGRATIONS_DISTINCT_COUNT_ROW_ID_ASC',
-  IntegrationsDistinctCountRowIdDesc = 'INTEGRATIONS_DISTINCT_COUNT_ROW_ID_DESC',
-  IntegrationsDistinctCountTypeAsc = 'INTEGRATIONS_DISTINCT_COUNT_TYPE_ASC',
-  IntegrationsDistinctCountTypeDesc = 'INTEGRATIONS_DISTINCT_COUNT_TYPE_DESC',
-  IntegrationsDistinctCountUpdatedAtAsc = 'INTEGRATIONS_DISTINCT_COUNT_UPDATED_AT_ASC',
-  IntegrationsDistinctCountUpdatedAtDesc = 'INTEGRATIONS_DISTINCT_COUNT_UPDATED_AT_DESC',
-  IntegrationsDistinctCountWorkspaceIdAsc = 'INTEGRATIONS_DISTINCT_COUNT_WORKSPACE_ID_ASC',
-  IntegrationsDistinctCountWorkspaceIdDesc = 'INTEGRATIONS_DISTINCT_COUNT_WORKSPACE_ID_DESC',
-  InvitationsCountAsc = 'INVITATIONS_COUNT_ASC',
-  InvitationsCountDesc = 'INVITATIONS_COUNT_DESC',
-  InvitationsDistinctCountAcceptedAtAsc = 'INVITATIONS_DISTINCT_COUNT_ACCEPTED_AT_ASC',
-  InvitationsDistinctCountAcceptedAtDesc = 'INVITATIONS_DISTINCT_COUNT_ACCEPTED_AT_DESC',
-  InvitationsDistinctCountCreatedAtAsc = 'INVITATIONS_DISTINCT_COUNT_CREATED_AT_ASC',
-  InvitationsDistinctCountCreatedAtDesc = 'INVITATIONS_DISTINCT_COUNT_CREATED_AT_DESC',
-  InvitationsDistinctCountEmailAsc = 'INVITATIONS_DISTINCT_COUNT_EMAIL_ASC',
-  InvitationsDistinctCountEmailDesc = 'INVITATIONS_DISTINCT_COUNT_EMAIL_DESC',
-  InvitationsDistinctCountExpiresAtAsc = 'INVITATIONS_DISTINCT_COUNT_EXPIRES_AT_ASC',
-  InvitationsDistinctCountExpiresAtDesc = 'INVITATIONS_DISTINCT_COUNT_EXPIRES_AT_DESC',
-  InvitationsDistinctCountInvitedByAsc = 'INVITATIONS_DISTINCT_COUNT_INVITED_BY_ASC',
-  InvitationsDistinctCountInvitedByDesc = 'INVITATIONS_DISTINCT_COUNT_INVITED_BY_DESC',
-  InvitationsDistinctCountRoleAsc = 'INVITATIONS_DISTINCT_COUNT_ROLE_ASC',
-  InvitationsDistinctCountRoleDesc = 'INVITATIONS_DISTINCT_COUNT_ROLE_DESC',
-  InvitationsDistinctCountRowIdAsc = 'INVITATIONS_DISTINCT_COUNT_ROW_ID_ASC',
-  InvitationsDistinctCountRowIdDesc = 'INVITATIONS_DISTINCT_COUNT_ROW_ID_DESC',
-  InvitationsDistinctCountWorkspaceIdAsc = 'INVITATIONS_DISTINCT_COUNT_WORKSPACE_ID_ASC',
-  InvitationsDistinctCountWorkspaceIdDesc = 'INVITATIONS_DISTINCT_COUNT_WORKSPACE_ID_DESC',
-  McpServersCountAsc = 'MCP_SERVERS_COUNT_ASC',
-  McpServersCountDesc = 'MCP_SERVERS_COUNT_DESC',
-  McpServersDistinctCountArgsAsc = 'MCP_SERVERS_DISTINCT_COUNT_ARGS_ASC',
-  McpServersDistinctCountArgsDesc = 'MCP_SERVERS_DISTINCT_COUNT_ARGS_DESC',
-  McpServersDistinctCountCommandAsc = 'MCP_SERVERS_DISTINCT_COUNT_COMMAND_ASC',
-  McpServersDistinctCountCommandDesc = 'MCP_SERVERS_DISTINCT_COUNT_COMMAND_DESC',
-  McpServersDistinctCountCreatedAtAsc = 'MCP_SERVERS_DISTINCT_COUNT_CREATED_AT_ASC',
-  McpServersDistinctCountCreatedAtDesc = 'MCP_SERVERS_DISTINCT_COUNT_CREATED_AT_DESC',
-  McpServersDistinctCountCwdAsc = 'MCP_SERVERS_DISTINCT_COUNT_CWD_ASC',
-  McpServersDistinctCountCwdDesc = 'MCP_SERVERS_DISTINCT_COUNT_CWD_DESC',
-  McpServersDistinctCountEnvAsc = 'MCP_SERVERS_DISTINCT_COUNT_ENV_ASC',
-  McpServersDistinctCountEnvDesc = 'MCP_SERVERS_DISTINCT_COUNT_ENV_DESC',
-  McpServersDistinctCountIsEnabledAsc = 'MCP_SERVERS_DISTINCT_COUNT_IS_ENABLED_ASC',
-  McpServersDistinctCountIsEnabledDesc = 'MCP_SERVERS_DISTINCT_COUNT_IS_ENABLED_DESC',
-  McpServersDistinctCountNameAsc = 'MCP_SERVERS_DISTINCT_COUNT_NAME_ASC',
-  McpServersDistinctCountNameDesc = 'MCP_SERVERS_DISTINCT_COUNT_NAME_DESC',
-  McpServersDistinctCountRowIdAsc = 'MCP_SERVERS_DISTINCT_COUNT_ROW_ID_ASC',
-  McpServersDistinctCountRowIdDesc = 'MCP_SERVERS_DISTINCT_COUNT_ROW_ID_DESC',
-  McpServersDistinctCountTypeAsc = 'MCP_SERVERS_DISTINCT_COUNT_TYPE_ASC',
-  McpServersDistinctCountTypeDesc = 'MCP_SERVERS_DISTINCT_COUNT_TYPE_DESC',
-  McpServersDistinctCountUpdatedAtAsc = 'MCP_SERVERS_DISTINCT_COUNT_UPDATED_AT_ASC',
-  McpServersDistinctCountUpdatedAtDesc = 'MCP_SERVERS_DISTINCT_COUNT_UPDATED_AT_DESC',
-  McpServersDistinctCountWorkspaceIdAsc = 'MCP_SERVERS_DISTINCT_COUNT_WORKSPACE_ID_ASC',
-  McpServersDistinctCountWorkspaceIdDesc = 'MCP_SERVERS_DISTINCT_COUNT_WORKSPACE_ID_DESC',
-  NameAsc = 'NAME_ASC',
-  NameDesc = 'NAME_DESC',
-  Natural = 'NATURAL',
-  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
-  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
-  PluginsCountAsc = 'PLUGINS_COUNT_ASC',
-  PluginsCountDesc = 'PLUGINS_COUNT_DESC',
-  PluginsDistinctCountAuthorIdAsc = 'PLUGINS_DISTINCT_COUNT_AUTHOR_ID_ASC',
-  PluginsDistinctCountAuthorIdDesc = 'PLUGINS_DISTINCT_COUNT_AUTHOR_ID_DESC',
-  PluginsDistinctCountConfigAsc = 'PLUGINS_DISTINCT_COUNT_CONFIG_ASC',
-  PluginsDistinctCountConfigDesc = 'PLUGINS_DISTINCT_COUNT_CONFIG_DESC',
-  PluginsDistinctCountCreatedAtAsc = 'PLUGINS_DISTINCT_COUNT_CREATED_AT_ASC',
-  PluginsDistinctCountCreatedAtDesc = 'PLUGINS_DISTINCT_COUNT_CREATED_AT_DESC',
-  PluginsDistinctCountDescriptionAsc = 'PLUGINS_DISTINCT_COUNT_DESCRIPTION_ASC',
-  PluginsDistinctCountDescriptionDesc = 'PLUGINS_DISTINCT_COUNT_DESCRIPTION_DESC',
-  PluginsDistinctCountIsEnabledAsc = 'PLUGINS_DISTINCT_COUNT_IS_ENABLED_ASC',
-  PluginsDistinctCountIsEnabledDesc = 'PLUGINS_DISTINCT_COUNT_IS_ENABLED_DESC',
-  PluginsDistinctCountIsVerifiedAsc = 'PLUGINS_DISTINCT_COUNT_IS_VERIFIED_ASC',
-  PluginsDistinctCountIsVerifiedDesc = 'PLUGINS_DISTINCT_COUNT_IS_VERIFIED_DESC',
-  PluginsDistinctCountManifestAsc = 'PLUGINS_DISTINCT_COUNT_MANIFEST_ASC',
-  PluginsDistinctCountManifestDesc = 'PLUGINS_DISTINCT_COUNT_MANIFEST_DESC',
-  PluginsDistinctCountNameAsc = 'PLUGINS_DISTINCT_COUNT_NAME_ASC',
-  PluginsDistinctCountNameDesc = 'PLUGINS_DISTINCT_COUNT_NAME_DESC',
-  PluginsDistinctCountRowIdAsc = 'PLUGINS_DISTINCT_COUNT_ROW_ID_ASC',
-  PluginsDistinctCountRowIdDesc = 'PLUGINS_DISTINCT_COUNT_ROW_ID_DESC',
-  PluginsDistinctCountUpdatedAtAsc = 'PLUGINS_DISTINCT_COUNT_UPDATED_AT_ASC',
-  PluginsDistinctCountUpdatedAtDesc = 'PLUGINS_DISTINCT_COUNT_UPDATED_AT_DESC',
-  PluginsDistinctCountVersionAsc = 'PLUGINS_DISTINCT_COUNT_VERSION_ASC',
-  PluginsDistinctCountVersionDesc = 'PLUGINS_DISTINCT_COUNT_VERSION_DESC',
-  PluginsDistinctCountWasmHashAsc = 'PLUGINS_DISTINCT_COUNT_WASM_HASH_ASC',
-  PluginsDistinctCountWasmHashDesc = 'PLUGINS_DISTINCT_COUNT_WASM_HASH_DESC',
-  PluginsDistinctCountWasmUrlAsc = 'PLUGINS_DISTINCT_COUNT_WASM_URL_ASC',
-  PluginsDistinctCountWasmUrlDesc = 'PLUGINS_DISTINCT_COUNT_WASM_URL_DESC',
-  PluginsDistinctCountWorkspaceIdAsc = 'PLUGINS_DISTINCT_COUNT_WORKSPACE_ID_ASC',
-  PluginsDistinctCountWorkspaceIdDesc = 'PLUGINS_DISTINCT_COUNT_WORKSPACE_ID_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  RowIdAsc = 'ROW_ID_ASC',
-  RowIdDesc = 'ROW_ID_DESC',
-  SlugAsc = 'SLUG_ASC',
-  SlugDesc = 'SLUG_DESC',
-  SubscriptionIdAsc = 'SUBSCRIPTION_ID_ASC',
-  SubscriptionIdDesc = 'SUBSCRIPTION_ID_DESC',
-  UpdatedAtAsc = 'UPDATED_AT_ASC',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
-  WorkflowsCountAsc = 'WORKFLOWS_COUNT_ASC',
-  WorkflowsCountDesc = 'WORKFLOWS_COUNT_DESC',
-  WorkflowsDistinctCountCreatedAtAsc = 'WORKFLOWS_DISTINCT_COUNT_CREATED_AT_ASC',
-  WorkflowsDistinctCountCreatedAtDesc = 'WORKFLOWS_DISTINCT_COUNT_CREATED_AT_DESC',
-  WorkflowsDistinctCountCreatedByAsc = 'WORKFLOWS_DISTINCT_COUNT_CREATED_BY_ASC',
-  WorkflowsDistinctCountCreatedByDesc = 'WORKFLOWS_DISTINCT_COUNT_CREATED_BY_DESC',
-  WorkflowsDistinctCountCronExpressionAsc = 'WORKFLOWS_DISTINCT_COUNT_CRON_EXPRESSION_ASC',
-  WorkflowsDistinctCountCronExpressionDesc = 'WORKFLOWS_DISTINCT_COUNT_CRON_EXPRESSION_DESC',
-  WorkflowsDistinctCountDefinitionAsc = 'WORKFLOWS_DISTINCT_COUNT_DEFINITION_ASC',
-  WorkflowsDistinctCountDefinitionDesc = 'WORKFLOWS_DISTINCT_COUNT_DEFINITION_DESC',
-  WorkflowsDistinctCountDescriptionAsc = 'WORKFLOWS_DISTINCT_COUNT_DESCRIPTION_ASC',
-  WorkflowsDistinctCountDescriptionDesc = 'WORKFLOWS_DISTINCT_COUNT_DESCRIPTION_DESC',
-  WorkflowsDistinctCountIsActiveAsc = 'WORKFLOWS_DISTINCT_COUNT_IS_ACTIVE_ASC',
-  WorkflowsDistinctCountIsActiveDesc = 'WORKFLOWS_DISTINCT_COUNT_IS_ACTIVE_DESC',
-  WorkflowsDistinctCountLastRunAtAsc = 'WORKFLOWS_DISTINCT_COUNT_LAST_RUN_AT_ASC',
-  WorkflowsDistinctCountLastRunAtDesc = 'WORKFLOWS_DISTINCT_COUNT_LAST_RUN_AT_DESC',
-  WorkflowsDistinctCountLastRunStatusAsc = 'WORKFLOWS_DISTINCT_COUNT_LAST_RUN_STATUS_ASC',
-  WorkflowsDistinctCountLastRunStatusDesc = 'WORKFLOWS_DISTINCT_COUNT_LAST_RUN_STATUS_DESC',
-  WorkflowsDistinctCountNameAsc = 'WORKFLOWS_DISTINCT_COUNT_NAME_ASC',
-  WorkflowsDistinctCountNameDesc = 'WORKFLOWS_DISTINCT_COUNT_NAME_DESC',
-  WorkflowsDistinctCountRowIdAsc = 'WORKFLOWS_DISTINCT_COUNT_ROW_ID_ASC',
-  WorkflowsDistinctCountRowIdDesc = 'WORKFLOWS_DISTINCT_COUNT_ROW_ID_DESC',
-  WorkflowsDistinctCountUpdatedAtAsc = 'WORKFLOWS_DISTINCT_COUNT_UPDATED_AT_ASC',
-  WorkflowsDistinctCountUpdatedAtDesc = 'WORKFLOWS_DISTINCT_COUNT_UPDATED_AT_DESC',
-  WorkflowsDistinctCountWebhookSecretAsc = 'WORKFLOWS_DISTINCT_COUNT_WEBHOOK_SECRET_ASC',
-  WorkflowsDistinctCountWebhookSecretDesc = 'WORKFLOWS_DISTINCT_COUNT_WEBHOOK_SECRET_DESC',
-  WorkflowsDistinctCountWorkspaceIdAsc = 'WORKFLOWS_DISTINCT_COUNT_WORKSPACE_ID_ASC',
-  WorkflowsDistinctCountWorkspaceIdDesc = 'WORKFLOWS_DISTINCT_COUNT_WORKSPACE_ID_DESC',
-  WorkspaceUsersCountAsc = 'WORKSPACE_USERS_COUNT_ASC',
-  WorkspaceUsersCountDesc = 'WORKSPACE_USERS_COUNT_DESC',
-  WorkspaceUsersDistinctCountCreatedAtAsc = 'WORKSPACE_USERS_DISTINCT_COUNT_CREATED_AT_ASC',
-  WorkspaceUsersDistinctCountCreatedAtDesc = 'WORKSPACE_USERS_DISTINCT_COUNT_CREATED_AT_DESC',
-  WorkspaceUsersDistinctCountRoleAsc = 'WORKSPACE_USERS_DISTINCT_COUNT_ROLE_ASC',
-  WorkspaceUsersDistinctCountRoleDesc = 'WORKSPACE_USERS_DISTINCT_COUNT_ROLE_DESC',
-  WorkspaceUsersDistinctCountUpdatedAtAsc = 'WORKSPACE_USERS_DISTINCT_COUNT_UPDATED_AT_ASC',
-  WorkspaceUsersDistinctCountUpdatedAtDesc = 'WORKSPACE_USERS_DISTINCT_COUNT_UPDATED_AT_DESC',
-  WorkspaceUsersDistinctCountUserIdAsc = 'WORKSPACE_USERS_DISTINCT_COUNT_USER_ID_ASC',
-  WorkspaceUsersDistinctCountUserIdDesc = 'WORKSPACE_USERS_DISTINCT_COUNT_USER_ID_DESC',
-  WorkspaceUsersDistinctCountWorkspaceIdAsc = 'WORKSPACE_USERS_DISTINCT_COUNT_WORKSPACE_ID_ASC',
-  WorkspaceUsersDistinctCountWorkspaceIdDesc = 'WORKSPACE_USERS_DISTINCT_COUNT_WORKSPACE_ID_DESC'
-}
-
-/** Represents an update to a `Workspace`. Fields that are set will be updated. */
-export type WorkspacePatch = {
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  deletedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  deletionReason?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  organizationId?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  slug?: InputMaybe<Scalars['String']['input']>;
-  subscriptionId?: InputMaybe<Scalars['String']['input']>;
-  tier?: InputMaybe<Tier>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-export enum WorkspaceRole {
-  Admin = 'admin',
-  Member = 'member',
-  Owner = 'owner'
-}
-
-/** A filter to be used against WorkspaceRole fields. All fields are combined with a logical ‘and.’ */
-export type WorkspaceRoleFilter = {
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<WorkspaceRole>;
-  /** Equal to the specified value. */
-  equalTo?: InputMaybe<WorkspaceRole>;
-  /** Greater than the specified value. */
-  greaterThan?: InputMaybe<WorkspaceRole>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<WorkspaceRole>;
-  /** Included in the specified list. */
-  in?: InputMaybe<Array<WorkspaceRole>>;
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Less than the specified value. */
-  lessThan?: InputMaybe<WorkspaceRole>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<WorkspaceRole>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<WorkspaceRole>;
-  /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<WorkspaceRole>;
-  /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<WorkspaceRole>>;
-};
-
-/** A filter to be used against many `Integration` object types. All fields are combined with a logical ‘and.’ */
-export type WorkspaceToManyIntegrationFilter = {
-  /** Aggregates across related `Integration` match the filter criteria. */
-  aggregates?: InputMaybe<IntegrationAggregatesFilter>;
-  /** Every related `Integration` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<IntegrationFilter>;
-  /** No related `Integration` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<IntegrationFilter>;
-  /** Some related `Integration` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<IntegrationFilter>;
-};
-
-/** A filter to be used against many `Invitation` object types. All fields are combined with a logical ‘and.’ */
-export type WorkspaceToManyInvitationFilter = {
-  /** Aggregates across related `Invitation` match the filter criteria. */
-  aggregates?: InputMaybe<InvitationAggregatesFilter>;
-  /** Every related `Invitation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<InvitationFilter>;
-  /** No related `Invitation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<InvitationFilter>;
-  /** Some related `Invitation` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<InvitationFilter>;
-};
-
-/** A filter to be used against many `McpServer` object types. All fields are combined with a logical ‘and.’ */
-export type WorkspaceToManyMcpServerFilter = {
-  /** Aggregates across related `McpServer` match the filter criteria. */
-  aggregates?: InputMaybe<McpServerAggregatesFilter>;
-  /** Every related `McpServer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<McpServerFilter>;
-  /** No related `McpServer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<McpServerFilter>;
-  /** Some related `McpServer` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<McpServerFilter>;
-};
-
-/** A filter to be used against many `Plugin` object types. All fields are combined with a logical ‘and.’ */
-export type WorkspaceToManyPluginFilter = {
-  /** Aggregates across related `Plugin` match the filter criteria. */
-  aggregates?: InputMaybe<PluginAggregatesFilter>;
-  /** Every related `Plugin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<PluginFilter>;
-  /** No related `Plugin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<PluginFilter>;
-  /** Some related `Plugin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<PluginFilter>;
-};
-
-/** A filter to be used against many `Workflow` object types. All fields are combined with a logical ‘and.’ */
-export type WorkspaceToManyWorkflowFilter = {
-  /** Aggregates across related `Workflow` match the filter criteria. */
-  aggregates?: InputMaybe<WorkflowAggregatesFilter>;
-  /** Every related `Workflow` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<WorkflowFilter>;
-  /** No related `Workflow` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<WorkflowFilter>;
-  /** Some related `Workflow` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<WorkflowFilter>;
-};
-
-/** A filter to be used against many `WorkspaceUser` object types. All fields are combined with a logical ‘and.’ */
-export type WorkspaceToManyWorkspaceUserFilter = {
-  /** Aggregates across related `WorkspaceUser` match the filter criteria. */
-  aggregates?: InputMaybe<WorkspaceUserAggregatesFilter>;
-  /** Every related `WorkspaceUser` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: InputMaybe<WorkspaceUserFilter>;
-  /** No related `WorkspaceUser` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: InputMaybe<WorkspaceUserFilter>;
-  /** Some related `WorkspaceUser` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: InputMaybe<WorkspaceUserFilter>;
-};
-
-export type WorkspaceUser = Node & {
-  __typename?: 'WorkspaceUser';
-  createdAt?: Maybe<Scalars['Datetime']['output']>;
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  id: Scalars['ID']['output'];
-  role: WorkspaceRole;
-  updatedAt?: Maybe<Scalars['Datetime']['output']>;
-  /** Reads a single `User` that is related to this `WorkspaceUser`. */
-  user?: Maybe<User>;
-  userId: Scalars['UUID']['output'];
-  /** Reads a single `Workspace` that is related to this `WorkspaceUser`. */
-  workspace?: Maybe<Workspace>;
-  workspaceId: Scalars['UUID']['output'];
-};
-
-export type WorkspaceUserAggregates = {
-  __typename?: 'WorkspaceUserAggregates';
-  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  distinctCount?: Maybe<WorkspaceUserDistinctCountAggregates>;
-  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-};
-
-/** A filter to be used against aggregates of `WorkspaceUser` object types. */
-export type WorkspaceUserAggregatesFilter = {
-  /** Distinct count aggregate over matching `WorkspaceUser` objects. */
-  distinctCount?: InputMaybe<WorkspaceUserDistinctCountAggregateFilter>;
-  /** A filter that must pass for the relevant `WorkspaceUser` object to be included within the aggregate. */
-  filter?: InputMaybe<WorkspaceUserFilter>;
-};
-
-/**
- * A condition to be used against `WorkspaceUser` object types. All fields are
- * tested for equality and combined with a logical ‘and.’
- */
-export type WorkspaceUserCondition = {
-  /** Checks for equality with the object’s `createdAt` field. */
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `role` field. */
-  role?: InputMaybe<WorkspaceRole>;
-  /** Checks for equality with the object’s `updatedAt` field. */
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `userId` field. */
-  userId?: InputMaybe<Scalars['UUID']['input']>;
-  /** Checks for equality with the object’s `workspaceId` field. */
-  workspaceId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
-/** A connection to a list of `WorkspaceUser` values. */
-export type WorkspaceUserConnection = {
-  __typename?: 'WorkspaceUserConnection';
-  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  aggregates?: Maybe<WorkspaceUserAggregates>;
-  /** A list of edges which contains the `WorkspaceUser` and cursor to aid in pagination. */
-  edges: Array<WorkspaceUserEdge>;
-  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  groupedAggregates?: Maybe<Array<WorkspaceUserAggregates>>;
-  /** A list of `WorkspaceUser` objects. */
-  nodes: Array<WorkspaceUser>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `WorkspaceUser` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-
-/** A connection to a list of `WorkspaceUser` values. */
-export type WorkspaceUserConnectionGroupedAggregatesArgs = {
-  groupBy: Array<WorkspaceUserGroupBy>;
-  having?: InputMaybe<WorkspaceUserHavingInput>;
-};
-
-export type WorkspaceUserDistinctCountAggregateFilter = {
-  createdAt?: InputMaybe<BigIntFilter>;
-  role?: InputMaybe<BigIntFilter>;
-  updatedAt?: InputMaybe<BigIntFilter>;
-  userId?: InputMaybe<BigIntFilter>;
-  workspaceId?: InputMaybe<BigIntFilter>;
-};
-
-export type WorkspaceUserDistinctCountAggregates = {
-  __typename?: 'WorkspaceUserDistinctCountAggregates';
-  /** Distinct count of createdAt across the matching connection */
-  createdAt?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of role across the matching connection */
-  role?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of updatedAt across the matching connection */
-  updatedAt?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of userId across the matching connection */
-  userId?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of workspaceId across the matching connection */
-  workspaceId?: Maybe<Scalars['BigInt']['output']>;
-};
-
-/** A `WorkspaceUser` edge in the connection. */
-export type WorkspaceUserEdge = {
-  __typename?: 'WorkspaceUserEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `WorkspaceUser` at the end of the edge. */
-  node: WorkspaceUser;
-};
-
-/** A filter to be used against `WorkspaceUser` object types. All fields are combined with a logical ‘and.’ */
-export type WorkspaceUserFilter = {
-  /** Checks for all expressions in this list. */
-  and?: InputMaybe<Array<WorkspaceUserFilter>>;
-  /** Filter by the object’s `createdAt` field. */
-  createdAt?: InputMaybe<DatetimeFilter>;
-  /** Negates the expression. */
-  not?: InputMaybe<WorkspaceUserFilter>;
-  /** Checks for any expressions in this list. */
-  or?: InputMaybe<Array<WorkspaceUserFilter>>;
-  /** Filter by the object’s `role` field. */
-  role?: InputMaybe<WorkspaceRoleFilter>;
-  /** Filter by the object’s `updatedAt` field. */
-  updatedAt?: InputMaybe<DatetimeFilter>;
-  /** Filter by the object’s `user` relation. */
-  user?: InputMaybe<UserFilter>;
-  /** Filter by the object’s `userId` field. */
-  userId?: InputMaybe<UuidFilter>;
-  /** Filter by the object’s `workspace` relation. */
-  workspace?: InputMaybe<WorkspaceFilter>;
-  /** Filter by the object’s `workspaceId` field. */
-  workspaceId?: InputMaybe<UuidFilter>;
-};
-
-/** Grouping methods for `WorkspaceUser` for usage during aggregation. */
-export enum WorkspaceUserGroupBy {
-  CreatedAt = 'CREATED_AT',
-  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
-  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
-  Role = 'ROLE',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
-  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR',
-  UserId = 'USER_ID',
-  WorkspaceId = 'WORKSPACE_ID'
-}
-
-export type WorkspaceUserHavingAverageInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type WorkspaceUserHavingDistinctCountInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-/** Conditions for `WorkspaceUser` aggregates. */
-export type WorkspaceUserHavingInput = {
-  AND?: InputMaybe<Array<WorkspaceUserHavingInput>>;
-  OR?: InputMaybe<Array<WorkspaceUserHavingInput>>;
-  average?: InputMaybe<WorkspaceUserHavingAverageInput>;
-  distinctCount?: InputMaybe<WorkspaceUserHavingDistinctCountInput>;
-  max?: InputMaybe<WorkspaceUserHavingMaxInput>;
-  min?: InputMaybe<WorkspaceUserHavingMinInput>;
-  stddevPopulation?: InputMaybe<WorkspaceUserHavingStddevPopulationInput>;
-  stddevSample?: InputMaybe<WorkspaceUserHavingStddevSampleInput>;
-  sum?: InputMaybe<WorkspaceUserHavingSumInput>;
-  variancePopulation?: InputMaybe<WorkspaceUserHavingVariancePopulationInput>;
-  varianceSample?: InputMaybe<WorkspaceUserHavingVarianceSampleInput>;
-};
-
-export type WorkspaceUserHavingMaxInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type WorkspaceUserHavingMinInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type WorkspaceUserHavingStddevPopulationInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type WorkspaceUserHavingStddevSampleInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type WorkspaceUserHavingSumInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type WorkspaceUserHavingVariancePopulationInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type WorkspaceUserHavingVarianceSampleInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-/** An input for mutations affecting `WorkspaceUser` */
-export type WorkspaceUserInput = {
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  role?: InputMaybe<WorkspaceRole>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  userId: Scalars['UUID']['input'];
-  workspaceId: Scalars['UUID']['input'];
-};
-
-/** Methods to use when ordering `WorkspaceUser`. */
-export enum WorkspaceUserOrderBy {
-  CreatedAtAsc = 'CREATED_AT_ASC',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  UpdatedAtAsc = 'UPDATED_AT_ASC',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
-  UserIdAsc = 'USER_ID_ASC',
-  UserIdDesc = 'USER_ID_DESC',
-  WorkspaceIdAsc = 'WORKSPACE_ID_ASC',
-  WorkspaceIdDesc = 'WORKSPACE_ID_DESC'
-}
-
-/** Represents an update to a `WorkspaceUser`. Fields that are set will be updated. */
-export type WorkspaceUserPatch = {
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  role?: InputMaybe<WorkspaceRole>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  userId?: InputMaybe<Scalars['UUID']['input']>;
-  workspaceId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
 export type CreateIntegrationMutationVariables = Exact<{
   input: CreateIntegrationInput;
 }>;
@@ -6753,20 +5483,6 @@ export type DeleteIntegrationMutationVariables = Exact<{
 
 
 export type DeleteIntegrationMutation = { __typename?: 'Mutation', deleteIntegration?: { __typename?: 'DeleteIntegrationPayload', integration?: { __typename?: 'Integration', rowId: string, name: string } | null } | null };
-
-export type CreateInvitationMutationVariables = Exact<{
-  input: CreateInvitationInput;
-}>;
-
-
-export type CreateInvitationMutation = { __typename?: 'Mutation', createInvitation?: { __typename?: 'CreateInvitationPayload', invitation?: { __typename?: 'Invitation', rowId: string } | null } | null };
-
-export type DeleteInvitationMutationVariables = Exact<{
-  rowId: Scalars['UUID']['input'];
-}>;
-
-
-export type DeleteInvitationMutation = { __typename?: 'Mutation', deleteInvitation?: { __typename?: 'DeleteInvitationPayload', invitation?: { __typename?: 'Invitation', rowId: string } | null } | null };
 
 export type CreateMcpServerMutationVariables = Exact<{
   input: CreateMcpServerInput;
@@ -6794,7 +5510,7 @@ export type CreateWorkflowMutationVariables = Exact<{
 }>;
 
 
-export type CreateWorkflowMutation = { __typename?: 'Mutation', createWorkflow?: { __typename?: 'CreateWorkflowPayload', workflow?: { __typename?: 'Workflow', rowId: string, workspaceId: string, name: string, description?: string | null, definition: Record<string, unknown>, cronExpression?: string | null, isActive: boolean, createdAt?: Date | null } | null } | null };
+export type CreateWorkflowMutation = { __typename?: 'Mutation', createWorkflow?: { __typename?: 'CreateWorkflowPayload', workflow?: { __typename?: 'Workflow', rowId: string, organizationId: string, name: string, description?: string | null, definition: Record<string, unknown>, cronExpression?: string | null, isActive: boolean, createdAt?: Date | null } | null } | null };
 
 export type DeleteWorkflowMutationVariables = Exact<{
   input: DeleteWorkflowInput;
@@ -6808,50 +5524,7 @@ export type UpdateWorkflowMutationVariables = Exact<{
 }>;
 
 
-export type UpdateWorkflowMutation = { __typename?: 'Mutation', updateWorkflow?: { __typename?: 'UpdateWorkflowPayload', workflow?: { __typename?: 'Workflow', rowId: string, workspaceId: string, name: string, description?: string | null, definition: Record<string, unknown>, cronExpression?: string | null, isActive: boolean, updatedAt?: Date | null } | null } | null };
-
-export type CreateWorkspaceUserMutationVariables = Exact<{
-  input: CreateWorkspaceUserInput;
-}>;
-
-
-export type CreateWorkspaceUserMutation = { __typename?: 'Mutation', createWorkspaceUser?: { __typename?: 'CreateWorkspaceUserPayload', workspaceUser?: { __typename?: 'WorkspaceUser', workspaceId: string, userId: string, role: WorkspaceRole } | null } | null };
-
-export type DeleteWorkspaceUserMutationVariables = Exact<{
-  userId: Scalars['UUID']['input'];
-  workspaceId: Scalars['UUID']['input'];
-}>;
-
-
-export type DeleteWorkspaceUserMutation = { __typename?: 'Mutation', deleteWorkspaceUser?: { __typename?: 'DeleteWorkspaceUserPayload', clientMutationId?: string | null } | null };
-
-export type UpdateWorkspaceUserMutationVariables = Exact<{
-  input: UpdateWorkspaceUserInput;
-}>;
-
-
-export type UpdateWorkspaceUserMutation = { __typename?: 'Mutation', updateWorkspaceUser?: { __typename?: 'UpdateWorkspaceUserPayload', clientMutationId?: string | null } | null };
-
-export type CreateWorkspaceMutationVariables = Exact<{
-  input: CreateWorkspaceInput;
-}>;
-
-
-export type CreateWorkspaceMutation = { __typename?: 'Mutation', createWorkspace?: { __typename?: 'CreateWorkspacePayload', workspace?: { __typename?: 'Workspace', rowId: string, name: string, slug: string, tier: Tier } | null } | null };
-
-export type DeleteWorkspaceMutationVariables = Exact<{
-  input: DeleteWorkspaceInput;
-}>;
-
-
-export type DeleteWorkspaceMutation = { __typename?: 'Mutation', deleteWorkspace?: { __typename?: 'DeleteWorkspacePayload', workspace?: { __typename?: 'Workspace', rowId: string } | null } | null };
-
-export type UpdateWorkspaceMutationVariables = Exact<{
-  input: UpdateWorkspaceInput;
-}>;
-
-
-export type UpdateWorkspaceMutation = { __typename?: 'Mutation', updateWorkspace?: { __typename?: 'UpdateWorkspacePayload', workspace?: { __typename?: 'Workspace', rowId: string, name: string, slug: string, tier: Tier } | null } | null };
+export type UpdateWorkflowMutation = { __typename?: 'Mutation', updateWorkflow?: { __typename?: 'UpdateWorkflowPayload', workflow?: { __typename?: 'Workflow', rowId: string, organizationId: string, name: string, description?: string | null, definition: Record<string, unknown>, cronExpression?: string | null, isActive: boolean, updatedAt?: Date | null } | null } | null };
 
 export type IntegrationDefinitionsQueryVariables = Exact<{
   isFeatured?: InputMaybe<Scalars['Boolean']['input']>;
@@ -6868,7 +5541,7 @@ export type IntegrationDefinitionQueryVariables = Exact<{
 export type IntegrationDefinitionQuery = { __typename?: 'Query', integrationDefinition?: { __typename?: 'IntegrationDefinition', id: string, rowId: string, name: string, description?: string | null, iconUrl?: string | null, category: string, authType: string, authFields: Record<string, unknown>, mcpPackage: string, mcpCommand: string, mcpArgs: Record<string, unknown>, keepAlive: boolean, idleTimeoutMs: number, isFeatured: boolean, isEnabled: boolean, setupSteps?: Record<string, unknown> | null, docsUrl?: string | null, supportsOAuth: boolean } | null };
 
 export type IntegrationsQueryVariables = Exact<{
-  workspaceId: Scalars['UUID']['input'];
+  organizationId: Scalars['String']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
@@ -6882,15 +5555,8 @@ export type IntegrationQueryVariables = Exact<{
 
 export type IntegrationQuery = { __typename?: 'Query', integration?: { __typename?: 'Integration', rowId: string, name: string, type: string, isEnabled: boolean, config: Record<string, unknown>, createdAt?: Date | null, updatedAt?: Date | null } | null };
 
-export type InvitationsQueryVariables = Exact<{
-  email?: InputMaybe<Scalars['String']['input']>;
-}>;
-
-
-export type InvitationsQuery = { __typename?: 'Query', invitations?: { __typename?: 'InvitationConnection', nodes: Array<{ __typename?: 'Invitation', rowId: string, email: string, role: WorkspaceRole, createdAt?: Date | null, workspace?: { __typename?: 'Workspace', rowId: string, name: string, slug: string, workspaceUsers: { __typename?: 'WorkspaceUserConnection', totalCount: number } } | null }> } | null };
-
 export type PluginsQueryVariables = Exact<{
-  workspaceId: Scalars['UUID']['input'];
+  organizationId: Scalars['String']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
@@ -6909,48 +5575,15 @@ export type WorkflowQueryVariables = Exact<{
 }>;
 
 
-export type WorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', rowId: string, workspaceId: string, name: string, description?: string | null, definition: Record<string, unknown>, cronExpression?: string | null, webhookSecret?: string | null, isActive: boolean, createdAt?: Date | null, updatedAt?: Date | null, workspace?: { __typename?: 'Workspace', rowId: string, name: string, slug: string, tier: Tier } | null, workflowRuns: { __typename?: 'WorkflowRunConnection', totalCount: number, nodes: Array<{ __typename?: 'WorkflowRun', rowId: string, engineWorkflowId: string, status: string, startedAt?: Date | null, completedAt?: Date | null, input?: Record<string, unknown> | null, output?: Record<string, unknown> | null, error?: string | null, createdAt?: Date | null, workflowStepLogs: { __typename?: 'WorkflowStepLogConnection', nodes: Array<{ __typename?: 'WorkflowStepLog', rowId: string, stepId: string, stepName: string, stepType: string, status: string, input?: Record<string, unknown> | null, output?: Record<string, unknown> | null, error?: string | null, startedAt?: Date | null, completedAt?: Date | null }> } }> } } | null };
+export type WorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', rowId: string, organizationId: string, name: string, description?: string | null, definition: Record<string, unknown>, cronExpression?: string | null, webhookSecret?: string | null, isActive: boolean, createdAt?: Date | null, updatedAt?: Date | null, workflowRuns: { __typename?: 'WorkflowRunConnection', totalCount: number, nodes: Array<{ __typename?: 'WorkflowRun', rowId: string, engineWorkflowId: string, status: string, startedAt?: Date | null, completedAt?: Date | null, input?: Record<string, unknown> | null, output?: Record<string, unknown> | null, error?: string | null, createdAt?: Date | null, workflowStepLogs: { __typename?: 'WorkflowStepLogConnection', nodes: Array<{ __typename?: 'WorkflowStepLog', rowId: string, stepId: string, stepName: string, stepType: string, status: string, input?: Record<string, unknown> | null, output?: Record<string, unknown> | null, error?: string | null, startedAt?: Date | null, completedAt?: Date | null }> } }> } } | null };
 
 export type WorkflowsQueryVariables = Exact<{
-  workspaceId: Scalars['UUID']['input'];
+  organizationId: Scalars['String']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
 export type WorkflowsQuery = { __typename?: 'Query', workflows?: { __typename?: 'WorkflowConnection', totalCount: number, nodes: Array<{ __typename?: 'Workflow', rowId: string, name: string, description?: string | null, cronExpression?: string | null, isActive: boolean, createdAt?: Date | null, updatedAt?: Date | null, workflowRuns: { __typename?: 'WorkflowRunConnection', nodes: Array<{ __typename?: 'WorkflowRun', rowId: string, status: string, createdAt?: Date | null }> } }> } | null };
-
-export type WorkspaceUsersQueryVariables = Exact<{
-  workspaceId: Scalars['UUID']['input'];
-  filter?: InputMaybe<WorkspaceUserFilter>;
-  orderBy?: InputMaybe<Array<WorkspaceUserOrderBy> | WorkspaceUserOrderBy>;
-}>;
-
-
-export type WorkspaceUsersQuery = { __typename?: 'Query', workspaceUsers?: { __typename?: 'WorkspaceUserConnection', nodes: Array<{ __typename?: 'WorkspaceUser', role: WorkspaceRole, createdAt?: Date | null, user?: { __typename?: 'User', rowId: string, name: string, email: string, avatarUrl?: string | null } | null }> } | null };
-
-export type WorkspaceQueryVariables = Exact<{
-  rowId: Scalars['UUID']['input'];
-  userId: Scalars['UUID']['input'];
-}>;
-
-
-export type WorkspaceQuery = { __typename?: 'Query', workspace?: { __typename?: 'Workspace', rowId: string, name: string, slug: string, tier: Tier, subscriptionId?: string | null, workspaceUsers: { __typename?: 'WorkspaceUserConnection', nodes: Array<{ __typename?: 'WorkspaceUser', role: WorkspaceRole }> }, workflows: { __typename?: 'WorkflowConnection', totalCount: number, nodes: Array<{ __typename?: 'Workflow', rowId: string, name: string, isActive: boolean, createdAt?: Date | null, updatedAt?: Date | null }> }, integrations: { __typename?: 'IntegrationConnection', totalCount: number, nodes: Array<{ __typename?: 'Integration', rowId: string, name: string, type: string, isEnabled: boolean }> }, plugins: { __typename?: 'PluginConnection', totalCount: number, nodes: Array<{ __typename?: 'Plugin', rowId: string, name: string, version: string, isEnabled: boolean }> } } | null };
-
-export type WorkspaceBySlugQueryVariables = Exact<{
-  slug: Scalars['String']['input'];
-  userId: Scalars['UUID']['input'];
-}>;
-
-
-export type WorkspaceBySlugQuery = { __typename?: 'Query', workspaceBySlug?: { __typename?: 'Workspace', rowId: string, name: string, slug: string, tier: Tier, subscriptionId?: string | null, workspaceUsers: { __typename?: 'WorkspaceUserConnection', nodes: Array<{ __typename?: 'WorkspaceUser', role: WorkspaceRole }> }, workflows: { __typename?: 'WorkflowConnection', totalCount: number, nodes: Array<{ __typename?: 'Workflow', rowId: string, name: string, isActive: boolean, createdAt?: Date | null, updatedAt?: Date | null }> }, integrations: { __typename?: 'IntegrationConnection', totalCount: number, nodes: Array<{ __typename?: 'Integration', rowId: string, name: string, type: string, isEnabled: boolean }> }, plugins: { __typename?: 'PluginConnection', totalCount: number, nodes: Array<{ __typename?: 'Plugin', rowId: string, name: string, version: string, isEnabled: boolean }> } } | null };
-
-export type WorkspacesQueryVariables = Exact<{
-  userId: Scalars['UUID']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
-}>;
-
-
-export type WorkspacesQuery = { __typename?: 'Query', workspaces?: { __typename?: 'WorkspaceConnection', nodes: Array<{ __typename?: 'Workspace', rowId: string, name: string, slug: string, subscriptionId?: string | null, tier: Tier, workspaceUsers: { __typename?: 'WorkspaceUserConnection', totalCount: number }, currentUser: { __typename?: 'WorkspaceUserConnection', nodes: Array<{ __typename?: 'WorkspaceUser', role: WorkspaceRole }> } }> } | null };
 
 
 export const CreateIntegrationDocument = gql`
@@ -6985,24 +5618,6 @@ export const DeleteIntegrationDocument = gql`
     integration {
       rowId
       name
-    }
-  }
-}
-    `;
-export const CreateInvitationDocument = gql`
-    mutation CreateInvitation($input: CreateInvitationInput!) {
-  createInvitation(input: $input) {
-    invitation {
-      rowId
-    }
-  }
-}
-    `;
-export const DeleteInvitationDocument = gql`
-    mutation DeleteInvitation($rowId: UUID!) {
-  deleteInvitation(input: {rowId: $rowId}) {
-    invitation {
-      rowId
     }
   }
 }
@@ -7052,7 +5667,7 @@ export const CreateWorkflowDocument = gql`
   createWorkflow(input: $input) {
     workflow {
       rowId
-      workspaceId
+      organizationId
       name
       description
       definition
@@ -7077,71 +5692,13 @@ export const UpdateWorkflowDocument = gql`
   updateWorkflow(input: $input) {
     workflow {
       rowId
-      workspaceId
+      organizationId
       name
       description
       definition
       cronExpression
       isActive
       updatedAt
-    }
-  }
-}
-    `;
-export const CreateWorkspaceUserDocument = gql`
-    mutation CreateWorkspaceUser($input: CreateWorkspaceUserInput!) {
-  createWorkspaceUser(input: $input) {
-    workspaceUser {
-      workspaceId
-      userId
-      role
-    }
-  }
-}
-    `;
-export const DeleteWorkspaceUserDocument = gql`
-    mutation DeleteWorkspaceUser($userId: UUID!, $workspaceId: UUID!) {
-  deleteWorkspaceUser(input: {userId: $userId, workspaceId: $workspaceId}) {
-    clientMutationId
-  }
-}
-    `;
-export const UpdateWorkspaceUserDocument = gql`
-    mutation UpdateWorkspaceUser($input: UpdateWorkspaceUserInput!) {
-  updateWorkspaceUser(input: $input) {
-    clientMutationId
-  }
-}
-    `;
-export const CreateWorkspaceDocument = gql`
-    mutation CreateWorkspace($input: CreateWorkspaceInput!) {
-  createWorkspace(input: $input) {
-    workspace {
-      rowId
-      name
-      slug
-      tier
-    }
-  }
-}
-    `;
-export const DeleteWorkspaceDocument = gql`
-    mutation DeleteWorkspace($input: DeleteWorkspaceInput!) {
-  deleteWorkspace(input: $input) {
-    workspace {
-      rowId
-    }
-  }
-}
-    `;
-export const UpdateWorkspaceDocument = gql`
-    mutation UpdateWorkspace($input: UpdateWorkspaceInput!) {
-  updateWorkspace(input: $input) {
-    workspace {
-      rowId
-      name
-      slug
-      tier
     }
   }
 }
@@ -7196,9 +5753,9 @@ export const IntegrationDefinitionDocument = gql`
 }
     `;
 export const IntegrationsDocument = gql`
-    query Integrations($workspaceId: UUID!, $limit: Int) {
+    query Integrations($organizationId: String!, $limit: Int) {
   integrations(
-    condition: {workspaceId: $workspaceId}
+    condition: {organizationId: $organizationId}
     orderBy: NAME_ASC
     first: $limit
   ) {
@@ -7228,30 +5785,10 @@ export const IntegrationDocument = gql`
   }
 }
     `;
-export const InvitationsDocument = gql`
-    query Invitations($email: String) {
-  invitations(condition: {email: $email}) {
-    nodes {
-      rowId
-      email
-      role
-      createdAt
-      workspace {
-        rowId
-        name
-        slug
-        workspaceUsers {
-          totalCount
-        }
-      }
-    }
-  }
-}
-    `;
 export const PluginsDocument = gql`
-    query Plugins($workspaceId: UUID!, $limit: Int) {
+    query Plugins($organizationId: String!, $limit: Int) {
   plugins(
-    condition: {workspaceId: $workspaceId, isEnabled: true}
+    condition: {organizationId: $organizationId, isEnabled: true}
     orderBy: NAME_ASC
     first: $limit
   ) {
@@ -7285,7 +5822,7 @@ export const WorkflowDocument = gql`
     query Workflow($rowId: UUID!) {
   workflow(rowId: $rowId) {
     rowId
-    workspaceId
+    organizationId
     name
     description
     definition
@@ -7294,12 +5831,6 @@ export const WorkflowDocument = gql`
     isActive
     createdAt
     updatedAt
-    workspace {
-      rowId
-      name
-      slug
-      tier
-    }
     workflowRuns(orderBy: CREATED_AT_DESC, first: 10) {
       nodes {
         rowId
@@ -7332,9 +5863,9 @@ export const WorkflowDocument = gql`
 }
     `;
 export const WorkflowsDocument = gql`
-    query Workflows($workspaceId: UUID!, $limit: Int) {
+    query Workflows($organizationId: String!, $limit: Int) {
   workflows(
-    condition: {workspaceId: $workspaceId}
+    condition: {organizationId: $organizationId}
     orderBy: NAME_ASC
     first: $limit
   ) {
@@ -7358,139 +5889,6 @@ export const WorkflowsDocument = gql`
   }
 }
     `;
-export const WorkspaceUsersDocument = gql`
-    query WorkspaceUsers($workspaceId: UUID!, $filter: WorkspaceUserFilter, $orderBy: [WorkspaceUserOrderBy!] = [CREATED_AT_ASC]) {
-  workspaceUsers(
-    condition: {workspaceId: $workspaceId}
-    filter: $filter
-    orderBy: $orderBy
-  ) {
-    nodes {
-      role
-      createdAt
-      user {
-        rowId
-        name
-        email
-        avatarUrl
-      }
-    }
-  }
-}
-    `;
-export const WorkspaceDocument = gql`
-    query Workspace($rowId: UUID!, $userId: UUID!) {
-  workspace(rowId: $rowId) {
-    rowId
-    name
-    slug
-    tier
-    subscriptionId
-    workspaceUsers(condition: {userId: $userId}) {
-      nodes {
-        role
-      }
-    }
-    workflows(orderBy: NAME_ASC) {
-      totalCount
-      nodes {
-        rowId
-        name
-        isActive
-        createdAt
-        updatedAt
-      }
-    }
-    integrations(orderBy: NAME_ASC) {
-      totalCount
-      nodes {
-        rowId
-        name
-        type
-        isEnabled
-      }
-    }
-    plugins(orderBy: NAME_ASC) {
-      totalCount
-      nodes {
-        rowId
-        name
-        version
-        isEnabled
-      }
-    }
-  }
-}
-    `;
-export const WorkspaceBySlugDocument = gql`
-    query WorkspaceBySlug($slug: String!, $userId: UUID!) {
-  workspaceBySlug(slug: $slug) {
-    rowId
-    name
-    slug
-    tier
-    subscriptionId
-    workspaceUsers(condition: {userId: $userId}) {
-      nodes {
-        role
-      }
-    }
-    workflows(orderBy: NAME_ASC) {
-      totalCount
-      nodes {
-        rowId
-        name
-        isActive
-        createdAt
-        updatedAt
-      }
-    }
-    integrations(orderBy: NAME_ASC) {
-      totalCount
-      nodes {
-        rowId
-        name
-        type
-        isEnabled
-      }
-    }
-    plugins(orderBy: NAME_ASC) {
-      totalCount
-      nodes {
-        rowId
-        name
-        version
-        isEnabled
-      }
-    }
-  }
-}
-    `;
-export const WorkspacesDocument = gql`
-    query Workspaces($userId: UUID!, $limit: Int) {
-  workspaces(
-    filter: {workspaceUsers: {some: {userId: {equalTo: $userId}}}}
-    orderBy: NAME_ASC
-    first: $limit
-  ) {
-    nodes {
-      rowId
-      name
-      slug
-      subscriptionId
-      tier
-      workspaceUsers {
-        totalCount
-      }
-      currentUser: workspaceUsers(condition: {userId: $userId}) {
-        nodes {
-          role
-        }
-      }
-    }
-  }
-}
-    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
 
@@ -7507,12 +5905,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     DeleteIntegration(variables: DeleteIntegrationMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<DeleteIntegrationMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DeleteIntegrationMutation>({ document: DeleteIntegrationDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'DeleteIntegration', 'mutation', variables);
-    },
-    CreateInvitation(variables: CreateInvitationMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<CreateInvitationMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CreateInvitationMutation>({ document: CreateInvitationDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'CreateInvitation', 'mutation', variables);
-    },
-    DeleteInvitation(variables: DeleteInvitationMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<DeleteInvitationMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<DeleteInvitationMutation>({ document: DeleteInvitationDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'DeleteInvitation', 'mutation', variables);
     },
     CreateMcpServer(variables: CreateMcpServerMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<CreateMcpServerMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateMcpServerMutation>({ document: CreateMcpServerDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'CreateMcpServer', 'mutation', variables);
@@ -7532,24 +5924,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     UpdateWorkflow(variables: UpdateWorkflowMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<UpdateWorkflowMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateWorkflowMutation>({ document: UpdateWorkflowDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'UpdateWorkflow', 'mutation', variables);
     },
-    CreateWorkspaceUser(variables: CreateWorkspaceUserMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<CreateWorkspaceUserMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CreateWorkspaceUserMutation>({ document: CreateWorkspaceUserDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'CreateWorkspaceUser', 'mutation', variables);
-    },
-    DeleteWorkspaceUser(variables: DeleteWorkspaceUserMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<DeleteWorkspaceUserMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<DeleteWorkspaceUserMutation>({ document: DeleteWorkspaceUserDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'DeleteWorkspaceUser', 'mutation', variables);
-    },
-    UpdateWorkspaceUser(variables: UpdateWorkspaceUserMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<UpdateWorkspaceUserMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<UpdateWorkspaceUserMutation>({ document: UpdateWorkspaceUserDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'UpdateWorkspaceUser', 'mutation', variables);
-    },
-    CreateWorkspace(variables: CreateWorkspaceMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<CreateWorkspaceMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CreateWorkspaceMutation>({ document: CreateWorkspaceDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'CreateWorkspace', 'mutation', variables);
-    },
-    DeleteWorkspace(variables: DeleteWorkspaceMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<DeleteWorkspaceMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<DeleteWorkspaceMutation>({ document: DeleteWorkspaceDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'DeleteWorkspace', 'mutation', variables);
-    },
-    UpdateWorkspace(variables: UpdateWorkspaceMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<UpdateWorkspaceMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<UpdateWorkspaceMutation>({ document: UpdateWorkspaceDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'UpdateWorkspace', 'mutation', variables);
-    },
     IntegrationDefinitions(variables?: IntegrationDefinitionsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<IntegrationDefinitionsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<IntegrationDefinitionsQuery>({ document: IntegrationDefinitionsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'IntegrationDefinitions', 'query', variables);
     },
@@ -7562,9 +5936,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     Integration(variables: IntegrationQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<IntegrationQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<IntegrationQuery>({ document: IntegrationDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'Integration', 'query', variables);
     },
-    Invitations(variables?: InvitationsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<InvitationsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<InvitationsQuery>({ document: InvitationsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'Invitations', 'query', variables);
-    },
     Plugins(variables: PluginsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<PluginsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<PluginsQuery>({ document: PluginsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'Plugins', 'query', variables);
     },
@@ -7576,18 +5947,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     Workflows(variables: WorkflowsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<WorkflowsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<WorkflowsQuery>({ document: WorkflowsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'Workflows', 'query', variables);
-    },
-    WorkspaceUsers(variables: WorkspaceUsersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<WorkspaceUsersQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<WorkspaceUsersQuery>({ document: WorkspaceUsersDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'WorkspaceUsers', 'query', variables);
-    },
-    Workspace(variables: WorkspaceQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<WorkspaceQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<WorkspaceQuery>({ document: WorkspaceDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'Workspace', 'query', variables);
-    },
-    WorkspaceBySlug(variables: WorkspaceBySlugQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<WorkspaceBySlugQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<WorkspaceBySlugQuery>({ document: WorkspaceBySlugDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'WorkspaceBySlug', 'query', variables);
-    },
-    Workspaces(variables: WorkspacesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<WorkspacesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<WorkspacesQuery>({ document: WorkspacesDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'Workspaces', 'query', variables);
     }
   };
 }
