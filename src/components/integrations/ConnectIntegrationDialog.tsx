@@ -6,7 +6,6 @@ import {
   ExternalLink,
   Eye,
   EyeOff,
-  Info,
   Loader2,
   Zap,
 } from "lucide-react";
