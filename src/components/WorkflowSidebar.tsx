@@ -219,7 +219,7 @@ const IconMap: Record<string, React.ElementType> = {
 
 interface WorkflowSidebarProps {
   onAddNode: (type: string, data: any) => void;
-  workspaceId: string;
+  organizationId: string;
   workspaceSlug: string;
   currentWorkflow?: {
     id: string;
@@ -250,7 +250,7 @@ interface CommunityPlugin {
 
 function WorkflowSidebar({
   onAddNode,
-  workspaceId,
+  organizationId,
   workspaceSlug,
   currentWorkflow,
 }: WorkflowSidebarProps) {
@@ -260,7 +260,7 @@ function WorkflowSidebar({
 
   // Fetch connected integrations for the workspace
   const { data: integrationsData } = useQuery({
-    ...integrationsOptions({ workspaceId }),
+    ...integrationsOptions({ organizationId }),
     select: (data) => data?.integrations?.nodes ?? [],
   });
 

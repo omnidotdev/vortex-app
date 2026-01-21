@@ -43,14 +43,14 @@ export const Route = createFileRoute(
       integrationOptions({ id: params.integrationId }),
     );
 
-    return { workspaceId: workspaceBySlug.rowId };
+    return { organizationId: workspaceBySlug.rowId };
   },
   component: IntegrationDetailPage,
 });
 
 function IntegrationDetailPage() {
   const { workspaceSlug, integrationId } = Route.useParams();
-  const { workspaceId } = Route.useLoaderData();
+  const { organizationId } = Route.useLoaderData();
   const navigate = useNavigate();
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -65,7 +65,7 @@ function IntegrationDetailPage() {
       meta: {
         invalidates: [
           integrationOptions({ id: integrationId }).queryKey,
-          integrationsOptions({ workspaceId }).queryKey,
+          integrationsOptions({ organizationId }).queryKey,
         ],
       },
     });
@@ -73,7 +73,7 @@ function IntegrationDetailPage() {
   const { mutateAsync: deleteIntegration, isPending: isDeleting } =
     useDeleteIntegrationMutation({
       meta: {
-        invalidates: [integrationsOptions({ workspaceId }).queryKey],
+        invalidates: [integrationsOptions({ organizationId }).queryKey],
       },
     });
 

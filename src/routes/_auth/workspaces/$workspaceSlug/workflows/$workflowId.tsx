@@ -56,7 +56,7 @@ export const Route = createFileRoute(
       workflowOptions({ rowId: params.workflowId }),
     );
 
-    return { workspaceId: workspaceBySlug.rowId };
+    return { organizationId: workspaceBySlug.rowId };
   },
   component: WorkflowEditorPage,
 });
@@ -103,7 +103,7 @@ const getNodeId = () => `node_${Date.now()}_${nodeIdCounter++}`;
  */
 function WorkflowEditorPage() {
   const { workspaceSlug, workflowId } = Route.useParams();
-  const { workspaceId } = Route.useLoaderData();
+  const { organizationId } = Route.useLoaderData();
   const _navigate = useNavigate();
 
   const { data: workflow } = useSuspenseQuery({
@@ -614,7 +614,7 @@ function WorkflowEditorPage() {
             description: workflow.description || undefined,
           }}
           onAddNode={handleAddNode}
-          workspaceId={workspaceId}
+          organizationId={organizationId}
           workspaceSlug={workspaceSlug}
         />
 

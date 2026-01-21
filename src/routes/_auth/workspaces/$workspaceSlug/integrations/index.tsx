@@ -35,12 +35,12 @@ export const Route = createFileRoute(
 
     await Promise.all([
       queryClient.ensureQueryData(
-        integrationsOptions({ workspaceId: workspaceBySlug.rowId }),
+        integrationsOptions({ organizationId: workspaceBySlug.rowId }),
       ),
       queryClient.ensureQueryData(integrationDefinitionsOptions({})),
     ]);
 
-    return { workspaceId: workspaceBySlug.rowId };
+    return { organizationId: workspaceBySlug.rowId };
   },
   component: IntegrationsPage,
 });
@@ -69,14 +69,14 @@ const categoryLabels: Record<string, string> = {
 
 function IntegrationsPage() {
   const { workspaceSlug } = Route.useParams();
-  const { workspaceId } = Route.useLoaderData();
+  const { organizationId } = Route.useLoaderData();
   const navigate = useNavigate();
   const [connectingDefinition, setConnectingDefinition] =
     useState<IntegrationDefinition | null>(null);
 
   // Fetch workspace integrations (connected)
   const { data: integrations } = useSuspenseQuery({
-    ...integrationsOptions({ workspaceId }),
+    ...integrationsOptions({ organizationId }),
     select: (data) => data?.integrations?.nodes ?? [],
   });
 
@@ -317,7 +317,7 @@ function IntegrationsPage() {
       {connectingDefinition && (
         <ConnectIntegrationDialog
           definition={connectingDefinition}
-          workspaceId={workspaceId}
+          organizationId={organizationId}
           onClose={() => setConnectingDefinition(null)}
         />
       )}

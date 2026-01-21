@@ -14,7 +14,7 @@ export const Route = createFileRoute(
 )({
   loader: async ({ context: { workspaceBySlug } }) => {
     if (!workspaceBySlug) throw notFound();
-    return { workspaceId: workspaceBySlug.rowId };
+    return { organizationId: workspaceBySlug.rowId };
   },
   component: TemplatesPage,
 });
@@ -352,7 +352,7 @@ const templates = [
 
 function TemplatesPage() {
   const { workspaceSlug } = Route.useParams();
-  const { workspaceId } = Route.useLoaderData();
+  const { organizationId } = Route.useLoaderData();
   const navigate = useNavigate();
   const [creatingId, setCreatingId] = useState<string | null>(null);
 
@@ -380,7 +380,7 @@ function TemplatesPage() {
     createWorkflow({
       input: {
         workflow: {
-          workspaceId,
+          organizationId,
           name: template.name,
           description: template.description,
           definition: template.definition,
