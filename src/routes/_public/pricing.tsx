@@ -58,7 +58,7 @@ const plans = [
 
 function PricingPage() {
   const handleSignIn = () => {
-    authClient.signIn.social({ provider: "omni", callbackURL: "/workspaces" });
+    authClient.signIn.oauth2({ providerId: "omni", callbackURL: "/workspaces" });
   };
 
   return (
