@@ -1,4 +1,8 @@
-import { useNavigate, useSearch, createFileRoute } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  useNavigate,
+  useSearch,
+} from "@tanstack/react-router";
 import { XCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -29,7 +33,9 @@ function OAuthError() {
   };
 
   const errorMessage =
-    search.description || errorMessages[search.error] || errorMessages.unknown_error;
+    search.description ||
+    errorMessages[search.error] ||
+    errorMessages.unknown_error;
 
   return (
     <div className="flex min-h-screen items-center justify-center">
@@ -46,10 +52,7 @@ function OAuthError() {
           <Button onClick={() => navigate({ to: "/workspaces" })}>
             Return to Workspaces
           </Button>
-          <Button
-            variant="outline"
-            onClick={() => window.history.back()}
-          >
+          <Button variant="outline" onClick={() => window.history.back()}>
             Go Back
           </Button>
         </div>
