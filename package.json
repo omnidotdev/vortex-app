@@ -16,7 +16,6 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "unleash-client": "^6.3.0",
     "@ark-ui/react": "^5.30.0",
     "@hatchet-dev/typescript-sdk": "^1.10.3",
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -30,6 +29,7 @@
     "@tanstack/react-router-ssr-query": "^1.143.4",
     "@tanstack/react-start": "^1.143.4",
     "@tanstack/zod-adapter": "^1.143.4",
+    "better-all": "^0.0.4",
     "better-auth": "^1.4.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -48,6 +48,7 @@
     "stripe": "^20.1.0",
     "tailwind-merge": "^3.4.0",
     "ts-pattern": "^5.9.0",
+    "unleash-client": "^6.3.0",
     "usehooks-ts": "^3.1.1",
     "zod": "4.2.1",
     "zustand": "^5.0.9"
@@ -69,6 +70,7 @@
     "@tanstack/react-devtools": "^0.8.4",
     "@tanstack/react-query-devtools": "^5.91.1",
     "@tanstack/react-router-devtools": "^1.143.4",
+    "@types/ms": "^2.1.0",
     "@types/node": "^25.0.3",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
