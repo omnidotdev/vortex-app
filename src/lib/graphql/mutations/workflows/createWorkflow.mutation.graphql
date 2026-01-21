@@ -2,7 +2,7 @@ mutation CreateWorkflow($input: CreateWorkflowInput!) {
   createWorkflow(input: $input) {
     workflow {
       rowId
-      workspaceId
+      organizationId
       name
       description
       definition

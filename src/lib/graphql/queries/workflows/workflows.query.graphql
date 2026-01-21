@@ -1,6 +1,6 @@
-query Workflows($workspaceId: UUID!, $limit: Int) {
+query Workflows($organizationId: String!, $limit: Int) {
   workflows(
-    condition: { workspaceId: $workspaceId }
+    condition: { organizationId: $organizationId }
     orderBy: NAME_ASC
     first: $limit
   ) {
