@@ -2,7 +2,7 @@ import { GraphQLClient } from "graphql-request";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 
 import auth from "@/lib/auth/auth";
-import { API_GRAPHQL_URL, AUTH_ISSUER_URL } from "@/lib/config/env.config";
+import { API_GRAPHQL_URL, AUTH_BASE_URL } from "@/lib/config/env.config";
 
 export interface AuthSession {
   session: {
@@ -45,7 +45,7 @@ export async function getAuth(request: Request): Promise<AuthSession | null> {
 
       // extract claims from the ID token
       if (tokenResult?.idToken) {
-        const jwks = createRemoteJWKSet(new URL(`${AUTH_ISSUER_URL}/jwks`));
+        const jwks = createRemoteJWKSet(new URL(`${AUTH_BASE_URL}/.well-known/jwks.json`));
         const { payload } = await jwtVerify(tokenResult.idToken, jwks);
         identityProviderId = payload.sub;
       }
