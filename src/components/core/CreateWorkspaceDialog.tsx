@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useRouteContext } from "@tanstack/react-router";
 import { useRef } from "react";
 import { toast } from "sonner";
@@ -13,15 +13,35 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useCreateWorkspaceMutation } from "@/generated/graphql";
 import useDialogStore, { DialogType } from "@/lib/hooks/store/useDialogStore";
 import useForm from "@/lib/hooks/useForm";
 import workspacesOptions from "@/lib/options/workspaces.options";
 import generateSlug from "@/lib/util/generateSlug";
 
+// TODO: Replace with actual mutation when vortex-api has workspace support
+type CreateWorkspaceInput = {
+  input: {
+    workspace: {
+      name: string;
+      slug: string;
+    };
+  };
+};
+
+type CreateWorkspaceResult = {
+  createWorkspace: {
+    workspace: {
+      rowId: string;
+      name: string;
+      slug: string;
+    } | null;
+  };
+};
+
 const CreateWorkspaceDialog = () => {
   const navigate = useNavigate();
   const nameRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
 
   const { session } = useRouteContext({ strict: false });
 
@@ -30,13 +50,27 @@ const CreateWorkspaceDialog = () => {
       type: DialogType.CreateWorkspace,
     });
 
-  const { mutateAsync: createNewWorkspace } = useCreateWorkspaceMutation({
-    meta: {
-      invalidates: [
-        workspacesOptions({ userId: session?.user?.rowId! }).queryKey,
-      ],
+  // TODO: Replace with actual mutation when vortex-api has workspace support
+  const { mutateAsync: createNewWorkspace } = useMutation({
+    mutationFn: async (
+      variables: CreateWorkspaceInput,
+    ): Promise<CreateWorkspaceResult> => {
+      // Stub: simulate workspace creation
+      const workspace = variables.input.workspace;
+      return {
+        createWorkspace: {
+          workspace: {
+            rowId: workspace.slug,
+            name: workspace.name,
+            slug: workspace.slug,
+          },
+        },
+      };
     },
     onSuccess: ({ createWorkspace }) => {
+      queryClient.invalidateQueries({
+        queryKey: workspacesOptions({ userId: session?.user?.rowId! }).queryKey,
+      });
       navigate({
         to: "/workspaces/$workspaceSlug",
         params: { workspaceSlug: createWorkspace?.workspace?.slug! },
