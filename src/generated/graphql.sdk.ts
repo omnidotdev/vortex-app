@@ -175,6 +175,72 @@ export type CreateMcpServerPayloadMcpServerEdgeArgs = {
   orderBy?: Array<McpServerOrderBy>;
 };
 
+/** All input for the create `OauthState` mutation. */
+export type CreateOauthStateInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `OauthState` to be created by this mutation. */
+  oauthState: OauthStateInput;
+};
+
+/** The output of our create `OauthState` mutation. */
+export type CreateOauthStatePayload = {
+  __typename?: 'CreateOauthStatePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `OauthState` that was created by this mutation. */
+  oauthState?: Maybe<OauthState>;
+  /** An edge for our `OauthState`. May be used by Relay 1. */
+  oauthStateEdge?: Maybe<OauthStateEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `OauthState` mutation. */
+export type CreateOauthStatePayloadOauthStateEdgeArgs = {
+  orderBy?: Array<OauthStateOrderBy>;
+};
+
+/** All input for the create `OauthToken` mutation. */
+export type CreateOauthTokenInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `OauthToken` to be created by this mutation. */
+  oauthToken: OauthTokenInput;
+};
+
+/** The output of our create `OauthToken` mutation. */
+export type CreateOauthTokenPayload = {
+  __typename?: 'CreateOauthTokenPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `OauthToken` that was created by this mutation. */
+  oauthToken?: Maybe<OauthToken>;
+  /** An edge for our `OauthToken`. May be used by Relay 1. */
+  oauthTokenEdge?: Maybe<OauthTokenEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `OauthToken` mutation. */
+export type CreateOauthTokenPayloadOauthTokenEdgeArgs = {
+  orderBy?: Array<OauthTokenOrderBy>;
+};
+
 /** All input for the create `Plugin` mutation. */
 export type CreatePluginInput = {
   /**
@@ -531,6 +597,94 @@ export type DeleteMcpServerPayloadMcpServerEdgeArgs = {
   orderBy?: Array<McpServerOrderBy>;
 };
 
+/** All input for the `deleteOauthStateById` mutation. */
+export type DeleteOauthStateByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `OauthState` to be deleted. */
+  id: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteOauthState` mutation. */
+export type DeleteOauthStateInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  rowId: Scalars['UUID']['input'];
+};
+
+/** The output of our delete `OauthState` mutation. */
+export type DeleteOauthStatePayload = {
+  __typename?: 'DeleteOauthStatePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedOauthStateId?: Maybe<Scalars['ID']['output']>;
+  /** The `OauthState` that was deleted by this mutation. */
+  oauthState?: Maybe<OauthState>;
+  /** An edge for our `OauthState`. May be used by Relay 1. */
+  oauthStateEdge?: Maybe<OauthStateEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `OauthState` mutation. */
+export type DeleteOauthStatePayloadOauthStateEdgeArgs = {
+  orderBy?: Array<OauthStateOrderBy>;
+};
+
+/** All input for the `deleteOauthTokenById` mutation. */
+export type DeleteOauthTokenByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `OauthToken` to be deleted. */
+  id: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteOauthToken` mutation. */
+export type DeleteOauthTokenInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  rowId: Scalars['UUID']['input'];
+};
+
+/** The output of our delete `OauthToken` mutation. */
+export type DeleteOauthTokenPayload = {
+  __typename?: 'DeleteOauthTokenPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedOauthTokenId?: Maybe<Scalars['ID']['output']>;
+  /** The `OauthToken` that was deleted by this mutation. */
+  oauthToken?: Maybe<OauthToken>;
+  /** An edge for our `OauthToken`. May be used by Relay 1. */
+  oauthTokenEdge?: Maybe<OauthTokenEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `OauthToken` mutation. */
+export type DeleteOauthTokenPayloadOauthTokenEdgeArgs = {
+  orderBy?: Array<OauthTokenOrderBy>;
+};
+
 /** All input for the `deletePluginById` mutation. */
 export type DeletePluginByIdInput = {
   /**
@@ -872,6 +1026,7 @@ export type IntFilter = {
 
 export type Integration = Node & {
   __typename?: 'Integration';
+  authMethod: Scalars['String']['output'];
   config: Scalars['JSON']['output'];
   createdAt?: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `IntegrationDefinition` that is related to this `Integration`. */
@@ -884,10 +1039,26 @@ export type Integration = Node & {
   mcpServer?: Maybe<McpServer>;
   mcpServerId?: Maybe<Scalars['UUID']['output']>;
   name: Scalars['String']['output'];
+  oauthConnectedAt?: Maybe<Scalars['Datetime']['output']>;
+  oauthStatus?: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `OauthToken`. */
+  oauthTokens: OauthTokenConnection;
   organizationId: Scalars['String']['output'];
   rowId: Scalars['UUID']['output'];
   type: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+
+export type IntegrationOauthTokensArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<OauthTokenCondition>;
+  filter?: InputMaybe<OauthTokenFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OauthTokenOrderBy>>;
 };
 
 export type IntegrationAggregates = {
@@ -910,6 +1081,8 @@ export type IntegrationAggregatesFilter = {
  * for equality and combined with a logical ‘and.’
  */
 export type IntegrationCondition = {
+  /** Checks for equality with the object’s `authMethod` field. */
+  authMethod?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `definitionId` field. */
@@ -920,6 +1093,10 @@ export type IntegrationCondition = {
   mcpServerId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `oauthConnectedAt` field. */
+  oauthConnectedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `oauthStatus` field. */
+  oauthStatus?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `organizationId` field. */
   organizationId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `rowId` field. */
@@ -1330,6 +1507,8 @@ export enum IntegrationDefinitionOrderBy {
   IdleTimeoutMsDesc = 'IDLE_TIMEOUT_MS_DESC',
   IntegrationsByDefinitionIdCountAsc = 'INTEGRATIONS_BY_DEFINITION_ID_COUNT_ASC',
   IntegrationsByDefinitionIdCountDesc = 'INTEGRATIONS_BY_DEFINITION_ID_COUNT_DESC',
+  IntegrationsByDefinitionIdDistinctCountAuthMethodAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_AUTH_METHOD_ASC',
+  IntegrationsByDefinitionIdDistinctCountAuthMethodDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_AUTH_METHOD_DESC',
   IntegrationsByDefinitionIdDistinctCountConfigAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_CONFIG_ASC',
   IntegrationsByDefinitionIdDistinctCountConfigDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_CONFIG_DESC',
   IntegrationsByDefinitionIdDistinctCountCreatedAtAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_CREATED_AT_ASC',
@@ -1342,6 +1521,10 @@ export enum IntegrationDefinitionOrderBy {
   IntegrationsByDefinitionIdDistinctCountMcpServerIdDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_MCP_SERVER_ID_DESC',
   IntegrationsByDefinitionIdDistinctCountNameAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_NAME_ASC',
   IntegrationsByDefinitionIdDistinctCountNameDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_NAME_DESC',
+  IntegrationsByDefinitionIdDistinctCountOauthConnectedAtAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_OAUTH_CONNECTED_AT_ASC',
+  IntegrationsByDefinitionIdDistinctCountOauthConnectedAtDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_OAUTH_CONNECTED_AT_DESC',
+  IntegrationsByDefinitionIdDistinctCountOauthStatusAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_OAUTH_STATUS_ASC',
+  IntegrationsByDefinitionIdDistinctCountOauthStatusDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_OAUTH_STATUS_DESC',
   IntegrationsByDefinitionIdDistinctCountOrganizationIdAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC',
   IntegrationsByDefinitionIdDistinctCountOrganizationIdDesc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
   IntegrationsByDefinitionIdDistinctCountRowIdAsc = 'INTEGRATIONS_BY_DEFINITION_ID_DISTINCT_COUNT_ROW_ID_ASC',
@@ -1439,12 +1622,15 @@ export type IntegrationDefinitionVarianceSampleAggregates = {
 };
 
 export type IntegrationDistinctCountAggregateFilter = {
+  authMethod?: InputMaybe<BigIntFilter>;
   config?: InputMaybe<BigIntFilter>;
   createdAt?: InputMaybe<BigIntFilter>;
   definitionId?: InputMaybe<BigIntFilter>;
   isEnabled?: InputMaybe<BigIntFilter>;
   mcpServerId?: InputMaybe<BigIntFilter>;
   name?: InputMaybe<BigIntFilter>;
+  oauthConnectedAt?: InputMaybe<BigIntFilter>;
+  oauthStatus?: InputMaybe<BigIntFilter>;
   organizationId?: InputMaybe<BigIntFilter>;
   rowId?: InputMaybe<BigIntFilter>;
   type?: InputMaybe<BigIntFilter>;
@@ -1453,6 +1639,8 @@ export type IntegrationDistinctCountAggregateFilter = {
 
 export type IntegrationDistinctCountAggregates = {
   __typename?: 'IntegrationDistinctCountAggregates';
+  /** Distinct count of authMethod across the matching connection */
+  authMethod?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of config across the matching connection */
   config?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of createdAt across the matching connection */
@@ -1465,6 +1653,10 @@ export type IntegrationDistinctCountAggregates = {
   mcpServerId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of name across the matching connection */
   name?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of oauthConnectedAt across the matching connection */
+  oauthConnectedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of oauthStatus across the matching connection */
+  oauthStatus?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of organizationId across the matching connection */
   organizationId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of rowId across the matching connection */
@@ -1488,6 +1680,8 @@ export type IntegrationEdge = {
 export type IntegrationFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<IntegrationFilter>>;
+  /** Filter by the object’s `authMethod` field. */
+  authMethod?: InputMaybe<StringFilter>;
   /** Filter by the object’s `createdAt` field. */
   createdAt?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `definition` relation. */
@@ -1508,6 +1702,14 @@ export type IntegrationFilter = {
   name?: InputMaybe<StringFilter>;
   /** Negates the expression. */
   not?: InputMaybe<IntegrationFilter>;
+  /** Filter by the object’s `oauthConnectedAt` field. */
+  oauthConnectedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `oauthStatus` field. */
+  oauthStatus?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `oauthTokens` relation. */
+  oauthTokens?: InputMaybe<IntegrationToManyOauthTokenFilter>;
+  /** Some related `oauthTokens` exist. */
+  oauthTokensExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for any expressions in this list. */
   or?: InputMaybe<Array<IntegrationFilter>>;
   /** Filter by the object’s `organizationId` field. */
@@ -1522,6 +1724,7 @@ export type IntegrationFilter = {
 
 /** Grouping methods for `Integration` for usage during aggregation. */
 export enum IntegrationGroupBy {
+  AuthMethod = 'AUTH_METHOD',
   Config = 'CONFIG',
   CreatedAt = 'CREATED_AT',
   CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
@@ -1530,6 +1733,10 @@ export enum IntegrationGroupBy {
   IsEnabled = 'IS_ENABLED',
   McpServerId = 'MCP_SERVER_ID',
   Name = 'NAME',
+  OauthConnectedAt = 'OAUTH_CONNECTED_AT',
+  OauthConnectedAtTruncatedToDay = 'OAUTH_CONNECTED_AT_TRUNCATED_TO_DAY',
+  OauthConnectedAtTruncatedToHour = 'OAUTH_CONNECTED_AT_TRUNCATED_TO_HOUR',
+  OauthStatus = 'OAUTH_STATUS',
   OrganizationId = 'ORGANIZATION_ID',
   Type = 'TYPE',
   UpdatedAt = 'UPDATED_AT',
@@ -1539,11 +1746,13 @@ export enum IntegrationGroupBy {
 
 export type IntegrationHavingAverageInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  oauthConnectedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
 export type IntegrationHavingDistinctCountInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  oauthConnectedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
@@ -1564,47 +1773,57 @@ export type IntegrationHavingInput = {
 
 export type IntegrationHavingMaxInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  oauthConnectedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
 export type IntegrationHavingMinInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  oauthConnectedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
 export type IntegrationHavingStddevPopulationInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  oauthConnectedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
 export type IntegrationHavingStddevSampleInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  oauthConnectedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
 export type IntegrationHavingSumInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  oauthConnectedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
 export type IntegrationHavingVariancePopulationInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  oauthConnectedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
 export type IntegrationHavingVarianceSampleInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
+  oauthConnectedAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
 /** An input for mutations affecting `Integration` */
 export type IntegrationInput = {
+  authMethod?: InputMaybe<Scalars['String']['input']>;
   config?: InputMaybe<Scalars['JSON']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   definitionId?: InputMaybe<Scalars['String']['input']>;
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   mcpServerId?: InputMaybe<Scalars['UUID']['input']>;
   name: Scalars['String']['input'];
+  oauthConnectedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  oauthStatus?: InputMaybe<Scalars['String']['input']>;
   organizationId: Scalars['String']['input'];
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   type: Scalars['String']['input'];
@@ -1613,6 +1832,8 @@ export type IntegrationInput = {
 
 /** Methods to use when ordering `Integration`. */
 export enum IntegrationOrderBy {
+  AuthMethodAsc = 'AUTH_METHOD_ASC',
+  AuthMethodDesc = 'AUTH_METHOD_DESC',
   CreatedAtAsc = 'CREATED_AT_ASC',
   CreatedAtDesc = 'CREATED_AT_DESC',
   DefinitionIdAsc = 'DEFINITION_ID_ASC',
@@ -1624,6 +1845,34 @@ export enum IntegrationOrderBy {
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
   Natural = 'NATURAL',
+  OauthConnectedAtAsc = 'OAUTH_CONNECTED_AT_ASC',
+  OauthConnectedAtDesc = 'OAUTH_CONNECTED_AT_DESC',
+  OauthStatusAsc = 'OAUTH_STATUS_ASC',
+  OauthStatusDesc = 'OAUTH_STATUS_DESC',
+  OauthTokensCountAsc = 'OAUTH_TOKENS_COUNT_ASC',
+  OauthTokensCountDesc = 'OAUTH_TOKENS_COUNT_DESC',
+  OauthTokensDistinctCountAccessTokenAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_ACCESS_TOKEN_ASC',
+  OauthTokensDistinctCountAccessTokenDesc = 'OAUTH_TOKENS_DISTINCT_COUNT_ACCESS_TOKEN_DESC',
+  OauthTokensDistinctCountCreatedAtAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_CREATED_AT_ASC',
+  OauthTokensDistinctCountCreatedAtDesc = 'OAUTH_TOKENS_DISTINCT_COUNT_CREATED_AT_DESC',
+  OauthTokensDistinctCountExpiresAtAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_EXPIRES_AT_ASC',
+  OauthTokensDistinctCountExpiresAtDesc = 'OAUTH_TOKENS_DISTINCT_COUNT_EXPIRES_AT_DESC',
+  OauthTokensDistinctCountIntegrationIdAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_INTEGRATION_ID_ASC',
+  OauthTokensDistinctCountIntegrationIdDesc = 'OAUTH_TOKENS_DISTINCT_COUNT_INTEGRATION_ID_DESC',
+  OauthTokensDistinctCountOrganizationIdAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_ORGANIZATION_ID_ASC',
+  OauthTokensDistinctCountOrganizationIdDesc = 'OAUTH_TOKENS_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
+  OauthTokensDistinctCountProviderAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_PROVIDER_ASC',
+  OauthTokensDistinctCountProviderDesc = 'OAUTH_TOKENS_DISTINCT_COUNT_PROVIDER_DESC',
+  OauthTokensDistinctCountRefreshTokenAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_REFRESH_TOKEN_ASC',
+  OauthTokensDistinctCountRefreshTokenDesc = 'OAUTH_TOKENS_DISTINCT_COUNT_REFRESH_TOKEN_DESC',
+  OauthTokensDistinctCountRowIdAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_ROW_ID_ASC',
+  OauthTokensDistinctCountRowIdDesc = 'OAUTH_TOKENS_DISTINCT_COUNT_ROW_ID_DESC',
+  OauthTokensDistinctCountScopeAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_SCOPE_ASC',
+  OauthTokensDistinctCountScopeDesc = 'OAUTH_TOKENS_DISTINCT_COUNT_SCOPE_DESC',
+  OauthTokensDistinctCountTokenTypeAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_TOKEN_TYPE_ASC',
+  OauthTokensDistinctCountTokenTypeDesc = 'OAUTH_TOKENS_DISTINCT_COUNT_TOKEN_TYPE_DESC',
+  OauthTokensDistinctCountUpdatedAtAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_UPDATED_AT_ASC',
+  OauthTokensDistinctCountUpdatedAtDesc = 'OAUTH_TOKENS_DISTINCT_COUNT_UPDATED_AT_DESC',
   OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
   OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -1638,16 +1887,31 @@ export enum IntegrationOrderBy {
 
 /** Represents an update to a `Integration`. Fields that are set will be updated. */
 export type IntegrationPatch = {
+  authMethod?: InputMaybe<Scalars['String']['input']>;
   config?: InputMaybe<Scalars['JSON']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   definitionId?: InputMaybe<Scalars['String']['input']>;
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   mcpServerId?: InputMaybe<Scalars['UUID']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  oauthConnectedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  oauthStatus?: InputMaybe<Scalars['String']['input']>;
   organizationId?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** A filter to be used against many `OauthToken` object types. All fields are combined with a logical ‘and.’ */
+export type IntegrationToManyOauthTokenFilter = {
+  /** Aggregates across related `OauthToken` match the filter criteria. */
+  aggregates?: InputMaybe<OauthTokenAggregatesFilter>;
+  /** Every related `OauthToken` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<OauthTokenFilter>;
+  /** No related `OauthToken` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<OauthTokenFilter>;
+  /** Some related `OauthToken` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<OauthTokenFilter>;
 };
 
 export type McpServer = Node & {
@@ -1907,6 +2171,8 @@ export enum McpServerOrderBy {
   CwdDesc = 'CWD_DESC',
   IntegrationsCountAsc = 'INTEGRATIONS_COUNT_ASC',
   IntegrationsCountDesc = 'INTEGRATIONS_COUNT_DESC',
+  IntegrationsDistinctCountAuthMethodAsc = 'INTEGRATIONS_DISTINCT_COUNT_AUTH_METHOD_ASC',
+  IntegrationsDistinctCountAuthMethodDesc = 'INTEGRATIONS_DISTINCT_COUNT_AUTH_METHOD_DESC',
   IntegrationsDistinctCountConfigAsc = 'INTEGRATIONS_DISTINCT_COUNT_CONFIG_ASC',
   IntegrationsDistinctCountConfigDesc = 'INTEGRATIONS_DISTINCT_COUNT_CONFIG_DESC',
   IntegrationsDistinctCountCreatedAtAsc = 'INTEGRATIONS_DISTINCT_COUNT_CREATED_AT_ASC',
@@ -1919,6 +2185,10 @@ export enum McpServerOrderBy {
   IntegrationsDistinctCountMcpServerIdDesc = 'INTEGRATIONS_DISTINCT_COUNT_MCP_SERVER_ID_DESC',
   IntegrationsDistinctCountNameAsc = 'INTEGRATIONS_DISTINCT_COUNT_NAME_ASC',
   IntegrationsDistinctCountNameDesc = 'INTEGRATIONS_DISTINCT_COUNT_NAME_DESC',
+  IntegrationsDistinctCountOauthConnectedAtAsc = 'INTEGRATIONS_DISTINCT_COUNT_OAUTH_CONNECTED_AT_ASC',
+  IntegrationsDistinctCountOauthConnectedAtDesc = 'INTEGRATIONS_DISTINCT_COUNT_OAUTH_CONNECTED_AT_DESC',
+  IntegrationsDistinctCountOauthStatusAsc = 'INTEGRATIONS_DISTINCT_COUNT_OAUTH_STATUS_ASC',
+  IntegrationsDistinctCountOauthStatusDesc = 'INTEGRATIONS_DISTINCT_COUNT_OAUTH_STATUS_DESC',
   IntegrationsDistinctCountOrganizationIdAsc = 'INTEGRATIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC',
   IntegrationsDistinctCountOrganizationIdDesc = 'INTEGRATIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
   IntegrationsDistinctCountRowIdAsc = 'INTEGRATIONS_DISTINCT_COUNT_ROW_ID_ASC',
@@ -2012,6 +2282,10 @@ export type Mutation = {
   createIntegrationDefinition?: Maybe<CreateIntegrationDefinitionPayload>;
   /** Creates a single `McpServer`. */
   createMcpServer?: Maybe<CreateMcpServerPayload>;
+  /** Creates a single `OauthState`. */
+  createOauthState?: Maybe<CreateOauthStatePayload>;
+  /** Creates a single `OauthToken`. */
+  createOauthToken?: Maybe<CreateOauthTokenPayload>;
   /** Creates a single `Plugin`. */
   createPlugin?: Maybe<CreatePluginPayload>;
   /** Creates a single `User`. */
@@ -2036,6 +2310,14 @@ export type Mutation = {
   deleteMcpServer?: Maybe<DeleteMcpServerPayload>;
   /** Deletes a single `McpServer` using its globally unique id. */
   deleteMcpServerById?: Maybe<DeleteMcpServerPayload>;
+  /** Deletes a single `OauthState` using a unique key. */
+  deleteOauthState?: Maybe<DeleteOauthStatePayload>;
+  /** Deletes a single `OauthState` using its globally unique id. */
+  deleteOauthStateById?: Maybe<DeleteOauthStatePayload>;
+  /** Deletes a single `OauthToken` using a unique key. */
+  deleteOauthToken?: Maybe<DeleteOauthTokenPayload>;
+  /** Deletes a single `OauthToken` using its globally unique id. */
+  deleteOauthTokenById?: Maybe<DeleteOauthTokenPayload>;
   /** Deletes a single `Plugin` using a unique key. */
   deletePlugin?: Maybe<DeletePluginPayload>;
   /** Deletes a single `Plugin` using its globally unique id. */
@@ -2078,6 +2360,14 @@ export type Mutation = {
   updateMcpServer?: Maybe<UpdateMcpServerPayload>;
   /** Updates a single `McpServer` using its globally unique id and a patch. */
   updateMcpServerById?: Maybe<UpdateMcpServerPayload>;
+  /** Updates a single `OauthState` using a unique key and a patch. */
+  updateOauthState?: Maybe<UpdateOauthStatePayload>;
+  /** Updates a single `OauthState` using its globally unique id and a patch. */
+  updateOauthStateById?: Maybe<UpdateOauthStatePayload>;
+  /** Updates a single `OauthToken` using a unique key and a patch. */
+  updateOauthToken?: Maybe<UpdateOauthTokenPayload>;
+  /** Updates a single `OauthToken` using its globally unique id and a patch. */
+  updateOauthTokenById?: Maybe<UpdateOauthTokenPayload>;
   /** Updates a single `Plugin` using a unique key and a patch. */
   updatePlugin?: Maybe<UpdatePluginPayload>;
   /** Updates a single `Plugin` using its globally unique id and a patch. */
@@ -2126,6 +2416,18 @@ export type MutationCreateIntegrationDefinitionArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateMcpServerArgs = {
   input: CreateMcpServerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateOauthStateArgs = {
+  input: CreateOauthStateInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateOauthTokenArgs = {
+  input: CreateOauthTokenInput;
 };
 
 
@@ -2198,6 +2500,30 @@ export type MutationDeleteMcpServerArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteMcpServerByIdArgs = {
   input: DeleteMcpServerByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteOauthStateArgs = {
+  input: DeleteOauthStateInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteOauthStateByIdArgs = {
+  input: DeleteOauthStateByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteOauthTokenArgs = {
+  input: DeleteOauthTokenInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteOauthTokenByIdArgs = {
+  input: DeleteOauthTokenByIdInput;
 };
 
 
@@ -2328,6 +2654,30 @@ export type MutationUpdateMcpServerByIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateOauthStateArgs = {
+  input: UpdateOauthStateInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateOauthStateByIdArgs = {
+  input: UpdateOauthStateByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateOauthTokenArgs = {
+  input: UpdateOauthTokenInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateOauthTokenByIdArgs = {
+  input: UpdateOauthTokenByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePluginArgs = {
   input: UpdatePluginInput;
 };
@@ -2420,6 +2770,613 @@ export type MutationUpdateWorkflowStepLogByIdArgs = {
 export type Node = {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   id: Scalars['ID']['output'];
+};
+
+export type OauthState = Node & {
+  __typename?: 'OauthState';
+  codeChallenge?: Maybe<Scalars['String']['output']>;
+  codeVerifier?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  definitionId: Scalars['String']['output'];
+  expiresAt: Scalars['Datetime']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  organizationId: Scalars['String']['output'];
+  provider: Scalars['String']['output'];
+  redirectUri: Scalars['String']['output'];
+  returnUrl?: Maybe<Scalars['String']['output']>;
+  rowId: Scalars['UUID']['output'];
+  scopes: Array<Maybe<Scalars['String']['output']>>;
+  state: Scalars['String']['output'];
+};
+
+export type OauthStateAggregates = {
+  __typename?: 'OauthStateAggregates';
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<OauthStateDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+/**
+ * A condition to be used against `OauthState` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type OauthStateCondition = {
+  /** Checks for equality with the object’s `codeChallenge` field. */
+  codeChallenge?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `codeVerifier` field. */
+  codeVerifier?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `definitionId` field. */
+  definitionId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `expiresAt` field. */
+  expiresAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `provider` field. */
+  provider?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `redirectUri` field. */
+  redirectUri?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `returnUrl` field. */
+  returnUrl?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `state` field. */
+  state?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `OauthState` values. */
+export type OauthStateConnection = {
+  __typename?: 'OauthStateConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<OauthStateAggregates>;
+  /** A list of edges which contains the `OauthState` and cursor to aid in pagination. */
+  edges: Array<OauthStateEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<OauthStateAggregates>>;
+  /** A list of `OauthState` objects. */
+  nodes: Array<OauthState>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `OauthState` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `OauthState` values. */
+export type OauthStateConnectionGroupedAggregatesArgs = {
+  groupBy: Array<OauthStateGroupBy>;
+  having?: InputMaybe<OauthStateHavingInput>;
+};
+
+export type OauthStateDistinctCountAggregates = {
+  __typename?: 'OauthStateDistinctCountAggregates';
+  /** Distinct count of codeChallenge across the matching connection */
+  codeChallenge?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of codeVerifier across the matching connection */
+  codeVerifier?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of definitionId across the matching connection */
+  definitionId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of expiresAt across the matching connection */
+  expiresAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of provider across the matching connection */
+  provider?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of redirectUri across the matching connection */
+  redirectUri?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of returnUrl across the matching connection */
+  returnUrl?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of scopes across the matching connection */
+  scopes?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of state across the matching connection */
+  state?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `OauthState` edge in the connection. */
+export type OauthStateEdge = {
+  __typename?: 'OauthStateEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `OauthState` at the end of the edge. */
+  node: OauthState;
+};
+
+/** A filter to be used against `OauthState` object types. All fields are combined with a logical ‘and.’ */
+export type OauthStateFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<OauthStateFilter>>;
+  /** Filter by the object’s `codeChallenge` field. */
+  codeChallenge?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `codeVerifier` field. */
+  codeVerifier?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `definitionId` field. */
+  definitionId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `expiresAt` field. */
+  expiresAt?: InputMaybe<DatetimeFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<OauthStateFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<OauthStateFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `provider` field. */
+  provider?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `redirectUri` field. */
+  redirectUri?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `returnUrl` field. */
+  returnUrl?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `scopes` field. */
+  scopes?: InputMaybe<StringListFilter>;
+  /** Filter by the object’s `state` field. */
+  state?: InputMaybe<StringFilter>;
+};
+
+/** Grouping methods for `OauthState` for usage during aggregation. */
+export enum OauthStateGroupBy {
+  CodeChallenge = 'CODE_CHALLENGE',
+  CodeVerifier = 'CODE_VERIFIER',
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  DefinitionId = 'DEFINITION_ID',
+  ExpiresAt = 'EXPIRES_AT',
+  ExpiresAtTruncatedToDay = 'EXPIRES_AT_TRUNCATED_TO_DAY',
+  ExpiresAtTruncatedToHour = 'EXPIRES_AT_TRUNCATED_TO_HOUR',
+  OrganizationId = 'ORGANIZATION_ID',
+  Provider = 'PROVIDER',
+  RedirectUri = 'REDIRECT_URI',
+  ReturnUrl = 'RETURN_URL',
+  Scopes = 'SCOPES',
+  State = 'STATE'
+}
+
+export type OauthStateHavingAverageInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type OauthStateHavingDistinctCountInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `OauthState` aggregates. */
+export type OauthStateHavingInput = {
+  AND?: InputMaybe<Array<OauthStateHavingInput>>;
+  OR?: InputMaybe<Array<OauthStateHavingInput>>;
+  average?: InputMaybe<OauthStateHavingAverageInput>;
+  distinctCount?: InputMaybe<OauthStateHavingDistinctCountInput>;
+  max?: InputMaybe<OauthStateHavingMaxInput>;
+  min?: InputMaybe<OauthStateHavingMinInput>;
+  stddevPopulation?: InputMaybe<OauthStateHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<OauthStateHavingStddevSampleInput>;
+  sum?: InputMaybe<OauthStateHavingSumInput>;
+  variancePopulation?: InputMaybe<OauthStateHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<OauthStateHavingVarianceSampleInput>;
+};
+
+export type OauthStateHavingMaxInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type OauthStateHavingMinInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type OauthStateHavingStddevPopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type OauthStateHavingStddevSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type OauthStateHavingSumInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type OauthStateHavingVariancePopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type OauthStateHavingVarianceSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** An input for mutations affecting `OauthState` */
+export type OauthStateInput = {
+  codeChallenge?: InputMaybe<Scalars['String']['input']>;
+  codeVerifier?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  definitionId: Scalars['String']['input'];
+  expiresAt: Scalars['Datetime']['input'];
+  organizationId: Scalars['String']['input'];
+  provider: Scalars['String']['input'];
+  redirectUri: Scalars['String']['input'];
+  returnUrl?: InputMaybe<Scalars['String']['input']>;
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  scopes: Array<InputMaybe<Scalars['String']['input']>>;
+  state: Scalars['String']['input'];
+};
+
+/** Methods to use when ordering `OauthState`. */
+export enum OauthStateOrderBy {
+  CodeChallengeAsc = 'CODE_CHALLENGE_ASC',
+  CodeChallengeDesc = 'CODE_CHALLENGE_DESC',
+  CodeVerifierAsc = 'CODE_VERIFIER_ASC',
+  CodeVerifierDesc = 'CODE_VERIFIER_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  DefinitionIdAsc = 'DEFINITION_ID_ASC',
+  DefinitionIdDesc = 'DEFINITION_ID_DESC',
+  ExpiresAtAsc = 'EXPIRES_AT_ASC',
+  ExpiresAtDesc = 'EXPIRES_AT_DESC',
+  Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  ProviderAsc = 'PROVIDER_ASC',
+  ProviderDesc = 'PROVIDER_DESC',
+  RedirectUriAsc = 'REDIRECT_URI_ASC',
+  RedirectUriDesc = 'REDIRECT_URI_DESC',
+  ReturnUrlAsc = 'RETURN_URL_ASC',
+  ReturnUrlDesc = 'RETURN_URL_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  StateAsc = 'STATE_ASC',
+  StateDesc = 'STATE_DESC'
+}
+
+/** Represents an update to a `OauthState`. Fields that are set will be updated. */
+export type OauthStatePatch = {
+  codeChallenge?: InputMaybe<Scalars['String']['input']>;
+  codeVerifier?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  definitionId?: InputMaybe<Scalars['String']['input']>;
+  expiresAt?: InputMaybe<Scalars['Datetime']['input']>;
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  provider?: InputMaybe<Scalars['String']['input']>;
+  redirectUri?: InputMaybe<Scalars['String']['input']>;
+  returnUrl?: InputMaybe<Scalars['String']['input']>;
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  scopes?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  state?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type OauthToken = Node & {
+  __typename?: 'OauthToken';
+  accessToken: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  expiresAt?: Maybe<Scalars['Datetime']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  /** Reads a single `Integration` that is related to this `OauthToken`. */
+  integration?: Maybe<Integration>;
+  integrationId: Scalars['UUID']['output'];
+  organizationId: Scalars['String']['output'];
+  provider: Scalars['String']['output'];
+  refreshToken?: Maybe<Scalars['String']['output']>;
+  rowId: Scalars['UUID']['output'];
+  scope: Scalars['String']['output'];
+  tokenType: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+export type OauthTokenAggregates = {
+  __typename?: 'OauthTokenAggregates';
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<OauthTokenDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+/** A filter to be used against aggregates of `OauthToken` object types. */
+export type OauthTokenAggregatesFilter = {
+  /** Distinct count aggregate over matching `OauthToken` objects. */
+  distinctCount?: InputMaybe<OauthTokenDistinctCountAggregateFilter>;
+  /** A filter that must pass for the relevant `OauthToken` object to be included within the aggregate. */
+  filter?: InputMaybe<OauthTokenFilter>;
+};
+
+/**
+ * A condition to be used against `OauthToken` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type OauthTokenCondition = {
+  /** Checks for equality with the object’s `accessToken` field. */
+  accessToken?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `expiresAt` field. */
+  expiresAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `integrationId` field. */
+  integrationId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `provider` field. */
+  provider?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `refreshToken` field. */
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `scope` field. */
+  scope?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `tokenType` field. */
+  tokenType?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** A connection to a list of `OauthToken` values. */
+export type OauthTokenConnection = {
+  __typename?: 'OauthTokenConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<OauthTokenAggregates>;
+  /** A list of edges which contains the `OauthToken` and cursor to aid in pagination. */
+  edges: Array<OauthTokenEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<OauthTokenAggregates>>;
+  /** A list of `OauthToken` objects. */
+  nodes: Array<OauthToken>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `OauthToken` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `OauthToken` values. */
+export type OauthTokenConnectionGroupedAggregatesArgs = {
+  groupBy: Array<OauthTokenGroupBy>;
+  having?: InputMaybe<OauthTokenHavingInput>;
+};
+
+export type OauthTokenDistinctCountAggregateFilter = {
+  accessToken?: InputMaybe<BigIntFilter>;
+  createdAt?: InputMaybe<BigIntFilter>;
+  expiresAt?: InputMaybe<BigIntFilter>;
+  integrationId?: InputMaybe<BigIntFilter>;
+  organizationId?: InputMaybe<BigIntFilter>;
+  provider?: InputMaybe<BigIntFilter>;
+  refreshToken?: InputMaybe<BigIntFilter>;
+  rowId?: InputMaybe<BigIntFilter>;
+  scope?: InputMaybe<BigIntFilter>;
+  tokenType?: InputMaybe<BigIntFilter>;
+  updatedAt?: InputMaybe<BigIntFilter>;
+};
+
+export type OauthTokenDistinctCountAggregates = {
+  __typename?: 'OauthTokenDistinctCountAggregates';
+  /** Distinct count of accessToken across the matching connection */
+  accessToken?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of expiresAt across the matching connection */
+  expiresAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of integrationId across the matching connection */
+  integrationId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of provider across the matching connection */
+  provider?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of refreshToken across the matching connection */
+  refreshToken?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of scope across the matching connection */
+  scope?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of tokenType across the matching connection */
+  tokenType?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of updatedAt across the matching connection */
+  updatedAt?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `OauthToken` edge in the connection. */
+export type OauthTokenEdge = {
+  __typename?: 'OauthTokenEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `OauthToken` at the end of the edge. */
+  node: OauthToken;
+};
+
+/** A filter to be used against `OauthToken` object types. All fields are combined with a logical ‘and.’ */
+export type OauthTokenFilter = {
+  /** Filter by the object’s `accessToken` field. */
+  accessToken?: InputMaybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<OauthTokenFilter>>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `expiresAt` field. */
+  expiresAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `integration` relation. */
+  integration?: InputMaybe<IntegrationFilter>;
+  /** Filter by the object’s `integrationId` field. */
+  integrationId?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<OauthTokenFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<OauthTokenFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `provider` field. */
+  provider?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `refreshToken` field. */
+  refreshToken?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `scope` field. */
+  scope?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `tokenType` field. */
+  tokenType?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<DatetimeFilter>;
+};
+
+/** Grouping methods for `OauthToken` for usage during aggregation. */
+export enum OauthTokenGroupBy {
+  AccessToken = 'ACCESS_TOKEN',
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  ExpiresAt = 'EXPIRES_AT',
+  ExpiresAtTruncatedToDay = 'EXPIRES_AT_TRUNCATED_TO_DAY',
+  ExpiresAtTruncatedToHour = 'EXPIRES_AT_TRUNCATED_TO_HOUR',
+  IntegrationId = 'INTEGRATION_ID',
+  OrganizationId = 'ORGANIZATION_ID',
+  Provider = 'PROVIDER',
+  RefreshToken = 'REFRESH_TOKEN',
+  Scope = 'SCOPE',
+  TokenType = 'TOKEN_TYPE',
+  UpdatedAt = 'UPDATED_AT',
+  UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
+  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR'
+}
+
+export type OauthTokenHavingAverageInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type OauthTokenHavingDistinctCountInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `OauthToken` aggregates. */
+export type OauthTokenHavingInput = {
+  AND?: InputMaybe<Array<OauthTokenHavingInput>>;
+  OR?: InputMaybe<Array<OauthTokenHavingInput>>;
+  average?: InputMaybe<OauthTokenHavingAverageInput>;
+  distinctCount?: InputMaybe<OauthTokenHavingDistinctCountInput>;
+  max?: InputMaybe<OauthTokenHavingMaxInput>;
+  min?: InputMaybe<OauthTokenHavingMinInput>;
+  stddevPopulation?: InputMaybe<OauthTokenHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<OauthTokenHavingStddevSampleInput>;
+  sum?: InputMaybe<OauthTokenHavingSumInput>;
+  variancePopulation?: InputMaybe<OauthTokenHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<OauthTokenHavingVarianceSampleInput>;
+};
+
+export type OauthTokenHavingMaxInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type OauthTokenHavingMinInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type OauthTokenHavingStddevPopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type OauthTokenHavingStddevSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type OauthTokenHavingSumInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type OauthTokenHavingVariancePopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type OauthTokenHavingVarianceSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  expiresAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** An input for mutations affecting `OauthToken` */
+export type OauthTokenInput = {
+  accessToken: Scalars['String']['input'];
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  expiresAt?: InputMaybe<Scalars['Datetime']['input']>;
+  integrationId: Scalars['UUID']['input'];
+  organizationId: Scalars['String']['input'];
+  provider: Scalars['String']['input'];
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  scope: Scalars['String']['input'];
+  tokenType?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** Methods to use when ordering `OauthToken`. */
+export enum OauthTokenOrderBy {
+  AccessTokenAsc = 'ACCESS_TOKEN_ASC',
+  AccessTokenDesc = 'ACCESS_TOKEN_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  ExpiresAtAsc = 'EXPIRES_AT_ASC',
+  ExpiresAtDesc = 'EXPIRES_AT_DESC',
+  IntegrationIdAsc = 'INTEGRATION_ID_ASC',
+  IntegrationIdDesc = 'INTEGRATION_ID_DESC',
+  Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  ProviderAsc = 'PROVIDER_ASC',
+  ProviderDesc = 'PROVIDER_DESC',
+  RefreshTokenAsc = 'REFRESH_TOKEN_ASC',
+  RefreshTokenDesc = 'REFRESH_TOKEN_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  ScopeAsc = 'SCOPE_ASC',
+  ScopeDesc = 'SCOPE_DESC',
+  TokenTypeAsc = 'TOKEN_TYPE_ASC',
+  TokenTypeDesc = 'TOKEN_TYPE_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
+
+/** Represents an update to a `OauthToken`. Fields that are set will be updated. */
+export type OauthTokenPatch = {
+  accessToken?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  expiresAt?: InputMaybe<Scalars['Datetime']['input']>;
+  integrationId?: InputMaybe<Scalars['UUID']['input']>;
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  provider?: InputMaybe<Scalars['String']['input']>;
+  refreshToken?: InputMaybe<Scalars['String']['input']>;
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  scope?: InputMaybe<Scalars['String']['input']>;
+  tokenType?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 export enum OrganizationType {
@@ -2824,6 +3781,18 @@ export type Query = Node & {
   mcpServers?: Maybe<McpServerConnection>;
   /** Fetches an object given its globally unique `ID`. */
   node?: Maybe<Node>;
+  /** Get a single `OauthState`. */
+  oauthState?: Maybe<OauthState>;
+  /** Reads a single `OauthState` using its globally unique `ID`. */
+  oauthStateById?: Maybe<OauthState>;
+  /** Reads and enables pagination through a set of `OauthState`. */
+  oauthStates?: Maybe<OauthStateConnection>;
+  /** Get a single `OauthToken`. */
+  oauthToken?: Maybe<OauthToken>;
+  /** Reads a single `OauthToken` using its globally unique `ID`. */
+  oauthTokenById?: Maybe<OauthToken>;
+  /** Reads and enables pagination through a set of `OauthToken`. */
+  oauthTokens?: Maybe<OauthTokenConnection>;
   /** Get a single `Plugin`. */
   plugin?: Maybe<Plugin>;
   /** Reads a single `Plugin` using its globally unique `ID`. */
@@ -2952,6 +3921,56 @@ export type QueryMcpServersArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryNodeArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryOauthStateArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryOauthStateByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryOauthStatesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<OauthStateCondition>;
+  filter?: InputMaybe<OauthStateFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OauthStateOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryOauthTokenArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryOauthTokenByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryOauthTokensArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<OauthTokenCondition>;
+  filter?: InputMaybe<OauthTokenFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OauthTokenOrderBy>>;
 };
 
 
@@ -3201,6 +4220,46 @@ export type StringFilter = {
   startsWithInsensitive?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** A filter to be used against String List fields. All fields are combined with a logical ‘and.’ */
+export type StringListFilter = {
+  /** Any array item is equal to the specified value. */
+  anyEqualTo?: InputMaybe<Scalars['String']['input']>;
+  /** Any array item is greater than the specified value. */
+  anyGreaterThan?: InputMaybe<Scalars['String']['input']>;
+  /** Any array item is greater than or equal to the specified value. */
+  anyGreaterThanOrEqualTo?: InputMaybe<Scalars['String']['input']>;
+  /** Any array item is less than the specified value. */
+  anyLessThan?: InputMaybe<Scalars['String']['input']>;
+  /** Any array item is less than or equal to the specified value. */
+  anyLessThanOrEqualTo?: InputMaybe<Scalars['String']['input']>;
+  /** Any array item is not equal to the specified value. */
+  anyNotEqualTo?: InputMaybe<Scalars['String']['input']>;
+  /** Contained by the specified list of values. */
+  containedBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Contains the specified list of values. */
+  contains?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Overlaps the specified list of values. */
+  overlaps?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
 /** A filter to be used against UUID fields. All fields are combined with a logical ‘and.’ */
 export type UuidFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
@@ -3366,6 +4425,100 @@ export type UpdateMcpServerPayload = {
 /** The output of our update `McpServer` mutation. */
 export type UpdateMcpServerPayloadMcpServerEdgeArgs = {
   orderBy?: Array<McpServerOrderBy>;
+};
+
+/** All input for the `updateOauthStateById` mutation. */
+export type UpdateOauthStateByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `OauthState` to be updated. */
+  id: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `OauthState` being updated. */
+  patch: OauthStatePatch;
+};
+
+/** All input for the `updateOauthState` mutation. */
+export type UpdateOauthStateInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** An object where the defined keys will be set on the `OauthState` being updated. */
+  patch: OauthStatePatch;
+  rowId: Scalars['UUID']['input'];
+};
+
+/** The output of our update `OauthState` mutation. */
+export type UpdateOauthStatePayload = {
+  __typename?: 'UpdateOauthStatePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `OauthState` that was updated by this mutation. */
+  oauthState?: Maybe<OauthState>;
+  /** An edge for our `OauthState`. May be used by Relay 1. */
+  oauthStateEdge?: Maybe<OauthStateEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `OauthState` mutation. */
+export type UpdateOauthStatePayloadOauthStateEdgeArgs = {
+  orderBy?: Array<OauthStateOrderBy>;
+};
+
+/** All input for the `updateOauthTokenById` mutation. */
+export type UpdateOauthTokenByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `OauthToken` to be updated. */
+  id: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `OauthToken` being updated. */
+  patch: OauthTokenPatch;
+};
+
+/** All input for the `updateOauthToken` mutation. */
+export type UpdateOauthTokenInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** An object where the defined keys will be set on the `OauthToken` being updated. */
+  patch: OauthTokenPatch;
+  rowId: Scalars['UUID']['input'];
+};
+
+/** The output of our update `OauthToken` mutation. */
+export type UpdateOauthTokenPayload = {
+  __typename?: 'UpdateOauthTokenPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `OauthToken` that was updated by this mutation. */
+  oauthToken?: Maybe<OauthToken>;
+  /** An edge for our `OauthToken`. May be used by Relay 1. */
+  oauthTokenEdge?: Maybe<OauthTokenEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `OauthToken` mutation. */
+export type UpdateOauthTokenPayloadOauthTokenEdgeArgs = {
+  orderBy?: Array<OauthTokenOrderBy>;
 };
 
 /** All input for the `updatePluginById` mutation. */

@@ -5,7 +5,14 @@ import {
   notFound,
   useNavigate,
 } from "@tanstack/react-router";
-import { Grid3X3, History, Loader2, PlayCircle, Save } from "lucide-react";
+import {
+  Grid3X3,
+  History,
+  Loader2,
+  PlayCircle,
+  Save,
+  Trash2,
+} from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ReactFlow, {
   Background,
@@ -33,11 +40,23 @@ import { ParallelNode } from "@/components/nodes/ParallelNode";
 import { PluginNode } from "@/components/nodes/PluginNode";
 import { SwitchNode } from "@/components/nodes/SwitchNode";
 import { TriggerNode } from "@/components/nodes/TriggerNode";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import WorkflowSidebar from "@/components/WorkflowSidebar";
 import { NodeConfigSidebar } from "@/components/workflow/NodeConfigSidebar";
 import { WorkflowRunsPanel } from "@/components/workflow/WorkflowRunsPanel";
 import {
+  useDeleteWorkflowMutation,
   useUpdateWorkflowMutation,
   useWorkflowQuery,
   useWorkflowsQuery,
@@ -104,7 +123,7 @@ const getNodeId = () => `node_${Date.now()}_${nodeIdCounter++}`;
 function WorkflowEditorPage() {
   const { workspaceSlug, workflowId } = Route.useParams();
   const { organizationId } = Route.useLoaderData();
-  const _navigate = useNavigate();
+  const navigate = useNavigate();
 
   const { data: workflow } = useSuspenseQuery({
     ...workflowOptions({ rowId: workflowId }),
@@ -152,6 +171,24 @@ function WorkflowEditorPage() {
       setError(err instanceof Error ? err.message : "Failed to save workflow");
     },
   });
+
+  const { mutate: deleteWorkflow, isPending: isDeleting } =
+    useDeleteWorkflowMutation({
+      meta: {
+        invalidates: [getQueryKeyPrefix(useWorkflowsQuery)],
+      },
+      onSuccess: () => {
+        navigate({
+          to: "/workspaces/$workspaceSlug/workflows",
+          params: { workspaceSlug },
+        });
+      },
+      onError: (err) => {
+        setError(
+          err instanceof Error ? err.message : "Failed to delete workflow",
+        );
+      },
+    });
 
   // Debug pane logging helper
   const logToDebugPane = useCallback(
@@ -601,6 +638,39 @@ function WorkflowEditorPage() {
             )}
             Save
           </Button>
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive" size="sm" disabled={isDeleting}>
+                {isDeleting ? (
+                  <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                ) : (
+                  <Trash2 className="mr-1 h-4 w-4" />
+                )}
+                Delete
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete workflow?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will permanently delete "{workflow.name}" and all its run
+                  history. This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() =>
+                    deleteWorkflow({ input: { rowId: workflowId } })
+                  }
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </header>
 

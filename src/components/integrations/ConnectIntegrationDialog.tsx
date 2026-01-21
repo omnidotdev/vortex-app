@@ -8,6 +8,7 @@ import {
   EyeOff,
   Info,
   Loader2,
+  Zap,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -30,6 +31,7 @@ import {
   useCreateIntegrationMutation,
   useCreateMcpServerMutation,
 } from "@/generated/graphql";
+import { API_BASE_URL } from "@/lib/config/env.config";
 import { integrationsOptions } from "@/lib/options/integrations.options";
 
 import type { IntegrationDefinitionsQuery } from "@/generated/graphql";
@@ -191,13 +193,37 @@ export function ConnectIntegrationDialog({
           </DialogHeader>
           <DialogCloseTrigger />
 
-          {/* OAuth Coming Soon Badge */}
+          {/* OAuth Connect Section */}
           {supportsOAuth && (
-            <div className="flex items-center gap-2 rounded-md bg-muted p-2 text-muted-foreground text-sm">
-              <Info className="h-4 w-4" />
-              <span>
-                OAuth support coming soon - use manual credentials for now
-              </span>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between rounded-md border bg-muted/30 p-3">
+                <div className="flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-primary" />
+                  <span className="font-medium text-sm">Quick Connect</span>
+                </div>
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    // Get provider ID from definition
+                    const provider = definition.rowId;
+                    const params = new URLSearchParams({
+                      organizationId,
+                      definitionId: definition.rowId,
+                      returnUrl: window.location.href,
+                    });
+                    window.location.href = `${API_BASE_URL}/api/v1/oauth/${provider}/authorize?${params}`;
+                  }}
+                >
+                  Connect with OAuth
+                </Button>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="h-px flex-1 bg-border" />
+                <span className="text-muted-foreground text-xs">
+                  or enter credentials manually
+                </span>
+                <div className="h-px flex-1 bg-border" />
+              </div>
             </div>
           )}
 
