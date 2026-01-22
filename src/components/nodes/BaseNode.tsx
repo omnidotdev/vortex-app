@@ -18,113 +18,153 @@ export interface NodeTheme {
   iconText: string;
   accent: string;
   handleColor: string;
+  glow?: string;
 }
 
-/** Pre-defined node themes */
+/** Pre-defined node themes - gemstone-inspired with glows */
 export const nodeThemes = {
+  // Sapphire - triggers
   trigger: {
-    border: "border-blue-200 dark:border-blue-800",
-    bg: "bg-blue-50 dark:bg-blue-950",
-    iconBg: "bg-blue-100 dark:bg-blue-900",
-    iconText: "text-blue-600 dark:text-blue-400",
+    border: "border-blue-300/60 dark:border-blue-600/40",
+    bg: "bg-gradient-to-br from-blue-50 via-blue-50/80 to-sky-50 dark:from-blue-950 dark:via-blue-950/80 dark:to-sky-950",
+    iconBg:
+      "bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700",
+    iconText: "text-white",
     accent: "text-blue-600 dark:text-blue-400",
     handleColor: "!bg-blue-500",
+    glow: "shadow-[0_0_15px_rgba(59,130,246,0.15)] dark:shadow-[0_0_20px_rgba(59,130,246,0.25)]",
   },
+  // Amber/Topaz - actions
   action: {
-    border: "border-amber-200 dark:border-amber-800",
-    bg: "bg-amber-50 dark:bg-amber-950",
-    iconBg: "bg-amber-100 dark:bg-amber-900",
-    iconText: "text-amber-600 dark:text-amber-400",
+    border: "border-amber-300/60 dark:border-amber-600/40",
+    bg: "bg-gradient-to-br from-amber-50 via-orange-50/50 to-yellow-50 dark:from-amber-950 dark:via-orange-950/50 dark:to-yellow-950",
+    iconBg:
+      "bg-gradient-to-br from-amber-500 to-orange-500 dark:from-amber-600 dark:to-orange-600",
+    iconText: "text-white",
     accent: "text-amber-600 dark:text-amber-400",
     handleColor: "!bg-amber-500",
+    glow: "shadow-[0_0_15px_rgba(245,158,11,0.15)] dark:shadow-[0_0_20px_rgba(245,158,11,0.25)]",
   },
+  // Citrine - conditions
   condition: {
-    border: "border-yellow-200 dark:border-yellow-800",
-    bg: "bg-yellow-50 dark:bg-yellow-950",
-    iconBg: "bg-yellow-100 dark:bg-yellow-900",
-    iconText: "text-yellow-600 dark:text-yellow-400",
+    border: "border-yellow-300/60 dark:border-yellow-600/40",
+    bg: "bg-gradient-to-br from-yellow-50 via-amber-50/50 to-orange-50 dark:from-yellow-950 dark:via-amber-950/50 dark:to-orange-950",
+    iconBg:
+      "bg-gradient-to-br from-yellow-500 to-amber-500 dark:from-yellow-600 dark:to-amber-600",
+    iconText: "text-white",
     accent: "text-yellow-600 dark:text-yellow-400",
     handleColor: "!bg-yellow-500",
+    glow: "shadow-[0_0_15px_rgba(234,179,8,0.15)] dark:shadow-[0_0_20px_rgba(234,179,8,0.25)]",
   },
+  // Emerald - plugins/integrations
   plugin: {
-    border: "border-emerald-200 dark:border-emerald-800",
-    bg: "bg-emerald-50 dark:bg-emerald-950",
-    iconBg: "bg-emerald-100 dark:bg-emerald-900",
-    iconText: "text-emerald-600 dark:text-emerald-400",
+    border: "border-emerald-300/60 dark:border-emerald-600/40",
+    bg: "bg-gradient-to-br from-emerald-50 via-green-50/50 to-teal-50 dark:from-emerald-950 dark:via-green-950/50 dark:to-teal-950",
+    iconBg:
+      "bg-gradient-to-br from-emerald-500 to-green-600 dark:from-emerald-600 dark:to-green-700",
+    iconText: "text-white",
     accent: "text-emerald-600 dark:text-emerald-400",
     handleColor: "!bg-emerald-500",
+    glow: "shadow-[0_0_15px_rgba(16,185,129,0.15)] dark:shadow-[0_0_20px_rgba(16,185,129,0.25)]",
   },
+  // Aquamarine - delay/timing
   delay: {
-    border: "border-cyan-200 dark:border-cyan-800",
-    bg: "bg-cyan-50 dark:bg-cyan-950",
-    iconBg: "bg-cyan-100 dark:bg-cyan-900",
-    iconText: "text-cyan-600 dark:text-cyan-400",
+    border: "border-cyan-300/60 dark:border-cyan-600/40",
+    bg: "bg-gradient-to-br from-cyan-50 via-sky-50/50 to-blue-50 dark:from-cyan-950 dark:via-sky-950/50 dark:to-blue-950",
+    iconBg:
+      "bg-gradient-to-br from-cyan-500 to-sky-500 dark:from-cyan-600 dark:to-sky-600",
+    iconText: "text-white",
     accent: "text-cyan-600 dark:text-cyan-400",
     handleColor: "!bg-cyan-500",
+    glow: "shadow-[0_0_15px_rgba(6,182,212,0.15)] dark:shadow-[0_0_20px_rgba(6,182,212,0.25)]",
   },
+  // Tanzanite - loops
   loop: {
-    border: "border-indigo-200 dark:border-indigo-800",
-    bg: "bg-indigo-50 dark:bg-indigo-950",
-    iconBg: "bg-indigo-100 dark:bg-indigo-900",
-    iconText: "text-indigo-600 dark:text-indigo-400",
+    border: "border-indigo-300/60 dark:border-indigo-600/40",
+    bg: "bg-gradient-to-br from-indigo-50 via-violet-50/50 to-purple-50 dark:from-indigo-950 dark:via-violet-950/50 dark:to-purple-950",
+    iconBg:
+      "bg-gradient-to-br from-indigo-500 to-violet-500 dark:from-indigo-600 dark:to-violet-600",
+    iconText: "text-white",
     accent: "text-indigo-600 dark:text-indigo-400",
     handleColor: "!bg-indigo-500",
+    glow: "shadow-[0_0_15px_rgba(99,102,241,0.15)] dark:shadow-[0_0_20px_rgba(99,102,241,0.25)]",
   },
+  // Amethyst - parallel
   parallel: {
-    border: "border-violet-200 dark:border-violet-800",
-    bg: "bg-violet-50 dark:bg-violet-950",
-    iconBg: "bg-violet-100 dark:bg-violet-900",
-    iconText: "text-violet-600 dark:text-violet-400",
+    border: "border-violet-300/60 dark:border-violet-600/40",
+    bg: "bg-gradient-to-br from-violet-50 via-purple-50/50 to-fuchsia-50 dark:from-violet-950 dark:via-purple-950/50 dark:to-fuchsia-950",
+    iconBg:
+      "bg-gradient-to-br from-violet-500 to-purple-600 dark:from-violet-600 dark:to-purple-700",
+    iconText: "text-white",
     accent: "text-violet-600 dark:text-violet-400",
     handleColor: "!bg-violet-500",
+    glow: "shadow-[0_0_15px_rgba(139,92,246,0.15)] dark:shadow-[0_0_20px_rgba(139,92,246,0.25)]",
   },
+  // Fire Opal - gate
   gate: {
-    border: "border-orange-200 dark:border-orange-800",
-    bg: "bg-orange-50 dark:bg-orange-950",
-    iconBg: "bg-orange-100 dark:bg-orange-900",
-    iconText: "text-orange-600 dark:text-orange-400",
+    border: "border-orange-300/60 dark:border-orange-600/40",
+    bg: "bg-gradient-to-br from-orange-50 via-red-50/30 to-amber-50 dark:from-orange-950 dark:via-red-950/30 dark:to-amber-950",
+    iconBg:
+      "bg-gradient-to-br from-orange-500 to-red-500 dark:from-orange-600 dark:to-red-600",
+    iconText: "text-white",
     accent: "text-orange-600 dark:text-orange-400",
     handleColor: "!bg-orange-500",
+    glow: "shadow-[0_0_15px_rgba(249,115,22,0.15)] dark:shadow-[0_0_20px_rgba(249,115,22,0.25)]",
   },
+  // Purple Sapphire - switch
   switch: {
-    border: "border-purple-200 dark:border-purple-800",
-    bg: "bg-purple-50 dark:bg-purple-950",
-    iconBg: "bg-purple-100 dark:bg-purple-900",
-    iconText: "text-purple-600 dark:text-purple-400",
+    border: "border-purple-300/60 dark:border-purple-600/40",
+    bg: "bg-gradient-to-br from-purple-50 via-fuchsia-50/50 to-pink-50 dark:from-purple-950 dark:via-fuchsia-950/50 dark:to-pink-950",
+    iconBg:
+      "bg-gradient-to-br from-purple-500 to-fuchsia-500 dark:from-purple-600 dark:to-fuchsia-600",
+    iconText: "text-white",
     accent: "text-purple-600 dark:text-purple-400",
     handleColor: "!bg-purple-500",
+    glow: "shadow-[0_0_15px_rgba(168,85,247,0.15)] dark:shadow-[0_0_20px_rgba(168,85,247,0.25)]",
   },
+  // Ruby - MCP
   mcp: {
-    border: "border-rose-200 dark:border-rose-800",
-    bg: "bg-rose-50 dark:bg-rose-950",
-    iconBg: "bg-rose-100 dark:bg-rose-900",
-    iconText: "text-rose-600 dark:text-rose-400",
+    border: "border-rose-300/60 dark:border-rose-600/40",
+    bg: "bg-gradient-to-br from-rose-50 via-pink-50/50 to-red-50 dark:from-rose-950 dark:via-pink-950/50 dark:to-red-950",
+    iconBg:
+      "bg-gradient-to-br from-rose-500 to-red-500 dark:from-rose-600 dark:to-red-600",
+    iconText: "text-white",
     accent: "text-rose-600 dark:text-rose-400",
     handleColor: "!bg-rose-500",
+    glow: "shadow-[0_0_15px_rgba(244,63,94,0.15)] dark:shadow-[0_0_20px_rgba(244,63,94,0.25)]",
   },
+  // Pink Tourmaline - LLM/AI
   llm: {
-    border: "border-pink-200 dark:border-pink-800",
-    bg: "bg-pink-50 dark:bg-pink-950",
-    iconBg: "bg-pink-100 dark:bg-pink-900",
-    iconText: "text-pink-600 dark:text-pink-400",
+    border: "border-pink-300/60 dark:border-pink-600/40",
+    bg: "bg-gradient-to-br from-pink-50 via-rose-50/50 to-fuchsia-50 dark:from-pink-950 dark:via-rose-950/50 dark:to-fuchsia-950",
+    iconBg:
+      "bg-gradient-to-br from-pink-500 to-rose-500 dark:from-pink-600 dark:to-rose-600",
+    iconText: "text-white",
     accent: "text-pink-600 dark:text-pink-400",
     handleColor: "!bg-pink-500",
+    glow: "shadow-[0_0_15px_rgba(236,72,153,0.15)] dark:shadow-[0_0_20px_rgba(236,72,153,0.25)]",
   },
+  // Obsidian - code
   code: {
-    border: "border-slate-200 dark:border-slate-800",
-    bg: "bg-slate-50 dark:bg-slate-950",
-    iconBg: "bg-slate-100 dark:bg-slate-900",
-    iconText: "text-slate-600 dark:text-slate-400",
+    border: "border-slate-300/60 dark:border-slate-600/40",
+    bg: "bg-gradient-to-br from-slate-50 via-gray-50/50 to-zinc-50 dark:from-slate-950 dark:via-gray-950/50 dark:to-zinc-950",
+    iconBg:
+      "bg-gradient-to-br from-slate-600 to-slate-700 dark:from-slate-500 dark:to-slate-600",
+    iconText: "text-white",
     accent: "text-slate-600 dark:text-slate-400",
     handleColor: "!bg-slate-500",
+    glow: "shadow-[0_0_15px_rgba(100,116,139,0.1)] dark:shadow-[0_0_20px_rgba(100,116,139,0.15)]",
   },
+  // Jade - database
   database: {
-    border: "border-teal-200 dark:border-teal-800",
-    bg: "bg-teal-50 dark:bg-teal-950",
-    iconBg: "bg-teal-100 dark:bg-teal-900",
-    iconText: "text-teal-600 dark:text-teal-400",
+    border: "border-teal-300/60 dark:border-teal-600/40",
+    bg: "bg-gradient-to-br from-teal-50 via-emerald-50/50 to-cyan-50 dark:from-teal-950 dark:via-emerald-950/50 dark:to-cyan-950",
+    iconBg:
+      "bg-gradient-to-br from-teal-500 to-emerald-500 dark:from-teal-600 dark:to-emerald-600",
+    iconText: "text-white",
     accent: "text-teal-600 dark:text-teal-400",
     handleColor: "!bg-teal-500",
+    glow: "shadow-[0_0_15px_rgba(20,184,166,0.15)] dark:shadow-[0_0_20px_rgba(20,184,166,0.25)]",
   },
 } as const;
 
@@ -206,11 +246,14 @@ export const BaseNode = memo(
     return (
       <div
         className={cn(
-          "group relative cursor-pointer rounded-xl border-2 px-4 py-3 shadow-sm transition-all duration-200",
-          "hover:shadow-md",
+          "group relative cursor-pointer rounded-xl border px-4 py-3 transition-all duration-200",
+          "backdrop-blur-sm",
           themeConfig.border,
           themeConfig.bg,
-          selected && "ring-2 ring-primary ring-offset-2",
+          themeConfig.glow,
+          "hover:scale-[1.02]",
+          selected &&
+            "ring-2 ring-primary ring-offset-2 ring-offset-background",
         )}
         style={{ width: NODE_WIDTH, minHeight: NODE_MIN_HEIGHT }}
         onClick={onClick}
@@ -219,7 +262,7 @@ export const BaseNode = memo(
         <Button
           variant="ghost"
           size="icon"
-          className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-background opacity-0 shadow-md transition-opacity group-hover:opacity-100"
+          className="absolute -top-2 -right-2 h-6 w-6 rounded-full border bg-background opacity-0 shadow-md transition-opacity group-hover:opacity-100"
           onClick={(e) => {
             e.stopPropagation();
             onDelete?.();
@@ -229,22 +272,24 @@ export const BaseNode = memo(
         </Button>
 
         {/* Header */}
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex items-center gap-3">
-            {/* Icon container */}
+        <div className="flex min-w-0 items-start justify-between gap-3 overflow-hidden">
+          <div className="flex min-w-0 flex-1 items-center gap-3 overflow-hidden">
+            {/* Icon container - gemstone style with gradient and subtle shadow */}
             <div
               className={cn(
-                "flex h-9 w-9 items-center justify-center rounded-lg transition-colors",
+                "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl shadow-sm transition-transform group-hover:scale-105",
                 themeConfig.iconBg,
               )}
             >
               <Icon className={cn("h-5 w-5", themeConfig.iconText)} />
             </div>
             {/* Title and description */}
-            <div className="flex flex-col">
-              <span className="font-medium text-foreground">{label}</span>
+            <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+              <span className="truncate font-medium text-foreground">
+                {label}
+              </span>
               {description && (
-                <span className="text-muted-foreground text-xs">
+                <span className="truncate text-muted-foreground text-xs">
                   {description}
                 </span>
               )}
@@ -254,7 +299,11 @@ export const BaseNode = memo(
           {badge && (
             <Badge
               variant={badgeVariant}
-              className={cn("text-xs", themeConfig.iconBg, themeConfig.accent)}
+              className={cn(
+                "shrink-0 border-transparent text-xs",
+                themeConfig.iconBg,
+                themeConfig.iconText,
+              )}
             >
               {badge}
             </Badge>
@@ -307,9 +356,14 @@ export const NodeInfoRow = memo(
     value: ReactNode;
     className?: string;
   }) => (
-    <div className={cn("flex items-center justify-between text-sm", className)}>
-      <span className="text-muted-foreground">{label}</span>
-      <span className="text-foreground">{value}</span>
+    <div
+      className={cn(
+        "flex min-w-0 items-center justify-between gap-2 overflow-hidden text-sm",
+        className,
+      )}
+    >
+      <span className="shrink-0 text-muted-foreground">{label}</span>
+      <span className="min-w-0 truncate text-foreground">{value}</span>
     </div>
   ),
 );

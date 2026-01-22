@@ -1,6 +1,8 @@
 import { Collapsible } from "@ark-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
+  ArrowLeft,
+  CheckCircle2,
   ChevronDown,
   ChevronRight,
   ExternalLink,
@@ -26,17 +28,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  useCreateIntegrationMutation,
-  useCreateMcpServerMutation,
-} from "@/generated/graphql";
+import { useCreateIntegrationMutation } from "@/generated/graphql";
 import { API_BASE_URL } from "@/lib/config/env.config";
 import { integrationsOptions } from "@/lib/options/integrations.options";
 
-import type { IntegrationDefinitionsQuery } from "@/generated/graphql";
+import type {
+  IntegrationDefinitionsQuery,
+  IntegrationsQuery,
+} from "@/generated/graphql";
 
 type IntegrationDefinition = NonNullable<
   IntegrationDefinitionsQuery["integrationDefinitions"]
+>["nodes"][number];
+
+type Integration = NonNullable<
+  IntegrationsQuery["integrations"]
 >["nodes"][number];
 
 interface AuthFieldSchema {
@@ -52,13 +58,22 @@ interface AuthFieldSchema {
 interface ConnectIntegrationDialogProps {
   definition: IntegrationDefinition;
   organizationId: string;
+  /** Existing integrations of this type for multi-account support */
+  existingIntegrations?: Integration[];
+  /** URL to return to after successful connection (e.g., workflow editor) */
+  returnTo?: string;
   onClose: () => void;
+  /** Called when user wants to configure an existing integration */
+  onConfigureExisting?: (integration: Integration) => void;
 }
 
 export function ConnectIntegrationDialog({
   definition,
   organizationId,
+  existingIntegrations = [],
+  returnTo,
   onClose,
+  onConfigureExisting,
 }: ConnectIntegrationDialogProps) {
   const queryClient = useQueryClient();
   const [credentials, setCredentials] = useState<Record<string, string>>({});
@@ -67,9 +82,12 @@ export function ConnectIntegrationDialog({
   const [jsonErrors, setJsonErrors] = useState<Record<string, string | null>>(
     {},
   );
-  const [instructionsOpen, setInstructionsOpen] = useState(true);
+  const [instructionsOpen, setInstructionsOpen] = useState(
+    existingIntegrations.length === 0,
+  );
+  const [connectionName, setConnectionName] = useState("");
+  const [successState, setSuccessState] = useState(false);
 
-  const createMcpServer = useCreateMcpServerMutation();
   const createIntegration = useCreateIntegrationMutation();
 
   const authFields = (definition.authFields || {}) as Record<
@@ -83,7 +101,7 @@ export function ConnectIntegrationDialog({
   const supportsOAuth = (definition as { supportsOauth?: boolean })
     .supportsOauth;
 
-  const isSubmitting = createMcpServer.isPending || createIntegration.isPending;
+  const isSubmitting = createIntegration.isPending;
 
   const validateJson = (value: string): string | null => {
     if (!value.trim()) return null;
@@ -117,36 +135,23 @@ export function ConnectIntegrationDialog({
     }
 
     try {
-      // First create the MCP server
-      const mcpResult = await createMcpServer.mutateAsync({
-        input: {
-          mcpServer: {
-            organizationId,
-            name: definition.name,
-            type: definition.id,
-            command: "npx",
-            args: ["-y", definition.id] as unknown as Record<string, unknown>, // MCP args
-            env: credentials as unknown as Record<string, unknown>, // Pass credentials as env vars
-            isEnabled: true,
-          },
-        },
-      });
+      // Generate a name: use custom name, or default with account number for multi-account
+      const integrationName =
+        connectionName.trim() ||
+        (existingIntegrations.length > 0
+          ? `${definition.name} (${existingIntegrations.length + 1})`
+          : definition.name);
 
-      const mcpServerId = mcpResult.createMcpServer?.mcpServer?.rowId;
-      if (!mcpServerId) {
-        throw new Error("Failed to create MCP server");
-      }
-
-      // Then create the integration linked to the MCP server
+      // Create the integration with credentials stored in config
+      // Use rowId (e.g., "twilio") for type, not the Relay Node ID
       await createIntegration.mutateAsync({
         input: {
           integration: {
             organizationId,
-            name: definition.name,
+            name: integrationName,
             type: definition.rowId,
             isEnabled: true,
-            config: {}, // Credentials are stored in MCP server env
-            mcpServerId,
+            config: credentials as unknown as Record<string, unknown>,
             definitionId: definition.rowId,
           },
         },
@@ -157,9 +162,23 @@ export function ConnectIntegrationDialog({
         queryKey: integrationsOptions({ organizationId }).queryKey,
       });
 
-      onClose();
+      // Show success state briefly before closing
+      setSuccessState(true);
+      setTimeout(() => {
+        onClose();
+      }, 1500);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to connect");
+      const message = err instanceof Error ? err.message : String(err);
+      if (
+        message.includes("Unauthorized") ||
+        message.includes("UNAUTHORIZED")
+      ) {
+        setError(
+          "You don't have permission to create integrations. Admin or owner role is required.",
+        );
+      } else {
+        setError(message || "Failed to connect");
+      }
     }
   };
 
@@ -167,11 +186,41 @@ export function ConnectIntegrationDialog({
     setShowSecrets((prev) => ({ ...prev, [field]: !prev[field] }));
   };
 
+  // Success state view
+  if (successState) {
+    return (
+      <DialogRoot open onOpenChange={(e) => !e.open && onClose()}>
+        <DialogBackdrop />
+        <DialogPositioner>
+          <DialogContent className="max-w-md">
+            <div className="flex flex-col items-center justify-center py-8 text-center">
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
+                <CheckCircle2 className="h-8 w-8 text-green-600 dark:text-green-400" />
+              </div>
+              <h2 className="font-semibold text-lg">Connected!</h2>
+              <p className="mt-1 text-muted-foreground text-sm">
+                {definition.name} has been connected successfully.
+              </p>
+              {returnTo && (
+                <Button variant="outline" size="sm" className="mt-4" asChild>
+                  <a href={returnTo}>
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back to workflow
+                  </a>
+                </Button>
+              )}
+            </div>
+          </DialogContent>
+        </DialogPositioner>
+      </DialogRoot>
+    );
+  }
+
   return (
     <DialogRoot open onOpenChange={(e) => !e.open && onClose()}>
       <DialogBackdrop />
       <DialogPositioner>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="flex max-h-[85vh] max-w-lg flex-col overflow-hidden">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               {definition.iconUrl && (
@@ -187,186 +236,271 @@ export function ConnectIntegrationDialog({
               Connect {definition.name}
             </DialogTitle>
             <DialogDescription>
-              Enter your credentials to connect this integration.
+              {existingIntegrations.length > 0
+                ? `Add another ${definition.name} account or manage existing connections.`
+                : "Enter your credentials to connect this integration."}
             </DialogDescription>
           </DialogHeader>
           <DialogCloseTrigger />
 
-          {/* OAuth Connect Section */}
-          {supportsOAuth && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between rounded-md border bg-muted/30 p-3">
-                <div className="flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-primary" />
-                  <span className="font-medium text-sm">Quick Connect</span>
-                </div>
-                <Button
-                  size="sm"
-                  onClick={() => {
-                    // Get provider ID from definition
-                    const provider = definition.rowId;
-                    const params = new URLSearchParams({
-                      organizationId,
-                      definitionId: definition.rowId,
-                      returnUrl: window.location.href,
-                    });
-                    window.location.href = `${API_BASE_URL}/api/v1/oauth/${provider}/authorize?${params}`;
-                  }}
-                >
-                  Connect with OAuth
-                </Button>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="h-px flex-1 bg-border" />
-                <span className="text-muted-foreground text-xs">
-                  or enter credentials manually
-                </span>
-                <div className="h-px flex-1 bg-border" />
-              </div>
-            </div>
-          )}
-
-          {/* Setup Instructions */}
-          {setupSteps && setupSteps.length > 0 && (
-            <Collapsible.Root
-              open={instructionsOpen}
-              onOpenChange={(details) => setInstructionsOpen(details.open)}
-            >
-              <Collapsible.Trigger className="flex w-full cursor-pointer items-center gap-2 rounded-md bg-muted/50 p-3 text-left font-medium text-sm hover:bg-muted">
-                {instructionsOpen ? (
-                  <ChevronDown className="h-4 w-4" />
-                ) : (
-                  <ChevronRight className="h-4 w-4" />
-                )}
-                Setup Instructions
-              </Collapsible.Trigger>
-              <Collapsible.Content>
-                <div className="rounded-b-md border border-t-0 bg-background p-3">
-                  <ol className="ml-4 list-decimal space-y-1.5 text-muted-foreground text-sm">
-                    {setupSteps.map((step, i) => (
-                      <li key={i}>{step}</li>
+          <form
+            onSubmit={handleSubmit}
+            className="flex min-h-0 flex-1 flex-col overflow-hidden"
+          >
+            <div className="flex-1 space-y-4 overflow-y-auto px-1 pb-4">
+              {/* Existing Integrations Section */}
+              {existingIntegrations.length > 0 && (
+                <div className="space-y-2">
+                  <Label className="text-muted-foreground text-xs uppercase tracking-wide">
+                    Connected Accounts
+                  </Label>
+                  <div className="space-y-2">
+                    {existingIntegrations.map((integration) => (
+                      <button
+                        key={integration.rowId}
+                        type="button"
+                        onClick={() => onConfigureExisting?.(integration)}
+                        className="flex w-full items-center justify-between rounded-md border p-3 text-left transition-colors hover:bg-accent"
+                      >
+                        <div className="flex items-center gap-3">
+                          {definition.iconUrl ? (
+                            <img
+                              src={definition.iconUrl}
+                              alt=""
+                              className="h-8 w-8 rounded bg-muted p-1"
+                            />
+                          ) : (
+                            <div className="flex h-8 w-8 items-center justify-center rounded bg-muted font-medium text-muted-foreground text-sm">
+                              {integration.name.charAt(0)}
+                            </div>
+                          )}
+                          <div>
+                            <p className="font-medium text-sm">
+                              {integration.name}
+                            </p>
+                            <p className="text-muted-foreground text-xs">
+                              {integration.isEnabled ? "Active" : "Inactive"}
+                            </p>
+                          </div>
+                        </div>
+                        <span className="text-muted-foreground text-xs">
+                          Configure →
+                        </span>
+                      </button>
                     ))}
-                  </ol>
-                  {docsUrl && (
-                    <a
-                      href={docsUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-3 inline-flex cursor-pointer items-center gap-1 text-primary text-sm hover:underline"
-                    >
-                      <ExternalLink className="h-3 w-3" />
-                      Open {definition.name} Developer Portal
-                    </a>
-                  )}
+                  </div>
+                  <div className="flex items-center gap-2 pt-2">
+                    <div className="h-px flex-1 bg-border" />
+                    <span className="text-muted-foreground text-xs">
+                      Add another account
+                    </span>
+                    <div className="h-px flex-1 bg-border" />
+                  </div>
                 </div>
-              </Collapsible.Content>
-            </Collapsible.Root>
-          )}
+              )}
 
-          <form onSubmit={handleSubmit} className="space-y-4 overflow-hidden">
-            {Object.entries(authFields).map(([fieldName, field]) => (
-              <div key={fieldName} className="space-y-2">
-                <Label htmlFor={fieldName}>
-                  {field.label}
-                  {field.required && (
+              {/* OAuth Connect Section */}
+              {supportsOAuth && (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between rounded-md border bg-muted/30 p-3">
+                    <div className="flex items-center gap-2">
+                      <Zap className="h-4 w-4 text-primary" />
+                      <span className="font-medium text-sm">Quick Connect</span>
+                    </div>
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        // Get provider ID from definition
+                        const provider = definition.rowId;
+                        const params = new URLSearchParams({
+                          organizationId,
+                          definitionId: definition.rowId,
+                          returnUrl: window.location.href,
+                        });
+                        window.location.href = `${API_BASE_URL}/api/v1/oauth/${provider}/authorize?${params}`;
+                      }}
+                    >
+                      Connect with OAuth
+                    </Button>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="h-px flex-1 bg-border" />
+                    <span className="text-muted-foreground text-xs">
+                      or enter credentials manually
+                    </span>
+                    <div className="h-px flex-1 bg-border" />
+                  </div>
+                </div>
+              )}
+
+              {/* Setup Instructions */}
+              {setupSteps && setupSteps.length > 0 && (
+                <Collapsible.Root
+                  open={instructionsOpen}
+                  onOpenChange={(details) => setInstructionsOpen(details.open)}
+                  className="overflow-hidden rounded-md border"
+                >
+                  <Collapsible.Trigger className="flex w-full cursor-pointer items-center gap-2 bg-muted/50 p-3 text-left font-medium text-sm hover:bg-muted">
+                    {instructionsOpen ? (
+                      <ChevronDown className="h-4 w-4" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4" />
+                    )}
+                    Setup Instructions
+                  </Collapsible.Trigger>
+                  <Collapsible.Content>
+                    <div className="border-t bg-background p-3">
+                      <ol className="ml-4 list-decimal space-y-1.5 text-muted-foreground text-sm">
+                        {setupSteps.map((step, i) => (
+                          <li key={i}>{step}</li>
+                        ))}
+                      </ol>
+                      {docsUrl && (
+                        <a
+                          href={docsUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-3 inline-flex cursor-pointer items-center gap-1 text-primary text-sm hover:underline"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          Open {definition.name} Developer Portal
+                        </a>
+                      )}
+                    </div>
+                  </Collapsible.Content>
+                </Collapsible.Root>
+              )}
+
+              {/* Connection Name (for multi-account clarity) */}
+              <div className="space-y-2">
+                <Label htmlFor="connectionName">
+                  Connection Name
+                  {existingIntegrations.length > 0 && (
                     <span className="ml-1 text-destructive">*</span>
                   )}
                 </Label>
-
-                {field.type === "json" || field.type === "text" ? (
-                  <>
-                    <Textarea
-                      id={fieldName}
-                      value={credentials[fieldName] || ""}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setCredentials((prev) => ({
-                          ...prev,
-                          [fieldName]: value,
-                        }));
-                        // Validate JSON on change for json fields
-                        if (field.type === "json") {
-                          setJsonErrors((prev) => ({
-                            ...prev,
-                            [fieldName]: validateJson(value),
-                          }));
-                        }
-                      }}
-                      onBlur={(e) => {
-                        // Re-validate on blur for json fields
-                        if (field.type === "json") {
-                          setJsonErrors((prev) => ({
-                            ...prev,
-                            [fieldName]: validateJson(e.target.value),
-                          }));
-                        }
-                      }}
-                      placeholder={field.placeholder}
-                      required={field.required}
-                      rows={6}
-                      className={`w-full font-mono text-sm ${
-                        jsonErrors[fieldName]
-                          ? "border-destructive focus-visible:ring-destructive"
-                          : ""
-                      }`}
-                    />
-                    {jsonErrors[fieldName] && (
-                      <p className="text-destructive text-xs">
-                        {jsonErrors[fieldName]}
-                      </p>
-                    )}
-                  </>
-                ) : (
-                  <div className="relative w-full">
-                    <Input
-                      id={fieldName}
-                      type={
-                        field.secret && !showSecrets[fieldName]
-                          ? "password"
-                          : "text"
-                      }
-                      value={credentials[fieldName] || ""}
-                      onChange={(e) =>
-                        setCredentials((prev) => ({
-                          ...prev,
-                          [fieldName]: e.target.value,
-                        }))
-                      }
-                      placeholder={field.placeholder}
-                      required={field.required}
-                      className={`w-full ${field.secret ? "pr-10" : ""}`}
-                    />
-                    {field.secret && (
-                      <button
-                        type="button"
-                        onClick={() => toggleShowSecret(fieldName)}
-                        className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                      >
-                        {showSecrets[fieldName] ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </button>
-                    )}
-                  </div>
-                )}
-
-                {field.description && (
-                  <p className="text-muted-foreground text-xs">
-                    {field.description}
-                  </p>
-                )}
+                <Input
+                  id="connectionName"
+                  value={connectionName}
+                  onChange={(e) => setConnectionName(e.target.value)}
+                  placeholder={
+                    existingIntegrations.length > 0
+                      ? `e.g., ${definition.name} - Production`
+                      : `${definition.name} (optional)`
+                  }
+                  required={existingIntegrations.length > 0}
+                />
+                <p className="text-muted-foreground text-xs">
+                  {existingIntegrations.length > 0
+                    ? "Give this connection a unique name to distinguish it from other accounts."
+                    : "Optionally name this connection for easier identification."}
+                </p>
               </div>
-            ))}
 
-            {error && (
-              <div className="wrap-break-word overflow-hidden rounded-md bg-destructive/10 p-3 text-destructive text-sm">
-                {error}
-              </div>
-            )}
+              {Object.entries(authFields).map(([fieldName, field]) => (
+                <div key={fieldName} className="space-y-2">
+                  <Label htmlFor={fieldName}>
+                    {field.label}
+                    {field.required && (
+                      <span className="ml-1 text-destructive">*</span>
+                    )}
+                  </Label>
 
-            <DialogFooter className="pt-4">
+                  {field.type === "json" || field.type === "text" ? (
+                    <>
+                      <Textarea
+                        id={fieldName}
+                        value={credentials[fieldName] || ""}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setCredentials((prev) => ({
+                            ...prev,
+                            [fieldName]: value,
+                          }));
+                          // Validate JSON on change for json fields
+                          if (field.type === "json") {
+                            setJsonErrors((prev) => ({
+                              ...prev,
+                              [fieldName]: validateJson(value),
+                            }));
+                          }
+                        }}
+                        onBlur={(e) => {
+                          // Re-validate on blur for json fields
+                          if (field.type === "json") {
+                            setJsonErrors((prev) => ({
+                              ...prev,
+                              [fieldName]: validateJson(e.target.value),
+                            }));
+                          }
+                        }}
+                        placeholder={field.placeholder}
+                        required={field.required}
+                        rows={6}
+                        className={`w-full font-mono text-sm ${
+                          jsonErrors[fieldName]
+                            ? "border-destructive focus-visible:ring-destructive"
+                            : ""
+                        }`}
+                      />
+                      {jsonErrors[fieldName] && (
+                        <p className="text-destructive text-xs">
+                          {jsonErrors[fieldName]}
+                        </p>
+                      )}
+                    </>
+                  ) : (
+                    <div className="relative w-full">
+                      <Input
+                        id={fieldName}
+                        type={
+                          field.secret && !showSecrets[fieldName]
+                            ? "password"
+                            : "text"
+                        }
+                        value={credentials[fieldName] || ""}
+                        onChange={(e) =>
+                          setCredentials((prev) => ({
+                            ...prev,
+                            [fieldName]: e.target.value,
+                          }))
+                        }
+                        placeholder={field.placeholder}
+                        required={field.required}
+                        className={`w-full ${field.secret ? "pr-10" : ""}`}
+                      />
+                      {field.secret && (
+                        <button
+                          type="button"
+                          onClick={() => toggleShowSecret(fieldName)}
+                          className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        >
+                          {showSecrets[fieldName] ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                  {field.description && (
+                    <p className="text-muted-foreground text-xs">
+                      {field.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+
+              {error && (
+                <div className="break-words rounded-md bg-destructive/10 p-3 text-destructive text-sm">
+                  {error}
+                </div>
+              )}
+            </div>
+
+            <DialogFooter className="shrink-0 border-t pt-4">
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancel
               </Button>
