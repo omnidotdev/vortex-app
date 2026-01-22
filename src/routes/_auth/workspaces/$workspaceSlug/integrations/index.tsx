@@ -131,7 +131,7 @@ function IntegrationsPage() {
               return (
                 <div
                   key={definition.id}
-                  className="relative rounded-lg border bg-card p-4 transition-shadow hover:shadow-md"
+                  className="relative rounded-lg border bg-card p-4"
                 >
                   <div className="flex items-start gap-3">
                     {definition.iconUrl ? (
@@ -275,7 +275,7 @@ function IntegrationsPage() {
                       <button
                         key={def.id}
                         type="button"
-                        className="flex items-center gap-3 rounded-lg border p-3 text-left transition-colors hover:bg-accent"
+                        className="flex cursor-pointer items-center gap-3 rounded-lg border p-3 text-left transition-colors hover:bg-accent"
                         onClick={() =>
                           connected
                             ? handleConfigure(

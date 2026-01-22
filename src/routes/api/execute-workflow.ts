@@ -10,7 +10,12 @@ export const Route = createFileRoute("/api/execute-workflow")({
       POST: async ({ request }) => {
         try {
           const body = await request.json();
-          const { workflowId, workflowDefinition, triggerData = {} } = body;
+          const {
+            workflowId,
+            organizationId,
+            workflowDefinition,
+            triggerData = {},
+          } = body;
 
           // Generate workflow run ID
           const workflowRunId = `wf-run-${Date.now()}-${Math.random().toString(36).substring(7)}`;
@@ -36,6 +41,7 @@ export const Route = createFileRoute("/api/execute-workflow")({
           // Trigger the DSL workflow via event
           await hatchet.event.push("workflow:execute", {
             workflowId: hatchetWorkflowId,
+            organizationId, // Include org ID for credential lookup
             triggerData,
             definition: dslDefinition,
           });

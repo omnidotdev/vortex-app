@@ -140,8 +140,8 @@ export interface NodeHandle {
   label?: string;
 }
 
-/** Standard node dimensions for consistent sizing */
-export const NODE_WIDTH = 280;
+/** Standard node dimensions for consistent sizing (must be even multiples of grid size 15px for center alignment) */
+export const NODE_WIDTH = 270;
 export const NODE_MIN_HEIGHT = 120;
 
 /** Base node props */
@@ -275,7 +275,7 @@ export const BaseNode = memo(
           </div>
         )}
 
-        {/* Handles */}
+        {/* Handles for connections */}
         {handles.map((handle, index) => (
           <Handle
             key={handle.id || `${handle.type}-${handle.position}-${index}`}

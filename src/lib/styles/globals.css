@@ -184,6 +184,154 @@
   .font-text {
     font-weight: var(--text-weight);
   }
+
+  /* ReactFlow handle positioning fixes */
+  .react-flow__handle {
+    /* Ensure handles are centered on their connection point */
+    transform: translate(-50%, -50%);
+  }
+  .react-flow__handle.react-flow__handle-top {
+    top: 0;
+    transform: translate(-50%, -50%);
+  }
+  .react-flow__handle.react-flow__handle-bottom {
+    bottom: 0;
+    top: auto;
+    transform: translate(-50%, 50%);
+  }
+  .react-flow__handle.react-flow__handle-left {
+    left: 0;
+    transform: translate(-50%, -50%);
+  }
+  .react-flow__handle.react-flow__handle-right {
+    right: 0;
+    left: auto;
+    transform: translate(50%, -50%);
+  }
+
+  /* ReactFlow Controls theming */
+  .react-flow__controls {
+    box-shadow:
+      0 1px 3px 0 rgb(0 0 0 / 0.1),
+      0 1px 2px -1px rgb(0 0 0 / 0.1);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .react-flow__controls-button {
+    background-color: var(--card) !important;
+    border: none !important;
+    border-bottom: 1px solid var(--border) !important;
+    transition: background-color 0.15s ease;
+  }
+  .react-flow__controls-button:hover {
+    background-color: var(--muted) !important;
+  }
+  .react-flow__controls-button:last-child {
+    border-bottom: none !important;
+  }
+  .react-flow__controls-button svg {
+    fill: var(--foreground) !important;
+  }
+
+  /* ReactFlow background pattern theming */
+  .react-flow__background pattern circle,
+  .react-flow__background pattern line {
+    stroke: var(--border);
+  }
+
+  /* Modern edge styling */
+  .react-flow__edge-smart {
+    cursor: pointer;
+  }
+
+  .react-flow__edge-smart:hover .react-flow__edge-path {
+    stroke-width: 4px !important;
+  }
+
+  .react-flow__edge-smart:hover .react-flow__edge-connector {
+    r: 6px;
+    filter: drop-shadow(0 0 6px currentColor);
+  }
+
+  .react-flow__edge-connector {
+    transition:
+      r 0.15s ease,
+      filter 0.15s ease;
+  }
+
+  .react-flow__edge-path {
+    transition:
+      stroke-width 0.15s ease,
+      stroke 0.15s ease;
+  }
+
+  /* Connection line styling during drag */
+  .react-flow__connection-line {
+    stroke: #6366f1;
+    stroke-width: 3px;
+    stroke-dasharray: 8 4;
+    animation: dash 0.5s linear infinite;
+  }
+
+  @keyframes dash {
+    to {
+      stroke-dashoffset: -12;
+    }
+  }
+
+  /* Handle styling - larger and more visible */
+  .react-flow__handle {
+    width: 14px !important;
+    height: 14px !important;
+    border: 2px solid var(--background) !important;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.15);
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .react-flow__handle:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+    box-shadow:
+      0 0 0 4px oklch(from var(--primary) l c h / 0.2),
+      0 2px 8px rgb(0 0 0 / 0.2);
+  }
+
+  .react-flow__handle.react-flow__handle-top:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+
+  .react-flow__handle.react-flow__handle-bottom:hover {
+    transform: translate(-50%, 50%) scale(1.2);
+  }
+
+  .react-flow__handle.react-flow__handle-left:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+
+  .react-flow__handle.react-flow__handle-right:hover {
+    transform: translate(50%, -50%) scale(1.2);
+  }
+
+  /* Connecting state */
+  .react-flow__handle.connecting {
+    animation: pulse-handle 1s ease infinite;
+  }
+
+  @keyframes pulse-handle {
+    0%,
+    100% {
+      box-shadow:
+        0 0 0 0 oklch(from var(--primary) l c h / 0.4),
+        0 2px 4px rgb(0 0 0 / 0.15);
+    }
+    50% {
+      box-shadow:
+        0 0 0 8px oklch(from var(--primary) l c h / 0),
+        0 2px 4px rgb(0 0 0 / 0.15);
+    }
+  }
 }
 
 @layer utilities {

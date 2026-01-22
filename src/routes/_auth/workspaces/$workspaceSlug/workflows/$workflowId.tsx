@@ -6,6 +6,7 @@ import {
   useNavigate,
 } from "@tanstack/react-router";
 import {
+  Copy,
   Grid3X3,
   History,
   Loader2,
@@ -14,12 +15,14 @@ import {
   PanelRightClose,
   PlayCircle,
   Save,
+  Settings,
   Trash2,
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ReactFlow, {
   Background,
+  ConnectionLineType,
   Controls,
   MarkerType,
   addEdge,
@@ -31,6 +34,7 @@ import type { Connection, Edge, Node, ReactFlowInstance } from "reactflow";
 import "reactflow/dist/style.css";
 
 import DebugPane from "@/components/DebugPane";
+import { SmartEdge } from "@/components/edges/SmartEdge";
 import { ActionNode } from "@/components/nodes/ActionNode";
 import { CodeNode } from "@/components/nodes/CodeNode";
 import { ConditionNode } from "@/components/nodes/ConditionNode";
@@ -44,6 +48,7 @@ import { ParallelNode } from "@/components/nodes/ParallelNode";
 import { PluginNode } from "@/components/nodes/PluginNode";
 import { SwitchNode } from "@/components/nodes/SwitchNode";
 import { TriggerNode } from "@/components/nodes/TriggerNode";
+import ThemeToggle from "@/components/ThemeToggle";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -101,6 +106,11 @@ const nodeTypes = {
   databaseNode: DatabaseNode,
 };
 
+// Define custom edge types - must be outside component to avoid re-creation
+const edgeTypes = {
+  smart: SmartEdge,
+};
+
 // Map step types to custom node types
 const nodeTypeMap: Record<string, string> = {
   trigger: "triggerNode",
@@ -151,6 +161,13 @@ function WorkflowEditorPage() {
   const [snapToGrid, setSnapToGrid] = useState(true);
   const [showLeftSidebar, setShowLeftSidebar] = useState(false);
   const [showRightSidebar, setShowRightSidebar] = useState(false);
+  const [contextMenu, setContextMenu] = useState<{
+    x: number;
+    y: number;
+    type: "node" | "edge" | "pane";
+    nodeId?: string;
+    edgeId?: string;
+  } | null>(null);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
@@ -232,8 +249,9 @@ function WorkflowEditorPage() {
       const edge: Edge = {
         ...params,
         id: `edge_${Date.now()}`,
+        type: "smart",
         markerEnd: { type: MarkerType.ArrowClosed },
-        style: { stroke: "#2563eb" },
+        style: { stroke: "#2563eb", strokeWidth: 2 },
       } as Edge;
 
       // Add labels for condition edges
@@ -346,6 +364,7 @@ function WorkflowEditorPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           workflowId: `vortex-workflow-${Date.now()}`,
+          organizationId, // Include org ID for credential lookup
           workflowDefinition,
           workflowType: "executeVortexWorkflow",
         }),
@@ -381,7 +400,7 @@ function WorkflowEditorPage() {
     } finally {
       setIsExecuting(false);
     }
-  }, [workflowId, workflow.name, logToDebugPane]);
+  }, [workflowId, organizationId, workflow.name, logToDebugPane]);
 
   // Execute connected actions from a trigger node
   const executeConnectedActions = useCallback(
@@ -558,11 +577,101 @@ function WorkflowEditorPage() {
   // Handle node click to open config panel
   const onNodeClick = useCallback((_event: React.MouseEvent, node: Node) => {
     setSelectedNode(node);
+    setContextMenu(null);
   }, []);
 
-  // Keyboard delete support
+  // Handle node context menu (right-click)
+  const onNodeContextMenu = useCallback(
+    (event: React.MouseEvent, node: Node) => {
+      event.preventDefault();
+      setContextMenu({
+        x: event.clientX,
+        y: event.clientY,
+        type: "node",
+        nodeId: node.id,
+      });
+      setSelectedNode(node);
+    },
+    [],
+  );
+
+  // Handle edge context menu (right-click)
+  const onEdgeContextMenu = useCallback(
+    (event: React.MouseEvent, edge: Edge) => {
+      event.preventDefault();
+      setContextMenu({
+        x: event.clientX,
+        y: event.clientY,
+        type: "edge",
+        edgeId: edge.id,
+      });
+    },
+    [],
+  );
+
+  // Handle pane context menu (right-click on canvas)
+  const onPaneContextMenu = useCallback((event: React.MouseEvent) => {
+    event.preventDefault();
+    setContextMenu({
+      x: event.clientX,
+      y: event.clientY,
+      type: "pane",
+    });
+  }, []);
+
+  // Close context menu
+  const closeContextMenu = useCallback(() => {
+    setContextMenu(null);
+  }, []);
+
+  // Duplicate node
+  const handleDuplicateNode = useCallback(
+    (nodeId: string) => {
+      const nodeToDuplicate = nodes.find((n) => n.id === nodeId);
+      if (!nodeToDuplicate) return;
+
+      const newNodeId = `node_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+      const newNode: Node = {
+        ...nodeToDuplicate,
+        id: newNodeId,
+        position: {
+          x: nodeToDuplicate.position.x + 50,
+          y: nodeToDuplicate.position.y + 50,
+        },
+        data: {
+          ...nodeToDuplicate.data,
+          onDelete: () => handleDeleteNode(newNodeId),
+        },
+        selected: false,
+      };
+
+      setNodes((nds) => [...nds, newNode]);
+      setContextMenu(null);
+      logToDebugPane("action", "Node duplicated", {
+        originalId: nodeId,
+        newId: newNodeId,
+      });
+    },
+    [nodes, setNodes, handleDeleteNode, logToDebugPane],
+  );
+
+  // Delete edge
+  const handleDeleteEdge = useCallback(
+    (edgeId: string) => {
+      setEdges((eds) => eds.filter((e) => e.id !== edgeId));
+      setContextMenu(null);
+      logToDebugPane("action", "Edge deleted", { edgeId });
+    },
+    [setEdges, logToDebugPane],
+  );
+
+  // Keyboard delete support and close context menu on Escape
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setContextMenu(null);
+        return;
+      }
       if (
         (event.key === "Delete" || event.key === "Backspace") &&
         selectedNode &&
@@ -596,7 +705,7 @@ function WorkflowEditorPage() {
       const newNode: Node = {
         id: nodeId,
         type,
-        position: { x: 250, y: nodes.length * 100 + 50 },
+        position: { x: 255, y: nodes.length * 105 + 45 },
         data: {
           ...data,
           config: {},
@@ -629,18 +738,6 @@ function WorkflowEditorPage() {
             <Menu className="h-5 w-5" />
           </Button>
 
-          {/* Desktop: Toggle left sidebar */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="hidden shrink-0 md:flex"
-            onClick={() => setShowLeftSidebar(!showLeftSidebar)}
-          >
-            <PanelLeftClose
-              className={`h-4 w-4 transition-transform ${showLeftSidebar ? "" : "rotate-180"}`}
-            />
-          </Button>
-
           <Link
             to="/workspaces/$workspaceSlug/workflows"
             params={{ workspaceSlug }}
@@ -654,8 +751,8 @@ function WorkflowEditorPage() {
           <span
             className={`hidden rounded-full px-2 py-0.5 text-xs sm:inline ${
               workflow.isActive
-                ? "bg-green-100 text-green-700"
-                : "bg-gray-100 text-gray-700"
+                ? "bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300"
+                : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
             }`}
           >
             {workflow.isActive ? "Active" : "Inactive"}
@@ -667,6 +764,7 @@ function WorkflowEditorPage() {
               {error}
             </span>
           )}
+          <ThemeToggle />
           <Button
             variant={snapToGrid ? "default" : "outline"}
             size="sm"
@@ -748,43 +846,18 @@ function WorkflowEditorPage() {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-
-          {/* Desktop: Toggle right sidebar */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="hidden md:flex"
-            onClick={() => setShowRightSidebar(!showRightSidebar)}
-          >
-            <PanelRightClose
-              className={`h-4 w-4 transition-transform ${showRightSidebar ? "" : "rotate-180"}`}
-            />
-          </Button>
         </div>
       </header>
 
       {/* Main editor area */}
       <div className="relative flex flex-1 overflow-hidden">
-        {/* Mobile overlay backdrop */}
-        {(showLeftSidebar || showRightSidebar) && (
-          <div
-            className="absolute inset-0 z-20 bg-black/50 md:hidden"
-            onClick={() => {
-              setShowLeftSidebar(false);
-              setShowRightSidebar(false);
-            }}
-          />
-        )}
-
         {/* Left Sidebar - drag nodes to canvas */}
         <div
-          className={`absolute top-0 left-0 z-30 h-full transform transition-transform duration-200 md:relative md:z-auto md:transform-none ${
-            showLeftSidebar
-              ? "translate-x-0"
-              : "-translate-x-full md:hidden md:translate-x-0"
-          } ${!showLeftSidebar && "md:!hidden"}`}
+          className={`h-full shrink-0 overflow-hidden bg-background transition-all duration-300 ease-in-out ${
+            showLeftSidebar ? "w-72 border-r md:w-80" : "w-0 border-r-0"
+          }`}
         >
-          <div className="relative h-full">
+          <div className="relative h-full w-72 md:w-80">
             {/* Mobile close button */}
             <Button
               variant="ghost"
@@ -809,11 +882,36 @@ function WorkflowEditorPage() {
 
         {/* Canvas */}
         <div className="flex flex-1 flex-col">
-          <div className="flex-1" ref={reactFlowWrapper}>
+          <div className="relative flex-1" ref={reactFlowWrapper}>
+            {/* Left sidebar toggle - floating on canvas edge */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute top-2 left-2 z-10 hidden bg-background/80 backdrop-blur-sm md:flex"
+              onClick={() => setShowLeftSidebar(!showLeftSidebar)}
+            >
+              <PanelLeftClose
+                className={`h-4 w-4 transition-transform ${showLeftSidebar ? "" : "rotate-180"}`}
+              />
+            </Button>
+
+            {/* Right sidebar toggle - floating on canvas edge */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute top-2 right-2 z-10 hidden bg-background/80 backdrop-blur-sm md:flex"
+              onClick={() => setShowRightSidebar(!showRightSidebar)}
+            >
+              <PanelRightClose
+                className={`h-4 w-4 transition-transform ${showRightSidebar ? "" : "rotate-180"}`}
+              />
+            </Button>
+
             <ReactFlow
               nodes={nodes}
               edges={edges}
               nodeTypes={nodeTypes}
+              edgeTypes={edgeTypes}
               onNodesChange={onNodesChange}
               onEdgesChange={onEdgesChange}
               onConnect={onConnect}
@@ -822,13 +920,20 @@ function WorkflowEditorPage() {
               onDrop={onDrop}
               onNodeClick={(event, node) => {
                 onNodeClick(event, node);
-                // On mobile, open right sidebar when node is selected
-                if (window.innerWidth < 768) {
-                  setShowRightSidebar(true);
-                }
+                // Open right sidebar when node is selected
+                setShowRightSidebar(true);
+                setShowRunsPanel(false);
               }}
+              onNodeContextMenu={onNodeContextMenu}
+              onEdgeContextMenu={onEdgeContextMenu}
+              onPaneContextMenu={onPaneContextMenu}
+              onPaneClick={closeContextMenu}
               snapToGrid={snapToGrid}
               snapGrid={[15, 15]}
+              connectionLineType={ConnectionLineType.SmoothStep}
+              connectionLineStyle={{ stroke: "#6366f1", strokeWidth: 3 }}
+              defaultEdgeOptions={{ type: "smart" }}
+              deleteKeyCode={["Backspace", "Delete"]}
               fitView
               className="bg-background"
               proOptions={{
@@ -839,6 +944,66 @@ function WorkflowEditorPage() {
               <Background />
               <Controls />
             </ReactFlow>
+
+            {/* Context Menu */}
+            {contextMenu && (
+              <div
+                className="fade-in-0 zoom-in-95 fixed z-50 min-w-[160px] animate-in overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
+                style={{ left: contextMenu.x, top: contextMenu.y }}
+              >
+                {contextMenu.type === "node" && contextMenu.nodeId && (
+                  <>
+                    <button
+                      type="button"
+                      className="relative flex w-full cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
+                      onClick={() => {
+                        setShowRightSidebar(true);
+                        setShowRunsPanel(false);
+                        setContextMenu(null);
+                      }}
+                    >
+                      <Settings className="h-4 w-4" />
+                      Configure
+                    </button>
+                    <button
+                      type="button"
+                      className="relative flex w-full cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
+                      onClick={() => handleDuplicateNode(contextMenu.nodeId!)}
+                    >
+                      <Copy className="h-4 w-4" />
+                      Duplicate
+                    </button>
+                    <div className="-mx-1 my-1 h-px bg-border" />
+                    <button
+                      type="button"
+                      className="relative flex w-full cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-destructive text-sm outline-none transition-colors hover:bg-destructive/10"
+                      onClick={() => {
+                        handleDeleteNode(contextMenu.nodeId!);
+                        setContextMenu(null);
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Delete
+                    </button>
+                  </>
+                )}
+                {contextMenu.type === "edge" && contextMenu.edgeId && (
+                  <button
+                    type="button"
+                    className="relative flex w-full cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-destructive text-sm outline-none transition-colors hover:bg-destructive/10"
+                    onClick={() => handleDeleteEdge(contextMenu.edgeId!)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Delete Connection
+                  </button>
+                )}
+                {contextMenu.type === "pane" && (
+                  <div className="px-2 py-1.5 text-muted-foreground text-sm">
+                    Drag nodes from the sidebar to add them
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Debug Pane at bottom */}
@@ -847,13 +1012,11 @@ function WorkflowEditorPage() {
 
         {/* Right sidebar - Node config, Runs panel, or Workflow info */}
         <div
-          className={`absolute top-0 right-0 z-30 h-full transform transition-transform duration-200 md:relative md:z-auto md:transform-none ${
-            showRightSidebar
-              ? "translate-x-0"
-              : "translate-x-full md:hidden md:translate-x-0"
-          } ${!showRightSidebar && "md:!hidden"}`}
+          className={`h-full shrink-0 overflow-hidden bg-muted/30 transition-all duration-300 ease-in-out ${
+            showRightSidebar ? "w-80 border-l md:w-96" : "w-0 border-l-0"
+          }`}
         >
-          <div className="relative h-full">
+          <div className="relative h-full w-80 md:w-96">
             {/* Mobile close button */}
             <Button
               variant="ghost"
@@ -864,7 +1027,7 @@ function WorkflowEditorPage() {
               <X className="h-4 w-4" />
             </Button>
             {showRunsPanel ? (
-              <aside className="h-full w-80 shrink-0 overflow-hidden border-l bg-muted/30 md:w-96">
+              <aside className="h-full w-full overflow-hidden">
                 <WorkflowRunsPanel
                   runs={workflow.workflowRuns?.nodes || []}
                   totalCount={workflow.workflowRuns?.totalCount || 0}
@@ -886,7 +1049,7 @@ function WorkflowEditorPage() {
                 webhookSecret={workflow.webhookSecret}
               />
             ) : (
-              <aside className="h-full w-80 shrink-0 overflow-y-auto border-l bg-muted/30 p-4 md:w-96">
+              <aside className="h-full w-full overflow-y-auto p-4">
                 <h2 className="font-medium text-muted-foreground text-sm">
                   Workflow Info
                 </h2>

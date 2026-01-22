@@ -90,8 +90,10 @@ export function StepLogItem({ step, index }: StepLogItemProps) {
       <div
         className={cn(
           "rounded-md border p-3 transition-colors",
-          step.status === "failed" && "border-red-200 bg-red-50/50",
-          step.status === "running" && "border-blue-200 bg-blue-50/50",
+          step.status === "failed" &&
+            "border-red-200 bg-red-50/50 dark:border-red-800 dark:bg-red-900/30",
+          step.status === "running" &&
+            "border-blue-200 bg-blue-50/50 dark:border-blue-800 dark:bg-blue-900/30",
         )}
       >
         <button
@@ -143,9 +145,11 @@ export function StepLogItem({ step, index }: StepLogItemProps) {
         {isExpanded && hasDetails && (
           <div className="mt-3 space-y-2 border-t pt-3">
             {step.error && (
-              <div className="rounded bg-red-100 p-2">
-                <span className="text-red-800 text-xs">Error:</span>
-                <pre className="mt-1 whitespace-pre-wrap font-mono text-red-700 text-xs">
+              <div className="rounded bg-red-100 p-2 dark:bg-red-900/50">
+                <span className="text-red-800 text-xs dark:text-red-300">
+                  Error:
+                </span>
+                <pre className="mt-1 whitespace-pre-wrap font-mono text-red-700 text-xs dark:text-red-400">
                   {step.error}
                 </pre>
               </div>
