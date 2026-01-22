@@ -115,6 +115,9 @@ const HttpNodeConfig = ({
 }) => {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
+  // Get config as fallback for inputs (templates store defaults in config)
+  const config = (data.config as Record<string, unknown>) || {};
+
   // Determine HTTP method from operation or inputs
   const method =
     operation === "request"
@@ -179,9 +182,9 @@ const HttpNodeConfig = ({
         <JsonField
           id="body"
           label="Request Body"
-          value={(inputs.body as Record<string, unknown>) || {}}
+          value={(inputs.body as Record<string, unknown>) || (config.body as Record<string, unknown>) || {}}
           onChange={(val) => updateInput("body", val)}
-          placeholder='{"message": "{{trigger.data}}"}'
+          placeholder='{"content": "Hello from Vortex!", "username": "Vortex Bot"}'
         />
       )}
 

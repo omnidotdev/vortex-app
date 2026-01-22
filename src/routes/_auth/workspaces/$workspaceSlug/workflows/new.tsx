@@ -403,13 +403,17 @@ const templates = [
             label: "Discord Message",
             description: "Send a message to Discord",
             iconName: "Discord",
-            preset: "discord",
             pluginId: "builtin:http",
-            operation: "request",
+            operation: "post",
             config: {
-              webhookUrl: "",
-              message: "Hello from Vortex!",
-              username: "Vortex Bot",
+              url: "",
+              body: {
+                content: "Hello from Vortex!",
+                username: "Vortex Bot",
+              },
+              headers: {
+                "Content-Type": "application/json",
+              },
             },
           },
         },
@@ -447,16 +451,24 @@ const templates = [
             label: "Discord Embed",
             description: "Send a rich embed to Discord",
             iconName: "Discord",
-            preset: "discord-embed",
             pluginId: "builtin:http",
-            operation: "request",
+            operation: "post",
             config: {
-              webhookUrl: "",
-              embedTitle: "Notification from Vortex",
-              embedDescription:
-                "This is a rich embed message with formatting support.",
-              embedColor: "blue",
-              embedFooter: "Powered by Vortex",
+              url: "",
+              body: {
+                embeds: [
+                  {
+                    title: "Notification from Vortex",
+                    description:
+                      "This is a rich embed message with formatting support.",
+                    color: 5814783,
+                    footer: { text: "Powered by Vortex" },
+                  },
+                ],
+              },
+              headers: {
+                "Content-Type": "application/json",
+              },
             },
           },
         },
@@ -494,15 +506,23 @@ const templates = [
             label: "Discord Embed",
             description: "Forward webhook payload to Discord",
             iconName: "Discord",
-            preset: "discord-embed",
             pluginId: "builtin:http",
-            operation: "request",
+            operation: "post",
             config: {
-              webhookUrl: "",
-              embedTitle: "Webhook Event",
-              embedDescription: "{{trigger.body}}",
-              embedColor: "blue",
-              embedFooter: "Forwarded by Vortex",
+              url: "",
+              body: {
+                embeds: [
+                  {
+                    title: "Webhook Event",
+                    description: "{{trigger.body}}",
+                    color: 5814783,
+                    footer: { text: "Forwarded by Vortex" },
+                  },
+                ],
+              },
+              headers: {
+                "Content-Type": "application/json",
+              },
             },
           },
         },
@@ -612,7 +632,7 @@ function NewWorkflowPage() {
           type="button"
           onClick={() => setTab("template")}
           className={cn(
-            "flex flex-1 items-center justify-center gap-2 rounded-md px-4 py-2 font-medium text-sm transition-colors",
+            "flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-2 font-medium text-sm transition-colors",
             tab === "template"
               ? "bg-background text-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground",
@@ -625,7 +645,7 @@ function NewWorkflowPage() {
           type="button"
           onClick={() => setTab("scratch")}
           className={cn(
-            "flex flex-1 items-center justify-center gap-2 rounded-md px-4 py-2 font-medium text-sm transition-colors",
+            "flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-2 font-medium text-sm transition-colors",
             tab === "scratch"
               ? "bg-background text-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground",
@@ -650,7 +670,7 @@ function NewWorkflowPage() {
                 onClick={() => handleUseTemplate(template)}
                 disabled={isPending}
                 className={cn(
-                  "flex flex-col rounded-lg border bg-card p-5 text-left transition-all hover:border-primary/50 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50",
+                  "flex cursor-pointer flex-col rounded-lg border bg-card p-5 text-left transition-all hover:border-primary/50 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50",
                   isCreating && "border-primary",
                 )}
               >

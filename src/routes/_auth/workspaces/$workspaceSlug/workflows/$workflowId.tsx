@@ -618,12 +618,12 @@ function WorkflowEditorPage() {
     <div className="flex h-full flex-col">
       {/* Header */}
       <header className="flex h-14 shrink-0 items-center justify-between border-b px-2 md:px-4">
-        <div className="flex items-center gap-2 md:gap-4">
+        <div className="flex min-w-0 items-center gap-2 md:gap-4">
           {/* Mobile: Toggle left sidebar */}
           <Button
             variant="ghost"
             size="sm"
-            className="md:hidden"
+            className="shrink-0 md:hidden"
             onClick={() => setShowLeftSidebar(!showLeftSidebar)}
           >
             <Menu className="h-5 w-5" />
@@ -633,7 +633,7 @@ function WorkflowEditorPage() {
           <Button
             variant="ghost"
             size="sm"
-            className="hidden md:flex"
+            className="hidden shrink-0 md:flex"
             onClick={() => setShowLeftSidebar(!showLeftSidebar)}
           >
             <PanelLeftClose
@@ -644,11 +644,11 @@ function WorkflowEditorPage() {
           <Link
             to="/workspaces/$workspaceSlug/workflows"
             params={{ workspaceSlug }}
-            className="hidden text-muted-foreground hover:text-foreground sm:block"
+            className="hidden shrink-0 text-muted-foreground hover:text-foreground sm:block"
           >
             &larr; Back
           </Link>
-          <h1 className="max-w-32 truncate font-semibold sm:max-w-none">
+          <h1 className="max-w-32 truncate font-semibold md:max-w-48 lg:max-w-none">
             {workflow.name}
           </h1>
           <span
@@ -661,7 +661,7 @@ function WorkflowEditorPage() {
             {workflow.isActive ? "Active" : "Inactive"}
           </span>
         </div>
-        <div className="flex items-center gap-1 md:gap-2">
+        <div className="flex shrink-0 items-center gap-1 md:gap-2">
           {error && (
             <span className="hidden text-red-500 text-sm md:inline">
               {error}
@@ -671,7 +671,7 @@ function WorkflowEditorPage() {
             variant={snapToGrid ? "default" : "outline"}
             size="sm"
             onClick={() => setSnapToGrid(!snapToGrid)}
-            className="hidden md:flex"
+            className="hidden lg:flex"
           >
             <Grid3X3 className="mr-1 h-4 w-4" />
             Snap
@@ -683,11 +683,11 @@ function WorkflowEditorPage() {
             disabled={isExecuting}
           >
             {isExecuting ? (
-              <Loader2 className="h-4 w-4 animate-spin md:mr-1" />
+              <Loader2 className="h-4 w-4 animate-spin lg:mr-1" />
             ) : (
-              <PlayCircle className="h-4 w-4 md:mr-1" />
+              <PlayCircle className="h-4 w-4 lg:mr-1" />
             )}
-            <span className="hidden md:inline">Execute</span>
+            <span className="hidden lg:inline">Execute</span>
           </Button>
           <Button
             variant={showRunsPanel ? "default" : "outline"}
@@ -698,17 +698,17 @@ function WorkflowEditorPage() {
               if (!showRunsPanel) setSelectedNode(null);
             }}
           >
-            <History className="h-4 w-4 md:mr-1" />
-            <span className="hidden md:inline">History</span>
+            <History className="h-4 w-4 lg:mr-1" />
+            <span className="hidden lg:inline">History</span>
           </Button>
 
           <Button size="sm" onClick={handleSave} disabled={isSaving}>
             {isSaving ? (
-              <Loader2 className="h-4 w-4 animate-spin md:mr-1" />
+              <Loader2 className="h-4 w-4 animate-spin lg:mr-1" />
             ) : (
-              <Save className="h-4 w-4 md:mr-1" />
+              <Save className="h-4 w-4 lg:mr-1" />
             )}
-            <span className="hidden md:inline">Save</span>
+            <span className="hidden lg:inline">Save</span>
           </Button>
 
           <AlertDialog>
@@ -717,7 +717,7 @@ function WorkflowEditorPage() {
                 variant="destructive"
                 size="sm"
                 disabled={isDeleting}
-                className="hidden sm:flex"
+                className="hidden md:flex"
               >
                 {isDeleting ? (
                   <Loader2 className="mr-1 h-4 w-4 animate-spin" />
