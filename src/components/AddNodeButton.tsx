@@ -37,10 +37,10 @@ export function AddNodeButton({
     <DialogRoot open={isOpen} onOpenChange={(e) => setIsOpen(e.open)}>
       <DialogTrigger asChild>
         <Button
-          size="lg"
-          className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl"
+          size="icon"
+          className="!h-14 !w-14 !rounded-full shadow-lg hover:shadow-xl"
         >
-          <Plus className="h-6 w-6" />
+          <Plus className="!h-6 !w-6" />
           <span className="sr-only">Add Node</span>
         </Button>
       </DialogTrigger>
