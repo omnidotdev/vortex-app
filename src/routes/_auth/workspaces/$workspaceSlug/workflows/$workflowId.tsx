@@ -10,8 +10,6 @@ import {
   Grid3X3,
   History,
   Loader2,
-  Menu,
-  PanelLeftClose,
   PanelRightClose,
   PlayCircle,
   Save,
@@ -33,6 +31,7 @@ import ReactFlow, {
 import type { Connection, Edge, Node, ReactFlowInstance } from "reactflow";
 import "reactflow/dist/style.css";
 
+import { AddNodeButton } from "@/components/AddNodeButton";
 import DebugPane from "@/components/DebugPane";
 import { SmartEdge } from "@/components/edges/SmartEdge";
 import { ActionNode } from "@/components/nodes/ActionNode";
@@ -61,7 +60,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import WorkflowSidebar from "@/components/WorkflowSidebar";
 import { NodeConfigSidebar } from "@/components/workflow/NodeConfigSidebar";
 import { WorkflowRunsPanel } from "@/components/workflow/WorkflowRunsPanel";
 import {
@@ -159,7 +157,6 @@ function WorkflowEditorPage() {
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [showRunsPanel, setShowRunsPanel] = useState(false);
   const [snapToGrid, setSnapToGrid] = useState(true);
-  const [showLeftSidebar, setShowLeftSidebar] = useState(false);
   const [showRightSidebar, setShowRightSidebar] = useState(false);
   const [contextMenu, setContextMenu] = useState<{
     x: number;
@@ -697,10 +694,7 @@ function WorkflowEditorPage() {
 
   // Handle adding node from sidebar (click, not drag)
   const handleAddNode = useCallback(
-    (
-      type: string,
-      data: { label: string; description: string; iconName?: string },
-    ) => {
+    (type: string, data: Record<string, unknown>) => {
       const nodeId = getNodeId();
       const newNode: Node = {
         id: nodeId,
@@ -714,10 +708,11 @@ function WorkflowEditorPage() {
       };
       setNodes((nds) => [...nds, newNode]);
 
+      const label = (data.label as string) ?? "Unknown";
       logToDebugPane("action", "Node added via sidebar", data, {
         nodeType: type,
-        nodeName: data.label,
-        expectedOutcome: `Added ${data.label} node to workflow`,
+        nodeName: label,
+        expectedOutcome: `Added ${label} node to workflow`,
       });
     },
     [nodes.length, setNodes, logToDebugPane, handleDeleteNode],
@@ -728,35 +723,32 @@ function WorkflowEditorPage() {
       {/* Header */}
       <header className="flex h-14 shrink-0 items-center justify-between border-b px-2 md:px-4">
         <div className="flex min-w-0 items-center gap-2 md:gap-4">
-          {/* Mobile: Toggle left sidebar */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="shrink-0 md:hidden"
-            onClick={() => setShowLeftSidebar(!showLeftSidebar)}
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-
           <Link
             to="/workspaces/$workspaceSlug/workflows"
             params={{ workspaceSlug }}
-            className="hidden shrink-0 text-muted-foreground hover:text-foreground sm:block"
+            className="shrink-0 text-muted-foreground hover:text-foreground"
           >
             &larr; Back
           </Link>
-          <h1 className="max-w-32 truncate font-semibold md:max-w-48 lg:max-w-none">
-            {workflow.name}
-          </h1>
-          <span
-            className={`hidden rounded-full px-2 py-0.5 text-xs sm:inline ${
-              workflow.isActive
-                ? "bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300"
-                : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-            }`}
-          >
-            {workflow.isActive ? "Active" : "Inactive"}
-          </span>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <h1 className="truncate font-semibold">{workflow.name}</h1>
+              <span
+                className={`hidden shrink-0 rounded-full px-2 py-0.5 text-xs sm:inline ${
+                  workflow.isActive
+                    ? "bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300"
+                    : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                }`}
+              >
+                {workflow.isActive ? "Active" : "Inactive"}
+              </span>
+            </div>
+            {workflow.description && (
+              <p className="hidden truncate text-muted-foreground text-sm md:block">
+                {workflow.description}
+              </p>
+            )}
+          </div>
         </div>
         <div className="flex shrink-0 items-center gap-1 md:gap-2">
           {error && (
@@ -851,50 +843,9 @@ function WorkflowEditorPage() {
 
       {/* Main editor area */}
       <div className="relative flex flex-1 overflow-hidden">
-        {/* Left Sidebar - drag nodes to canvas */}
-        <div
-          className={`h-full shrink-0 overflow-hidden bg-background transition-all duration-300 ease-in-out ${
-            showLeftSidebar ? "w-72 border-r md:w-80" : "w-0 border-r-0"
-          }`}
-        >
-          <div className="relative h-full w-72 md:w-80">
-            {/* Mobile close button */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="absolute top-2 right-2 z-10 md:hidden"
-              onClick={() => setShowLeftSidebar(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-            <WorkflowSidebar
-              currentWorkflow={{
-                id: workflowId,
-                name: workflow.name,
-                description: workflow.description || undefined,
-              }}
-              onAddNode={handleAddNode}
-              organizationId={organizationId}
-              workspaceSlug={workspaceSlug}
-            />
-          </div>
-        </div>
-
         {/* Canvas */}
         <div className="flex flex-1 flex-col">
           <div className="relative flex-1" ref={reactFlowWrapper}>
-            {/* Left sidebar toggle - floating on canvas edge */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="absolute top-2 left-2 z-10 hidden bg-background/80 backdrop-blur-sm md:flex"
-              onClick={() => setShowLeftSidebar(!showLeftSidebar)}
-            >
-              <PanelLeftClose
-                className={`h-4 w-4 transition-transform ${showLeftSidebar ? "" : "rotate-180"}`}
-              />
-            </Button>
-
             {/* Right sidebar toggle - floating on canvas edge */}
             <Button
               variant="ghost"
@@ -999,11 +950,19 @@ function WorkflowEditorPage() {
                 )}
                 {contextMenu.type === "pane" && (
                   <div className="px-2 py-1.5 text-muted-foreground text-sm">
-                    Drag nodes from the sidebar to add them
+                    Click the + button to add nodes
                   </div>
                 )}
               </div>
             )}
+
+            {/* Floating Add Node Button */}
+            <div className="absolute right-4 bottom-4 z-10">
+              <AddNodeButton
+                organizationId={organizationId}
+                onAddNode={handleAddNode}
+              />
+            </div>
           </div>
 
           {/* Debug Pane at bottom */}
