@@ -7,6 +7,15 @@
   --font-display: var(--display-family);
   --font-text: var(--text-family);
 
+  /* Glow shadow utilities */
+  --shadow-glow-sm: var(--glow-sm);
+  --shadow-glow: var(--glow-md);
+  --shadow-glow-lg: var(--glow-lg);
+  --shadow-glow-pulse: var(--glow-pulse);
+
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-muted: var(--brand-muted);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -47,39 +56,58 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
+  /* Amethyst brand */
+  --brand: oklch(0.55 0.15 295);
+  --brand-foreground: oklch(0.985 0 0);
+  --brand-muted: oklch(0.94 0.03 295);
+
+  /* Glow effects - amethyst ambient light */
+  --glow-color: oklch(0.6 0.18 295 / 0.15);
+  --glow-color-strong: oklch(0.6 0.18 295 / 0.25);
+  --glow-sm: 0 0 8px var(--glow-color), 0 0 2px var(--glow-color);
+  --glow-md:
+    0 0 12px var(--glow-color), 0 0 4px var(--glow-color-strong), 0 2px 8px
+    oklch(0 0 0 / 0.08);
+  --glow-lg:
+    0 0 20px var(--glow-color), 0 0 8px var(--glow-color-strong), 0 4px 12px
+    oklch(0 0 0 / 0.1);
+  --glow-pulse:
+    0 0 16px oklch(0.6 0.2 295 / 0.3), 0 0 6px oklch(0.6 0.2 295 / 0.2);
+
+  --background: oklch(0.995 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  /* Primary: amethyst with enough saturation to be visible */
+  --primary: oklch(0.52 0.14 295);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.965 0.008 295);
+  --secondary-foreground: oklch(0.25 0 0);
+  --muted: oklch(0.965 0 0);
+  --muted-foreground: oklch(0.45 0 0);
+  --accent: oklch(0.95 0.025 295);
+  --accent-foreground: oklch(0.35 0.1 295);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
+  --border: oklch(0.91 0.008 295);
+  --input: oklch(0.91 0 0);
+  --ring: oklch(0.55 0.12 295);
+  --chart-1: oklch(0.55 0.14 295);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.5rem;
+  --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary: oklch(0.52 0.14 295);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-accent: oklch(0.95 0.02 295);
+  --sidebar-accent-foreground: oklch(0.35 0.1 295);
+  --sidebar-border: oklch(0.91 0.008 295);
+  --sidebar-ring: oklch(0.55 0.12 295);
   --display-family: var(--font-sans);
   --display-weight: 400;
   --text-family: var(--font-sans);
@@ -87,38 +115,57 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  /* Amethyst brand */
+  --brand: oklch(0.7 0.14 295);
+  --brand-foreground: oklch(0.12 0 0);
+  --brand-muted: oklch(0.25 0.04 295);
+
+  /* Glow effects - amethyst ambient light (more visible on dark) */
+  --glow-color: oklch(0.65 0.18 295 / 0.2);
+  --glow-color-strong: oklch(0.65 0.18 295 / 0.35);
+  --glow-sm: 0 0 10px var(--glow-color), 0 0 3px var(--glow-color);
+  --glow-md:
+    0 0 16px var(--glow-color), 0 0 6px var(--glow-color-strong), 0 2px 8px
+    oklch(0 0 0 / 0.3);
+  --glow-lg:
+    0 0 24px var(--glow-color), 0 0 10px var(--glow-color-strong), 0 4px 16px
+    oklch(0 0 0 / 0.4);
+  --glow-pulse:
+    0 0 20px oklch(0.68 0.2 295 / 0.4), 0 0 8px oklch(0.68 0.2 295 / 0.25);
+
+  --background: oklch(0.13 0 0);
+  --foreground: oklch(0.95 0 0);
+  --card: oklch(0.16 0.005 295);
+  --card-foreground: oklch(0.95 0 0);
+  --popover: oklch(0.16 0.005 295);
+  --popover-foreground: oklch(0.95 0 0);
+  /* Primary: lighter amethyst for dark mode */
+  --primary: oklch(0.68 0.14 295);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.22 0.015 295);
+  --secondary-foreground: oklch(0.95 0 0);
+  --muted: oklch(0.22 0 0);
+  --muted-foreground: oklch(0.6 0 0);
+  --accent: oklch(0.25 0.035 295);
+  --accent-foreground: oklch(0.82 0.1 295);
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
+  --border: oklch(0.26 0.015 295);
+  --input: oklch(0.22 0.01 295);
+  --ring: oklch(0.65 0.12 295);
+  --chart-1: oklch(0.68 0.14 295);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --sidebar: oklch(0.14 0.008 295);
+  --sidebar-foreground: oklch(0.95 0 0);
+  --sidebar-primary: oklch(0.68 0.14 295);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.25 0.035 295);
+  --sidebar-accent-foreground: oklch(0.82 0.08 295);
+  --sidebar-border: oklch(0.26 0.015 295);
+  --sidebar-ring: oklch(0.65 0.12 295);
 }
 
 @layer base {
@@ -168,5 +215,114 @@
     border-radius: 10px;
     border: 2px solid var(--muted);
     background-clip: content-box;
+  }
+
+  /* Glow animation for subtle pulsing effect */
+  @keyframes glow-pulse {
+    0%,
+    100% {
+      box-shadow: var(--glow-sm);
+    }
+    50% {
+      box-shadow: var(--glow-pulse);
+    }
+  }
+
+  .animate-glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  /* Static glow utilities */
+  .glow-sm {
+    box-shadow: var(--glow-sm);
+  }
+
+  .glow {
+    box-shadow: var(--glow-md);
+  }
+
+  .glow-lg {
+    box-shadow: var(--glow-lg);
+  }
+
+  /* Gemstone button effect - polished amethyst with inner highlights */
+  .btn-gem {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.58 0.15 295) 0%,
+      oklch(0.48 0.14 295) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 0 oklch(1 0 0 / 0.15),
+      inset 0 -1px 0 0 oklch(0 0 0 / 0.15),
+      0 1px 3px 0 oklch(0.4 0.15 295 / 0.3),
+      0 1px 2px -1px oklch(0 0 0 / 0.1);
+    border: 1px solid oklch(0.45 0.12 295 / 0.4);
+  }
+
+  .btn-gem:hover {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.62 0.16 295) 0%,
+      oklch(0.52 0.15 295) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 0 oklch(1 0 0 / 0.2),
+      inset 0 -1px 0 0 oklch(0 0 0 / 0.1),
+      0 1px 3px 0 oklch(0.4 0.15 295 / 0.3),
+      0 1px 2px -1px oklch(0 0 0 / 0.1),
+      var(--glow-sm);
+  }
+
+  .btn-gem:active {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.48 0.13 295) 0%,
+      oklch(0.44 0.12 295) 100%
+    );
+    box-shadow:
+      inset 0 1px 3px 0 oklch(0 0 0 / 0.2),
+      0 1px 2px 0 oklch(0 0 0 / 0.05);
+  }
+
+  /* Dark mode gemstone - brighter amethyst */
+  .dark .btn-gem {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.72 0.15 295) 0%,
+      oklch(0.62 0.14 295) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 0 oklch(1 0 0 / 0.2),
+      inset 0 -1px 0 0 oklch(0 0 0 / 0.15),
+      0 1px 3px 0 oklch(0.5 0.18 295 / 0.4),
+      0 1px 2px -1px oklch(0 0 0 / 0.2);
+    border: 1px solid oklch(0.55 0.12 295 / 0.3);
+    color: oklch(0.98 0 0);
+  }
+
+  .dark .btn-gem:hover {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.76 0.16 295) 0%,
+      oklch(0.66 0.15 295) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 0 oklch(1 0 0 / 0.25),
+      inset 0 -1px 0 0 oklch(0 0 0 / 0.1),
+      0 1px 3px 0 oklch(0.5 0.18 295 / 0.4),
+      0 1px 2px -1px oklch(0 0 0 / 0.2),
+      var(--glow-sm);
+  }
+
+  .dark .btn-gem:active {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.6 0.13 295) 0%,
+      oklch(0.55 0.12 295) 100%
+    );
+    box-shadow:
+      inset 0 1px 3px 0 oklch(0 0 0 / 0.25),
+      0 1px 2px 0 oklch(0 0 0 / 0.15);
   }
 }

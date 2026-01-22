@@ -9,9 +9,13 @@ import {
   Grid3X3,
   History,
   Loader2,
+  Menu,
+  PanelLeftClose,
+  PanelRightClose,
   PlayCircle,
   Save,
   Trash2,
+  X,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ReactFlow, {
@@ -145,6 +149,8 @@ function WorkflowEditorPage() {
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [showRunsPanel, setShowRunsPanel] = useState(false);
   const [snapToGrid, setSnapToGrid] = useState(true);
+  const [showLeftSidebar, setShowLeftSidebar] = useState(false);
+  const [showRightSidebar, setShowRightSidebar] = useState(false);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
@@ -299,16 +305,20 @@ function WorkflowEditorPage() {
     });
   };
 
-  const handleExecute = async () => {
+  const handleExecute = useCallback(async () => {
     setIsExecuting(true);
     logToDebugPane("trigger", "Workflow execution started", {
       workflowId,
-      nodeCount: nodes.length,
+      nodeCount: nodesRef.current.length,
     });
 
     try {
       // Get action nodes to execute
-      const actionNodes = nodes.filter((node) => node.type === "actionNode");
+      const currentNodes = nodesRef.current;
+      const currentEdges = edgesRef.current;
+      const actionNodes = currentNodes.filter(
+        (node) => node.type === "actionNode",
+      );
 
       if (actionNodes.length === 0) {
         logToDebugPane("action", "No action nodes to execute");
@@ -318,13 +328,13 @@ function WorkflowEditorPage() {
 
       // Prepare workflow definition
       const workflowDefinition = {
-        nodes: nodes.map((node) => ({
+        nodes: currentNodes.map((node) => ({
           id: node.id,
           type: node.type,
           data: node.data,
           position: node.position,
         })),
-        edges: edges.map((edge) => ({
+        edges: currentEdges.map((edge) => ({
           id: edge.id,
           source: edge.source,
           target: edge.target,
@@ -371,7 +381,7 @@ function WorkflowEditorPage() {
     } finally {
       setIsExecuting(false);
     }
-  };
+  }, [workflowId, workflow.name, logToDebugPane]);
 
   // Execute connected actions from a trigger node
   const executeConnectedActions = useCallback(
@@ -444,6 +454,35 @@ function WorkflowEditorPage() {
     [setNodes, setEdges, selectedNode, logToDebugPane],
   );
 
+  // Enrich nodes loaded from database with callbacks
+  // This runs once when the component mounts to add execute handlers to trigger nodes
+  useEffect(() => {
+    setNodes((currentNodes) =>
+      currentNodes.map((node) => {
+        if (node.type === "triggerNode" && !node.data.onExecuteWorkflow) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              onExecuteWorkflow: handleExecute,
+              onDelete: () => handleDeleteNode(node.id),
+            },
+          };
+        }
+        if (!node.data.onDelete) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              onDelete: () => handleDeleteNode(node.id),
+            },
+          };
+        }
+        return node;
+      }),
+    );
+  }, [setNodes, handleExecute, handleDeleteNode]);
+
   // Handle drag over for drop zone
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
@@ -490,6 +529,8 @@ function WorkflowEditorPage() {
             onDelete: () => handleDeleteNode(nodeId),
             executeConnectedActions:
               nodeType === "triggerNode" ? executeConnectedActions : undefined,
+            onExecuteWorkflow:
+              nodeType === "triggerNode" ? handleExecute : undefined,
           },
         };
 
@@ -510,6 +551,7 @@ function WorkflowEditorPage() {
       logToDebugPane,
       handleDeleteNode,
       executeConnectedActions,
+      handleExecute,
     ],
   );
 
@@ -575,18 +617,42 @@ function WorkflowEditorPage() {
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <header className="flex h-14 shrink-0 items-center justify-between border-b px-4">
-        <div className="flex items-center gap-4">
+      <header className="flex h-14 shrink-0 items-center justify-between border-b px-2 md:px-4">
+        <div className="flex items-center gap-2 md:gap-4">
+          {/* Mobile: Toggle left sidebar */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="md:hidden"
+            onClick={() => setShowLeftSidebar(!showLeftSidebar)}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+
+          {/* Desktop: Toggle left sidebar */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="hidden md:flex"
+            onClick={() => setShowLeftSidebar(!showLeftSidebar)}
+          >
+            <PanelLeftClose
+              className={`h-4 w-4 transition-transform ${showLeftSidebar ? "" : "rotate-180"}`}
+            />
+          </Button>
+
           <Link
             to="/workspaces/$workspaceSlug/workflows"
             params={{ workspaceSlug }}
-            className="text-muted-foreground hover:text-foreground"
+            className="hidden text-muted-foreground hover:text-foreground sm:block"
           >
             &larr; Back
           </Link>
-          <h1 className="font-semibold">{workflow.name}</h1>
+          <h1 className="max-w-32 truncate font-semibold sm:max-w-none">
+            {workflow.name}
+          </h1>
           <span
-            className={`rounded-full px-2 py-0.5 text-xs ${
+            className={`hidden rounded-full px-2 py-0.5 text-xs sm:inline ${
               workflow.isActive
                 ? "bg-green-100 text-green-700"
                 : "bg-gray-100 text-gray-700"
@@ -595,12 +661,17 @@ function WorkflowEditorPage() {
             {workflow.isActive ? "Active" : "Inactive"}
           </span>
         </div>
-        <div className="flex items-center gap-2">
-          {error && <span className="text-red-500 text-sm">{error}</span>}
+        <div className="flex items-center gap-1 md:gap-2">
+          {error && (
+            <span className="hidden text-red-500 text-sm md:inline">
+              {error}
+            </span>
+          )}
           <Button
             variant={snapToGrid ? "default" : "outline"}
             size="sm"
             onClick={() => setSnapToGrid(!snapToGrid)}
+            className="hidden md:flex"
           >
             <Grid3X3 className="mr-1 h-4 w-4" />
             Snap
@@ -612,36 +683,42 @@ function WorkflowEditorPage() {
             disabled={isExecuting}
           >
             {isExecuting ? (
-              <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin md:mr-1" />
             ) : (
-              <PlayCircle className="mr-1 h-4 w-4" />
+              <PlayCircle className="h-4 w-4 md:mr-1" />
             )}
-            Execute
+            <span className="hidden md:inline">Execute</span>
           </Button>
           <Button
             variant={showRunsPanel ? "default" : "outline"}
             size="sm"
             onClick={() => {
               setShowRunsPanel(!showRunsPanel);
+              setShowRightSidebar(true);
               if (!showRunsPanel) setSelectedNode(null);
             }}
           >
-            <History className="mr-1 h-4 w-4" />
-            History
+            <History className="h-4 w-4 md:mr-1" />
+            <span className="hidden md:inline">History</span>
           </Button>
 
           <Button size="sm" onClick={handleSave} disabled={isSaving}>
             {isSaving ? (
-              <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin md:mr-1" />
             ) : (
-              <Save className="mr-1 h-4 w-4" />
+              <Save className="h-4 w-4 md:mr-1" />
             )}
-            Save
+            <span className="hidden md:inline">Save</span>
           </Button>
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive" size="sm" disabled={isDeleting}>
+              <Button
+                variant="destructive"
+                size="sm"
+                disabled={isDeleting}
+                className="hidden sm:flex"
+              >
                 {isDeleting ? (
                   <Loader2 className="mr-1 h-4 w-4 animate-spin" />
                 ) : (
@@ -671,22 +748,64 @@ function WorkflowEditorPage() {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+
+          {/* Desktop: Toggle right sidebar */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="hidden md:flex"
+            onClick={() => setShowRightSidebar(!showRightSidebar)}
+          >
+            <PanelRightClose
+              className={`h-4 w-4 transition-transform ${showRightSidebar ? "" : "rotate-180"}`}
+            />
+          </Button>
         </div>
       </header>
 
       {/* Main editor area */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Workflow Sidebar - drag nodes to canvas */}
-        <WorkflowSidebar
-          currentWorkflow={{
-            id: workflowId,
-            name: workflow.name,
-            description: workflow.description || undefined,
-          }}
-          onAddNode={handleAddNode}
-          organizationId={organizationId}
-          workspaceSlug={workspaceSlug}
-        />
+      <div className="relative flex flex-1 overflow-hidden">
+        {/* Mobile overlay backdrop */}
+        {(showLeftSidebar || showRightSidebar) && (
+          <div
+            className="absolute inset-0 z-20 bg-black/50 md:hidden"
+            onClick={() => {
+              setShowLeftSidebar(false);
+              setShowRightSidebar(false);
+            }}
+          />
+        )}
+
+        {/* Left Sidebar - drag nodes to canvas */}
+        <div
+          className={`absolute top-0 left-0 z-30 h-full transform transition-transform duration-200 md:relative md:z-auto md:transform-none ${
+            showLeftSidebar
+              ? "translate-x-0"
+              : "-translate-x-full md:hidden md:translate-x-0"
+          } ${!showLeftSidebar && "md:!hidden"}`}
+        >
+          <div className="relative h-full">
+            {/* Mobile close button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute top-2 right-2 z-10 md:hidden"
+              onClick={() => setShowLeftSidebar(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+            <WorkflowSidebar
+              currentWorkflow={{
+                id: workflowId,
+                name: workflow.name,
+                description: workflow.description || undefined,
+              }}
+              onAddNode={handleAddNode}
+              organizationId={organizationId}
+              workspaceSlug={workspaceSlug}
+            />
+          </div>
+        </div>
 
         {/* Canvas */}
         <div className="flex flex-1 flex-col">
@@ -701,7 +820,13 @@ function WorkflowEditorPage() {
               onInit={setReactFlowInstance}
               onDragOver={onDragOver}
               onDrop={onDrop}
-              onNodeClick={onNodeClick}
+              onNodeClick={(event, node) => {
+                onNodeClick(event, node);
+                // On mobile, open right sidebar when node is selected
+                if (window.innerWidth < 768) {
+                  setShowRightSidebar(true);
+                }
+              }}
               snapToGrid={snapToGrid}
               snapGrid={[15, 15]}
               fitView
@@ -721,62 +846,91 @@ function WorkflowEditorPage() {
         </div>
 
         {/* Right sidebar - Node config, Runs panel, or Workflow info */}
-        {showRunsPanel ? (
-          <aside className="w-100 shrink-0 overflow-hidden border-l bg-muted/30">
-            <WorkflowRunsPanel
-              runs={workflow.workflowRuns?.nodes || []}
-              totalCount={workflow.workflowRuns?.totalCount || 0}
-            />
-          </aside>
-        ) : selectedNode ? (
-          <NodeConfigSidebar
-            selectedNode={selectedNode}
-            onNodeUpdate={handleNodeUpdate}
-            onNodeDelete={handleDeleteNode}
-            onClose={() => setSelectedNode(null)}
-            workflowId={workflowId}
-            webhookSecret={workflow.webhookSecret}
-          />
-        ) : (
-          <aside className="w-100 shrink-0 overflow-y-auto border-l bg-muted/30 p-4">
-            <h2 className="font-medium text-muted-foreground text-sm">
-              Workflow Info
-            </h2>
-            <div className="mt-4 space-y-4 text-sm">
-              <div>
-                <label className="text-muted-foreground">Name</label>
-                <p className="font-medium">{workflow.name}</p>
-              </div>
-              {workflow.description && (
-                <div>
-                  <label className="text-muted-foreground">Description</label>
-                  <p>{workflow.description}</p>
+        <div
+          className={`absolute top-0 right-0 z-30 h-full transform transition-transform duration-200 md:relative md:z-auto md:transform-none ${
+            showRightSidebar
+              ? "translate-x-0"
+              : "translate-x-full md:hidden md:translate-x-0"
+          } ${!showRightSidebar && "md:!hidden"}`}
+        >
+          <div className="relative h-full">
+            {/* Mobile close button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute top-2 right-2 z-10 md:hidden"
+              onClick={() => setShowRightSidebar(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+            {showRunsPanel ? (
+              <aside className="h-full w-80 shrink-0 overflow-hidden border-l bg-muted/30 md:w-96">
+                <WorkflowRunsPanel
+                  runs={workflow.workflowRuns?.nodes || []}
+                  totalCount={workflow.workflowRuns?.totalCount || 0}
+                />
+              </aside>
+            ) : selectedNode ? (
+              <NodeConfigSidebar
+                selectedNode={selectedNode}
+                onNodeUpdate={handleNodeUpdate}
+                onNodeDelete={handleDeleteNode}
+                onClose={() => {
+                  setSelectedNode(null);
+                  // On mobile, close sidebar when deselecting
+                  if (window.innerWidth < 768) {
+                    setShowRightSidebar(false);
+                  }
+                }}
+                workflowId={workflowId}
+                webhookSecret={workflow.webhookSecret}
+              />
+            ) : (
+              <aside className="h-full w-80 shrink-0 overflow-y-auto border-l bg-muted/30 p-4 md:w-96">
+                <h2 className="font-medium text-muted-foreground text-sm">
+                  Workflow Info
+                </h2>
+                <div className="mt-4 space-y-4 text-sm">
+                  <div>
+                    <label className="text-muted-foreground">Name</label>
+                    <p className="font-medium">{workflow.name}</p>
+                  </div>
+                  {workflow.description && (
+                    <div>
+                      <label className="text-muted-foreground">
+                        Description
+                      </label>
+                      <p>{workflow.description}</p>
+                    </div>
+                  )}
+                  <div>
+                    <label className="text-muted-foreground">Trigger</label>
+                    <p className="font-medium">
+                      {nodes.find((n) => n.type === "triggerNode")?.data
+                        ?.triggerType || "manual"}
+                    </p>
+                  </div>
+                  {workflow.cronExpression && (
+                    <div>
+                      <label className="text-muted-foreground">Schedule</label>
+                      <p className="font-mono text-xs">
+                        {workflow.cronExpression}
+                      </p>
+                    </div>
+                  )}
+                  <div>
+                    <label className="text-muted-foreground">Nodes</label>
+                    <p className="font-medium">{nodes.length}</p>
+                  </div>
+                  <div>
+                    <label className="text-muted-foreground">Connections</label>
+                    <p className="font-medium">{edges.length}</p>
+                  </div>
                 </div>
-              )}
-              <div>
-                <label className="text-muted-foreground">Trigger</label>
-                <p className="font-medium">
-                  {nodes.find((n) => n.type === "triggerNode")?.data
-                    ?.triggerType || "manual"}
-                </p>
-              </div>
-              {workflow.cronExpression && (
-                <div>
-                  <label className="text-muted-foreground">Schedule</label>
-                  <p className="font-mono text-xs">{workflow.cronExpression}</p>
-                </div>
-              )}
-              <div>
-                <label className="text-muted-foreground">Nodes</label>
-                <p className="font-medium">{nodes.length}</p>
-              </div>
-              <div>
-                <label className="text-muted-foreground">Connections</label>
-                <p className="font-medium">{edges.length}</p>
-              </div>
-            </div>
-          </aside>
-        )}
+              </aside>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

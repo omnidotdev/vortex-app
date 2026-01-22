@@ -42,7 +42,7 @@ export const NodeConfigSidebar = ({
   // Early return for empty state
   if (!selectedNode) {
     return (
-      <aside className="flex w-100 shrink-0 flex-col border-l bg-background">
+      <aside className="flex h-full w-80 shrink-0 flex-col border-l bg-background md:w-96">
         <EmptyState />
       </aside>
     );
@@ -98,7 +98,7 @@ const NodeConfigSidebarContent = ({
   const ConfigComponent = nodeConfigRegistry[nodeType];
 
   return (
-    <aside className="flex w-100 shrink-0 flex-col border-l bg-background">
+    <aside className="flex h-full w-80 shrink-0 flex-col border-l bg-background md:w-96">
       <NodeConfigHeader
         nodeType={nodeType}
         label={(formData.label as string) || "Untitled"}

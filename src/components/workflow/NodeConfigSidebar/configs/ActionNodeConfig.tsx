@@ -1,3 +1,6 @@
+import { ChevronDown, ChevronRight } from "lucide-react";
+import { useState } from "react";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -9,99 +12,59 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { JsonField } from "../fields/JsonField";
+import { DiscordNodeConfig } from "./DiscordNodeConfig";
+import { SlackNodeConfig } from "./SlackNodeConfig";
 
 import type { NodeConfigProps } from "./types";
 
-// Built-in plugins and their operations
-const BUILTIN_PLUGINS = {
-  "builtin:http": {
-    name: "HTTP Request",
-    operations: {
-      request: {
-        name: "Custom Request",
-        description: "Make any HTTP request",
-        fields: ["url", "method", "headers", "body", "auth"],
-      },
-      get: {
-        name: "GET",
-        description: "Fetch data from an API",
-        fields: ["url", "headers", "auth"],
-      },
-      post: {
-        name: "POST",
-        description: "Send data to an API",
-        fields: ["url", "headers", "body", "auth"],
-      },
-      put: {
-        name: "PUT",
-        description: "Update data via API",
-        fields: ["url", "headers", "body", "auth"],
-      },
-      delete: {
-        name: "DELETE",
-        description: "Delete via API",
-        fields: ["url", "headers", "auth"],
-      },
-    },
-  },
-  "builtin:transform": {
-    name: "Transform",
-    operations: {
-      jsonPath: {
-        name: "JSONPath Extract",
-        description: "Extract data using JSONPath expression",
-        fields: ["data", "path", "first"],
-      },
-      template: {
-        name: "Template",
-        description: "Render template with variables",
-        fields: ["template", "variables"],
-      },
-      map: {
-        name: "Map Data",
-        description: "Map source to target structure",
-        fields: ["data", "mapping"],
-      },
-      pick: {
-        name: "Pick Keys",
-        description: "Pick specific keys from object",
-        fields: ["data", "keys"],
-      },
-      omit: {
-        name: "Omit Keys",
-        description: "Omit specific keys from object",
-        fields: ["data", "keys"],
-      },
-      merge: {
-        name: "Merge Objects",
-        description: "Merge multiple objects",
-        fields: ["objects", "deep"],
-      },
-    },
-  },
-} as const;
+export const ActionNodeConfig = (props: NodeConfigProps) => {
+  const { data, onChange } = props;
+  const preset = data.preset as string | undefined;
 
-type PluginId = keyof typeof BUILTIN_PLUGINS;
-type OperationConfig = {
-  name: string;
-  description: string;
-  fields: readonly string[];
-};
+  // Route to simplified configs for communication presets
+  // These hide HTTP implementation details like n8n does
+  if (preset === "discord" || preset === "discord-embed") {
+    return <DiscordNodeConfig {...props} />;
+  }
+  if (preset === "slack") {
+    return <SlackNodeConfig {...props} />;
+  }
 
-export const ActionNodeConfig = ({ data, onChange }: NodeConfigProps) => {
-  const pluginId = (data.pluginId as PluginId) || "";
+  const pluginId = (data.pluginId as string) || "";
   const operation = (data.operation as string) || "";
   const inputs = (data.inputs as Record<string, unknown>) || {};
-
-  const plugin = pluginId ? BUILTIN_PLUGINS[pluginId] : null;
-  const operationConfig: OperationConfig | undefined = plugin
-    ? (plugin.operations as Record<string, OperationConfig>)[operation]
-    : undefined;
 
   const updateInput = (key: string, value: unknown) => {
     onChange("inputs", { ...inputs, [key]: value });
   };
 
+  // For HTTP Request nodes, show simplified UI
+  if (pluginId === "builtin:http") {
+    return (
+      <HttpNodeConfig
+        data={data}
+        onChange={onChange}
+        operation={operation}
+        inputs={inputs}
+        updateInput={updateInput}
+      />
+    );
+  }
+
+  // For Transform nodes, show simplified UI
+  if (pluginId === "builtin:transform") {
+    return (
+      <TransformNodeConfig
+        data={data}
+        onChange={onChange}
+        operation={operation}
+        inputs={inputs}
+        updateInput={updateInput}
+      />
+    );
+  }
+
+  // Fallback for custom/unknown plugins
   return (
     <>
       <div className="space-y-2">
@@ -116,116 +79,61 @@ export const ActionNodeConfig = ({ data, onChange }: NodeConfigProps) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="pluginId">Plugin</Label>
-        <Select
-          value={pluginId}
-          onValueChange={(value) => {
-            onChange("pluginId", value);
-            onChange("operation", "");
-            onChange("inputs", {});
-          }}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select a plugin" />
-          </SelectTrigger>
-          <SelectContent>
-            {Object.entries(BUILTIN_PLUGINS).map(([id, p]) => (
-              <SelectItem key={id} value={id}>
-                {p.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <Label htmlFor="customOperation">Operation</Label>
+        <Input
+          id="customOperation"
+          value={operation}
+          onChange={(e) => onChange("operation", e.target.value)}
+          placeholder="e.g., sendEmail, notify"
+        />
       </div>
 
-      {plugin && (
-        <div className="space-y-2">
-          <Label htmlFor="operation">Operation</Label>
-          <Select
-            value={operation}
-            onValueChange={(value) => {
-              onChange("operation", value);
-              onChange("inputs", {});
-            }}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select an operation" />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(plugin.operations).map(([opId, op]) => (
-                <SelectItem key={opId} value={opId}>
-                  {op.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {operationConfig && (
-            <p className="text-muted-foreground text-xs">
-              {operationConfig.description}
-            </p>
-          )}
-        </div>
-      )}
-
-      {/* Dynamic fields based on operation */}
-      {pluginId === "builtin:http" && operation && (
-        <HttpInputs
-          operation={operation}
-          inputs={inputs}
-          updateInput={updateInput}
-        />
-      )}
-
-      {pluginId === "builtin:transform" && operation && (
-        <TransformInputs
-          operation={operation}
-          inputs={inputs}
-          updateInput={updateInput}
-        />
-      )}
-
-      {/* Fallback for custom plugins */}
-      {!pluginId && (
-        <>
-          <div className="space-y-2">
-            <Label htmlFor="customOperation">Operation</Label>
-            <Input
-              id="customOperation"
-              value={operation}
-              onChange={(e) => onChange("operation", e.target.value)}
-              placeholder="e.g., sendEmail, notify"
-            />
-          </div>
-
-          <JsonField
-            id="inputs"
-            label="Inputs (JSON)"
-            value={inputs}
-            onChange={(val) => onChange("inputs", val)}
-            placeholder='{"key": "value"}'
-          />
-        </>
-      )}
+      <JsonField
+        id="inputs"
+        label="Input Data"
+        value={inputs}
+        onChange={(val) => onChange("inputs", val)}
+        placeholder='{"key": "value"}'
+      />
     </>
   );
 };
 
-// HTTP-specific input fields
-const HttpInputs = ({
+// Simplified HTTP node config
+const HttpNodeConfig = ({
+  data,
+  onChange,
   operation,
   inputs,
   updateInput,
 }: {
+  data: Record<string, unknown>;
+  onChange: (key: string, value: unknown) => void;
   operation: string;
   inputs: Record<string, unknown>;
   updateInput: (key: string, value: unknown) => void;
 }) => {
-  const showBody = ["request", "post", "put", "patch"].includes(operation);
-  const showMethod = operation === "request";
+  const [showAdvanced, setShowAdvanced] = useState(false);
+
+  // Determine HTTP method from operation or inputs
+  const method =
+    operation === "request"
+      ? (inputs.method as string) || "GET"
+      : operation.toUpperCase();
+  const showBody = ["POST", "PUT", "PATCH"].includes(method);
 
   return (
-    <div className="space-y-4 border-t pt-4">
-      <h4 className="font-medium text-sm">HTTP Settings</h4>
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="description">Description</Label>
+        <Textarea
+          id="description"
+          value={(data.description as string) || ""}
+          onChange={(e) => onChange("description", e.target.value)}
+          placeholder="What does this request do?"
+          rows={2}
+        />
+      </div>
 
       <div className="space-y-2">
         <Label htmlFor="url">URL</Label>
@@ -236,61 +144,152 @@ const HttpInputs = ({
           placeholder="https://api.example.com/endpoint"
         />
         <p className="text-muted-foreground text-xs">
-          Use {"{{variable}}"} for dynamic values
+          Use {"{{variable}}"} for dynamic values from previous steps
         </p>
       </div>
 
-      {showMethod && (
-        <div className="space-y-2">
-          <Label htmlFor="method">Method</Label>
-          <Select
-            value={(inputs.method as string) || "GET"}
-            onValueChange={(value) => updateInput("method", value)}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="GET">GET</SelectItem>
-              <SelectItem value="POST">POST</SelectItem>
-              <SelectItem value="PUT">PUT</SelectItem>
-              <SelectItem value="PATCH">PATCH</SelectItem>
-              <SelectItem value="DELETE">DELETE</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      )}
-
-      <JsonField
-        id="headers"
-        label="Headers (optional)"
-        value={(inputs.headers as Record<string, string>) || {}}
-        onChange={(val) => updateInput("headers", val)}
-        placeholder='{"Authorization": "Bearer {{token}}"}'
-      />
+      <div className="space-y-2">
+        <Label>Method</Label>
+        <Select
+          value={method}
+          onValueChange={(value) => {
+            if (operation === "request") {
+              updateInput("method", value);
+            } else {
+              // Switch to custom request mode
+              onChange("operation", "request");
+              updateInput("method", value);
+            }
+          }}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="GET">GET - Fetch data</SelectItem>
+            <SelectItem value="POST">POST - Send data</SelectItem>
+            <SelectItem value="PUT">PUT - Update/replace</SelectItem>
+            <SelectItem value="PATCH">PATCH - Partial update</SelectItem>
+            <SelectItem value="DELETE">DELETE - Remove</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
       {showBody && (
         <JsonField
           id="body"
-          label="Body"
+          label="Request Body"
           value={(inputs.body as Record<string, unknown>) || {}}
           onChange={(val) => updateInput("body", val)}
           placeholder='{"message": "{{trigger.data}}"}'
         />
       )}
 
+      <button
+        type="button"
+        className="flex w-full items-center gap-2 border-t pt-4 text-muted-foreground text-sm hover:text-foreground"
+        onClick={() => setShowAdvanced(!showAdvanced)}
+      >
+        {showAdvanced ? (
+          <ChevronDown className="h-4 w-4" />
+        ) : (
+          <ChevronRight className="h-4 w-4" />
+        )}
+        Headers & Timeout
+      </button>
+
+      {showAdvanced && (
+        <div className="space-y-4 pt-2">
+          <JsonField
+            id="headers"
+            label="Headers"
+            value={(inputs.headers as Record<string, string>) || {}}
+            onChange={(val) => updateInput("headers", val)}
+            placeholder='{"Authorization": "Bearer {{token}}"}'
+          />
+
+          <div className="space-y-2">
+            <Label htmlFor="timeout">Timeout</Label>
+            <div className="flex items-center gap-2">
+              <Input
+                id="timeout"
+                type="number"
+                value={Math.round(((inputs.timeout as number) || 30000) / 1000)}
+                onChange={(e) =>
+                  updateInput(
+                    "timeout",
+                    (Number.parseInt(e.target.value, 10) || 30) * 1000,
+                  )
+                }
+                min={1}
+                max={120}
+                className="w-24"
+              />
+              <span className="text-muted-foreground text-sm">seconds</span>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+// Simplified Transform node config
+const TransformNodeConfig = ({
+  data,
+  onChange,
+  operation,
+  inputs,
+  updateInput,
+}: {
+  data: Record<string, unknown>;
+  onChange: (key: string, value: unknown) => void;
+  operation: string;
+  inputs: Record<string, unknown>;
+  updateInput: (key: string, value: unknown) => void;
+}) => {
+  return (
+    <>
       <div className="space-y-2">
-        <Label htmlFor="timeout">Timeout (ms)</Label>
-        <Input
-          id="timeout"
-          type="number"
-          value={(inputs.timeout as number) || 30000}
-          onChange={(e) => updateInput("timeout", Number(e.target.value))}
-          min={1000}
-          max={120000}
+        <Label htmlFor="description">Description</Label>
+        <Textarea
+          id="description"
+          value={(data.description as string) || ""}
+          onChange={(e) => onChange("description", e.target.value)}
+          placeholder="What does this transform do?"
+          rows={2}
         />
       </div>
-    </div>
+
+      <div className="space-y-2">
+        <Label>Transform Type</Label>
+        <Select
+          value={operation}
+          onValueChange={(value) => {
+            onChange("operation", value);
+            onChange("inputs", {});
+          }}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select transform" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="jsonPath">Extract Data (JSONPath)</SelectItem>
+            <SelectItem value="template">Build from Template</SelectItem>
+            <SelectItem value="map">Map Fields</SelectItem>
+            <SelectItem value="pick">Keep Fields</SelectItem>
+            <SelectItem value="omit">Remove Fields</SelectItem>
+            <SelectItem value="merge">Merge Objects</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <TransformInputs
+        operation={operation}
+        inputs={inputs}
+        updateInput={updateInput}
+      />
+    </>
   );
 };
 
@@ -304,10 +303,10 @@ const TransformInputs = ({
   inputs: Record<string, unknown>;
   updateInput: (key: string, value: unknown) => void;
 }) => {
-  return (
-    <div className="space-y-4 border-t pt-4">
-      <h4 className="font-medium text-sm">Transform Settings</h4>
+  if (!operation) return null;
 
+  return (
+    <div className="space-y-4">
       {operation === "jsonPath" && (
         <>
           <div className="space-y-2">
