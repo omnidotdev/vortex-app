@@ -51,6 +51,8 @@ export function getRouter() {
     context: { queryClient, session: null, isMaintenanceMode: false },
     defaultPreload: "intent",
     defaultPreloadStaleTime: 0,
+    // Scroll restoration on navigation
+    scrollRestoration: true,
     defaultNotFoundComponent: () => (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
