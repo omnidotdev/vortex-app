@@ -22,10 +22,7 @@ import type { NodeConfigProps } from "./types";
  * integration nodes (Shopify, Stripe, etc.) instead of showing raw
  * operation/inputs fields.
  */
-export const IntegrationNodeConfig = ({
-  data,
-  onChange,
-}: NodeConfigProps) => {
+export const IntegrationNodeConfig = ({ data, onChange }: NodeConfigProps) => {
   const integrationDefinitionId = data.integrationDefinitionId as
     | string
     | undefined;
@@ -193,7 +190,10 @@ export const IntegrationNodeConfig = ({
       {/* Action Selection */}
       <div className="space-y-2">
         <Label>Action</Label>
-        <Select value={operation} onValueChange={(v) => onChange("operation", v)}>
+        <Select
+          value={operation}
+          onValueChange={(v) => onChange("operation", v)}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Select an action..." />
           </SelectTrigger>
@@ -355,7 +355,9 @@ const ActionInputs = ({
             onChange={(e) =>
               updateInput(
                 "limit",
-                e.target.value ? Number.parseInt(e.target.value, 10) : undefined,
+                e.target.value
+                  ? Number.parseInt(e.target.value, 10)
+                  : undefined,
               )
             }
             placeholder="50"
