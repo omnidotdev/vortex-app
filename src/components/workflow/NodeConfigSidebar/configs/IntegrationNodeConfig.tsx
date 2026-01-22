@@ -405,24 +405,29 @@ export const IntegrationNodeConfig = ({ data, onChange }: NodeConfigProps) => {
       // AI
       openai: [
         {
-          value: "chat_completion",
-          label: "Chat Completion",
-          description: "Generate chat response",
+          value: "ask_chatgpt",
+          label: "Ask ChatGPT",
+          description: "Send a prompt to ChatGPT",
         },
         {
-          value: "text_completion",
-          label: "Text Completion",
-          description: "Complete text prompt",
+          value: "ask_assistant",
+          label: "Ask Assistant",
+          description: "Chat with an OpenAI Assistant",
         },
         {
-          value: "create_embedding",
-          label: "Create Embedding",
-          description: "Generate text embedding",
-        },
-        {
-          value: "create_image",
-          label: "Create Image",
+          value: "generate_image",
+          label: "Generate Image",
           description: "Generate image with DALL-E",
+        },
+        {
+          value: "vision_prompt",
+          label: "Vision Prompt",
+          description: "Analyze images with GPT-4 Vision",
+        },
+        {
+          value: "text_to_speech",
+          label: "Text to Speech",
+          description: "Convert text to spoken audio",
         },
         {
           value: "transcribe_audio",
@@ -430,77 +435,87 @@ export const IntegrationNodeConfig = ({ data, onChange }: NodeConfigProps) => {
           description: "Transcribe audio with Whisper",
         },
         {
-          value: "moderate_content",
-          label: "Moderate Content",
-          description: "Check content moderation",
+          value: "translate_audio",
+          label: "Translate Audio",
+          description: "Translate audio to English",
         },
         {
-          value: "custom",
-          label: "Custom Action",
-          description: "Configure a custom API call",
+          value: "extract-structured-data",
+          label: "Extract Structured Data",
+          description: "Extract structured data from text",
+        },
+        {
+          value: "custom_api_call",
+          label: "Custom API Call",
+          description: "Make a custom OpenAI API call",
         },
       ],
       anthropic: [
         {
-          value: "chat_completion",
-          label: "Chat Completion",
-          description: "Generate chat response",
+          value: "ask_claude",
+          label: "Ask Claude",
+          description: "Ask Claude anything you want!",
         },
         {
-          value: "create_message",
-          label: "Create Message",
-          description: "Send message to Claude",
+          value: "extract-structured-data",
+          label: "Extract Structured Data",
+          description: "Extract structured data from text, image or PDF",
         },
         {
-          value: "custom",
-          label: "Custom Action",
-          description: "Configure a custom API call",
+          value: "custom_api_call",
+          label: "Custom API Call",
+          description: "Make a custom Anthropic API call",
         },
       ],
       mistral: [
         {
-          value: "chat_completion",
-          label: "Chat Completion",
-          description: "Generate chat response",
+          value: "create_chat_completion",
+          label: "Ask Mistral",
+          description: "Ask Mistral anything you want!",
         },
         {
-          value: "create_embedding",
-          label: "Create Embedding",
-          description: "Generate text embedding",
+          value: "create_embeddings",
+          label: "Create Embeddings",
+          description: "Generate text embeddings",
         },
         {
-          value: "custom",
-          label: "Custom Action",
-          description: "Configure a custom API call",
+          value: "upload_file",
+          label: "Upload File",
+          description: "Upload a file for fine-tuning or context",
+        },
+        {
+          value: "list_models",
+          label: "List Models",
+          description: "List available Mistral AI models",
+        },
+        {
+          value: "custom_api_call",
+          label: "Custom API Call",
+          description: "Make a custom Mistral API call",
         },
       ],
       groq: [
         {
-          value: "chat_completion",
-          label: "Chat Completion",
-          description: "Generate fast chat response",
+          value: "ask-ai",
+          label: "Ask AI",
+          description: "Ask Groq using fast language models",
         },
         {
-          value: "custom",
-          label: "Custom Action",
-          description: "Configure a custom API call",
+          value: "transcribe-audio",
+          label: "Transcribe Audio",
+          description: "Transcribe audio into text",
+        },
+        {
+          value: "translate-audio",
+          label: "Translate Audio",
+          description: "Translate audio to English",
         },
       ],
       perplexity: [
         {
-          value: "search",
-          label: "Search",
-          description: "Search and summarize results",
-        },
-        {
-          value: "chat_completion",
-          label: "Chat Completion",
-          description: "Generate chat response",
-        },
-        {
-          value: "custom",
-          label: "Custom Action",
-          description: "Configure a custom API call",
+          value: "ask-ai",
+          label: "Ask AI",
+          description: "AI-powered search and completion",
         },
       ],
       replicate: [
@@ -1932,7 +1947,7 @@ const ActionInputs = ({
 
   // AI integrations (OpenAI, Anthropic)
   if (integrationId === "openai" || integrationId === "anthropic") {
-    if (operation === "chat_completion" || operation === "create_message") {
+    if (operation === "ask_chatgpt" || operation === "ask_claude") {
       return (
         <div className="space-y-4">
           <div className="space-y-2">
