@@ -182,7 +182,11 @@ const HttpNodeConfig = ({
         <JsonField
           id="body"
           label="Request Body"
-          value={(inputs.body as Record<string, unknown>) || (config.body as Record<string, unknown>) || {}}
+          value={
+            (inputs.body as Record<string, unknown>) ||
+            (config.body as Record<string, unknown>) ||
+            {}
+          }
           onChange={(val) => updateInput("body", val)}
           placeholder='{"content": "Hello from Vortex!", "username": "Vortex Bot"}'
         />
