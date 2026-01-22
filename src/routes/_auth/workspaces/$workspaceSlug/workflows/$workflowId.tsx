@@ -963,10 +963,12 @@ function WorkflowEditorPage() {
                 onAddNode={handleAddNode}
               />
             </div>
-          </div>
 
-          {/* Debug Pane at bottom */}
-          <DebugPane />
+            {/* Debug Console - floating button + slide-out sheet */}
+            <div className="absolute bottom-4 left-4 z-10">
+              <DebugPane />
+            </div>
+          </div>
         </div>
 
         {/* Right sidebar - Node config, Runs panel, or Workflow info */}

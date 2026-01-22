@@ -1,12 +1,14 @@
 import { queryOptions } from "@tanstack/react-query";
 
 import {
+  useIntegrationDefinitionQuery,
   useIntegrationDefinitionsQuery,
   useIntegrationQuery,
   useIntegrationsQuery,
 } from "@/generated/graphql";
 
 import type {
+  IntegrationDefinitionQueryVariables,
   IntegrationDefinitionsQueryVariables,
   IntegrationQueryVariables,
   IntegrationsQueryVariables,
@@ -30,4 +32,12 @@ export const integrationDefinitionsOptions = (
   queryOptions({
     queryKey: useIntegrationDefinitionsQuery.getKey(variables),
     queryFn: useIntegrationDefinitionsQuery.fetcher(variables),
+  });
+
+export const integrationDefinitionOptions = (
+  variables: IntegrationDefinitionQueryVariables,
+) =>
+  queryOptions({
+    queryKey: useIntegrationDefinitionQuery.getKey(variables),
+    queryFn: useIntegrationDefinitionQuery.fetcher(variables),
   });

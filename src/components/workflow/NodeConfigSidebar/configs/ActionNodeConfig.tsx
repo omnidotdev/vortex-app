@@ -13,6 +13,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { JsonField } from "../fields/JsonField";
 import { DiscordNodeConfig } from "./DiscordNodeConfig";
+import { IntegrationNodeConfig } from "./IntegrationNodeConfig";
 import { SlackNodeConfig } from "./SlackNodeConfig";
 
 import type { NodeConfigProps } from "./types";
@@ -62,6 +63,14 @@ export const ActionNodeConfig = (props: NodeConfigProps) => {
         updateInput={updateInput}
       />
     );
+  }
+
+  // For integration nodes (Shopify, Stripe, etc.), show friendly UI
+  const integrationDefinitionId = data.integrationDefinitionId as
+    | string
+    | undefined;
+  if (integrationDefinitionId) {
+    return <IntegrationNodeConfig {...props} />;
   }
 
   // Fallback for custom/unknown plugins
