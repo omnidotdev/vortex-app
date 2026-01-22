@@ -1,8 +1,4 @@
-import {
-  createFileRoute,
-  notFound,
-  useNavigate,
-} from "@tanstack/react-router";
+import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import {
   Clock,
   FileText,
@@ -19,8 +15,8 @@ import {
   useCreateWorkflowMutation,
   useWorkflowsQuery,
 } from "@/generated/graphql";
-import { cn } from "@/lib/utils";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute(
   "/_auth/workspaces/$workspaceSlug/workflows/new",
@@ -378,6 +374,7 @@ const templates = [
           data: {
             label: "Manual Trigger",
             description: "Start the workflow manually or via API",
+            iconName: "MousePointer",
             triggerType: "manual",
             config: {},
           },
@@ -387,8 +384,9 @@ const templates = [
           type: "actionNode",
           position: { x: 250, y: 200 },
           data: {
-            label: "Send Discord Message",
+            label: "Discord Message",
             description: "Send a message to Discord",
+            iconName: "Discord",
             preset: "discord",
             pluginId: "builtin:http",
             operation: "request",
@@ -420,6 +418,7 @@ const templates = [
           data: {
             label: "Manual Trigger",
             description: "Start the workflow manually",
+            iconName: "MousePointer",
             triggerType: "manual",
             config: {},
           },
@@ -429,8 +428,9 @@ const templates = [
           type: "actionNode",
           position: { x: 250, y: 200 },
           data: {
-            label: "Send Discord Embed",
+            label: "Discord Embed",
             description: "Send a rich embed to Discord",
+            iconName: "Discord",
             preset: "discord-embed",
             pluginId: "builtin:http",
             operation: "request",
@@ -465,6 +465,7 @@ const templates = [
           data: {
             label: "Webhook Trigger",
             description: "Receives incoming webhook requests",
+            iconName: "Webhook",
             triggerType: "webhook",
             config: { method: "POST" },
           },
@@ -474,8 +475,9 @@ const templates = [
           type: "actionNode",
           position: { x: 250, y: 200 },
           data: {
-            label: "Send to Discord",
+            label: "Discord Embed",
             description: "Forward webhook payload to Discord",
+            iconName: "Discord",
             preset: "discord-embed",
             pluginId: "builtin:http",
             operation: "request",
@@ -661,7 +663,10 @@ function NewWorkflowPage() {
 
       {/* Scratch Tab */}
       {tab === "scratch" && (
-        <form onSubmit={handleSubmitScratch} className="mx-auto max-w-xl space-y-6">
+        <form
+          onSubmit={handleSubmitScratch}
+          className="mx-auto max-w-xl space-y-6"
+        >
           <div className="space-y-2">
             <label htmlFor="name" className="font-medium text-sm">
               Workflow Name
