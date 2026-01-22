@@ -49,6 +49,7 @@ const templates = [
           data: {
             label: "Manual Trigger",
             description: "Click Execute to start",
+            iconName: "MousePointer",
             triggerType: "manual",
             config: {},
           },
@@ -58,8 +59,9 @@ const templates = [
           type: "actionNode",
           position: { x: 250, y: 180 },
           data: {
-            label: "Fetch Post",
+            label: "HTTP Request",
             description: "GET from JSONPlaceholder",
+            iconName: "Globe",
             pluginId: "builtin:http",
             operation: "request",
             config: {
@@ -73,8 +75,9 @@ const templates = [
           type: "actionNode",
           position: { x: 250, y: 310 },
           data: {
-            label: "Extract Title",
+            label: "JSONPath Extract",
             description: "Get title from response",
+            iconName: "FileJson",
             pluginId: "builtin:transform",
             operation: "jsonPath",
             config: {
@@ -108,6 +111,7 @@ const templates = [
           data: {
             label: "Webhook Trigger",
             description: "Receives incoming webhook requests",
+            iconName: "Webhook",
             triggerType: "webhook",
             config: { method: "POST" },
           },
@@ -117,8 +121,9 @@ const templates = [
           type: "actionNode",
           position: { x: 250, y: 180 },
           data: {
-            label: "Add Timestamp",
+            label: "Template",
             description: "Format response with timestamp",
+            iconName: "FileJson",
             pluginId: "builtin:transform",
             operation: "template",
             config: {
@@ -135,8 +140,9 @@ const templates = [
           type: "actionNode",
           position: { x: 250, y: 310 },
           data: {
-            label: "Echo to HTTPBin",
+            label: "HTTP Request",
             description: "POST to httpbin.org",
+            iconName: "Globe",
             pluginId: "builtin:http",
             operation: "request",
             config: {
@@ -174,6 +180,7 @@ const templates = [
           data: {
             label: "Webhook Trigger",
             description: "Receives alert payloads",
+            iconName: "Webhook",
             triggerType: "webhook",
             config: {},
           },
@@ -183,8 +190,9 @@ const templates = [
           type: "conditionNode",
           position: { x: 250, y: 180 },
           data: {
-            label: "Check Priority",
+            label: "If Condition",
             description: "Route based on priority",
+            iconName: "GitBranch",
             expression: "trigger.body.priority === 'high'",
             config: { expression: "trigger.body.priority === 'high'" },
           },
@@ -194,8 +202,9 @@ const templates = [
           type: "actionNode",
           position: { x: 100, y: 310 },
           data: {
-            label: "Format High Priority",
+            label: "Template",
             description: "Create urgent message",
+            iconName: "FileJson",
             pluginId: "builtin:transform",
             operation: "template",
             config: {
@@ -212,8 +221,9 @@ const templates = [
           type: "actionNode",
           position: { x: 400, y: 310 },
           data: {
-            label: "Format Low Priority",
+            label: "Template",
             description: "Create standard message",
+            iconName: "FileJson",
             pluginId: "builtin:transform",
             operation: "template",
             config: {
@@ -230,8 +240,9 @@ const templates = [
           type: "actionNode",
           position: { x: 250, y: 440 },
           data: {
-            label: "Send to HTTPBin",
+            label: "HTTP Request",
             description: "POST formatted result",
+            iconName: "Globe",
             pluginId: "builtin:http",
             operation: "request",
             config: {
@@ -281,6 +292,7 @@ const templates = [
           data: {
             label: "Manual Trigger",
             description: "Start the pipeline",
+            iconName: "MousePointer",
             triggerType: "manual",
             config: {},
           },
@@ -290,8 +302,9 @@ const templates = [
           type: "actionNode",
           position: { x: 250, y: 180 },
           data: {
-            label: "Fetch Users",
+            label: "HTTP Request",
             description: "GET users from API",
+            iconName: "Globe",
             pluginId: "builtin:http",
             operation: "request",
             config: {
@@ -305,8 +318,9 @@ const templates = [
           type: "actionNode",
           position: { x: 250, y: 310 },
           data: {
-            label: "Extract Names",
+            label: "JSONPath Extract",
             description: "Get user names",
+            iconName: "FileJson",
             pluginId: "builtin:transform",
             operation: "jsonPath",
             config: {
@@ -320,8 +334,9 @@ const templates = [
           type: "actionNode",
           position: { x: 250, y: 440 },
           data: {
-            label: "Fetch Posts",
+            label: "HTTP Request",
             description: "GET posts from API",
+            iconName: "Globe",
             pluginId: "builtin:http",
             operation: "request",
             config: {
@@ -335,8 +350,9 @@ const templates = [
           type: "actionNode",
           position: { x: 250, y: 570 },
           data: {
-            label: "Combine Results",
+            label: "Template",
             description: "Merge users and posts",
+            iconName: "FileJson",
             pluginId: "builtin:transform",
             operation: "template",
             config: {
