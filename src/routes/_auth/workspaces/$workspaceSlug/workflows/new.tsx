@@ -45,7 +45,7 @@ const templates = [
         {
           id: "trigger_1",
           type: "triggerNode",
-          position: { x: 250, y: 50 },
+          position: { x: 255, y: 45 },
           data: {
             label: "Manual Trigger",
             description: "Click Execute to start",
@@ -57,7 +57,7 @@ const templates = [
         {
           id: "http_1",
           type: "actionNode",
-          position: { x: 250, y: 180 },
+          position: { x: 255, y: 180 },
           data: {
             label: "HTTP Request",
             description: "GET from JSONPlaceholder",
@@ -73,7 +73,7 @@ const templates = [
         {
           id: "transform_1",
           type: "actionNode",
-          position: { x: 250, y: 310 },
+          position: { x: 255, y: 315 },
           data: {
             label: "JSONPath Extract",
             description: "Get title from response",
@@ -89,8 +89,8 @@ const templates = [
         },
       ],
       edges: [
-        { id: "e1", source: "trigger_1", target: "http_1" },
-        { id: "e2", source: "http_1", target: "transform_1" },
+        { id: "e1", source: "trigger_1", target: "http_1", type: "smart" },
+        { id: "e2", source: "http_1", target: "transform_1", type: "smart" },
       ],
       version: "1.0",
     },
@@ -107,7 +107,7 @@ const templates = [
         {
           id: "trigger_1",
           type: "triggerNode",
-          position: { x: 250, y: 50 },
+          position: { x: 255, y: 45 },
           data: {
             label: "Webhook Trigger",
             description: "Receives incoming webhook requests",
@@ -119,7 +119,7 @@ const templates = [
         {
           id: "transform_1",
           type: "actionNode",
-          position: { x: 250, y: 180 },
+          position: { x: 255, y: 180 },
           data: {
             label: "Template",
             description: "Format response with timestamp",
@@ -138,7 +138,7 @@ const templates = [
         {
           id: "http_1",
           type: "actionNode",
-          position: { x: 250, y: 310 },
+          position: { x: 255, y: 315 },
           data: {
             label: "HTTP Request",
             description: "POST to httpbin.org",
@@ -158,8 +158,8 @@ const templates = [
         },
       ],
       edges: [
-        { id: "e1", source: "trigger_1", target: "transform_1" },
-        { id: "e2", source: "transform_1", target: "http_1" },
+        { id: "e1", source: "trigger_1", target: "transform_1", type: "smart" },
+        { id: "e2", source: "transform_1", target: "http_1", type: "smart" },
       ],
       version: "1.0",
     },
@@ -176,7 +176,7 @@ const templates = [
         {
           id: "trigger_1",
           type: "triggerNode",
-          position: { x: 250, y: 50 },
+          position: { x: 255, y: 45 },
           data: {
             label: "Webhook Trigger",
             description: "Receives alert payloads",
@@ -188,7 +188,7 @@ const templates = [
         {
           id: "condition_1",
           type: "conditionNode",
-          position: { x: 250, y: 180 },
+          position: { x: 255, y: 180 },
           data: {
             label: "If Condition",
             description: "Route based on priority",
@@ -200,7 +200,7 @@ const templates = [
         {
           id: "action_high",
           type: "actionNode",
-          position: { x: 100, y: 310 },
+          position: { x: 105, y: 315 },
           data: {
             label: "Template",
             description: "Create urgent message",
@@ -219,7 +219,7 @@ const templates = [
         {
           id: "action_low",
           type: "actionNode",
-          position: { x: 400, y: 310 },
+          position: { x: 405, y: 315 },
           data: {
             label: "Template",
             description: "Create standard message",
@@ -238,7 +238,7 @@ const templates = [
         {
           id: "http_1",
           type: "actionNode",
-          position: { x: 250, y: 440 },
+          position: { x: 255, y: 450 },
           data: {
             label: "HTTP Request",
             description: "POST formatted result",
@@ -255,13 +255,14 @@ const templates = [
         },
       ],
       edges: [
-        { id: "e1", source: "trigger_1", target: "condition_1" },
+        { id: "e1", source: "trigger_1", target: "condition_1", type: "smart" },
         {
           id: "e2",
           source: "condition_1",
           target: "action_high",
           sourceHandle: "true",
           label: "High",
+          type: "smart",
         },
         {
           id: "e3",
@@ -269,9 +270,10 @@ const templates = [
           target: "action_low",
           sourceHandle: "false",
           label: "Normal",
+          type: "smart",
         },
-        { id: "e4", source: "action_high", target: "http_1" },
-        { id: "e5", source: "action_low", target: "http_1" },
+        { id: "e4", source: "action_high", target: "http_1", type: "smart" },
+        { id: "e5", source: "action_low", target: "http_1", type: "smart" },
       ],
       version: "1.0",
     },
@@ -288,7 +290,7 @@ const templates = [
         {
           id: "trigger_1",
           type: "triggerNode",
-          position: { x: 250, y: 50 },
+          position: { x: 255, y: 45 },
           data: {
             label: "Manual Trigger",
             description: "Start the pipeline",
@@ -300,7 +302,7 @@ const templates = [
         {
           id: "http_users",
           type: "actionNode",
-          position: { x: 250, y: 180 },
+          position: { x: 255, y: 180 },
           data: {
             label: "HTTP Request",
             description: "GET users from API",
@@ -316,7 +318,7 @@ const templates = [
         {
           id: "transform_names",
           type: "actionNode",
-          position: { x: 250, y: 310 },
+          position: { x: 255, y: 315 },
           data: {
             label: "JSONPath Extract",
             description: "Get user names",
@@ -332,7 +334,7 @@ const templates = [
         {
           id: "http_posts",
           type: "actionNode",
-          position: { x: 250, y: 440 },
+          position: { x: 255, y: 450 },
           data: {
             label: "HTTP Request",
             description: "GET posts from API",
@@ -348,7 +350,7 @@ const templates = [
         {
           id: "transform_combine",
           type: "actionNode",
-          position: { x: 250, y: 570 },
+          position: { x: 255, y: 585 },
           data: {
             label: "Template",
             description: "Merge users and posts",
@@ -366,10 +368,25 @@ const templates = [
         },
       ],
       edges: [
-        { id: "e1", source: "trigger_1", target: "http_users" },
-        { id: "e2", source: "http_users", target: "transform_names" },
-        { id: "e3", source: "transform_names", target: "http_posts" },
-        { id: "e4", source: "http_posts", target: "transform_combine" },
+        { id: "e1", source: "trigger_1", target: "http_users", type: "smart" },
+        {
+          id: "e2",
+          source: "http_users",
+          target: "transform_names",
+          type: "smart",
+        },
+        {
+          id: "e3",
+          source: "transform_names",
+          target: "http_posts",
+          type: "smart",
+        },
+        {
+          id: "e4",
+          source: "http_posts",
+          target: "transform_combine",
+          type: "smart",
+        },
       ],
       version: "1.0",
     },
@@ -386,7 +403,7 @@ const templates = [
         {
           id: "trigger_1",
           type: "triggerNode",
-          position: { x: 250, y: 50 },
+          position: { x: 255, y: 45 },
           data: {
             label: "Manual Trigger",
             description: "Start the workflow manually or via API",
@@ -398,7 +415,7 @@ const templates = [
         {
           id: "action_send_discord",
           type: "actionNode",
-          position: { x: 250, y: 200 },
+          position: { x: 255, y: 195 },
           data: {
             label: "Discord Message",
             description: "Send a message to Discord",
@@ -418,7 +435,14 @@ const templates = [
           },
         },
       ],
-      edges: [{ id: "e1", source: "trigger_1", target: "action_send_discord" }],
+      edges: [
+        {
+          id: "e1",
+          source: "trigger_1",
+          target: "action_send_discord",
+          type: "smart",
+        },
+      ],
       version: "1.0",
     },
   },
@@ -434,7 +458,7 @@ const templates = [
         {
           id: "trigger_1",
           type: "triggerNode",
-          position: { x: 250, y: 50 },
+          position: { x: 255, y: 45 },
           data: {
             label: "Manual Trigger",
             description: "Start the workflow manually",
@@ -446,7 +470,7 @@ const templates = [
         {
           id: "action_send_embed",
           type: "actionNode",
-          position: { x: 250, y: 200 },
+          position: { x: 255, y: 195 },
           data: {
             label: "Discord Embed",
             description: "Send a rich embed to Discord",
@@ -473,7 +497,14 @@ const templates = [
           },
         },
       ],
-      edges: [{ id: "e1", source: "trigger_1", target: "action_send_embed" }],
+      edges: [
+        {
+          id: "e1",
+          source: "trigger_1",
+          target: "action_send_embed",
+          type: "smart",
+        },
+      ],
       version: "1.0",
     },
   },
@@ -489,7 +520,7 @@ const templates = [
         {
           id: "trigger_1",
           type: "triggerNode",
-          position: { x: 250, y: 50 },
+          position: { x: 255, y: 45 },
           data: {
             label: "Webhook Trigger",
             description: "Receives incoming webhook requests",
@@ -501,7 +532,7 @@ const templates = [
         {
           id: "action_discord",
           type: "actionNode",
-          position: { x: 250, y: 200 },
+          position: { x: 255, y: 195 },
           data: {
             label: "Discord Embed",
             description: "Forward webhook payload to Discord",
@@ -527,7 +558,14 @@ const templates = [
           },
         },
       ],
-      edges: [{ id: "e1", source: "trigger_1", target: "action_discord" }],
+      edges: [
+        {
+          id: "e1",
+          source: "trigger_1",
+          target: "action_discord",
+          type: "smart",
+        },
+      ],
       version: "1.0",
     },
   },
