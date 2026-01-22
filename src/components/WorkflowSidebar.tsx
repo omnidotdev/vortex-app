@@ -36,6 +36,7 @@ import {
   Webhook,
 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { SiDiscord, SiSlack } from "react-icons/si";
 
 import ThemeToggle from "@/components/ThemeToggle";
 import { Badge } from "@/components/ui/badge";
@@ -172,6 +173,36 @@ const officialPlugins = [
     ],
   },
   {
+    type: NodeTypes.ACTION,
+    category: "Communication",
+    items: [
+      {
+        iconName: "Discord",
+        label: "Discord Message",
+        description: "Send a message to Discord",
+        pluginId: "builtin:http",
+        operation: "request",
+        preset: "discord",
+      },
+      {
+        iconName: "Discord",
+        label: "Discord Embed",
+        description: "Send a rich embed to Discord",
+        pluginId: "builtin:http",
+        operation: "request",
+        preset: "discord-embed",
+      },
+      {
+        iconName: "Slack",
+        label: "Slack Message",
+        description: "Send a message to Slack",
+        pluginId: "builtin:http",
+        operation: "request",
+        preset: "slack",
+      },
+    ],
+  },
+  {
     type: NodeTypes.MCP,
     category: "MCP Integrations",
     items: [
@@ -215,6 +246,8 @@ const IconMap: Record<string, React.ElementType> = {
   GitFork,
   Puzzle,
   CheckCircle,
+  Discord: SiDiscord,
+  Slack: SiSlack,
 };
 
 interface WorkflowSidebarProps {
@@ -367,6 +400,31 @@ function WorkflowSidebar({
       if (type === NodeTypes.TRIGGER) {
         return { triggerType: nodeData.data.triggerType || "manual" };
       }
+      // Simplified configs for communication nodes - no HTTP details exposed
+      // These are transformed to HTTP requests at execution time
+      if (nodeData.data.preset === "discord") {
+        return {
+          webhookUrl: "",
+          message: "Hello from Vortex!",
+          username: "Vortex Bot",
+        };
+      }
+      if (nodeData.data.preset === "discord-embed") {
+        return {
+          webhookUrl: "",
+          embedTitle: "Notification",
+          embedDescription: "Your message here",
+          embedColor: "blue",
+          embedFooter: "Powered by Vortex",
+        };
+      }
+      if (nodeData.data.preset === "slack") {
+        return {
+          webhookUrl: "",
+          message: "Hello from Vortex!",
+          messageType: "simple",
+        };
+      }
       return {};
     })();
 
@@ -461,6 +519,7 @@ function WorkflowSidebar({
                     operation?: string;
                     triggerType?: string;
                     comingSoon?: boolean;
+                    preset?: string;
                   };
                   const isComingSoon = itemWithPlugin.comingSoon;
                   return (
@@ -491,6 +550,10 @@ function WorkflowSidebar({
                             // Pass trigger type for trigger nodes
                             ...(itemWithPlugin.triggerType && {
                               triggerType: itemWithPlugin.triggerType,
+                            }),
+                            // Pass preset for pre-configured nodes
+                            ...(itemWithPlugin.preset && {
+                              preset: itemWithPlugin.preset,
                             }),
                           },
                         });

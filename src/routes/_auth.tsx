@@ -7,9 +7,19 @@ import {
   useMatches,
   useParams,
 } from "@tanstack/react-router";
-import { LogOut } from "lucide-react";
+import { LogOut, Menu } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import {
+  SheetBackdrop,
+  SheetCloseTrigger,
+  SheetContent,
+  SheetContext,
+  SheetPositioner,
+  SheetRoot,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import signOut from "@/lib/auth/signOut";
 import SidebarProvider from "@/providers/SidebarProvider";
 import { signOutAndRedirect } from "@/server/functions/auth";
 
@@ -65,8 +75,11 @@ function AuthenticatedLayout() {
 
   return (
     <SidebarProvider>
-      <div className="flex h-dvh w-full">
-        {/* Sidebar - hidden in workflow editor */}
+      <div className="flex h-dvh w-full flex-col lg:flex-row">
+        {/* Mobile header - hidden in workflow editor and on lg+ */}
+        {!isWorkflowEditor && <MobileHeader />}
+
+        {/* Desktop sidebar - hidden in workflow editor */}
         {!isWorkflowEditor && <AppSidebar />}
 
         {/* Main content */}
@@ -75,6 +88,147 @@ function AuthenticatedLayout() {
         </main>
       </div>
     </SidebarProvider>
+  );
+}
+
+/**
+ * Mobile header with sidebar trigger for smaller viewports.
+ */
+function MobileHeader() {
+  const { session, organization } = Route.useRouteContext();
+  const params = useParams({ strict: false });
+  const workspaceSlug = (params as { workspaceSlug?: string }).workspaceSlug;
+
+  return (
+    <header className="flex h-14 shrink-0 items-center justify-between border-b px-4 lg:hidden">
+      <Link to="/workspaces" className="font-bold text-xl hover:opacity-80">
+        Vortex
+      </Link>
+
+      <SheetRoot>
+        <SheetTrigger asChild>
+          <Button variant="ghost" size="icon" aria-label="Open menu">
+            <Menu className="h-5 w-5" />
+          </Button>
+        </SheetTrigger>
+        <SheetBackdrop />
+        <SheetPositioner side="left">
+          <SheetContent side="left" className="w-64 p-0">
+            <SheetContext>
+              {({ setOpen }) => (
+                <div className="flex h-full flex-col">
+                  {/* Header */}
+                  <div className="flex h-14 items-center justify-between border-b px-4">
+                    <Link
+                      to="/workspaces"
+                      className="font-bold text-xl hover:opacity-80"
+                      onClick={() => setOpen(false)}
+                    >
+                      Vortex
+                    </Link>
+                    <SheetCloseTrigger />
+                  </div>
+
+                  {/* Navigation */}
+                  <nav className="flex-1 space-y-1 p-4">
+                    <Link
+                      to="/workspaces"
+                      className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
+                      activeProps={{ className: "bg-accent" }}
+                      onClick={() => setOpen(false)}
+                    >
+                      Workspaces
+                    </Link>
+
+                    {/* Workspace-specific navigation */}
+                    {workspaceSlug && (
+                      <>
+                        <div className="pt-4 pb-2">
+                          <p className="px-3 font-medium text-muted-foreground text-xs uppercase">
+                            {organization?.name || workspaceSlug}
+                          </p>
+                        </div>
+                        <Link
+                          to="/workspaces/$workspaceSlug"
+                          params={{ workspaceSlug }}
+                          className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
+                          activeOptions={{ exact: true }}
+                          activeProps={{ className: "bg-accent" }}
+                          onClick={() => setOpen(false)}
+                        >
+                          Dashboard
+                        </Link>
+                        <Link
+                          to="/workspaces/$workspaceSlug/workflows"
+                          params={{ workspaceSlug }}
+                          className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
+                          activeProps={{ className: "bg-accent" }}
+                          onClick={() => setOpen(false)}
+                        >
+                          Workflows
+                        </Link>
+                        <Link
+                          to="/workspaces/$workspaceSlug/integrations"
+                          params={{ workspaceSlug }}
+                          className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
+                          activeProps={{ className: "bg-accent" }}
+                          onClick={() => setOpen(false)}
+                        >
+                          Integrations
+                        </Link>
+                        <Link
+                          to="/workspaces/$workspaceSlug/settings"
+                          params={{ workspaceSlug }}
+                          className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
+                          activeProps={{ className: "bg-accent" }}
+                          onClick={() => setOpen(false)}
+                        >
+                          Settings
+                        </Link>
+                      </>
+                    )}
+                  </nav>
+
+                  {/* User */}
+                  <div className="border-t p-4">
+                    <div className="flex items-center gap-3">
+                      {session?.user?.image ? (
+                        <img
+                          src={session.user.image}
+                          alt={session.user.name || "User"}
+                          className="h-8 w-8 rounded-full"
+                        />
+                      ) : (
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 font-medium text-sm">
+                          {session?.user?.name?.charAt(0) || "U"}
+                        </div>
+                      )}
+                      <div className="flex-1 truncate">
+                        <p className="truncate font-medium text-sm">
+                          {session?.user?.name || "User"}
+                        </p>
+                        <p className="truncate text-muted-foreground text-xs">
+                          {session?.user?.email}
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="mt-3 w-full justify-start text-muted-foreground"
+                      onClick={signOut}
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Sign out
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </SheetContext>
+          </SheetContent>
+        </SheetPositioner>
+      </SheetRoot>
+    </header>
   );
 }
 
@@ -132,14 +286,6 @@ function AppSidebar() {
                 Workflows
               </Link>
               <Link
-                to="/workspaces/$workspaceSlug/templates"
-                params={{ workspaceSlug }}
-                className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
-                activeProps={{ className: "bg-accent" }}
-              >
-                Templates
-              </Link>
-              <Link
                 to="/workspaces/$workspaceSlug/integrations"
                 params={{ workspaceSlug }}
                 className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
@@ -187,7 +333,7 @@ function AppSidebar() {
             variant="ghost"
             size="sm"
             className="mt-3 w-full justify-start text-muted-foreground"
-            onClick={() => signOutAndRedirect()}
+            onClick={signOut}
           >
             <LogOut className="mr-2 h-4 w-4" />
             Sign out

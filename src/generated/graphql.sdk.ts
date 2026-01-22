@@ -439,6 +439,39 @@ export type CreateWorkflowStepLogPayloadWorkflowStepLogEdgeArgs = {
   orderBy?: Array<WorkflowStepLogOrderBy>;
 };
 
+/** All input for the create `WorkflowTemplate` mutation. */
+export type CreateWorkflowTemplateInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `WorkflowTemplate` to be created by this mutation. */
+  workflowTemplate: WorkflowTemplateInput;
+};
+
+/** The output of our create `WorkflowTemplate` mutation. */
+export type CreateWorkflowTemplatePayload = {
+  __typename?: 'CreateWorkflowTemplatePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `WorkflowTemplate` that was created by this mutation. */
+  workflowTemplate?: Maybe<WorkflowTemplate>;
+  /** An edge for our `WorkflowTemplate`. May be used by Relay 1. */
+  workflowTemplateEdge?: Maybe<WorkflowTemplateEdge>;
+};
+
+
+/** The output of our create `WorkflowTemplate` mutation. */
+export type CreateWorkflowTemplatePayloadWorkflowTemplateEdgeArgs = {
+  orderBy?: Array<WorkflowTemplateOrderBy>;
+};
+
 /** A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’ */
 export type DatetimeFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
@@ -978,6 +1011,50 @@ export type DeleteWorkflowStepLogPayload = {
 /** The output of our delete `WorkflowStepLog` mutation. */
 export type DeleteWorkflowStepLogPayloadWorkflowStepLogEdgeArgs = {
   orderBy?: Array<WorkflowStepLogOrderBy>;
+};
+
+/** All input for the `deleteWorkflowTemplateById` mutation. */
+export type DeleteWorkflowTemplateByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `WorkflowTemplate` to be deleted. */
+  id: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteWorkflowTemplate` mutation. */
+export type DeleteWorkflowTemplateInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  rowId: Scalars['UUID']['input'];
+};
+
+/** The output of our delete `WorkflowTemplate` mutation. */
+export type DeleteWorkflowTemplatePayload = {
+  __typename?: 'DeleteWorkflowTemplatePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedWorkflowTemplateId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `WorkflowTemplate` that was deleted by this mutation. */
+  workflowTemplate?: Maybe<WorkflowTemplate>;
+  /** An edge for our `WorkflowTemplate`. May be used by Relay 1. */
+  workflowTemplateEdge?: Maybe<WorkflowTemplateEdge>;
+};
+
+
+/** The output of our delete `WorkflowTemplate` mutation. */
+export type DeleteWorkflowTemplatePayloadWorkflowTemplateEdgeArgs = {
+  orderBy?: Array<WorkflowTemplateOrderBy>;
 };
 
 export type HavingDatetimeFilter = {
@@ -2298,6 +2375,8 @@ export type Mutation = {
   createWorkflowRun?: Maybe<CreateWorkflowRunPayload>;
   /** Creates a single `WorkflowStepLog`. */
   createWorkflowStepLog?: Maybe<CreateWorkflowStepLogPayload>;
+  /** Creates a single `WorkflowTemplate`. */
+  createWorkflowTemplate?: Maybe<CreateWorkflowTemplatePayload>;
   /** Deletes a single `Integration` using a unique key. */
   deleteIntegration?: Maybe<DeleteIntegrationPayload>;
   /** Deletes a single `Integration` using its globally unique id. */
@@ -2348,6 +2427,10 @@ export type Mutation = {
   deleteWorkflowStepLog?: Maybe<DeleteWorkflowStepLogPayload>;
   /** Deletes a single `WorkflowStepLog` using its globally unique id. */
   deleteWorkflowStepLogById?: Maybe<DeleteWorkflowStepLogPayload>;
+  /** Deletes a single `WorkflowTemplate` using a unique key. */
+  deleteWorkflowTemplate?: Maybe<DeleteWorkflowTemplatePayload>;
+  /** Deletes a single `WorkflowTemplate` using its globally unique id. */
+  deleteWorkflowTemplateById?: Maybe<DeleteWorkflowTemplatePayload>;
   /** Updates a single `Integration` using a unique key and a patch. */
   updateIntegration?: Maybe<UpdateIntegrationPayload>;
   /** Updates a single `Integration` using its globally unique id and a patch. */
@@ -2398,6 +2481,10 @@ export type Mutation = {
   updateWorkflowStepLog?: Maybe<UpdateWorkflowStepLogPayload>;
   /** Updates a single `WorkflowStepLog` using its globally unique id and a patch. */
   updateWorkflowStepLogById?: Maybe<UpdateWorkflowStepLogPayload>;
+  /** Updates a single `WorkflowTemplate` using a unique key and a patch. */
+  updateWorkflowTemplate?: Maybe<UpdateWorkflowTemplatePayload>;
+  /** Updates a single `WorkflowTemplate` using its globally unique id and a patch. */
+  updateWorkflowTemplateById?: Maybe<UpdateWorkflowTemplatePayload>;
 };
 
 
@@ -2464,6 +2551,12 @@ export type MutationCreateWorkflowRunArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateWorkflowStepLogArgs = {
   input: CreateWorkflowStepLogInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateWorkflowTemplateArgs = {
+  input: CreateWorkflowTemplateInput;
 };
 
 
@@ -2618,6 +2711,18 @@ export type MutationDeleteWorkflowStepLogByIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteWorkflowTemplateArgs = {
+  input: DeleteWorkflowTemplateInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteWorkflowTemplateByIdArgs = {
+  input: DeleteWorkflowTemplateByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateIntegrationArgs = {
   input: UpdateIntegrationInput;
 };
@@ -2764,6 +2869,18 @@ export type MutationUpdateWorkflowStepLogArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateWorkflowStepLogByIdArgs = {
   input: UpdateWorkflowStepLogByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateWorkflowTemplateArgs = {
+  input: UpdateWorkflowTemplateInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateWorkflowTemplateByIdArgs = {
+  input: UpdateWorkflowTemplateByIdInput;
 };
 
 /** An object with a globally unique `ID`. */
@@ -3838,6 +3955,12 @@ export type Query = Node & {
   workflowStepLogById?: Maybe<WorkflowStepLog>;
   /** Reads and enables pagination through a set of `WorkflowStepLog`. */
   workflowStepLogs?: Maybe<WorkflowStepLogConnection>;
+  /** Get a single `WorkflowTemplate`. */
+  workflowTemplate?: Maybe<WorkflowTemplate>;
+  /** Reads a single `WorkflowTemplate` using its globally unique `ID`. */
+  workflowTemplateById?: Maybe<WorkflowTemplate>;
+  /** Reads and enables pagination through a set of `WorkflowTemplate`. */
+  workflowTemplates?: Maybe<WorkflowTemplateConnection>;
   /** Reads and enables pagination through a set of `Workflow`. */
   workflows?: Maybe<WorkflowConnection>;
 };
@@ -4127,6 +4250,31 @@ export type QueryWorkflowStepLogsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<WorkflowStepLogOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryWorkflowTemplateArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryWorkflowTemplateByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryWorkflowTemplatesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<WorkflowTemplateCondition>;
+  filter?: InputMaybe<WorkflowTemplateFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<WorkflowTemplateOrderBy>>;
 };
 
 
@@ -4838,6 +4986,53 @@ export type UpdateWorkflowStepLogPayload = {
 /** The output of our update `WorkflowStepLog` mutation. */
 export type UpdateWorkflowStepLogPayloadWorkflowStepLogEdgeArgs = {
   orderBy?: Array<WorkflowStepLogOrderBy>;
+};
+
+/** All input for the `updateWorkflowTemplateById` mutation. */
+export type UpdateWorkflowTemplateByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `WorkflowTemplate` to be updated. */
+  id: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `WorkflowTemplate` being updated. */
+  patch: WorkflowTemplatePatch;
+};
+
+/** All input for the `updateWorkflowTemplate` mutation. */
+export type UpdateWorkflowTemplateInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** An object where the defined keys will be set on the `WorkflowTemplate` being updated. */
+  patch: WorkflowTemplatePatch;
+  rowId: Scalars['UUID']['input'];
+};
+
+/** The output of our update `WorkflowTemplate` mutation. */
+export type UpdateWorkflowTemplatePayload = {
+  __typename?: 'UpdateWorkflowTemplatePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `WorkflowTemplate` that was updated by this mutation. */
+  workflowTemplate?: Maybe<WorkflowTemplate>;
+  /** An edge for our `WorkflowTemplate`. May be used by Relay 1. */
+  workflowTemplateEdge?: Maybe<WorkflowTemplateEdge>;
+};
+
+
+/** The output of our update `WorkflowTemplate` mutation. */
+export type UpdateWorkflowTemplatePayloadWorkflowTemplateEdgeArgs = {
+  orderBy?: Array<WorkflowTemplateOrderBy>;
 };
 
 export type User = Node & {
@@ -6602,6 +6797,321 @@ export type WorkflowStepLogPatch = {
   stepName?: InputMaybe<Scalars['String']['input']>;
   stepType?: InputMaybe<Scalars['String']['input']>;
   workflowRunId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+export type WorkflowTemplate = Node & {
+  __typename?: 'WorkflowTemplate';
+  category: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  definition: Scalars['JSON']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  iconUrl?: Maybe<Scalars['String']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  isFeatured: Scalars['Boolean']['output'];
+  isPublic: Scalars['Boolean']['output'];
+  longDescription?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  requiredIntegrations: Array<Maybe<Scalars['String']['output']>>;
+  rowId: Scalars['UUID']['output'];
+  slug: Scalars['String']['output'];
+  sortOrder?: Maybe<Scalars['String']['output']>;
+  tags: Array<Maybe<Scalars['String']['output']>>;
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+export type WorkflowTemplateAggregates = {
+  __typename?: 'WorkflowTemplateAggregates';
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<WorkflowTemplateDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+/**
+ * A condition to be used against `WorkflowTemplate` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type WorkflowTemplateCondition = {
+  /** Checks for equality with the object’s `category` field. */
+  category?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `iconUrl` field. */
+  iconUrl?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `isFeatured` field. */
+  isFeatured?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `isPublic` field. */
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `longDescription` field. */
+  longDescription?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `slug` field. */
+  slug?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `sortOrder` field. */
+  sortOrder?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** A connection to a list of `WorkflowTemplate` values. */
+export type WorkflowTemplateConnection = {
+  __typename?: 'WorkflowTemplateConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<WorkflowTemplateAggregates>;
+  /** A list of edges which contains the `WorkflowTemplate` and cursor to aid in pagination. */
+  edges: Array<WorkflowTemplateEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<WorkflowTemplateAggregates>>;
+  /** A list of `WorkflowTemplate` objects. */
+  nodes: Array<WorkflowTemplate>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `WorkflowTemplate` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `WorkflowTemplate` values. */
+export type WorkflowTemplateConnectionGroupedAggregatesArgs = {
+  groupBy: Array<WorkflowTemplateGroupBy>;
+  having?: InputMaybe<WorkflowTemplateHavingInput>;
+};
+
+export type WorkflowTemplateDistinctCountAggregates = {
+  __typename?: 'WorkflowTemplateDistinctCountAggregates';
+  /** Distinct count of category across the matching connection */
+  category?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of definition across the matching connection */
+  definition?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of description across the matching connection */
+  description?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of iconUrl across the matching connection */
+  iconUrl?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of isFeatured across the matching connection */
+  isFeatured?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of isPublic across the matching connection */
+  isPublic?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of longDescription across the matching connection */
+  longDescription?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of name across the matching connection */
+  name?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of requiredIntegrations across the matching connection */
+  requiredIntegrations?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of slug across the matching connection */
+  slug?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of sortOrder across the matching connection */
+  sortOrder?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of tags across the matching connection */
+  tags?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of updatedAt across the matching connection */
+  updatedAt?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `WorkflowTemplate` edge in the connection. */
+export type WorkflowTemplateEdge = {
+  __typename?: 'WorkflowTemplateEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `WorkflowTemplate` at the end of the edge. */
+  node: WorkflowTemplate;
+};
+
+/** A filter to be used against `WorkflowTemplate` object types. All fields are combined with a logical ‘and.’ */
+export type WorkflowTemplateFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<WorkflowTemplateFilter>>;
+  /** Filter by the object’s `category` field. */
+  category?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `iconUrl` field. */
+  iconUrl?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `isFeatured` field. */
+  isFeatured?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `isPublic` field. */
+  isPublic?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `longDescription` field. */
+  longDescription?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<WorkflowTemplateFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<WorkflowTemplateFilter>>;
+  /** Filter by the object’s `requiredIntegrations` field. */
+  requiredIntegrations?: InputMaybe<StringListFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `slug` field. */
+  slug?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `sortOrder` field. */
+  sortOrder?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `tags` field. */
+  tags?: InputMaybe<StringListFilter>;
+  /** Filter by the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<DatetimeFilter>;
+};
+
+/** Grouping methods for `WorkflowTemplate` for usage during aggregation. */
+export enum WorkflowTemplateGroupBy {
+  Category = 'CATEGORY',
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  Definition = 'DEFINITION',
+  Description = 'DESCRIPTION',
+  IconUrl = 'ICON_URL',
+  IsFeatured = 'IS_FEATURED',
+  IsPublic = 'IS_PUBLIC',
+  LongDescription = 'LONG_DESCRIPTION',
+  Name = 'NAME',
+  RequiredIntegrations = 'REQUIRED_INTEGRATIONS',
+  Slug = 'SLUG',
+  SortOrder = 'SORT_ORDER',
+  Tags = 'TAGS',
+  UpdatedAt = 'UPDATED_AT',
+  UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
+  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR'
+}
+
+export type WorkflowTemplateHavingAverageInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WorkflowTemplateHavingDistinctCountInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `WorkflowTemplate` aggregates. */
+export type WorkflowTemplateHavingInput = {
+  AND?: InputMaybe<Array<WorkflowTemplateHavingInput>>;
+  OR?: InputMaybe<Array<WorkflowTemplateHavingInput>>;
+  average?: InputMaybe<WorkflowTemplateHavingAverageInput>;
+  distinctCount?: InputMaybe<WorkflowTemplateHavingDistinctCountInput>;
+  max?: InputMaybe<WorkflowTemplateHavingMaxInput>;
+  min?: InputMaybe<WorkflowTemplateHavingMinInput>;
+  stddevPopulation?: InputMaybe<WorkflowTemplateHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<WorkflowTemplateHavingStddevSampleInput>;
+  sum?: InputMaybe<WorkflowTemplateHavingSumInput>;
+  variancePopulation?: InputMaybe<WorkflowTemplateHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<WorkflowTemplateHavingVarianceSampleInput>;
+};
+
+export type WorkflowTemplateHavingMaxInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WorkflowTemplateHavingMinInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WorkflowTemplateHavingStddevPopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WorkflowTemplateHavingStddevSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WorkflowTemplateHavingSumInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WorkflowTemplateHavingVariancePopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WorkflowTemplateHavingVarianceSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** An input for mutations affecting `WorkflowTemplate` */
+export type WorkflowTemplateInput = {
+  category: Scalars['String']['input'];
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  definition: Scalars['JSON']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  iconUrl?: InputMaybe<Scalars['String']['input']>;
+  isFeatured?: InputMaybe<Scalars['Boolean']['input']>;
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
+  longDescription?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  requiredIntegrations?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  slug: Scalars['String']['input'];
+  sortOrder?: InputMaybe<Scalars['String']['input']>;
+  tags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** Methods to use when ordering `WorkflowTemplate`. */
+export enum WorkflowTemplateOrderBy {
+  CategoryAsc = 'CATEGORY_ASC',
+  CategoryDesc = 'CATEGORY_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
+  IconUrlAsc = 'ICON_URL_ASC',
+  IconUrlDesc = 'ICON_URL_DESC',
+  IsFeaturedAsc = 'IS_FEATURED_ASC',
+  IsFeaturedDesc = 'IS_FEATURED_DESC',
+  IsPublicAsc = 'IS_PUBLIC_ASC',
+  IsPublicDesc = 'IS_PUBLIC_DESC',
+  LongDescriptionAsc = 'LONG_DESCRIPTION_ASC',
+  LongDescriptionDesc = 'LONG_DESCRIPTION_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  SlugAsc = 'SLUG_ASC',
+  SlugDesc = 'SLUG_DESC',
+  SortOrderAsc = 'SORT_ORDER_ASC',
+  SortOrderDesc = 'SORT_ORDER_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
+
+/** Represents an update to a `WorkflowTemplate`. Fields that are set will be updated. */
+export type WorkflowTemplatePatch = {
+  category?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  definition?: InputMaybe<Scalars['JSON']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  iconUrl?: InputMaybe<Scalars['String']['input']>;
+  isFeatured?: InputMaybe<Scalars['Boolean']['input']>;
+  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
+  longDescription?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  requiredIntegrations?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+  sortOrder?: InputMaybe<Scalars['String']['input']>;
+  tags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
 /** A filter to be used against many `WorkflowRun` object types. All fields are combined with a logical ‘and.’ */
