@@ -1,3 +1,7 @@
+import { Check, Copy } from "lucide-react";
+import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -20,6 +24,21 @@ export const TriggerNodeConfig = ({
 }: NodeConfigProps) => {
   const triggerType = (data.triggerType as string) || "manual";
   const config = (data.config as Record<string, unknown>) || {};
+  const [copied, setCopied] = useState(false);
+
+  // Build full webhook URL
+  const getWebhookUrl = () => {
+    if (typeof window === "undefined") return "";
+    const baseUrl = window.location.origin;
+    return `${baseUrl}/api/webhooks/workflow/${workflowId}/${webhookSecret}`;
+  };
+
+  const copyToClipboard = async () => {
+    const url = getWebhookUrl();
+    await navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <>
@@ -57,25 +76,36 @@ export const TriggerNodeConfig = ({
           <Label>Webhook URL</Label>
           {workflowId && webhookSecret ? (
             <>
-              <div className="rounded-md bg-muted p-3">
-                <code className="break-all text-xs">
-                  POST /webhooks/workflow/{workflowId}/{webhookSecret}
-                </code>
+              <div className="flex gap-2">
+                <div className="flex-1 rounded-md bg-muted p-3">
+                  <code className="break-all text-xs">{getWebhookUrl()}</code>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={copyToClipboard}
+                  className="shrink-0"
+                >
+                  {copied ? (
+                    <Check className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </Button>
               </div>
               <p className="text-muted-foreground text-xs">
-                Send a POST request to this URL to trigger the workflow. The
-                request body will be passed as trigger data.
+                Send a POST request with JSON body to trigger the workflow.
               </p>
             </>
           ) : (
             <>
               <div className="rounded-md bg-muted p-3">
                 <code className="break-all text-muted-foreground text-xs">
-                  POST /webhooks/workflow/{"{workflowId}"}/{"{secret}"}
+                  Save the workflow first to generate a webhook URL
                 </code>
               </div>
               <p className="text-muted-foreground text-xs">
-                Save the workflow to generate the webhook URL.
+                Click Save to generate your webhook URL.
               </p>
             </>
           )}

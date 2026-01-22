@@ -1,5 +1,7 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 
+import { Button } from "@/components/ui/button";
+
 export const Route = createFileRoute("/_auth/workspaces/$workspaceSlug/")({
   component: WorkspaceDashboard,
 });
@@ -41,20 +43,22 @@ function WorkspaceDashboard() {
       <div className="mt-8">
         <h2 className="font-semibold text-lg">Quick Actions</h2>
         <div className="mt-4 flex gap-4">
-          <Link
-            to="/workspaces/$workspaceSlug/workflows"
-            params={{ workspaceSlug }}
-            className="rounded-md border px-4 py-2 text-sm hover:bg-accent"
-          >
-            View Workflows
-          </Link>
-          <Link
-            to="/workspaces/$workspaceSlug/workflows/new"
-            params={{ workspaceSlug }}
-            className="rounded-md bg-primary px-4 py-2 text-primary-foreground text-sm hover:bg-primary/90"
-          >
-            Create Workflow
-          </Link>
+          <Button asChild variant="outline">
+            <Link
+              to="/workspaces/$workspaceSlug/workflows"
+              params={{ workspaceSlug }}
+            >
+              View Workflows
+            </Link>
+          </Button>
+          <Button asChild>
+            <Link
+              to="/workspaces/$workspaceSlug/workflows/new"
+              params={{ workspaceSlug }}
+            >
+              Create Workflow
+            </Link>
+          </Button>
         </div>
       </div>
     </div>

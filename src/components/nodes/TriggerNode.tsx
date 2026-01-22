@@ -17,6 +17,7 @@ interface TriggerNodeData {
   onDelete?: () => void;
   onClick?: (event: React.MouseEvent) => void;
   executeConnectedActions?: (nodeId: string) => void;
+  onExecuteWorkflow?: () => void;
 }
 
 export const TriggerNode = memo(
@@ -28,6 +29,13 @@ export const TriggerNode = memo(
     const handleTestTrigger = (e: React.MouseEvent) => {
       e.stopPropagation();
 
+      // If we have a real execute handler, use it (executes via Hatchet)
+      if (data.onExecuteWorkflow) {
+        data.onExecuteWorkflow();
+        return;
+      }
+
+      // Fallback to local simulation
       if (
         typeof window !== "undefined" &&
         (

@@ -8,8 +8,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { DurationField } from "../fields/DurationField";
 
 import type { NodeConfigProps } from "./types";
+
+type DurationUnit = "seconds" | "minutes" | "hours" | "days";
 
 export const GateNodeConfig = ({ data, onChange }: NodeConfigProps) => {
   const gateType = (data.gateType as string) || "approval";
@@ -37,7 +40,7 @@ export const GateNodeConfig = ({ data, onChange }: NodeConfigProps) => {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="approval">Human Approval</SelectItem>
+            <SelectItem value="approval">Wait for Approval</SelectItem>
             <SelectItem value="signal">Wait for Signal</SelectItem>
           </SelectContent>
         </Select>
@@ -45,21 +48,25 @@ export const GateNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
       {gateType === "approval" && (
         <div className="space-y-2">
-          <Label htmlFor="approvers">Approvers (comma-separated)</Label>
-          <Input
+          <Label htmlFor="approvers">Who Can Approve</Label>
+          <Textarea
             id="approvers"
-            value={((data.approvers as string[]) || []).join(", ")}
+            value={((data.approvers as string[]) || []).join("\n")}
             onChange={(e) =>
               onChange(
                 "approvers",
                 e.target.value
-                  .split(",")
+                  .split("\n")
                   .map((s) => s.trim())
                   .filter(Boolean),
               )
             }
-            placeholder="user@example.com, admin@example.com"
+            placeholder="user@example.com&#10;admin@example.com"
+            rows={3}
           />
+          <p className="text-muted-foreground text-xs">
+            One email per line. Any of these people can approve.
+          </p>
         </div>
       )}
 
@@ -72,21 +79,22 @@ export const GateNodeConfig = ({ data, onChange }: NodeConfigProps) => {
             onChange={(e) => onChange("signalName", e.target.value)}
             placeholder="continue-workflow"
           />
+          <p className="text-muted-foreground text-xs">
+            Workflow continues when this signal is received via API
+          </p>
         </div>
       )}
 
-      <div className="space-y-2">
-        <Label htmlFor="timeout">Timeout</Label>
-        <Input
-          id="timeout"
-          value={(data.timeout as string) || ""}
-          onChange={(e) => onChange("timeout", e.target.value)}
-          placeholder="1h, 24h, 7d"
-        />
-      </div>
+      <DurationField
+        label="Wait Timeout"
+        duration={(data.timeoutDuration as number) || 24}
+        unit={(data.timeoutUnit as DurationUnit) || "hours"}
+        onDurationChange={(val) => onChange("timeoutDuration", val)}
+        onUnitChange={(val) => onChange("timeoutUnit", val)}
+      />
 
       <div className="space-y-2">
-        <Label>Timeout Action</Label>
+        <Label>If Timeout Reached</Label>
         <Select
           value={(data.timeoutAction as string) || "reject"}
           onValueChange={(value) => onChange("timeoutAction", value)}
@@ -95,9 +103,9 @@ export const GateNodeConfig = ({ data, onChange }: NodeConfigProps) => {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="approve">Auto-approve</SelectItem>
-            <SelectItem value="reject">Auto-reject</SelectItem>
-            <SelectItem value="continue">Continue anyway</SelectItem>
+            <SelectItem value="approve">Automatically Approve</SelectItem>
+            <SelectItem value="reject">Automatically Reject</SelectItem>
+            <SelectItem value="fail">Fail the Workflow</SelectItem>
           </SelectContent>
         </Select>
       </div>
