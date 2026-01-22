@@ -14,6 +14,7 @@ const app = {
   links: {
     docs: "https://docs.omni.dev/core/vortex",
     github: "https://github.com/omnidotdev/vortex",
+    feedback: "https://backfeed.omni.dev/workspaces/omni/projects/vortex",
   },
 };
 

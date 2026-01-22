@@ -23,8 +23,6 @@ import type { ReactNode } from "react";
 import type { AuthSession } from "@/lib/auth/getAuth";
 import type { Theme } from "@/providers/ThemeProvider";
 
-type Session = Awaited<ReturnType<typeof fetchSession>>["session"];
-
 /**
  * Log errors in a structured format for debugging and future Sentry integration.
  *
@@ -54,6 +52,13 @@ export const Route = createRootRouteWithContext<{
   beforeLoad: async () => {
     const { session } = await fetchSession();
     const { isMaintenanceMode } = await fetchMaintenanceMode();
+
+    // Set access token for GraphQL client during SSR
+    // Note: This only works server-side. Client-side token is set in RootComponent useEffect
+    if (session?.accessToken) {
+      setAccessToken(session.accessToken);
+    }
+
     return { session, isMaintenanceMode };
   },
   loader: () => getTheme(),
@@ -120,10 +125,13 @@ function RootComponent() {
   const theme = Route.useLoaderData();
   const { isMaintenanceMode, session } = Route.useRouteContext();
 
-  // Sync access token to GraphQL client for client-side requests
-  if (session?.accessToken) {
-    setAccessToken(session.accessToken);
-  }
+  // Set access token on client-side after hydration
+  // The beforeLoad sets it during SSR, but the client needs it too
+  useEffect(() => {
+    if (session?.accessToken) {
+      setAccessToken(session.accessToken);
+    }
+  }, [session?.accessToken]);
 
   if (isMaintenanceMode) {
     return (

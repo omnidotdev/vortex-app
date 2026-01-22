@@ -11,7 +11,8 @@ import {
   Phone,
   Sheet,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { z } from "zod";
 
 import { ConnectIntegrationDialog } from "@/components/integrations/ConnectIntegrationDialog";
 import { Badge } from "@/components/ui/badge";
@@ -27,9 +28,15 @@ type IntegrationDefinition = NonNullable<
   IntegrationDefinitionsQuery["integrationDefinitions"]
 >["nodes"][number];
 
+const searchSchema = z.object({
+  connect: z.string().optional(),
+  returnTo: z.string().optional(),
+});
+
 export const Route = createFileRoute(
   "/_auth/workspaces/$workspaceSlug/integrations/",
 )({
+  validateSearch: searchSchema,
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
 
@@ -67,6 +74,7 @@ const categoryLabels: Record<string, string> = {
 
 function IntegrationsPage() {
   const { workspaceSlug } = Route.useParams();
+  const { connect, returnTo } = Route.useSearch();
   const { organizationId } = Route.useLoaderData();
   const navigate = useNavigate();
   const [connectingDefinition, setConnectingDefinition] =
@@ -84,9 +92,40 @@ function IntegrationsPage() {
     select: (data) => data?.integrationDefinitions?.nodes ?? [],
   });
 
+  const initializedRef = useRef(false);
+
+  // Sync dialog state from URL param on initial load only
+  useEffect(() => {
+    if (initializedRef.current) return;
+    if (connect && definitions.length > 0) {
+      const definition = definitions.find(
+        (d) => d.id === connect || d.rowId === connect,
+      );
+      if (definition) {
+        setConnectingDefinition(definition);
+      }
+      initializedRef.current = true;
+    }
+  }, [connect, definitions]);
+
+  const openConnectDialog = (definition: IntegrationDefinition) => {
+    setConnectingDefinition(definition);
+    // Use rowId for URL param (e.g., "twilio")
+    window.history.replaceState(null, "", `?connect=${definition.rowId}`);
+  };
+
+  const closeConnectDialog = () => {
+    setConnectingDefinition(null);
+    window.history.replaceState(null, "", window.location.pathname);
+  };
+
   // Check if an integration is connected
   const isConnected = (definitionId: string) =>
     integrations.some((i) => i.type === definitionId);
+
+  // Get all integrations of a specific type (for multi-account support)
+  const getIntegrationsOfType = (definitionId: string) =>
+    integrations.filter((i) => i.type === definitionId);
 
   const handleConfigure = (integration: { rowId: string }) => {
     navigate({
@@ -124,14 +163,17 @@ function IntegrationsPage() {
           {definitions
             .filter((d) => d.isFeatured)
             .map((definition) => {
-              const connected = isConnected(definition.id);
+              const connected = isConnected(definition.rowId);
+              const connectedCount = getIntegrationsOfType(
+                definition.rowId,
+              ).length;
               const CategoryIcon =
                 categoryIcons[definition.category || "custom"] || Cable;
 
               return (
                 <div
-                  key={definition.id}
-                  className="relative rounded-lg border bg-card p-4"
+                  key={definition.rowId}
+                  className="relative flex flex-col rounded-lg border bg-card p-4"
                 >
                   <div className="flex items-start gap-3">
                     {definition.iconUrl ? (
@@ -149,7 +191,14 @@ function IntegrationsPage() {
                       <div className="flex items-center gap-2">
                         <h3 className="font-medium">{definition.name}</h3>
                         {connected && (
-                          <Check className="h-4 w-4 text-green-500" />
+                          <span className="flex items-center gap-1">
+                            <Check className="h-4 w-4 text-green-500" />
+                            {connectedCount > 1 && (
+                              <span className="rounded-full bg-green-100 px-1.5 text-[10px] text-green-700 dark:bg-green-900 dark:text-green-300">
+                                {connectedCount}
+                              </span>
+                            )}
+                          </span>
                         )}
                       </div>
                       <Badge variant="secondary" className="mt-1 text-[10px]">
@@ -157,29 +206,39 @@ function IntegrationsPage() {
                       </Badge>
                     </div>
                   </div>
-                  <p className="mt-3 line-clamp-2 text-muted-foreground text-sm">
+                  <p className="mt-3 line-clamp-2 flex-1 text-muted-foreground text-sm">
                     {definition.description}
                   </p>
                   <div className="mt-4">
                     {connected ? (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full"
-                        onClick={() => {
-                          const integration = integrations.find(
-                            (i) => i.type === definition.id,
-                          );
-                          if (integration) handleConfigure(integration);
-                        }}
-                      >
-                        Configure
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1"
+                          onClick={() => {
+                            const integration = integrations.find(
+                              (i) => i.type === definition.rowId,
+                            );
+                            if (integration) handleConfigure(integration);
+                          }}
+                        >
+                          Configure
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => openConnectDialog(definition)}
+                          title="Add another account"
+                        >
+                          +
+                        </Button>
+                      </div>
                     ) : (
                       <Button
                         size="sm"
                         className="w-full"
-                        onClick={() => setConnectingDefinition(definition)}
+                        onClick={() => openConnectDialog(definition)}
                       >
                         Connect
                       </Button>
@@ -270,18 +329,18 @@ function IntegrationsPage() {
                 </div>
                 <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
                   {defs.map((def) => {
-                    const connected = isConnected(def.id);
+                    const connected = isConnected(def.rowId);
                     return (
                       <button
-                        key={def.id}
+                        key={def.rowId}
                         type="button"
                         className="flex cursor-pointer items-center gap-3 rounded-lg border p-3 text-left transition-colors hover:bg-accent"
                         onClick={() =>
                           connected
                             ? handleConfigure(
-                                integrations.find((i) => i.type === def.id)!,
+                                integrations.find((i) => i.type === def.rowId)!,
                               )
-                            : setConnectingDefinition(def)
+                            : openConnectDialog(def)
                         }
                       >
                         {def.iconUrl ? (
@@ -316,7 +375,13 @@ function IntegrationsPage() {
         <ConnectIntegrationDialog
           definition={connectingDefinition}
           organizationId={organizationId}
-          onClose={() => setConnectingDefinition(null)}
+          existingIntegrations={getIntegrationsOfType(connectingDefinition.id)}
+          returnTo={returnTo}
+          onClose={closeConnectDialog}
+          onConfigureExisting={(integration) => {
+            closeConnectDialog();
+            handleConfigure(integration);
+          }}
         />
       )}
     </div>

@@ -266,7 +266,7 @@ export function NodePicker({ organizationId, onSelectNode }: NodePickerProps) {
         return false;
       }
       // Connected filter
-      if (showOnlyConnected && !connectedIds.has(def.id)) {
+      if (showOnlyConnected && !connectedIds.has(def.rowId)) {
         return false;
       }
       // Search filter
@@ -274,7 +274,7 @@ export function NodePicker({ organizationId, onSelectNode }: NodePickerProps) {
         return (
           def.name.toLowerCase().includes(query) ||
           def.description?.toLowerCase().includes(query) ||
-          def.id.toLowerCase().includes(query)
+          def.rowId.toLowerCase().includes(query)
         );
       }
       return true;
@@ -308,9 +308,10 @@ export function NodePicker({ organizationId, onSelectNode }: NodePickerProps) {
   };
 
   const handleSelectIntegration = (def: (typeof definitions)[0]) => {
-    const isConnected = connectedIds.has(def.id);
+    // Use rowId (e.g., "twilio") for comparisons, not the Relay Node ID
+    const isConnected = connectedIds.has(def.rowId);
     const connectedIntegration = connectedIntegrations.find(
-      (i) => i.type === def.id,
+      (i) => i.type === def.rowId,
     );
 
     onSelectNode({
@@ -319,8 +320,8 @@ export function NodePicker({ organizationId, onSelectNode }: NodePickerProps) {
         label: def.name,
         description: def.description ?? `${def.name} integration`,
         iconUrl: def.iconUrl,
-        integrationId: isConnected ? def.id : undefined,
-        integrationDefinitionId: def.id,
+        integrationId: isConnected ? def.rowId : undefined,
+        integrationDefinitionId: def.rowId,
         connectedInstanceId: connectedIntegration?.rowId,
         requiresConnection: !isConnected,
       },
@@ -470,10 +471,10 @@ export function NodePicker({ organizationId, onSelectNode }: NodePickerProps) {
               </h3>
               <div className="grid gap-2">
                 {filteredNodes.integrations.map((def) => {
-                  const isConnected = connectedIds.has(def.id);
+                  const isConnected = connectedIds.has(def.rowId);
                   return (
                     <button
-                      key={def.id}
+                      key={def.rowId}
                       type="button"
                       onClick={() => handleSelectIntegration(def)}
                       className="flex cursor-pointer items-start gap-3 overflow-hidden rounded-lg border bg-card p-3 text-left transition-colors hover:border-primary/50 hover:bg-accent"

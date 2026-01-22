@@ -57,6 +57,11 @@ function actionNodeToStep(node: Node): ActionStep {
   const inputs = (data.inputs as Record<string, unknown>) || {};
   const mergedInputs = { ...config, ...inputs };
 
+  // Use integrationId if set, otherwise fall back to integrationDefinitionId
+  // integrationDefinitionId is the integration type (e.g., "twilio")
+  // integrationId may be set to the same value when a connected instance exists
+  const integrationId = data.integrationId || data.integrationDefinitionId;
+
   return {
     id: node.id,
     type: "action",
@@ -64,7 +69,7 @@ function actionNodeToStep(node: Node): ActionStep {
     description: data.description,
     position: node.position,
     action: {
-      integrationId: data.integrationId,
+      integrationId,
       pluginId: data.pluginId,
       operation: data.operation || data.label || "execute",
       inputs: mergedInputs,
