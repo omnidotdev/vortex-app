@@ -17,24 +17,37 @@ import { NodePicker } from "./NodePicker";
 interface AddNodeButtonProps {
   organizationId: string;
   onAddNode: (type: string, data: Record<string, unknown>) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function AddNodeButton({
   organizationId,
   onAddNode,
+  open: controlledOpen,
+  onOpenChange,
 }: AddNodeButtonProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const isOpen = isControlled ? controlledOpen : uncontrolledOpen;
+
+  const handleOpenChange = (open: boolean) => {
+    if (!isControlled) {
+      setUncontrolledOpen(open);
+    }
+    onOpenChange?.(open);
+  };
 
   const handleSelectNode = (nodeData: {
     type: string;
     data: Record<string, unknown>;
   }) => {
     onAddNode(nodeData.type, nodeData.data);
-    setIsOpen(false);
+    handleOpenChange(false);
   };
 
   return (
-    <DialogRoot open={isOpen} onOpenChange={(e) => setIsOpen(e.open)}>
+    <DialogRoot open={isOpen} onOpenChange={(e) => handleOpenChange(e.open)}>
       <DialogTrigger asChild>
         <Button
           size="icon"

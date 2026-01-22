@@ -7,7 +7,8 @@ import {
   useMatches,
   useParams,
 } from "@tanstack/react-router";
-import { LogOut, Menu } from "lucide-react";
+import { BookOpen, LogOut, Menu, MessageSquare } from "lucide-react";
+import { RiDiscordLine as DiscordIcon } from "react-icons/ri";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +21,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import signOut from "@/lib/auth/signOut";
+import app from "@/lib/config/app.config";
 import SidebarProvider from "@/providers/SidebarProvider";
 import { signOutAndRedirect } from "@/server/functions/auth";
 
@@ -189,6 +191,37 @@ function MobileHeader() {
                     )}
                   </nav>
 
+                  {/* Omni Links */}
+                  <div className="space-y-1 border-t p-4">
+                    <a
+                      href={app.links.docs}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent hover:text-foreground"
+                    >
+                      <BookOpen className="h-4 w-4" />
+                      Docs
+                    </a>
+                    <a
+                      href={app.links.feedback}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent hover:text-foreground"
+                    >
+                      <MessageSquare className="h-4 w-4" />
+                      Provide Feedback
+                    </a>
+                    <a
+                      href={app.organization.discord}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent hover:text-foreground"
+                    >
+                      <DiscordIcon className="h-4 w-4" />
+                      Join Omni Discord
+                    </a>
+                  </div>
+
                   {/* User */}
                   <div className="border-t p-4">
                     <div className="flex items-center gap-3">
@@ -305,6 +338,37 @@ function AppSidebar() {
             </>
           )}
         </nav>
+
+        {/* Omni Links */}
+        <div className="space-y-1 border-t p-4">
+          <a
+            href={app.links.docs}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent hover:text-foreground"
+          >
+            <BookOpen className="h-4 w-4" />
+            Docs
+          </a>
+          <a
+            href={app.links.feedback}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent hover:text-foreground"
+          >
+            <MessageSquare className="h-4 w-4" />
+            Provide Feedback
+          </a>
+          <a
+            href={app.organization.discord}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent hover:text-foreground"
+          >
+            <DiscordIcon className="h-4 w-4" />
+            Join Omni Discord
+          </a>
+        </div>
 
         {/* User */}
         <div className="border-t p-4">

@@ -5,7 +5,7 @@ import {
   notFound,
   useNavigate,
 } from "@tanstack/react-router";
-import { ArrowLeft, Loader2, Trash2 } from "lucide-react";
+import { ArrowLeft, Cable, ExternalLink, Loader2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -29,6 +29,7 @@ import {
 } from "@/generated/graphql";
 import useForm from "@/lib/hooks/useForm";
 import {
+  integrationDefinitionsOptions,
   integrationOptions,
   integrationsOptions,
 } from "@/lib/options/integrations.options";
@@ -59,6 +60,13 @@ function IntegrationDetailPage() {
     ...integrationOptions({ id: integrationId }),
     select: (data) => data?.integration,
   });
+
+  // Fetch all definitions and find the matching one by type
+  const { data: definitions } = useSuspenseQuery({
+    ...integrationDefinitionsOptions({}),
+    select: (data) => data?.integrationDefinitions?.nodes ?? [],
+  });
+  const definition = definitions.find((d) => d.id === integration?.type);
 
   const { mutateAsync: updateIntegration, isPending: isUpdating } =
     useUpdateIntegrationMutation({
@@ -149,6 +157,9 @@ function IntegrationDetailPage() {
     );
   }
 
+  // Type-safe access to docsUrl
+  const docsUrl = (definition as { docsUrl?: string } | null)?.docsUrl;
+
   return (
     <div className="p-8">
       {/* Header */}
@@ -161,16 +172,22 @@ function IntegrationDetailPage() {
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
-            <span className="font-bold text-lg text-muted-foreground">
-              {integration.name.charAt(0)}
-            </span>
-          </div>
+          {definition?.iconUrl ? (
+            <img
+              src={definition.iconUrl}
+              alt={definition.name}
+              className="h-12 w-12 rounded-lg bg-muted p-2"
+            />
+          ) : (
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
+              <Cable className="h-6 w-6 text-muted-foreground" />
+            </div>
+          )}
           <div>
             <h1 className="font-bold text-2xl">{integration.name}</h1>
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground text-sm">
-                {integration.type}
+                {definition?.name || integration.type}
               </span>
               <span
                 className={`inline-flex rounded-full px-2 py-0.5 text-xs ${
@@ -181,6 +198,17 @@ function IntegrationDetailPage() {
               >
                 {integration.isEnabled ? "Active" : "Inactive"}
               </span>
+              {docsUrl && (
+                <a
+                  href={docsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-2 inline-flex items-center gap-1 text-muted-foreground text-xs hover:text-foreground"
+                >
+                  <ExternalLink className="h-3 w-3" />
+                  Docs
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -224,13 +252,22 @@ function IntegrationDetailPage() {
                       workflows.
                     </p>
                   </div>
-                  <input
+                  <button
                     id="isEnabled"
-                    type="checkbox"
-                    checked={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.checked)}
-                    className="h-5 w-5"
-                  />
+                    type="button"
+                    role="switch"
+                    aria-checked={field.state.value}
+                    onClick={() => field.handleChange(!field.state.value)}
+                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                      field.state.value ? "bg-primary" : "bg-input"
+                    }`}
+                  >
+                    <span
+                      className={`pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform ${
+                        field.state.value ? "translate-x-5" : "translate-x-0"
+                      }`}
+                    />
+                  </button>
                 </div>
               )}
             </form.Field>

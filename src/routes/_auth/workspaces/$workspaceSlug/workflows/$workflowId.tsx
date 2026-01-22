@@ -12,6 +12,7 @@ import {
   Loader2,
   PanelRightClose,
   PlayCircle,
+  Plus,
   Save,
   Settings,
   Trash2,
@@ -165,6 +166,7 @@ function WorkflowEditorPage() {
     nodeId?: string;
     edgeId?: string;
   } | null>(null);
+  const [showAddNodeDialog, setShowAddNodeDialog] = useState(false);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
@@ -621,6 +623,13 @@ function WorkflowEditorPage() {
     setContextMenu(null);
   }, []);
 
+  // Close context menu when add node dialog opens
+  useEffect(() => {
+    if (showAddNodeDialog) {
+      setContextMenu(null);
+    }
+  }, [showAddNodeDialog]);
+
   // Duplicate node
   const handleDuplicateNode = useCallback(
     (nodeId: string) => {
@@ -949,9 +958,17 @@ function WorkflowEditorPage() {
                   </button>
                 )}
                 {contextMenu.type === "pane" && (
-                  <div className="px-2 py-1.5 text-muted-foreground text-sm">
-                    Click the + button to add nodes
-                  </div>
+                  <button
+                    type="button"
+                    className="relative flex w-full cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
+                    onClick={() => {
+                      setShowAddNodeDialog(true);
+                      setContextMenu(null);
+                    }}
+                  >
+                    <Plus className="h-4 w-4" />
+                    Add Node
+                  </button>
                 )}
               </div>
             )}
@@ -961,6 +978,8 @@ function WorkflowEditorPage() {
               <AddNodeButton
                 organizationId={organizationId}
                 onAddNode={handleAddNode}
+                open={showAddNodeDialog}
+                onOpenChange={setShowAddNodeDialog}
               />
             </div>
 
