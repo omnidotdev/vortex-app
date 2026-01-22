@@ -439,13 +439,15 @@ export function NodePicker({ organizationId, onSelectNode }: NodePickerProps) {
                     key={node.id}
                     type="button"
                     onClick={() => handleSelectBuiltin(node)}
-                    className="flex items-start gap-3 rounded-lg border bg-card p-3 text-left transition-colors hover:border-primary/50 hover:bg-accent"
+                    className="flex cursor-pointer items-start gap-3 overflow-hidden rounded-lg border bg-card p-3 text-left transition-colors hover:border-primary/50 hover:bg-accent"
                   >
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10">
                       <node.icon className="h-4 w-4 text-primary" />
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="font-medium text-sm">{node.label}</div>
+                    <div className="min-w-0 flex-1 overflow-hidden">
+                      <div className="truncate font-medium text-sm">
+                        {node.label}
+                      </div>
                       <div className="truncate text-muted-foreground text-xs">
                         {node.description}
                       </div>
@@ -474,7 +476,7 @@ export function NodePicker({ organizationId, onSelectNode }: NodePickerProps) {
                       key={def.id}
                       type="button"
                       onClick={() => handleSelectIntegration(def)}
-                      className="flex items-start gap-3 rounded-lg border bg-card p-3 text-left transition-colors hover:border-primary/50 hover:bg-accent"
+                      className="flex cursor-pointer items-start gap-3 overflow-hidden rounded-lg border bg-card p-3 text-left transition-colors hover:border-primary/50 hover:bg-accent"
                     >
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-muted">
                         {def.iconUrl ? (
@@ -487,18 +489,18 @@ export function NodePicker({ organizationId, onSelectNode }: NodePickerProps) {
                           <Cable className="h-4 w-4 text-muted-foreground" />
                         )}
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium text-sm">
+                      <div className="min-w-0 flex-1 overflow-hidden">
+                        <div className="flex items-center gap-2 overflow-hidden">
+                          <span className="truncate font-medium text-sm">
                             {def.name}
                           </span>
                           {isConnected && (
-                            <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                            <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-green-500" />
                           )}
                           {def.isFeatured && (
                             <Badge
                               variant="secondary"
-                              className="h-4 px-1 text-[10px]"
+                              className="h-4 shrink-0 px-1 text-[10px]"
                             >
                               Featured
                             </Badge>

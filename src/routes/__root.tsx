@@ -158,6 +158,10 @@ function RootDocument({
         {/* dev tools (only included in development) */}
         {isDevEnv && (
           <TanStackDevtools
+            config={{
+              position: "bottom-left",
+              defaultOpen: true,
+            }}
             plugins={[
               {
                 name: "Router",
