@@ -38,7 +38,6 @@ import {
 import { useMemo, useState } from "react";
 import { SiDiscord, SiSlack } from "react-icons/si";
 
-import ThemeToggle from "@/components/ThemeToggle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -457,10 +456,9 @@ function WorkflowSidebar({
   };
 
   return (
-    <div className="w-64 border-border border-r bg-card p-4">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="h-full w-full bg-card p-4">
+      <div className="mb-4">
         <h2 className="font-bold text-foreground text-xl">Vortex</h2>
-        <ThemeToggle />
       </div>
 
       {currentWorkflow ? (

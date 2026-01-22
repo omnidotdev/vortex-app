@@ -105,9 +105,13 @@ export function RunDetail({ run, onBack }: RunDetailProps) {
         </div>
 
         {run.error && (
-          <div className="mt-3 rounded bg-red-100 p-2">
-            <span className="font-medium text-red-800 text-xs">Error:</span>
-            <p className="mt-1 text-red-700 text-sm">{run.error}</p>
+          <div className="mt-3 rounded bg-red-100 p-2 dark:bg-red-900/50">
+            <span className="font-medium text-red-800 text-xs dark:text-red-300">
+              Error:
+            </span>
+            <p className="mt-1 text-red-700 text-sm dark:text-red-400">
+              {run.error}
+            </p>
           </div>
         )}
       </div>
