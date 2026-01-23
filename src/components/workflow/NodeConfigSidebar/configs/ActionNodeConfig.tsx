@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,11 +11,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { VariablePicker } from "@/components/workflow/VariablePicker";
 import { JsonField } from "../fields/JsonField";
 import { DiscordNodeConfig } from "./DiscordNodeConfig";
 import { IntegrationNodeConfig } from "./IntegrationNodeConfig";
 import { SlackNodeConfig } from "./SlackNodeConfig";
 
+import type { Node } from "reactflow";
 import type { NodeConfigProps } from "./types";
 
 export const ActionNodeConfig = (props: NodeConfigProps) => {
@@ -48,6 +50,8 @@ export const ActionNodeConfig = (props: NodeConfigProps) => {
         operation={operation}
         inputs={inputs}
         updateInput={updateInput}
+        nodeId={props.nodeId}
+        allNodes={props.allNodes || []}
       />
     );
   }
@@ -115,14 +119,19 @@ const HttpNodeConfig = ({
   operation,
   inputs,
   updateInput,
+  nodeId,
+  allNodes,
 }: {
   data: Record<string, unknown>;
   onChange: (key: string, value: unknown) => void;
   operation: string;
   inputs: Record<string, unknown>;
   updateInput: (key: string, value: unknown) => void;
+  nodeId: string;
+  allNodes: Node[];
 }) => {
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const urlRef = useRef<HTMLInputElement>(null);
 
   // Get config as fallback for inputs (templates store defaults in config)
   const config = (data.config as Record<string, unknown>) || {};
@@ -133,6 +142,33 @@ const HttpNodeConfig = ({
       ? (inputs.method as string) || "GET"
       : operation.toUpperCase();
   const showBody = ["POST", "PUT", "PATCH"].includes(method);
+
+  // Insert variable at cursor position in URL field
+  const handleInsertUrlVariable = useCallback(
+    (variable: string) => {
+      const input = urlRef.current;
+      const currentValue = (inputs.url as string) || "";
+
+      if (input) {
+        const start = input.selectionStart || 0;
+        const end = input.selectionEnd || 0;
+        const newValue =
+          currentValue.substring(0, start) +
+          variable +
+          currentValue.substring(end);
+        updateInput("url", newValue);
+
+        setTimeout(() => {
+          input.focus();
+          const newCursorPos = start + variable.length;
+          input.setSelectionRange(newCursorPos, newCursorPos);
+        }, 0);
+      } else {
+        updateInput("url", currentValue + variable);
+      }
+    },
+    [inputs.url, updateInput],
+  );
 
   return (
     <>
@@ -148,16 +184,21 @@ const HttpNodeConfig = ({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="url">URL</Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="url">URL</Label>
+          <VariablePicker
+            nodes={allNodes}
+            currentNodeId={nodeId}
+            onSelect={(variable) => handleInsertUrlVariable(variable)}
+          />
+        </div>
         <Input
+          ref={urlRef}
           id="url"
           value={(inputs.url as string) || ""}
           onChange={(e) => updateInput("url", e.target.value)}
           placeholder="https://api.example.com/endpoint"
         />
-        <p className="text-muted-foreground text-xs">
-          Use {"{{variable}}"} for dynamic values from previous steps
-        </p>
       </div>
 
       <div className="space-y-2">
@@ -198,6 +239,8 @@ const HttpNodeConfig = ({
           }
           onChange={(val) => updateInput("body", val)}
           placeholder='{"content": "Hello from Vortex!", "username": "Vortex Bot"}'
+          nodeId={nodeId}
+          allNodes={allNodes}
         />
       )}
 
@@ -222,6 +265,8 @@ const HttpNodeConfig = ({
             value={(inputs.headers as Record<string, string>) || {}}
             onChange={(val) => updateInput("headers", val)}
             placeholder='{"Authorization": "Bearer {{token}}"}'
+            nodeId={nodeId}
+            allNodes={allNodes}
           />
 
           <div className="space-y-2">

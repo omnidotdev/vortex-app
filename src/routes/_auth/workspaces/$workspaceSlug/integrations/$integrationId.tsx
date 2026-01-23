@@ -5,7 +5,15 @@ import {
   notFound,
   useNavigate,
 } from "@tanstack/react-router";
-import { ArrowLeft, Cable, ExternalLink, Loader2, Trash2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Cable,
+  ExternalLink,
+  Eye,
+  EyeOff,
+  Loader2,
+  Trash2,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -49,24 +57,36 @@ export const Route = createFileRoute(
   component: IntegrationDetailPage,
 });
 
+interface AuthFieldSchema {
+  type: "string" | "text" | "json";
+  label: string;
+  description?: string;
+  placeholder?: string;
+  secret?: boolean;
+  required?: boolean;
+}
+
 function IntegrationDetailPage() {
   const { workspaceSlug, integrationId } = Route.useParams();
   const { organizationId } = Route.useLoaderData();
   const navigate = useNavigate();
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [credentials, setCredentials] = useState<Record<string, string>>({});
+  const [showSecrets, setShowSecrets] = useState<Record<string, boolean>>({});
+  const [isSavingCredentials, setIsSavingCredentials] = useState(false);
 
   const { data: integration } = useSuspenseQuery({
     ...integrationOptions({ id: integrationId }),
     select: (data) => data?.integration,
   });
 
-  // Fetch all definitions and find the matching one by type
+  // Fetch all definitions and find the matching one by type (rowId)
   const { data: definitions } = useSuspenseQuery({
     ...integrationDefinitionsOptions({}),
     select: (data) => data?.integrationDefinitions?.nodes ?? [],
   });
-  const definition = definitions.find((d) => d.id === integration?.type);
+  const definition = definitions.find((d) => d.rowId === integration?.type);
 
   const { mutateAsync: updateIntegration, isPending: isUpdating } =
     useUpdateIntegrationMutation({
@@ -114,6 +134,38 @@ function IntegrationDetailPage() {
       }
     },
   });
+
+  const handleSaveCredentials = async () => {
+    if (!integration) return;
+
+    // Only save if there are credentials to update
+    const hasCredentials = Object.values(credentials).some((v) => v.trim());
+    if (!hasCredentials) {
+      toast.error("Please enter at least one credential");
+      return;
+    }
+
+    setIsSavingCredentials(true);
+    try {
+      await updateIntegration({
+        input: {
+          rowId: integrationId,
+          patch: {
+            config: credentials as unknown as Record<string, unknown>,
+          },
+        },
+      });
+
+      toast.success("Credentials updated successfully!");
+      setCredentials({}); // Clear form after save
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update credentials",
+      );
+    } finally {
+      setIsSavingCredentials(false);
+    }
+  };
 
   const handleDelete = async () => {
     if (!integration) return;
@@ -293,6 +345,86 @@ function IntegrationDetailPage() {
           </form.Subscribe>
         </div>
       </form>
+
+      {/* Credentials Section */}
+      {definition?.authFields &&
+        Object.keys(definition.authFields as Record<string, AuthFieldSchema>)
+          .length > 0 && (
+          <section className="mt-8 max-w-xl">
+            <h2 className="font-semibold text-lg">Credentials</h2>
+            <p className="mt-1 text-muted-foreground text-sm">
+              Update your API keys or tokens. Leave blank to keep current
+              values.
+            </p>
+
+            <div className="mt-4 space-y-4">
+              {Object.entries(
+                definition.authFields as Record<string, AuthFieldSchema>,
+              ).map(([fieldName, field]) => (
+                <div key={fieldName} className="space-y-2">
+                  <Label htmlFor={`cred-${fieldName}`}>{field.label}</Label>
+                  <div className="relative">
+                    <Input
+                      id={`cred-${fieldName}`}
+                      type={
+                        field.secret && !showSecrets[fieldName]
+                          ? "password"
+                          : "text"
+                      }
+                      value={credentials[fieldName] || ""}
+                      onChange={(e) =>
+                        setCredentials((prev) => ({
+                          ...prev,
+                          [fieldName]: e.target.value,
+                        }))
+                      }
+                      placeholder={
+                        field.placeholder || `Enter new ${field.label}`
+                      }
+                      className={field.secret ? "pr-10" : ""}
+                    />
+                    {field.secret && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setShowSecrets((prev) => ({
+                            ...prev,
+                            [fieldName]: !prev[fieldName],
+                          }))
+                        }
+                        className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      >
+                        {showSecrets[fieldName] ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </button>
+                    )}
+                  </div>
+                  {field.description && (
+                    <p className="text-muted-foreground text-xs">
+                      {field.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+
+              <div className="flex justify-end pt-2">
+                <Button
+                  type="button"
+                  onClick={handleSaveCredentials}
+                  disabled={isSavingCredentials}
+                >
+                  {isSavingCredentials && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Update Credentials
+                </Button>
+              </div>
+            </div>
+          </section>
+        )}
 
       {/* Danger Zone */}
       <section className="mt-12 max-w-xl">

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
 import { AlertCircle, ExternalLink, Loader2, Plug } from "lucide-react";
-import { useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,8 +14,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { VariablePicker } from "@/components/workflow/VariablePicker";
 import { integrationDefinitionOptions } from "@/lib/options/integrations.options";
 
+import type { Node } from "reactflow";
 import type { NodeConfigProps } from "./types";
 
 /**
@@ -23,14 +25,51 @@ import type { NodeConfigProps } from "./types";
  * integration nodes (Shopify, Stripe, etc.) instead of showing raw
  * operation/inputs fields.
  */
-export const IntegrationNodeConfig = ({ data, onChange }: NodeConfigProps) => {
+export const IntegrationNodeConfig = ({
+  nodeId,
+  data,
+  onChange,
+  allNodes = [],
+}: NodeConfigProps) => {
   const { workspaceSlug } = useParams({ strict: false });
+  const promptRef = useRef<HTMLTextAreaElement>(null);
   const integrationDefinitionId = data.integrationDefinitionId as
     | string
     | undefined;
   const requiresConnection = data.requiresConnection as boolean | undefined;
   const operation = (data.operation as string) || "";
   const inputs = (data.inputs as Record<string, unknown>) || {};
+
+  // Handle inserting a variable into the prompt field
+  const handleInsertVariable = useCallback(
+    (variable: string, _displayName: string) => {
+      const textarea = promptRef.current;
+      if (textarea) {
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const currentValue = (inputs.prompt as string) || "";
+        const newValue =
+          currentValue.substring(0, start) +
+          variable +
+          currentValue.substring(end);
+        onChange("inputs", { ...inputs, prompt: newValue });
+
+        // Restore cursor position after the inserted variable
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(
+            start + variable.length,
+            start + variable.length,
+          );
+        }, 0);
+      } else {
+        // Fallback: append to end
+        const currentValue = (inputs.prompt as string) || "";
+        onChange("inputs", { ...inputs, prompt: currentValue + variable });
+      }
+    },
+    [inputs, onChange],
+  );
 
   // Fetch the integration definition to get available actions
   const { data: definitionData, isLoading } = useQuery({
@@ -1429,6 +1468,10 @@ export const IntegrationNodeConfig = ({ data, onChange }: NodeConfigProps) => {
           operation={operation}
           inputs={inputs}
           updateInput={updateInput}
+          nodeId={nodeId}
+          allNodes={allNodes}
+          promptRef={promptRef}
+          handleInsertVariable={handleInsertVariable}
         />
       )}
 
@@ -1500,11 +1543,19 @@ const ActionInputs = ({
   operation,
   inputs,
   updateInput,
+  nodeId,
+  allNodes,
+  promptRef,
+  handleInsertVariable,
 }: {
   integrationId: string;
   operation: string;
   inputs: Record<string, unknown>;
   updateInput: (key: string, value: unknown) => void;
+  nodeId: string;
+  allNodes: Node[];
+  promptRef: React.RefObject<HTMLTextAreaElement | null>;
+  handleInsertVariable: (variable: string, displayName: string) => void;
 }) => {
   // Shopify-specific inputs
   if (integrationId === "shopify") {
@@ -1948,37 +1999,64 @@ const ActionInputs = ({
   // AI integrations (OpenAI, Anthropic)
   if (integrationId === "openai" || integrationId === "anthropic") {
     if (operation === "ask_chatgpt" || operation === "ask_claude") {
+      const openaiModels = [
+        { value: "gpt-4o", label: "GPT-4o (Latest)" },
+        { value: "gpt-4o-mini", label: "GPT-4o Mini (Fast)" },
+        { value: "gpt-4-turbo", label: "GPT-4 Turbo" },
+        { value: "gpt-4", label: "GPT-4" },
+        { value: "gpt-3.5-turbo", label: "GPT-3.5 Turbo" },
+      ];
+      const anthropicModels = [
+        {
+          value: "claude-sonnet-4-20250514",
+          label: "Claude Sonnet 4 (Latest)",
+        },
+        { value: "claude-3-5-sonnet-20241022", label: "Claude 3.5 Sonnet" },
+        {
+          value: "claude-3-5-haiku-20241022",
+          label: "Claude 3.5 Haiku (Fast)",
+        },
+        { value: "claude-3-opus-20240229", label: "Claude 3 Opus" },
+      ];
+      const models =
+        integrationId === "openai" ? openaiModels : anthropicModels;
+
       return (
         <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="model">Model</Label>
-            <Input
-              id="model"
+            <Select
               value={(inputs.model as string) || ""}
-              onChange={(e) => updateInput("model", e.target.value)}
-              placeholder={
-                integrationId === "openai" ? "gpt-4" : "claude-3-opus-20240229"
-              }
-            />
+              onValueChange={(v) => updateInput("model", v)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a model..." />
+              </SelectTrigger>
+              <SelectContent>
+                {models.map((m) => (
+                  <SelectItem key={m.value} value={m.value}>
+                    {m.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="systemPrompt">System Prompt (optional)</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="prompt">Prompt</Label>
+              <VariablePicker
+                nodes={allNodes}
+                currentNodeId={nodeId}
+                onSelect={handleInsertVariable}
+              />
+            </div>
             <Textarea
-              id="systemPrompt"
-              value={(inputs.systemPrompt as string) || ""}
-              onChange={(e) => updateInput("systemPrompt", e.target.value)}
-              placeholder="You are a helpful assistant..."
-              rows={2}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="userMessage">User Message</Label>
-            <Textarea
-              id="userMessage"
-              value={(inputs.userMessage as string) || ""}
-              onChange={(e) => updateInput("userMessage", e.target.value)}
-              placeholder="Enter your prompt or use {{variable}}"
-              rows={3}
+              ref={promptRef}
+              id="prompt"
+              value={(inputs.prompt as string) || ""}
+              onChange={(e) => updateInput("prompt", e.target.value)}
+              placeholder="Enter your prompt or click { } to insert data from previous steps"
+              rows={4}
             />
           </div>
           <div className="space-y-2">
@@ -1995,7 +2073,7 @@ const ActionInputs = ({
                     : undefined,
                 )
               }
-              placeholder="1024"
+              placeholder="2048"
             />
           </div>
         </div>

@@ -185,4 +185,6 @@ export interface WorkflowDefinition {
   edges: EdgeDefinition[];
   variables?: Record<string, VariableDefinition>;
   settings?: WorkflowSettings;
+  /** Mapping from human-readable step names to step IDs for template resolution */
+  stepNameToId?: Record<string, string>;
 }
