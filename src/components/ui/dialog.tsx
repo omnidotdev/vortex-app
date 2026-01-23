@@ -137,6 +137,8 @@ export {
   DialogTitle,
   DialogDescription,
   DialogCloseTrigger,
+  /** @knipignore */
   DialogProvider,
+  /** @knipignore */
   DialogContext,
 };

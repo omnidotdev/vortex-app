@@ -1,4 +1,4 @@
-import { Cable, Play, Trash2 } from "lucide-react";
+import { Cable, Play, Settings, Trash2 } from "lucide-react";
 import { memo } from "react";
 import { Handle, Position } from "reactflow";
 
@@ -21,6 +21,7 @@ interface ActionNodeData {
   // Integration-specific fields
   iconUrl?: string;
   integrationDefinitionId?: string;
+  connectedInstanceId?: string;
   requiresConnection?: boolean;
   onNodeSelect?: (node: {
     id: string;
@@ -28,6 +29,8 @@ interface ActionNodeData {
     type: string;
   }) => void;
   onDelete?: () => void;
+  onConfigureIntegration?: (integrationDefinitionId: string) => void;
+  onOpenIntegrationSettings?: (integrationInstanceId: string) => void;
 }
 
 export const ActionNode = memo(
@@ -76,8 +79,8 @@ export const ActionNode = memo(
         </Button>
 
         {/* Header */}
-        <div className="flex min-w-0 items-start justify-between gap-3 overflow-hidden">
-          <div className="flex min-w-0 flex-1 items-center gap-3 overflow-hidden">
+        <div className="flex min-w-0 items-center justify-between gap-3">
+          <div className="flex min-w-0 flex-1 items-center gap-3">
             {/* Icon - use integration logo or default icon */}
             {data.iconUrl ? (
               <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white shadow-sm transition-transform group-hover:scale-105 dark:bg-slate-800">
@@ -117,19 +120,40 @@ export const ActionNode = memo(
               )}
             </div>
           </div>
-          {/* Badge */}
+          {/* Badge / Settings */}
           {isIntegration && (
-            <Badge
-              variant="outline"
-              className={cn(
-                "shrink-0 text-xs",
-                data.requiresConnection
-                  ? "border-amber-300 bg-amber-50 text-amber-700 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-300"
-                  : "border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
+            <>
+              {data.requiresConnection ? (
+                <Badge
+                  variant="outline"
+                  className="shrink-0 cursor-pointer border-amber-300 bg-amber-50 text-amber-700 text-xs hover:bg-amber-100 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-300 dark:hover:bg-amber-900"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    data.onConfigureIntegration?.(
+                      data.integrationDefinitionId!,
+                    );
+                  }}
+                >
+                  Connect
+                </Badge>
+              ) : (
+                <button
+                  type="button"
+                  className="shrink-0 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (data.connectedInstanceId) {
+                      data.onOpenIntegrationSettings?.(
+                        data.connectedInstanceId,
+                      );
+                    }
+                  }}
+                  title="Configure integration"
+                >
+                  <Settings className="h-4 w-4" />
+                </button>
               )}
-            >
-              {data.requiresConnection ? "Connect" : "Ready"}
-            </Badge>
+            </>
           )}
           {!isIntegration && data.pluginId && (
             <Badge

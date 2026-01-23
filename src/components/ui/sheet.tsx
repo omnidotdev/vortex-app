@@ -127,6 +127,7 @@ export {
   SheetContent,
   SheetCloseTrigger,
   SheetTitle,
+  /** @knipignore */
   SheetDescription,
   SheetContext,
 };

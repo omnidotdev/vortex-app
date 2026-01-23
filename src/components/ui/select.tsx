@@ -146,6 +146,7 @@ SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
 export {
   Select,
+  /** @knipignore */
   SelectGroup,
   SelectValue,
   SelectTrigger,
