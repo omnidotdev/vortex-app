@@ -275,6 +275,40 @@ function edgeToDslEdge(edge: Edge): EdgeDefinition {
 }
 
 /**
+ * Generate a unique step name for a node
+ */
+function generateStepName(node: Node, usedNames: Set<string>): string {
+  // Use existing stepName if present
+  if (node.data?.stepName) {
+    const name = node.data.stepName as string;
+    usedNames.add(name);
+    return name;
+  }
+
+  // Generate from label or integration type
+  const baseName =
+    (node.data?.label as string) ||
+    (node.data?.integrationDefinitionId
+      ? (node.data.integrationDefinitionId as string).charAt(0).toUpperCase() +
+        (node.data.integrationDefinitionId as string).slice(1)
+      : null) ||
+    (node.data?.pluginId === "builtin:http" ? "HTTP Request" : null) ||
+    node.type?.replace("Node", "") ||
+    "Step";
+
+  // Ensure uniqueness
+  let stepName = baseName;
+  let counter = 2;
+  while (usedNames.has(stepName)) {
+    stepName = `${baseName} ${counter}`;
+    counter++;
+  }
+
+  usedNames.add(stepName);
+  return stepName;
+}
+
+/**
  * Convert ReactFlow nodes and edges to a workflow definition
  */
 export function reactFlowToDsl(
@@ -282,8 +316,16 @@ export function reactFlowToDsl(
   edges: Edge[],
 ): WorkflowDefinition {
   const steps: Step[] = [];
+  const stepNameToId: Record<string, string> = {};
+  const usedNames = new Set<string>();
 
   for (const node of nodes) {
+    // Generate step name mapping (skip trigger nodes - they don't produce outputs)
+    if (node.type !== "triggerNode") {
+      const stepName = generateStepName(node, usedNames);
+      stepNameToId[stepName] = node.id;
+    }
+
     const step = nodeToStep(node, edges);
     if (step) {
       steps.push(step);
@@ -296,5 +338,6 @@ export function reactFlowToDsl(
     version: "1.0",
     steps,
     edges: dslEdges,
+    stepNameToId,
   };
 }

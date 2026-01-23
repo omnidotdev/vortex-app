@@ -12,6 +12,7 @@ import type { Node } from "reactflow";
 
 interface NodeConfigSidebarProps {
   selectedNode: Node | null;
+  allNodes: Node[];
   onNodeUpdate: (nodeId: string, data: Record<string, unknown>) => void;
   onNodeDelete: (nodeId: string) => void;
   onClose: () => void;
@@ -21,6 +22,7 @@ interface NodeConfigSidebarProps {
 
 export const NodeConfigSidebar = ({
   selectedNode,
+  allNodes,
   onNodeUpdate,
   onNodeDelete,
   onClose,
@@ -51,6 +53,7 @@ export const NodeConfigSidebar = ({
   return (
     <NodeConfigSidebarContent
       selectedNode={selectedNode}
+      allNodes={allNodes}
       onNodeUpdate={onNodeUpdate}
       onNodeDelete={onNodeDelete}
       onClose={onClose}
@@ -63,12 +66,16 @@ export const NodeConfigSidebar = ({
 // Separate component to use hooks with guaranteed selectedNode
 const NodeConfigSidebarContent = ({
   selectedNode,
+  allNodes,
   onNodeUpdate,
   onNodeDelete,
   onClose,
   workflowId,
   webhookSecret,
-}: Omit<NodeConfigSidebarProps, "selectedNode"> & { selectedNode: Node }) => {
+}: Omit<NodeConfigSidebarProps, "selectedNode" | "allNodes"> & {
+  selectedNode: Node;
+  allNodes: Node[];
+}) => {
   const nodeType = selectedNode.type || "";
 
   const { formData, handleChange, handleNestedChange } = useNodeConfig(
@@ -116,6 +123,7 @@ const NodeConfigSidebarContent = ({
             onNestedChange={handleNestedChange}
             workflowId={workflowId}
             webhookSecret={webhookSecret}
+            allNodes={allNodes}
           />
         ) : (
           <p className="text-muted-foreground text-sm">

@@ -72,6 +72,11 @@ import {
 import workflowOptions from "@/lib/options/workflow.options";
 import { NodeTypes } from "@/lib/schema";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
+import {
+  ensureStepNames,
+  generateUniqueStepName,
+  getNodeBaseName,
+} from "@/lib/workflow/stepNames";
 
 export const Route = createFileRoute(
   "/_auth/workspaces/$workspaceSlug/workflows/$workflowId",
@@ -147,7 +152,8 @@ function WorkflowEditorPage() {
 
   const definition =
     (workflow.definition as { nodes?: Node[]; edges?: Edge[] }) || {};
-  const initialNodes = definition.nodes || [];
+  // Ensure all nodes have step names (for backwards compatibility with old workflows)
+  const initialNodes = ensureStepNames(definition.nodes || []);
   const initialEdges = definition.edges || [];
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -472,11 +478,41 @@ function WorkflowEditorPage() {
     [setNodes, setEdges, selectedNode, logToDebugPane],
   );
 
+  // Handle integration configuration - navigate to integrations page to connect
+  const handleConfigureIntegration = useCallback(
+    (integrationDefinitionId: string) => {
+      const returnTo = encodeURIComponent(window.location.pathname);
+      navigate({
+        to: "/workspaces/$workspaceSlug/integrations",
+        params: { workspaceSlug },
+        search: { connect: integrationDefinitionId, returnTo },
+      });
+    },
+    [navigate, workspaceSlug],
+  );
+
+  // Handle opening integration settings - navigate to specific integration's settings
+  const handleOpenIntegrationSettings = useCallback(
+    (integrationInstanceId: string) => {
+      navigate({
+        to: "/workspaces/$workspaceSlug/integrations/$integrationId",
+        params: { workspaceSlug, integrationId: integrationInstanceId },
+      });
+    },
+    [navigate, workspaceSlug],
+  );
+
   // Enrich nodes loaded from database with callbacks
   // This runs once when the component mounts to add execute handlers to trigger nodes
   useEffect(() => {
     setNodes((currentNodes) =>
       currentNodes.map((node) => {
+        const needsCallbacks =
+          !node.data.onDelete ||
+          !node.data.onConfigureIntegration ||
+          !node.data.onOpenIntegrationSettings;
+        if (!needsCallbacks && node.type !== "triggerNode") return node;
+
         if (node.type === "triggerNode" && !node.data.onExecuteWorkflow) {
           return {
             ...node,
@@ -484,22 +520,32 @@ function WorkflowEditorPage() {
               ...node.data,
               onExecuteWorkflow: handleExecute,
               onDelete: () => handleDeleteNode(node.id),
+              onConfigureIntegration: handleConfigureIntegration,
+              onOpenIntegrationSettings: handleOpenIntegrationSettings,
             },
           };
         }
-        if (!node.data.onDelete) {
+        if (needsCallbacks) {
           return {
             ...node,
             data: {
               ...node.data,
               onDelete: () => handleDeleteNode(node.id),
+              onConfigureIntegration: handleConfigureIntegration,
+              onOpenIntegrationSettings: handleOpenIntegrationSettings,
             },
           };
         }
         return node;
       }),
     );
-  }, [setNodes, handleExecute, handleDeleteNode]);
+  }, [
+    setNodes,
+    handleExecute,
+    handleDeleteNode,
+    handleConfigureIntegration,
+    handleOpenIntegrationSettings,
+  ]);
 
   // Handle drag over for drop zone
   const onDragOver = useCallback((event: React.DragEvent) => {
@@ -535,16 +581,30 @@ function WorkflowEditorPage() {
         });
 
         const nodeId = getNodeId();
+
+        // Generate a unique step name based on the label
+        // We use nodesRef.current to get the latest nodes for uniqueness check
+        const stepName = generateUniqueStepName(label, nodesRef.current);
+
         const newNode: Node = {
           id: nodeId,
           type: nodeType,
           position,
           data: {
             label,
+            stepName,
             description,
             iconName,
             config,
+            // Include any integration/plugin info from the dropped data
+            ...(parsed.data?.integrationDefinitionId && {
+              integrationDefinitionId: parsed.data.integrationDefinitionId,
+            }),
+            ...(parsed.data?.pluginId && { pluginId: parsed.data.pluginId }),
+            ...(parsed.data?.operation && { operation: parsed.data.operation }),
             onDelete: () => handleDeleteNode(nodeId),
+            onConfigureIntegration: handleConfigureIntegration,
+            onOpenIntegrationSettings: handleOpenIntegrationSettings,
             executeConnectedActions:
               nodeType === "triggerNode" ? executeConnectedActions : undefined,
             onExecuteWorkflow:
@@ -568,6 +628,8 @@ function WorkflowEditorPage() {
       setNodes,
       logToDebugPane,
       handleDeleteNode,
+      handleConfigureIntegration,
+      handleOpenIntegrationSettings,
       executeConnectedActions,
       handleExecute,
     ],
@@ -637,6 +699,13 @@ function WorkflowEditorPage() {
       if (!nodeToDuplicate) return;
 
       const newNodeId = `node_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+
+      // Generate a unique step name for the duplicate
+      const baseStepName =
+        (nodeToDuplicate.data?.stepName as string) ||
+        getNodeBaseName(nodeToDuplicate.data || {});
+      const stepName = generateUniqueStepName(baseStepName, nodesRef.current);
+
       const newNode: Node = {
         ...nodeToDuplicate,
         id: newNodeId,
@@ -646,7 +715,10 @@ function WorkflowEditorPage() {
         },
         data: {
           ...nodeToDuplicate.data,
+          stepName,
           onDelete: () => handleDeleteNode(newNodeId),
+          onConfigureIntegration: handleConfigureIntegration,
+          onOpenIntegrationSettings: handleOpenIntegrationSettings,
         },
         selected: false,
       };
@@ -656,9 +728,17 @@ function WorkflowEditorPage() {
       logToDebugPane("action", "Node duplicated", {
         originalId: nodeId,
         newId: newNodeId,
+        stepName,
       });
     },
-    [nodes, setNodes, handleDeleteNode, logToDebugPane],
+    [
+      nodes,
+      setNodes,
+      handleDeleteNode,
+      handleConfigureIntegration,
+      handleOpenIntegrationSettings,
+      logToDebugPane,
+    ],
   );
 
   // Delete edge
@@ -705,26 +785,40 @@ function WorkflowEditorPage() {
   const handleAddNode = useCallback(
     (type: string, data: Record<string, unknown>) => {
       const nodeId = getNodeId();
+      const label = (data.label as string) ?? "Step";
+      const stepName = generateUniqueStepName(
+        getNodeBaseName(data),
+        nodesRef.current,
+      );
+
       const newNode: Node = {
         id: nodeId,
         type,
-        position: { x: 255, y: nodes.length * 105 + 45 },
+        position: { x: 255, y: nodesRef.current.length * 105 + 45 },
         data: {
           ...data,
+          stepName,
           config: {},
           onDelete: () => handleDeleteNode(nodeId),
+          onConfigureIntegration: handleConfigureIntegration,
+          onOpenIntegrationSettings: handleOpenIntegrationSettings,
         },
       };
       setNodes((nds) => [...nds, newNode]);
 
-      const label = (data.label as string) ?? "Unknown";
       logToDebugPane("action", "Node added via sidebar", data, {
         nodeType: type,
         nodeName: label,
         expectedOutcome: `Added ${label} node to workflow`,
       });
     },
-    [nodes.length, setNodes, logToDebugPane, handleDeleteNode],
+    [
+      setNodes,
+      logToDebugPane,
+      handleDeleteNode,
+      handleConfigureIntegration,
+      handleOpenIntegrationSettings,
+    ],
   );
 
   return (
@@ -1016,6 +1110,7 @@ function WorkflowEditorPage() {
             ) : selectedNode ? (
               <NodeConfigSidebar
                 selectedNode={selectedNode}
+                allNodes={nodes}
                 onNodeUpdate={handleNodeUpdate}
                 onNodeDelete={handleDeleteNode}
                 onClose={() => {
