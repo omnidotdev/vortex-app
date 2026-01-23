@@ -18,6 +18,12 @@ coverage
 # TLS/HTTPS
 certificates
 
+# tooling
+.claude
+
+# typescript
+tsconfig.tsbuildinfo
+
 # environment
 *.env*
 
