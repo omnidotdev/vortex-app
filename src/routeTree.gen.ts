@@ -126,28 +126,28 @@ const AuthWorkspacesWorkspaceSlugIntegrationsIntegrationIdRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof PublicIndexRoute
   '/pricing': typeof PublicPricingRoute
   '/api/execute-workflow': typeof ApiExecuteWorkflowRoute
   '/api/send-email': typeof ApiSendEmailRoute
-  '/': typeof PublicIndexRoute
   '/oauth/callback': typeof PublicOauthCallbackRoute
   '/oauth/error': typeof PublicOauthErrorRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/workspaces': typeof AuthWorkspacesIndexRoute
+  '/workspaces/': typeof AuthWorkspacesIndexRoute
   '/workspaces/$workspaceSlug/settings': typeof AuthWorkspacesWorkspaceSlugSettingsRoute
-  '/workspaces/$workspaceSlug': typeof AuthWorkspacesWorkspaceSlugIndexRoute
+  '/workspaces/$workspaceSlug/': typeof AuthWorkspacesWorkspaceSlugIndexRoute
   '/workspaces/$workspaceSlug/integrations/$integrationId': typeof AuthWorkspacesWorkspaceSlugIntegrationsIntegrationIdRoute
   '/workspaces/$workspaceSlug/workflows/$workflowId': typeof AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute
   '/workspaces/$workspaceSlug/workflows/new': typeof AuthWorkspacesWorkspaceSlugWorkflowsNewRoute
   '/api/webhooks/workflow/$workflowId/$secret': typeof ApiWebhooksWorkflowWorkflowIdSecretRoute
-  '/workspaces/$workspaceSlug/integrations': typeof AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute
-  '/workspaces/$workspaceSlug/workflows': typeof AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute
+  '/workspaces/$workspaceSlug/integrations/': typeof AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute
+  '/workspaces/$workspaceSlug/workflows/': typeof AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof PublicIndexRoute
   '/pricing': typeof PublicPricingRoute
   '/api/execute-workflow': typeof ApiExecuteWorkflowRoute
   '/api/send-email': typeof ApiSendEmailRoute
-  '/': typeof PublicIndexRoute
   '/oauth/callback': typeof PublicOauthCallbackRoute
   '/oauth/error': typeof PublicOauthErrorRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -185,28 +185,28 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/pricing'
     | '/api/execute-workflow'
     | '/api/send-email'
-    | '/'
     | '/oauth/callback'
     | '/oauth/error'
     | '/api/auth/$'
-    | '/workspaces'
+    | '/workspaces/'
     | '/workspaces/$workspaceSlug/settings'
-    | '/workspaces/$workspaceSlug'
+    | '/workspaces/$workspaceSlug/'
     | '/workspaces/$workspaceSlug/integrations/$integrationId'
     | '/workspaces/$workspaceSlug/workflows/$workflowId'
     | '/workspaces/$workspaceSlug/workflows/new'
     | '/api/webhooks/workflow/$workflowId/$secret'
-    | '/workspaces/$workspaceSlug/integrations'
-    | '/workspaces/$workspaceSlug/workflows'
+    | '/workspaces/$workspaceSlug/integrations/'
+    | '/workspaces/$workspaceSlug/workflows/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/pricing'
     | '/api/execute-workflow'
     | '/api/send-email'
-    | '/'
     | '/oauth/callback'
     | '/oauth/error'
     | '/api/auth/$'
@@ -255,14 +255,14 @@ declare module '@tanstack/react-router' {
     '/_public': {
       id: '/_public'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof PublicRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
       id: '/_auth'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -297,7 +297,7 @@ declare module '@tanstack/react-router' {
     '/_auth/workspaces/': {
       id: '/_auth/workspaces/'
       path: '/workspaces'
-      fullPath: '/workspaces'
+      fullPath: '/workspaces/'
       preLoaderRoute: typeof AuthWorkspacesIndexRouteImport
       parentRoute: typeof AuthRoute
     }
@@ -325,7 +325,7 @@ declare module '@tanstack/react-router' {
     '/_auth/workspaces/$workspaceSlug/': {
       id: '/_auth/workspaces/$workspaceSlug/'
       path: '/workspaces/$workspaceSlug'
-      fullPath: '/workspaces/$workspaceSlug'
+      fullPath: '/workspaces/$workspaceSlug/'
       preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugIndexRouteImport
       parentRoute: typeof AuthRoute
     }
@@ -339,14 +339,14 @@ declare module '@tanstack/react-router' {
     '/_auth/workspaces/$workspaceSlug/workflows/': {
       id: '/_auth/workspaces/$workspaceSlug/workflows/'
       path: '/workspaces/$workspaceSlug/workflows'
-      fullPath: '/workspaces/$workspaceSlug/workflows'
+      fullPath: '/workspaces/$workspaceSlug/workflows/'
       preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugWorkflowsIndexRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/workspaces/$workspaceSlug/integrations/': {
       id: '/_auth/workspaces/$workspaceSlug/integrations/'
       path: '/workspaces/$workspaceSlug/integrations'
-      fullPath: '/workspaces/$workspaceSlug/integrations'
+      fullPath: '/workspaces/$workspaceSlug/integrations/'
       preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugIntegrationsIndexRouteImport
       parentRoute: typeof AuthRoute
     }
