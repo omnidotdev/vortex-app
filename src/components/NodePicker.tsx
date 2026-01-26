@@ -11,6 +11,7 @@ import {
   Filter,
   GitBranch,
   Globe,
+  Info,
   Layers,
   Mail,
   MessageCircle,
@@ -27,6 +28,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 
+import IntegrationPreviewModal from "@/components/integrations/IntegrationPreviewModal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,6 +38,8 @@ import {
   integrationsOptions,
 } from "@/lib/options/integrations.options";
 import { NodeTypes } from "@/lib/schema";
+
+import type { IntegrationAction } from "@/lib/integrations/actions";
 
 // Category configuration with icons and labels
 const CATEGORIES = {
@@ -216,6 +220,9 @@ export function NodePicker({ organizationId, onSelectNode }: NodePickerProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<CategoryKey>("all");
   const [showOnlyConnected, setShowOnlyConnected] = useState(false);
+  const [previewIntegration, setPreviewIntegration] = useState<
+    (typeof definitions)[0] | null
+  >(null);
 
   // Fetch all integration definitions (the catalog)
   const { data: definitionsData, isLoading: loadingDefinitions } = useQuery({
@@ -324,6 +331,43 @@ export function NodePicker({ organizationId, onSelectNode }: NodePickerProps) {
         integrationDefinitionId: def.rowId,
         connectedInstanceId: connectedIntegration?.rowId,
         requiresConnection: !isConnected,
+      },
+    });
+  };
+
+  const handleOpenPreview = (
+    e: React.MouseEvent,
+    def: (typeof definitions)[0],
+  ) => {
+    e.stopPropagation();
+    setPreviewIntegration(def);
+  };
+
+  const handleConnectFromPreview = () => {
+    if (!previewIntegration) return;
+    window.location.href = `/workspaces/${window.location.pathname.split("/")[2]}/integrations?connect=${previewIntegration.rowId}`;
+  };
+
+  const handleAddActionFromPreview = (action: IntegrationAction) => {
+    if (!previewIntegration) return;
+    const isConnected = connectedIds.has(previewIntegration.rowId);
+    const connectedIntegration = connectedIntegrations.find(
+      (i) => i.type === previewIntegration.rowId,
+    );
+
+    onSelectNode({
+      type: NodeTypes.ACTION,
+      data: {
+        label: previewIntegration.name,
+        description:
+          previewIntegration.description ??
+          `${previewIntegration.name} integration`,
+        iconUrl: previewIntegration.iconUrl,
+        integrationId: isConnected ? previewIntegration.rowId : undefined,
+        integrationDefinitionId: previewIntegration.rowId,
+        connectedInstanceId: connectedIntegration?.rowId,
+        requiresConnection: !isConnected,
+        operation: action.value,
       },
     });
   };
@@ -473,53 +517,68 @@ export function NodePicker({ organizationId, onSelectNode }: NodePickerProps) {
                 {filteredNodes.integrations.map((def) => {
                   const isConnected = connectedIds.has(def.rowId);
                   return (
-                    <button
+                    <div
                       key={def.rowId}
-                      type="button"
-                      onClick={() => handleSelectIntegration(def)}
-                      className="flex cursor-pointer items-start gap-3 overflow-hidden rounded-lg border bg-card p-3 text-left transition-colors hover:border-primary/50 hover:bg-accent"
+                      className="group relative flex items-start gap-3 overflow-hidden rounded-lg border bg-card p-3 transition-colors hover:border-primary/50 hover:bg-accent"
                     >
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-muted">
-                        {def.iconUrl ? (
-                          <img
-                            src={def.iconUrl}
-                            alt={def.name}
-                            className="h-5 w-5 rounded"
-                          />
-                        ) : (
-                          <Cable className="h-4 w-4 text-muted-foreground" />
+                      <button
+                        type="button"
+                        onClick={() => handleSelectIntegration(def)}
+                        className="flex flex-1 cursor-pointer items-start gap-3 text-left"
+                      >
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-muted">
+                          {def.iconUrl ? (
+                            <img
+                              src={def.iconUrl}
+                              alt={def.name}
+                              className="h-5 w-5 rounded"
+                            />
+                          ) : (
+                            <Cable className="h-4 w-4 text-muted-foreground" />
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1 overflow-hidden">
+                          <div className="flex items-center gap-2 overflow-hidden">
+                            <span className="truncate font-medium text-sm">
+                              {def.name}
+                            </span>
+                            {isConnected && (
+                              <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-green-500" />
+                            )}
+                            {def.isFeatured && (
+                              <Badge
+                                variant="secondary"
+                                className="h-4 shrink-0 px-1 text-[10px]"
+                              >
+                                Featured
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="truncate text-muted-foreground text-xs">
+                            {def.description}
+                          </div>
+                        </div>
+                      </button>
+                      <div className="flex shrink-0 items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 opacity-0 transition-opacity group-hover:opacity-100"
+                          onClick={(e) => handleOpenPreview(e, def)}
+                        >
+                          <Info className="h-4 w-4" />
+                          <span className="sr-only">View actions</span>
+                        </Button>
+                        {!isConnected && (
+                          <Badge
+                            variant="outline"
+                            className="text-[10px] text-muted-foreground"
+                          >
+                            Connect
+                          </Badge>
                         )}
                       </div>
-                      <div className="min-w-0 flex-1 overflow-hidden">
-                        <div className="flex items-center gap-2 overflow-hidden">
-                          <span className="truncate font-medium text-sm">
-                            {def.name}
-                          </span>
-                          {isConnected && (
-                            <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-green-500" />
-                          )}
-                          {def.isFeatured && (
-                            <Badge
-                              variant="secondary"
-                              className="h-4 shrink-0 px-1 text-[10px]"
-                            >
-                              Featured
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="truncate text-muted-foreground text-xs">
-                          {def.description}
-                        </div>
-                      </div>
-                      {!isConnected && (
-                        <Badge
-                          variant="outline"
-                          className="shrink-0 text-[10px] text-muted-foreground"
-                        >
-                          Connect
-                        </Badge>
-                      )}
-                    </button>
+                    </div>
                   );
                 })}
               </div>
@@ -559,6 +618,17 @@ export function NodePicker({ organizationId, onSelectNode }: NodePickerProps) {
           )}
         </div>
       </ScrollArea>
+
+      {previewIntegration && (
+        <IntegrationPreviewModal
+          open={!!previewIntegration}
+          onOpenChange={(open) => !open && setPreviewIntegration(null)}
+          integration={previewIntegration}
+          isConnected={connectedIds.has(previewIntegration.rowId)}
+          onConnect={handleConnectFromPreview}
+          onAddAction={handleAddActionFromPreview}
+        />
+      )}
     </div>
   );
 }

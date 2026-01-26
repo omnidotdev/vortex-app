@@ -348,24 +348,26 @@ export function ConnectIntegrationDialog({
                     )}
                     Setup Instructions
                   </Collapsible.Trigger>
-                  <Collapsible.Content>
-                    <div className="border-t bg-background p-3">
-                      <ol className="ml-4 list-decimal space-y-1.5 text-muted-foreground text-sm">
-                        {setupSteps.map((step, i) => (
-                          <li key={i}>{step}</li>
-                        ))}
-                      </ol>
-                      {docsUrl && (
-                        <a
-                          href={docsUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="mt-3 inline-flex cursor-pointer items-center gap-1 text-primary text-sm hover:underline"
-                        >
-                          <ExternalLink className="h-3 w-3" />
-                          Open {definition.name} Developer Portal
-                        </a>
-                      )}
+                  <Collapsible.Content className="grid transition-[grid-template-rows,opacity] duration-200 ease-out data-[state=closed]:grid-rows-[0fr] data-[state=closed]:opacity-0 data-[state=open]:grid-rows-[1fr] data-[state=open]:opacity-100">
+                    <div className="overflow-hidden">
+                      <div className="border-t bg-background p-3">
+                        <ol className="ml-4 list-decimal space-y-1.5 text-muted-foreground text-sm">
+                          {setupSteps.map((step, i) => (
+                            <li key={i}>{step}</li>
+                          ))}
+                        </ol>
+                        {docsUrl && (
+                          <a
+                            href={docsUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-3 inline-flex cursor-pointer items-center gap-1 text-primary text-sm hover:underline"
+                          >
+                            <ExternalLink className="h-3 w-3" />
+                            Open {definition.name} Developer Portal
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </Collapsible.Content>
                 </Collapsible.Root>

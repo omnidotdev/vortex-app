@@ -12,6 +12,43 @@ export const StepType = {
   DELAY: "delay",
   PARALLEL: "parallel",
   PLUGIN: "plugin",
+  // Extended core nodes
+  MERGE: "merge",
+  SPLIT: "split",
+  FILTER: "filter",
+  SET: "set",
+  ERROR: "error",
+  RETRY: "retry",
+  TIMEOUT: "timeout",
+  EMAIL: "email",
+  WEBHOOK_RESPONSE: "webhookResponse",
+  FILE: "file",
+  QUEUE: "queue",
+  EMBEDDING: "embedding",
+  VECTOR_SEARCH: "vectorSearch",
+  LOG: "log",
+  ASSERT: "assert",
+  SLEEP: "sleep",
+  // Data transformation nodes
+  MAP: "map",
+  REDUCE: "reduce",
+  SORT: "sort",
+  UNIQUE: "unique",
+  TEMPLATE: "template",
+  // AI nodes
+  PROMPT: "prompt",
+  CHAT: "chat",
+  SUMMARIZE: "summarize",
+  CLASSIFY: "classify",
+  // Human-in-the-loop nodes
+  APPROVAL: "approval",
+  INPUT: "input",
+  NOTIFICATION: "notification",
+  // Data processing nodes
+  PARSE: "parse",
+  VALIDATE: "validate",
+  FORMAT: "format",
+  HASH: "hash",
 } as const;
 
 export type StepTypeValue = (typeof StepType)[keyof typeof StepType];
@@ -144,6 +181,313 @@ export interface PluginStep extends StepBase {
   };
 }
 
+// Extended core step types
+export interface MergeStep extends Omit<StepBase, "type"> {
+  type: "merge";
+  merge: {
+    mode: "object" | "array";
+    sources: string[];
+    conflictStrategy: "first" | "last" | "error";
+    outputVariable: string;
+  };
+}
+
+export interface SplitStep extends Omit<StepBase, "type"> {
+  type: "split";
+  split: {
+    input: string;
+    delimiter: string;
+    outputVariable: string;
+  };
+}
+
+export interface FilterStep extends Omit<StepBase, "type"> {
+  type: "filter";
+  filter: {
+    input: string;
+    condition: string;
+    outputVariable: string;
+  };
+}
+
+export interface SetStep extends Omit<StepBase, "type"> {
+  type: "set";
+  set: {
+    variables: Record<string, unknown>;
+  };
+}
+
+export interface ErrorStep extends Omit<StepBase, "type"> {
+  type: "error";
+  error: {
+    message: string;
+    code?: string;
+    details?: Record<string, unknown>;
+  };
+}
+
+export interface RetryStep extends Omit<StepBase, "type"> {
+  type: "retry";
+  retry: {
+    maxAttempts: number;
+    backoffType: "fixed" | "linear" | "exponential";
+    initialDelay: number;
+    maxDelay: number;
+  };
+}
+
+export interface TimeoutStep extends Omit<StepBase, "type"> {
+  type: "timeout";
+  timeout: {
+    duration: number;
+    unit: "seconds" | "minutes" | "hours";
+    onTimeout: "fail" | "continue" | "fallback";
+  };
+}
+
+export interface EmailStep extends Omit<StepBase, "type"> {
+  type: "email";
+  email: {
+    to: string;
+    subject: string;
+    body: string;
+    from?: string;
+    cc?: string;
+    bcc?: string;
+    attachments?: Array<{ name: string; url: string }>;
+  };
+}
+
+export interface WebhookResponseStep extends Omit<StepBase, "type"> {
+  type: "webhookResponse";
+  webhookResponse: {
+    statusCode: number;
+    body?: unknown;
+    headers: Record<string, string>;
+  };
+}
+
+export interface FileStep extends Omit<StepBase, "type"> {
+  type: "file";
+  file: {
+    operation: "read" | "write" | "delete" | "copy" | "move";
+    path: string;
+    content?: string;
+    encoding: string;
+    outputVariable: string;
+  };
+}
+
+export interface QueueStep extends Omit<StepBase, "type"> {
+  type: "queue";
+  queue: {
+    operation: "push" | "pop" | "peek";
+    queueName: string;
+    message?: unknown;
+    outputVariable: string;
+  };
+}
+
+export interface EmbeddingStep extends Omit<StepBase, "type"> {
+  type: "embedding";
+  embedding: {
+    input: string;
+    model: string;
+    outputVariable: string;
+  };
+}
+
+export interface VectorSearchStep extends Omit<StepBase, "type"> {
+  type: "vectorSearch";
+  vectorSearch: {
+    query: string;
+    collection: string;
+    limit: number;
+    minScore?: number;
+    outputVariable: string;
+  };
+}
+
+export interface LogStep extends Omit<StepBase, "type"> {
+  type: "log";
+  log: {
+    level: "debug" | "info" | "warn" | "error";
+    message: string;
+    data?: Record<string, unknown>;
+  };
+}
+
+export interface AssertStep extends Omit<StepBase, "type"> {
+  type: "assert";
+  assert: {
+    condition: string;
+    message: string;
+  };
+}
+
+export interface SleepStep extends Omit<StepBase, "type"> {
+  type: "sleep";
+  sleep: {
+    duration: number;
+    unit: "seconds" | "minutes" | "hours";
+  };
+}
+
+// Data transformation step types
+export interface MapStep extends Omit<StepBase, "type"> {
+  type: "map";
+  map: {
+    source: string;
+    expression: string;
+    itemVariable: string;
+    outputVariable: string;
+  };
+}
+
+export interface ReduceStep extends Omit<StepBase, "type"> {
+  type: "reduce";
+  reduce: {
+    source: string;
+    expression: string;
+    initialValue?: unknown;
+    accumulatorVariable: string;
+    itemVariable: string;
+    outputVariable: string;
+  };
+}
+
+export interface SortStep extends Omit<StepBase, "type"> {
+  type: "sort";
+  sort: {
+    source: string;
+    key?: string;
+    direction: "asc" | "desc";
+    outputVariable: string;
+  };
+}
+
+export interface UniqueStep extends Omit<StepBase, "type"> {
+  type: "unique";
+  unique: {
+    source: string;
+    key?: string;
+    outputVariable: string;
+  };
+}
+
+export interface TemplateStep extends Omit<StepBase, "type"> {
+  type: "template";
+  template: {
+    content: string;
+    outputVariable: string;
+  };
+}
+
+// AI step types
+export interface PromptStep extends Omit<StepBase, "type"> {
+  type: "prompt";
+  prompt: {
+    model: string;
+    template: string;
+    outputVariable: string;
+  };
+}
+
+export interface ChatStep extends Omit<StepBase, "type"> {
+  type: "chat";
+  chat: {
+    model: string;
+    messages: Array<{ role: string; content: string }>;
+    outputVariable: string;
+  };
+}
+
+export interface SummarizeStep extends Omit<StepBase, "type"> {
+  type: "summarize";
+  summarize: {
+    model: string;
+    source: string;
+    style: "brief" | "detailed" | "bullets";
+    outputVariable: string;
+  };
+}
+
+export interface ClassifyStep extends Omit<StepBase, "type"> {
+  type: "classify";
+  classify: {
+    model: string;
+    source: string;
+    categories: string[];
+    outputVariable: string;
+  };
+}
+
+// Human-in-the-loop step types
+export interface ApprovalStep extends Omit<StepBase, "type"> {
+  type: "approval";
+  approval: {
+    title: string;
+    approvers: string[];
+    timeout?: number;
+  };
+}
+
+export interface InputStep extends Omit<StepBase, "type"> {
+  type: "input";
+  input: {
+    title: string;
+    fields: Array<{ name: string; type: string; required?: boolean }>;
+    timeout?: number;
+  };
+}
+
+export interface NotificationStep extends Omit<StepBase, "type"> {
+  type: "notification";
+  notification: {
+    channel: "email" | "slack" | "sms" | "webhook";
+    recipients: string[];
+    message: string;
+  };
+}
+
+// Data processing step types
+export interface ParseStep extends Omit<StepBase, "type"> {
+  type: "parse";
+  parse: {
+    format: "json" | "yaml" | "xml" | "csv";
+    source: string;
+    outputVariable: string;
+  };
+}
+
+export interface ValidateStep extends Omit<StepBase, "type"> {
+  type: "validate";
+  validate: {
+    schema: string;
+    source: string;
+  };
+}
+
+export interface FormatStep extends Omit<StepBase, "type"> {
+  type: "format";
+  format: {
+    type: "string" | "number" | "date" | "currency";
+    pattern?: string;
+    source: string;
+    outputVariable: string;
+  };
+}
+
+export interface HashStep extends Omit<StepBase, "type"> {
+  type: "hash";
+  hash: {
+    algorithm: "md5" | "sha1" | "sha256" | "sha512";
+    encoding: "hex" | "base64";
+    source: string;
+    outputVariable: string;
+  };
+}
+
 export type Step =
   | TriggerStep
   | ActionStep
@@ -153,7 +497,44 @@ export type Step =
   | GateStep
   | DelayStep
   | ParallelStep
-  | PluginStep;
+  | PluginStep
+  // Extended core steps
+  | MergeStep
+  | SplitStep
+  | FilterStep
+  | SetStep
+  | ErrorStep
+  | RetryStep
+  | TimeoutStep
+  | EmailStep
+  | WebhookResponseStep
+  | FileStep
+  | QueueStep
+  | EmbeddingStep
+  | VectorSearchStep
+  | LogStep
+  | AssertStep
+  | SleepStep
+  // Data transformation steps
+  | MapStep
+  | ReduceStep
+  | SortStep
+  | UniqueStep
+  | TemplateStep
+  // AI steps
+  | PromptStep
+  | ChatStep
+  | SummarizeStep
+  | ClassifyStep
+  // Human-in-the-loop steps
+  | ApprovalStep
+  | InputStep
+  | NotificationStep
+  // Data processing steps
+  | ParseStep
+  | ValidateStep
+  | FormatStep
+  | HashStep;
 
 export interface EdgeDefinition {
   id: string;
