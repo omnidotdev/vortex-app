@@ -1,9 +1,13 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { Cable, GitBranch } from "lucide-react";
+import { useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
-import { integrationsOptions } from "@/lib/options/integrations.options";
+import {
+  integrationDefinitionsOptions,
+  integrationsOptions,
+} from "@/lib/options/integrations.options";
 import workflowsOptions from "@/lib/options/workflows.options";
 
 export const Route = createFileRoute("/_auth/workspaces/$workspaceSlug/")({
@@ -13,6 +17,7 @@ export const Route = createFileRoute("/_auth/workspaces/$workspaceSlug/")({
     await Promise.all([
       queryClient.ensureQueryData(workflowsOptions({ organizationId })),
       queryClient.ensureQueryData(integrationsOptions({ organizationId })),
+      queryClient.ensureQueryData(integrationDefinitionsOptions({})),
     ]);
 
     return { organizationId };
@@ -37,6 +42,20 @@ function WorkspaceDashboard() {
     select: (data) => data?.integrations?.nodes ?? [],
   });
 
+  const { data: definitions } = useSuspenseQuery({
+    ...integrationDefinitionsOptions({}),
+    select: (data) => data?.integrationDefinitions?.nodes ?? [],
+  });
+
+  // Create a lookup map from integration type to definition
+  const definitionsByType = useMemo(() => {
+    const map = new Map<string, (typeof definitions)[number]>();
+    for (const def of definitions) {
+      map.set(def.rowId, def);
+    }
+    return map;
+  }, [definitions]);
+
   return (
     <div className="p-8">
       <h1 className="font-bold text-2xl">Dashboard</h1>
@@ -47,9 +66,16 @@ function WorkspaceDashboard() {
       {/* Quick stats */}
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         {/* Workflows Card */}
-        <div className="group relative overflow-hidden rounded-lg border p-6">
-          <div className="relative z-10">
-            <p className="text-muted-foreground text-sm">Workflows</p>
+        <Link
+          to="/workspaces/$workspaceSlug/workflows"
+          params={{ workspaceSlug }}
+          className="group relative rounded-lg border p-6 transition-colors hover:border-foreground/20 hover:bg-muted/50"
+        >
+          <div className="relative">
+            <div className="flex items-center gap-2 text-muted-foreground text-sm">
+              <GitBranch className="h-4 w-4" />
+              <span>Workflows</span>
+            </div>
             <p className="mt-2 font-bold text-3xl">{workflows.length}</p>
           </div>
 
@@ -61,12 +87,21 @@ function WorkspaceDashboard() {
                   key={workflow.rowId}
                   to="/workspaces/$workspaceSlug/workflows/$workflowId"
                   params={{ workspaceSlug, workflowId: workflow.rowId }}
-                  className="hover:!-translate-y-2 relative z-10 flex h-10 w-8 flex-col items-center justify-end transition-transform duration-300 group-hover:-translate-y-1"
+                  className="group/item hover:!-translate-y-2 relative z-20 flex h-10 w-8 flex-col items-center justify-end transition-transform duration-300 group-hover:-translate-y-1"
                   style={{
                     transitionDelay: `${i * 30}ms`,
                   }}
-                  title={workflow.name}
                 >
+                  {/* Tooltip */}
+                  <div className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md border bg-popover px-2 py-1 text-popover-foreground text-xs opacity-0 shadow-md transition-opacity group-hover/item:opacity-100">
+                    <span className="font-medium">{workflow.name}</span>
+                    <span
+                      className={`ml-1.5 ${workflow.isActive ? "text-green-500" : "text-muted-foreground"}`}
+                    >
+                      {workflow.isActive ? "● Active" : "○ Inactive"}
+                    </span>
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-border" />
+                  </div>
                   <div
                     className={`flex h-8 w-8 items-center justify-center rounded-md border transition-all duration-300 hover:scale-110 ${
                       workflow.isActive
@@ -92,40 +127,67 @@ function WorkspaceDashboard() {
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent to-background/80 opacity-60 transition-opacity duration-300 group-hover:opacity-0" />
             </div>
           )}
-        </div>
+        </Link>
 
         {/* Integrations Card */}
-        <div className="group relative overflow-hidden rounded-lg border p-6">
-          <div className="relative z-10">
-            <p className="text-muted-foreground text-sm">Integrations</p>
+        <Link
+          to="/workspaces/$workspaceSlug/integrations"
+          params={{ workspaceSlug }}
+          className="group relative rounded-lg border p-6 transition-colors hover:border-foreground/20 hover:bg-muted/50"
+        >
+          <div className="relative">
+            <div className="flex items-center gap-2 text-muted-foreground text-sm">
+              <Cable className="h-4 w-4" />
+              <span>Integrations</span>
+            </div>
             <p className="mt-2 font-bold text-3xl">{integrations.length}</p>
           </div>
 
           {/* Stacked integration icons */}
           {integrations.length > 0 && (
             <div className="absolute right-0 bottom-0 flex items-end gap-1 p-4">
-              {integrations.slice(0, 8).map((integration, i) => (
-                <Link
-                  key={integration.rowId}
-                  to="/workspaces/$workspaceSlug/integrations/$integrationId"
-                  params={{ workspaceSlug, integrationId: integration.rowId }}
-                  className="hover:!-translate-y-2 relative z-10 flex h-10 w-8 flex-col items-center justify-end transition-transform duration-300 group-hover:-translate-y-1"
-                  style={{
-                    transitionDelay: `${i * 30}ms`,
-                  }}
-                  title={integration.name}
-                >
-                  <div
-                    className={`flex h-8 w-8 items-center justify-center rounded-md border transition-all duration-300 hover:scale-110 ${
-                      integration.isEnabled
-                        ? "border-blue-500/30 bg-blue-500/10 text-blue-500 hover:border-blue-500/50 hover:bg-blue-500/20"
-                        : "border-muted bg-muted/50 text-muted-foreground hover:border-muted-foreground/50 hover:bg-muted"
-                    }`}
+              {integrations.slice(0, 8).map((integration, i) => {
+                const definition = definitionsByType.get(integration.type);
+                return (
+                  <Link
+                    key={integration.rowId}
+                    to="/workspaces/$workspaceSlug/integrations/$integrationId"
+                    params={{ workspaceSlug, integrationId: integration.rowId }}
+                    className="group/item hover:!-translate-y-2 relative z-20 flex h-10 w-8 flex-col items-center justify-end transition-transform duration-300 group-hover:-translate-y-1"
+                    style={{
+                      transitionDelay: `${i * 30}ms`,
+                    }}
                   >
-                    <Cable className="h-4 w-4" />
-                  </div>
-                </Link>
-              ))}
+                    {/* Tooltip */}
+                    <div className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md border bg-popover px-2 py-1 text-popover-foreground text-xs opacity-0 shadow-md transition-opacity group-hover/item:opacity-100">
+                      <span className="font-medium">{integration.name}</span>
+                      <span
+                        className={`ml-1.5 ${integration.isEnabled ? "text-blue-500" : "text-muted-foreground"}`}
+                      >
+                        {integration.isEnabled ? "● Enabled" : "○ Disabled"}
+                      </span>
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-border" />
+                    </div>
+                    <div
+                      className={`flex h-8 w-8 items-center justify-center overflow-hidden rounded-md border transition-all duration-300 hover:scale-110 ${
+                        integration.isEnabled
+                          ? "border-blue-500/30 bg-blue-500/10 hover:border-blue-500/50 hover:bg-blue-500/20"
+                          : "border-muted bg-muted/50 hover:border-muted-foreground/50 hover:bg-muted"
+                      }`}
+                    >
+                      {definition?.iconUrl ? (
+                        <img
+                          src={definition.iconUrl}
+                          alt={definition.name}
+                          className="h-5 w-5 object-contain"
+                        />
+                      ) : (
+                        <Cable className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
               {integrations.length > 8 && (
                 <Link
                   to="/workspaces/$workspaceSlug/integrations"
@@ -140,7 +202,7 @@ function WorkspaceDashboard() {
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-transparent to-background/80 opacity-60 transition-opacity duration-300 group-hover:opacity-0" />
             </div>
           )}
-        </div>
+        </Link>
       </div>
 
       {/* Quick actions */}
