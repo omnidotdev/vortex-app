@@ -11,6 +11,7 @@ import {
   History,
   Loader2,
   PanelRightClose,
+  Pencil,
   PlayCircle,
   Plus,
   Save,
@@ -36,18 +37,67 @@ import { AddNodeButton } from "@/components/AddNodeButton";
 import DebugPane from "@/components/DebugPane";
 import { SmartEdge } from "@/components/edges/SmartEdge";
 import { ActionNode } from "@/components/nodes/ActionNode";
+import { AggregateNode } from "@/components/nodes/AggregateNode";
+import { CacheNode } from "@/components/nodes/CacheNode";
 import { CodeNode } from "@/components/nodes/CodeNode";
 import { ConditionNode } from "@/components/nodes/ConditionNode";
 import { DatabaseNode } from "@/components/nodes/DatabaseNode";
 import { DelayNode } from "@/components/nodes/DelayNode";
+import { EventNode } from "@/components/nodes/EventNode";
 import { GateNode } from "@/components/nodes/GateNode";
 import { LLMNode } from "@/components/nodes/LLMNode";
 import { LoopNode } from "@/components/nodes/LoopNode";
 import { MCPNode } from "@/components/nodes/MCPNode";
 import { ParallelNode } from "@/components/nodes/ParallelNode";
 import { PluginNode } from "@/components/nodes/PluginNode";
+import { SubworkflowNode } from "@/components/nodes/SubworkflowNode";
 import { SwitchNode } from "@/components/nodes/SwitchNode";
 import { TriggerNode } from "@/components/nodes/TriggerNode";
+import { WaitNode } from "@/components/nodes/WaitNode";
+import { ApprovalNode } from "@/components/nodes/ApprovalNode";
+import { AssertNode } from "@/components/nodes/AssertNode";
+import { ChatNode } from "@/components/nodes/ChatNode";
+import { ClassifyNode } from "@/components/nodes/ClassifyNode";
+import { EmailNode } from "@/components/nodes/EmailNode";
+import { EmbeddingNode } from "@/components/nodes/EmbeddingNode";
+import { ErrorNode } from "@/components/nodes/ErrorNode";
+import { FileNode } from "@/components/nodes/FileNode";
+import { FilterNode } from "@/components/nodes/FilterNode";
+import { FormatNode } from "@/components/nodes/FormatNode";
+import { HashNode } from "@/components/nodes/HashNode";
+import { InputNode } from "@/components/nodes/InputNode";
+import { LogNode } from "@/components/nodes/LogNode";
+import { MapNode } from "@/components/nodes/MapNode";
+import { MergeNode } from "@/components/nodes/MergeNode";
+import { NotificationNode } from "@/components/nodes/NotificationNode";
+import { ParseNode } from "@/components/nodes/ParseNode";
+import { PromptNode } from "@/components/nodes/PromptNode";
+import { QueueNode } from "@/components/nodes/QueueNode";
+import { ReduceNode } from "@/components/nodes/ReduceNode";
+import { RetryNode } from "@/components/nodes/RetryNode";
+import { SetNode } from "@/components/nodes/SetNode";
+import { SleepNode } from "@/components/nodes/SleepNode";
+import { SortNode } from "@/components/nodes/SortNode";
+import { SplitNode } from "@/components/nodes/SplitNode";
+import { SummarizeNode } from "@/components/nodes/SummarizeNode";
+import { TemplateNode } from "@/components/nodes/TemplateNode";
+import { TimeoutNode } from "@/components/nodes/TimeoutNode";
+import { UniqueNode } from "@/components/nodes/UniqueNode";
+import { ValidateNode } from "@/components/nodes/ValidateNode";
+import { VectorSearchNode } from "@/components/nodes/VectorSearchNode";
+import { WebhookResponseNode } from "@/components/nodes/WebhookResponseNode";
+import { AgentNode } from "@/components/nodes/AgentNode";
+import { AudioNode } from "@/components/nodes/AudioNode";
+import { ChunkNode } from "@/components/nodes/ChunkNode";
+import { DecryptNode } from "@/components/nodes/DecryptNode";
+import { EncryptNode } from "@/components/nodes/EncryptNode";
+import { FlattenNode } from "@/components/nodes/FlattenNode";
+import { GroupNode } from "@/components/nodes/GroupNode";
+import { JwtNode } from "@/components/nodes/JwtNode";
+import { RagNode } from "@/components/nodes/RagNode";
+import { SignNode } from "@/components/nodes/SignNode";
+import { VisionNode } from "@/components/nodes/VisionNode";
+import { ZipNode } from "@/components/nodes/ZipNode";
 import ThemeToggle from "@/components/ThemeToggle";
 import {
   AlertDialog,
@@ -61,6 +111,28 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import {
+  DialogBackdrop,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogPositioner,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { NodeConfigSidebar } from "@/components/workflow/NodeConfigSidebar";
 import { WorkflowRunsPanel } from "@/components/workflow/WorkflowRunsPanel";
 import {
@@ -108,6 +180,63 @@ const nodeTypes = {
   llmNode: LLMNode,
   codeNode: CodeNode,
   databaseNode: DatabaseNode,
+  subworkflowNode: SubworkflowNode,
+  waitNode: WaitNode,
+  eventNode: EventNode,
+  aggregateNode: AggregateNode,
+  cacheNode: CacheNode,
+  // Extended core nodes
+  mergeNode: MergeNode,
+  splitNode: SplitNode,
+  filterNode: FilterNode,
+  setNode: SetNode,
+  errorNode: ErrorNode,
+  retryNode: RetryNode,
+  timeoutNode: TimeoutNode,
+  emailNode: EmailNode,
+  webhookResponseNode: WebhookResponseNode,
+  fileNode: FileNode,
+  queueNode: QueueNode,
+  embeddingNode: EmbeddingNode,
+  vectorSearchNode: VectorSearchNode,
+  logNode: LogNode,
+  assertNode: AssertNode,
+  sleepNode: SleepNode,
+  // Data transformation nodes
+  mapNode: MapNode,
+  reduceNode: ReduceNode,
+  sortNode: SortNode,
+  uniqueNode: UniqueNode,
+  templateNode: TemplateNode,
+  // AI nodes
+  promptNode: PromptNode,
+  chatNode: ChatNode,
+  summarizeNode: SummarizeNode,
+  classifyNode: ClassifyNode,
+  // Human-in-the-loop nodes
+  approvalNode: ApprovalNode,
+  inputNode: InputNode,
+  notificationNode: NotificationNode,
+  // Data processing nodes
+  parseNode: ParseNode,
+  validateNode: ValidateNode,
+  formatNode: FormatNode,
+  hashNode: HashNode,
+  // Advanced - Array Operations
+  groupNode: GroupNode,
+  flattenNode: FlattenNode,
+  chunkNode: ChunkNode,
+  zipNode: ZipNode,
+  // Advanced - Security
+  encryptNode: EncryptNode,
+  decryptNode: DecryptNode,
+  signNode: SignNode,
+  jwtNode: JwtNode,
+  // Advanced - AI Extensions
+  agentNode: AgentNode,
+  ragNode: RagNode,
+  visionNode: VisionNode,
+  audioNode: AudioNode,
 };
 
 // Define custom edge types - must be outside component to avoid re-creation
@@ -130,6 +259,63 @@ const nodeTypeMap: Record<string, string> = {
   llm: "llmNode",
   code: "codeNode",
   database: "databaseNode",
+  subworkflow: "subworkflowNode",
+  wait: "waitNode",
+  event: "eventNode",
+  aggregate: "aggregateNode",
+  cache: "cacheNode",
+  // Extended core nodes
+  merge: "mergeNode",
+  split: "splitNode",
+  filter: "filterNode",
+  set: "setNode",
+  error: "errorNode",
+  retry: "retryNode",
+  timeout: "timeoutNode",
+  email: "emailNode",
+  webhookResponse: "webhookResponseNode",
+  file: "fileNode",
+  queue: "queueNode",
+  embedding: "embeddingNode",
+  vectorSearch: "vectorSearchNode",
+  log: "logNode",
+  assert: "assertNode",
+  sleep: "sleepNode",
+  // Data transformation nodes
+  map: "mapNode",
+  reduce: "reduceNode",
+  sort: "sortNode",
+  unique: "uniqueNode",
+  template: "templateNode",
+  // AI nodes
+  prompt: "promptNode",
+  chat: "chatNode",
+  summarize: "summarizeNode",
+  classify: "classifyNode",
+  // Human-in-the-loop nodes
+  approval: "approvalNode",
+  input: "inputNode",
+  notification: "notificationNode",
+  // Data processing nodes
+  parse: "parseNode",
+  validate: "validateNode",
+  format: "formatNode",
+  hash: "hashNode",
+  // Advanced - Array Operations
+  group: "groupNode",
+  flatten: "flattenNode",
+  chunk: "chunkNode",
+  zip: "zipNode",
+  // Advanced - Security
+  encrypt: "encryptNode",
+  decrypt: "decryptNode",
+  sign: "signNode",
+  jwt: "jwtNode",
+  // Advanced - AI Extensions
+  agent: "agentNode",
+  rag: "ragNode",
+  vision: "visionNode",
+  audio: "audioNode",
 };
 
 let nodeIdCounter = 0;
@@ -173,6 +359,12 @@ function WorkflowEditorPage() {
     edgeId?: string;
   } | null>(null);
   const [showAddNodeDialog, setShowAddNodeDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [editName, setEditName] = useState(workflow.name);
+  const [editDescription, setEditDescription] = useState(
+    workflow.description || "",
+  );
+  const [editIsActive, setEditIsActive] = useState(workflow.isActive);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
@@ -836,6 +1028,97 @@ function WorkflowEditorPage() {
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <h1 className="truncate font-semibold">{workflow.name}</h1>
+              <DialogRoot
+                open={showEditDialog}
+                onOpenChange={(e) => setShowEditDialog(e.open)}
+              >
+                <DialogTrigger asChild>
+                  <button
+                    type="button"
+                    className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
+                    onClick={() => {
+                      setEditName(workflow.name);
+                      setEditDescription(workflow.description || "");
+                      setEditIsActive(workflow.isActive);
+                    }}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </button>
+                </DialogTrigger>
+                <DialogBackdrop />
+                <DialogPositioner>
+                  <DialogContent>
+                    <DialogCloseTrigger />
+                    <DialogHeader>
+                      <DialogTitle>Edit Workflow</DialogTitle>
+                      <DialogDescription>
+                        Update the workflow name, description, and status.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="edit-name">Name</Label>
+                        <Input
+                          id="edit-name"
+                          value={editName}
+                          onChange={(e) => setEditName(e.target.value)}
+                          placeholder="Workflow name"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="edit-description">Description</Label>
+                        <Textarea
+                          id="edit-description"
+                          value={editDescription}
+                          onChange={(e) => setEditDescription(e.target.value)}
+                          placeholder="Optional description"
+                          rows={3}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="edit-status">Status</Label>
+                        <Select
+                          value={editIsActive ? "active" : "inactive"}
+                          onValueChange={(value) =>
+                            setEditIsActive(value === "active")
+                          }
+                        >
+                          <SelectTrigger id="edit-status">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="active">Active</SelectItem>
+                            <SelectItem value="inactive">Inactive</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <DialogCloseTrigger asChild>
+                        <Button variant="outline">Cancel</Button>
+                      </DialogCloseTrigger>
+                      <Button
+                        onClick={() => {
+                          updateWorkflow({
+                            input: {
+                              rowId: workflowId,
+                              patch: {
+                                name: editName,
+                                description: editDescription || null,
+                                isActive: editIsActive,
+                              },
+                            },
+                          });
+                          setShowEditDialog(false);
+                        }}
+                        disabled={!editName.trim()}
+                      >
+                        Save Changes
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </DialogPositioner>
+              </DialogRoot>
               <span
                 className={`hidden shrink-0 rounded-full px-2 py-0.5 text-xs sm:inline ${
                   workflow.isActive
