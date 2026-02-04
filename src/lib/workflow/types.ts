@@ -71,6 +71,10 @@ export const StepType = {
   RACE: "race",
   // Documentation
   COMMENT: "comment",
+  // State management
+  STATE_GET: "state_get",
+  STATE_SET: "state_set",
+  STATE_WAIT: "state_wait",
 } as const;
 
 export type StepTypeValue = (typeof StepType)[keyof typeof StepType];
@@ -756,6 +760,35 @@ export interface CommentStep extends Omit<StepBase, "type"> {
   };
 }
 
+// State management
+export interface StateGetStep extends Omit<StepBase, "type"> {
+  type: "state_get";
+  stateGet: {
+    key: string;
+    outputVariable: string;
+  };
+}
+
+export interface StateSetStep extends Omit<StepBase, "type"> {
+  type: "state_set";
+  stateSet: {
+    key: string;
+    value: unknown;
+    ttl?: number;
+  };
+}
+
+export interface StateWaitStep extends Omit<StepBase, "type"> {
+  type: "state_wait";
+  stateWait: {
+    key: string;
+    condition: "exists" | "equals" | "changed";
+    value?: unknown;
+    timeout: string;
+    outputVariable?: string;
+  };
+}
+
 export type Step =
   | TriggerStep
   | ActionStep
@@ -824,7 +857,11 @@ export type Step =
   | TryCatchStep
   | RaceStep
   // Documentation
-  | CommentStep;
+  | CommentStep
+  // State management
+  | StateGetStep
+  | StateSetStep
+  | StateWaitStep;
 
 export interface EdgeDefinition {
   id: string;
