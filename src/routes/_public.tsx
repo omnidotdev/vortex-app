@@ -54,7 +54,7 @@ function PublicLayout() {
                   {app.name}
                 </span>
                 <Badge className="hidden border-primary/20 bg-primary/10 text-primary text-xs sm:inline-flex">
-                  Alpha
+                  Early Access
                 </Badge>
               </Link>
 
