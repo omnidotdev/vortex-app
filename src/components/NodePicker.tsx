@@ -11,6 +11,7 @@ import {
   Filter,
   GitBranch,
   Globe,
+  Home,
   Info,
   Layers,
   Mail,
@@ -26,7 +27,7 @@ import {
   Webhook,
   Zap,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import IntegrationPreviewModal from "@/components/integrations/IntegrationPreviewModal";
 import { Badge } from "@/components/ui/badge";
@@ -50,6 +51,7 @@ const CATEGORIES = {
   http: { label: "HTTP", icon: Globe },
   ai: { label: "AI", icon: Bot },
   communication: { label: "Communication", icon: MessageCircle },
+  smarthome: { label: "Smart Home", icon: Home },
   developer: { label: "Developer", icon: Code },
   productivity: { label: "Productivity", icon: Sheet },
   marketing: { label: "Marketing", icon: Mail },
@@ -60,6 +62,80 @@ const CATEGORIES = {
 } as const;
 
 type CategoryKey = keyof typeof CATEGORIES;
+
+// Search tags/aliases for integrations (allows searching by alternative names)
+const INTEGRATION_SEARCH_TAGS: Record<string, string[]> = {
+  // AI
+  openai: ["chatgpt", "gpt", "gpt-4", "gpt-4o", "dall-e", "whisper", "ai"],
+  anthropic: ["claude", "ai"],
+  mistral: ["mistral-ai", "ai"],
+  groq: ["llama", "ai"],
+  perplexity: ["ai", "search"],
+  replicate: ["ai", "ml", "machine learning"],
+  huggingface: ["ai", "ml", "transformers"],
+  // Communication
+  slack: ["messaging", "chat"],
+  discord: ["messaging", "chat", "gaming"],
+  twilio: ["sms", "text", "phone", "call", "messaging"],
+  sendgrid: ["email", "mail"],
+  resend: ["email", "mail"],
+  mailchimp: ["email", "mail", "newsletter"],
+  postmark: ["email", "mail"],
+  intercom: ["chat", "support", "messaging"],
+  zendesk: ["support", "tickets", "helpdesk"],
+  // Developer
+  github: ["git", "code", "repo", "repository"],
+  gitlab: ["git", "code", "repo", "repository"],
+  bitbucket: ["git", "code", "repo"],
+  linear: ["issues", "tickets", "project management"],
+  jira: ["issues", "tickets", "project management", "atlassian"],
+  sentry: ["errors", "monitoring", "debugging"],
+  datadog: ["monitoring", "logs", "apm"],
+  // Productivity
+  notion: ["notes", "docs", "wiki", "database"],
+  airtable: ["database", "spreadsheet", "tables"],
+  "google-sheets": ["spreadsheet", "excel", "sheets"],
+  "google-drive": ["files", "storage", "docs"],
+  "google-calendar": ["calendar", "events", "scheduling"],
+  asana: ["tasks", "project management"],
+  todoist: ["tasks", "todo", "checklist"],
+  trello: ["kanban", "boards", "tasks"],
+  clickup: ["tasks", "project management"],
+  monday: ["tasks", "project management"],
+  // Payments
+  stripe: ["payments", "billing", "credit card", "checkout"],
+  paypal: ["payments", "checkout"],
+  square: ["payments", "pos", "checkout"],
+  // Commerce
+  shopify: ["ecommerce", "store", "products", "orders"],
+  woocommerce: ["ecommerce", "store", "wordpress"],
+  // Storage
+  aws: ["s3", "amazon", "cloud"],
+  supabase: ["database", "postgres", "storage"],
+  firebase: ["database", "google", "storage"],
+  cloudflare: ["cdn", "workers", "r2"],
+  // CRM
+  salesforce: ["crm", "sales", "leads"],
+  hubspot: ["crm", "marketing", "sales"],
+  pipedrive: ["crm", "sales"],
+  // Smart Home / IoT
+  mqtt: ["iot", "messaging", "smart home", "home automation", "broker"],
+  homeassistant: [
+    "home assistant",
+    "hass",
+    "smart home",
+    "iot",
+    "automation",
+    "lights",
+    "thermostat",
+  ],
+  nodered: ["node-red", "iot", "automation", "flow"],
+  philipshue: ["hue", "lights", "smart lights", "philips"],
+  // Other
+  zapier: ["automation", "integrations"],
+  make: ["automation", "integrations", "integromat"],
+  webhooks: ["http", "api"],
+};
 
 // Built-in nodes organized by category
 const BUILTIN_NODES = [
@@ -90,6 +166,15 @@ const BUILTIN_NODES = [
     icon: MousePointer,
     nodeType: NodeTypes.TRIGGER,
     config: { triggerType: "manual" },
+  },
+  {
+    id: "trigger-omni",
+    category: "triggers",
+    label: "Omni Event",
+    description: "Triggered by events from Omni services",
+    icon: Zap,
+    nodeType: NodeTypes.TRIGGER,
+    config: { triggerType: "omni" },
   },
   // Flow Control
   {
@@ -203,6 +288,9 @@ function mapCategory(apiCategory: string): CategoryKey {
     storage: "storage",
     support: "communication",
     hr: "productivity",
+    smarthome: "smarthome",
+    "smart-home": "smarthome",
+    iot: "smarthome",
     other: "other",
   };
   return mapping[apiCategory?.toLowerCase()] ?? "other";
@@ -214,15 +302,18 @@ interface NodePickerProps {
     type: string;
     data: Record<string, unknown>;
   }) => void;
+  searchInputRef?: React.RefObject<HTMLInputElement | null>;
 }
 
-export function NodePicker({ organizationId, onSelectNode }: NodePickerProps) {
+export function NodePicker({ organizationId, onSelectNode, searchInputRef: externalRef }: NodePickerProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<CategoryKey>("all");
   const [showOnlyConnected, setShowOnlyConnected] = useState(false);
   const [previewIntegration, setPreviewIntegration] = useState<
     (typeof definitions)[0] | null
   >(null);
+  const internalRef = useRef<HTMLInputElement>(null);
+  const searchInputRef = externalRef ?? internalRef;
 
   // Fetch all integration definitions (the catalog)
   const { data: definitionsData, isLoading: loadingDefinitions } = useQuery({
@@ -278,11 +369,20 @@ export function NodePicker({ organizationId, onSelectNode }: NodePickerProps) {
       }
       // Search filter
       if (query) {
-        return (
+        // Check name, description, and rowId
+        if (
           def.name.toLowerCase().includes(query) ||
           def.description?.toLowerCase().includes(query) ||
           def.rowId.toLowerCase().includes(query)
-        );
+        ) {
+          return true;
+        }
+        // Check search tags/aliases
+        const tags = INTEGRATION_SEARCH_TAGS[def.rowId];
+        if (tags?.some((tag) => tag.includes(query))) {
+          return true;
+        }
+        return false;
       }
       return true;
     });
@@ -403,6 +503,9 @@ export function NodePicker({ organizationId, onSelectNode }: NodePickerProps) {
       ).length,
       storage: definitions.filter((d) => mapCategory(d.category) === "storage")
         .length,
+      smarthome: definitions.filter(
+        (d) => mapCategory(d.category) === "smarthome",
+      ).length,
       other: definitions.filter((d) => mapCategory(d.category) === "other")
         .length,
     };
@@ -416,11 +519,11 @@ export function NodePicker({ organizationId, onSelectNode }: NodePickerProps) {
         <div className="relative">
           <Search className="absolute top-2.5 left-3 h-4 w-4 text-muted-foreground" />
           <Input
+            ref={searchInputRef}
             placeholder="Search nodes and integrations..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9"
-            autoFocus
           />
         </div>
 
