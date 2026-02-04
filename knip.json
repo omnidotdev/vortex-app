@@ -1,0 +1,23 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "src/server/functions/*.ts",
+    "src/lib/providers/billing/index.ts"
+  ],
+  "ignore": [
+    "src/lib/payments.ts",
+    "src/server/middleware.ts",
+    "src/generated/**",
+    "src/lib/graphql/codegen.config.ts",
+    "knip.config.ts",
+    "public/sw.js"
+  ],
+  "ignoreDependencies": [
+    "@graphql-codegen/*",
+    "dotenv",
+    "msw",
+    "react-hotkeys-hook",
+    "ts-pattern",
+    "graphql-tag"
+  ]
+}
