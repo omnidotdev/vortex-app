@@ -49,6 +49,21 @@ export const StepType = {
   VALIDATE: "validate",
   FORMAT: "format",
   HASH: "hash",
+  // Advanced - Array Operations
+  GROUP: "group",
+  FLATTEN: "flatten",
+  CHUNK: "chunk",
+  ZIP: "zip",
+  // Advanced - Security
+  ENCRYPT: "encrypt",
+  DECRYPT: "decrypt",
+  SIGN: "sign",
+  JWT: "jwt",
+  // Advanced - AI Extensions
+  AGENT: "agent",
+  RAG: "rag",
+  VISION: "vision",
+  AUDIO: "audio",
 } as const;
 
 export type StepTypeValue = (typeof StepType)[keyof typeof StepType];
@@ -488,6 +503,138 @@ export interface HashStep extends Omit<StepBase, "type"> {
   };
 }
 
+// Advanced - Array Operations
+export interface GroupStep extends Omit<StepBase, "type"> {
+  type: "group";
+  group: {
+    source: string;
+    keyExpression: string;
+    itemVariable: string;
+    outputVariable?: string;
+  };
+}
+
+export interface FlattenStep extends Omit<StepBase, "type"> {
+  type: "flatten";
+  flatten: {
+    source: string;
+    depth: number;
+    outputVariable?: string;
+  };
+}
+
+export interface ChunkStep extends Omit<StepBase, "type"> {
+  type: "chunk";
+  chunk: {
+    source: string;
+    size: number;
+    outputVariable?: string;
+  };
+}
+
+export interface ZipStep extends Omit<StepBase, "type"> {
+  type: "zip";
+  zip: {
+    sources: string[];
+    outputVariable?: string;
+  };
+}
+
+// Advanced - Security
+export interface EncryptStep extends Omit<StepBase, "type"> {
+  type: "encrypt";
+  encrypt: {
+    input: string;
+    key: string;
+    algorithm: "AES-GCM" | "AES-CBC";
+    outputVariable?: string;
+  };
+}
+
+export interface DecryptStep extends Omit<StepBase, "type"> {
+  type: "decrypt";
+  decrypt: {
+    input: string;
+    key: string;
+    algorithm: "AES-GCM" | "AES-CBC";
+    outputVariable?: string;
+  };
+}
+
+export interface SignStep extends Omit<StepBase, "type"> {
+  type: "sign";
+  sign: {
+    input: string;
+    key: string;
+    algorithm: "SHA-256" | "SHA-384" | "SHA-512";
+    encoding: "hex" | "base64";
+    outputVariable?: string;
+  };
+}
+
+export interface JwtStep extends Omit<StepBase, "type"> {
+  type: "jwt";
+  jwt: {
+    operation: "create" | "verify" | "decode";
+    input: string;
+    secret?: string;
+    algorithm: "HS256" | "HS384" | "HS512";
+    expiresIn?: number;
+    outputVariable?: string;
+  };
+}
+
+// Advanced - AI Extensions
+export interface AgentStep extends Omit<StepBase, "type"> {
+  type: "agent";
+  agent: {
+    serverId: string;
+    model?: string;
+    goal: string;
+    tools?: string[];
+    maxIterations: number;
+    outputVariable?: string;
+  };
+}
+
+export interface RagStep extends Omit<StepBase, "type"> {
+  type: "rag";
+  rag: {
+    serverId: string;
+    model?: string;
+    query: string;
+    collection: string;
+    topK: number;
+    promptTemplate?: string;
+    outputVariable?: string;
+  };
+}
+
+export interface VisionStep extends Omit<StepBase, "type"> {
+  type: "vision";
+  vision: {
+    serverId: string;
+    model?: string;
+    image: string;
+    task: "describe" | "ocr" | "detect" | "classify";
+    prompt?: string;
+    outputVariable?: string;
+  };
+}
+
+export interface AudioStep extends Omit<StepBase, "type"> {
+  type: "audio";
+  audio: {
+    serverId: string;
+    model?: string;
+    task: "transcribe" | "synthesize";
+    input: string;
+    language?: string;
+    voice?: string;
+    outputVariable?: string;
+  };
+}
+
 export type Step =
   | TriggerStep
   | ActionStep
@@ -534,7 +681,22 @@ export type Step =
   | ParseStep
   | ValidateStep
   | FormatStep
-  | HashStep;
+  | HashStep
+  // Advanced - Array Operations
+  | GroupStep
+  | FlattenStep
+  | ChunkStep
+  | ZipStep
+  // Advanced - Security
+  | EncryptStep
+  | DecryptStep
+  | SignStep
+  | JwtStep
+  // Advanced - AI Extensions
+  | AgentStep
+  | RagStep
+  | VisionStep
+  | AudioStep;
 
 export interface EdgeDefinition {
   id: string;
