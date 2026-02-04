@@ -298,6 +298,37 @@ const BUILTIN_NODES = [
     pluginId: "builtin:race",
     operation: "execute",
   },
+  // State Management
+  {
+    id: "state-get",
+    category: "storage",
+    label: "State Get",
+    description: "Read from cross-workflow state store",
+    icon: Database,
+    nodeType: NodeTypes.STATE_GET,
+    pluginId: "builtin:state",
+    operation: "get",
+  },
+  {
+    id: "state-set",
+    category: "storage",
+    label: "State Set",
+    description: "Write to cross-workflow state store",
+    icon: Database,
+    nodeType: NodeTypes.STATE_SET,
+    pluginId: "builtin:state",
+    operation: "set",
+  },
+  {
+    id: "state-wait",
+    category: "storage",
+    label: "State Wait",
+    description: "Wait for a state condition to be met",
+    icon: Clock,
+    nodeType: NodeTypes.STATE_WAIT,
+    pluginId: "builtin:state",
+    operation: "wait",
+  },
   // Transform
   {
     id: "transform-jsonpath",
