@@ -16,6 +16,9 @@ export const NodeTypes = {
   TRY_CATCH: "tryCatchNode",
   RACE: "raceNode",
   COMMENT: "commentNode",
+  STATE_GET: "stateGetNode",
+  STATE_SET: "stateSetNode",
+  STATE_WAIT: "stateWaitNode",
 } as const;
 
 // Base node schema
