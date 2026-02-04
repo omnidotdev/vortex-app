@@ -73,9 +73,19 @@ export const TriggerType = {
   CRON: "cron",
   EVENT: "event",
   MANUAL: "manual",
+  OMNI: "omni",
 } as const;
 
 export type TriggerTypeValue = (typeof TriggerType)[keyof typeof TriggerType];
+
+export interface OmniTriggerConfig {
+  triggerType: "omni";
+  omni: {
+    source: string; // "runa", "chronicle", "*"
+    eventType: string; // "user.created", "payment.*"
+    filter?: string; // JSONPath condition
+  };
+}
 
 export interface Position {
   x: number;
