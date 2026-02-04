@@ -67,6 +67,7 @@ export const TriggerNodeConfig = ({
             <SelectItem value="webhook">Webhook</SelectItem>
             <SelectItem value="cron">Scheduled (Cron)</SelectItem>
             <SelectItem value="event">Event</SelectItem>
+            <SelectItem value="omni">Omni Event</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -145,6 +146,56 @@ export const TriggerNodeConfig = ({
           <p className="text-muted-foreground text-xs">
             The workflow will trigger when this event is emitted.
           </p>
+        </div>
+      )}
+
+      {triggerType === "omni" && (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="source">Source</Label>
+            <Input
+              id="source"
+              value={(config.source as string) || ""}
+              onChange={(e) =>
+                onNestedChange("config", "source", e.target.value)
+              }
+              placeholder="runa, chronicle, * (all)"
+            />
+            <p className="text-muted-foreground text-xs">
+              Omni service name or * for all services
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="eventType">Event Type</Label>
+            <Input
+              id="eventType"
+              value={(config.eventType as string) || ""}
+              onChange={(e) =>
+                onNestedChange("config", "eventType", e.target.value)
+              }
+              placeholder="user.created, payment.*"
+            />
+            <p className="text-muted-foreground text-xs">
+              Event type pattern. Use * for wildcards
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="filter">Filter (optional)</Label>
+            <Textarea
+              id="filter"
+              value={(config.filter as string) || ""}
+              onChange={(e) =>
+                onNestedChange("config", "filter", e.target.value)
+              }
+              placeholder="$.data.amount > 100"
+              rows={3}
+            />
+            <p className="text-muted-foreground text-xs">
+              JSONPath expression to filter events
+            </p>
+          </div>
         </div>
       )}
     </>
