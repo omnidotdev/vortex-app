@@ -13,6 +13,8 @@ export const NodeTypes = {
   PLUGIN: "pluginNode",
   MCP: "mcpNode",
   SUBWORKFLOW: "subworkflowNode",
+  TRY_CATCH: "tryCatchNode",
+  RACE: "raceNode",
 } as const;
 
 // Base node schema
