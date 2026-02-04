@@ -1,5 +1,5 @@
 import { Layers, Plus } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +30,7 @@ export function AddNodeButton({
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
   const isControlled = controlledOpen !== undefined;
   const isOpen = isControlled ? controlledOpen : uncontrolledOpen;
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const handleOpenChange = (open: boolean) => {
     if (!isControlled) {
@@ -47,7 +48,11 @@ export function AddNodeButton({
   };
 
   return (
-    <DialogRoot open={isOpen} onOpenChange={(e) => handleOpenChange(e.open)}>
+    <DialogRoot
+      open={isOpen}
+      onOpenChange={(e) => handleOpenChange(e.open)}
+      initialFocusEl={() => searchInputRef.current}
+    >
       <DialogTrigger asChild>
         <Button
           size="icon"
@@ -60,17 +65,18 @@ export function AddNodeButton({
       <DialogBackdrop />
       <DialogPositioner>
         <DialogContent className="h-[80vh] max-h-[700px] w-[95vw] max-w-[480px] overflow-hidden p-0">
-          <DialogHeader className="border-b px-4 py-3">
-            <DialogTitle className="flex items-center gap-2">
-              <Layers className="h-5 w-5" />
+          <DialogHeader className="px-4 py-2">
+            <DialogTitle className="flex items-center gap-2 text-base">
+              <Layers className="h-4 w-4" />
               Add Node
             </DialogTitle>
           </DialogHeader>
           <DialogCloseTrigger />
-          <div className="h-[calc(100%-57px)] overflow-hidden">
+          <div className="h-[calc(100%-41px)] overflow-hidden">
             <NodePicker
               organizationId={organizationId}
               onSelectNode={handleSelectNode}
+              searchInputRef={searchInputRef}
             />
           </div>
         </DialogContent>

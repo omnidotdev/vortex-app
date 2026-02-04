@@ -23,16 +23,13 @@ import {
 import signOut from "@/lib/auth/signOut";
 import app from "@/lib/config/app.config";
 import SidebarProvider from "@/providers/SidebarProvider";
-import { signOutAndRedirect } from "@/server/functions/auth";
 
 export const Route = createFileRoute("/_auth")({
   beforeLoad: async ({ params, context: { session } }) => {
-    // Redirect to home if not authenticated
-    if (!session?.user) throw redirect({ to: "/" });
-
-    // If session exists but `rowId` is missing, the user may exist in the
-    // identity provider but not in the database (stale cookie or incomplete signup)
-    if (!session.user.rowId) {
+    // If session doesn't exist or rowId is missing, sign out to clear stale session
+    // The user may exist in the identity provider but not in the database
+    if (!session?.user?.rowId) {
+      const { signOutAndRedirect } = await import("@/server/functions/auth");
       await signOutAndRedirect();
     }
 
@@ -103,8 +100,14 @@ function MobileHeader() {
 
   return (
     <header className="flex h-14 shrink-0 items-center justify-between border-b px-4 lg:hidden">
-      <Link to="/workspaces" className="font-bold text-xl hover:opacity-80">
-        Vortex
+      <Link
+        to="/workspaces"
+        className="flex items-center gap-2 hover:opacity-80"
+      >
+        <img src="/logo.png" alt="Vortex" className="h-6 w-6" />
+        <span className="rounded bg-primary/10 px-1.5 py-0.5 font-medium text-primary text-xs">
+          Early Access
+        </span>
       </Link>
 
       <SheetRoot>
@@ -114,21 +117,28 @@ function MobileHeader() {
           </Button>
         </SheetTrigger>
         <SheetBackdrop />
-        <SheetPositioner side="left">
-          <SheetContent side="left" className="w-64 p-0">
+        <SheetPositioner side="right">
+          <SheetContent side="right" className="w-64 p-0">
             <SheetContext>
               {({ setOpen }) => (
                 <div className="flex h-full flex-col">
                   {/* Header */}
-                  <div className="flex h-14 items-center justify-between border-b px-4">
+                  <div className="flex items-center justify-between border-b px-4 py-4">
                     <Link
                       to="/workspaces"
-                      className="font-bold text-xl hover:opacity-80"
+                      className="flex min-w-0 items-center gap-2 hover:opacity-80"
                       onClick={() => setOpen(false)}
                     >
-                      Vortex
+                      <img
+                        src="/logo.png"
+                        alt="Vortex"
+                        className="h-6 w-6 shrink-0"
+                      />
+                      <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 font-medium text-primary text-xs">
+                        Early Access
+                      </span>
                     </Link>
-                    <SheetCloseTrigger />
+                    <SheetCloseTrigger className="shrink-0" />
                   </div>
 
                   {/* Navigation */}
@@ -278,8 +288,14 @@ function AppSidebar() {
       <div className="flex h-full flex-col">
         {/* Header */}
         <div className="flex h-16 items-center border-b px-4">
-          <Link to="/workspaces" className="font-bold text-xl hover:opacity-80">
-            Vortex
+          <Link
+            to="/workspaces"
+            className="flex items-center gap-2 hover:opacity-80"
+          >
+            <img src="/logo.png" alt="Vortex" className="h-6 w-6" />
+            <span className="rounded bg-primary/10 px-1.5 py-0.5 font-medium text-primary text-xs">
+              Early Access
+            </span>
           </Link>
         </div>
 

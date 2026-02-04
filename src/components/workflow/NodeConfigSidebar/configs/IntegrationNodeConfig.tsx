@@ -5,7 +5,9 @@ import { useCallback, useMemo, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { JsonEditor } from "@/components/ui/json-editor";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -38,6 +40,7 @@ export const IntegrationNodeConfig = ({
     | string
     | undefined;
   const requiresConnection = data.requiresConnection as boolean | undefined;
+  const needsAttention = data.needsAttention as boolean | undefined;
   const operation = (data.operation as string) || "";
   const inputs = (data.inputs as Record<string, unknown>) || {};
 
@@ -111,7 +114,12 @@ export const IntegrationNodeConfig = ({
             <span className="text-amber-800 text-sm dark:text-amber-200">
               This integration needs to be connected first.
             </span>
-            <Button variant="outline" size="sm" asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              asChild
+              className={cn(needsAttention && "animate-attention-pulse")}
+            >
               <a
                 href={`/workspaces/${workspaceSlug}/integrations?connect=${integrationDefinitionId}&returnTo=${encodeURIComponent(window.location.pathname)}`}
                 target="_blank"
@@ -143,9 +151,8 @@ export const IntegrationNodeConfig = ({
         <Select
           value={operation}
           onValueChange={(v) => onChange("operation", v)}
-          disabled={requiresConnection}
         >
-          <SelectTrigger disabled={requiresConnection}>
+          <SelectTrigger>
             <SelectValue placeholder="Select an action..." />
           </SelectTrigger>
           <SelectContent>
@@ -164,7 +171,7 @@ export const IntegrationNodeConfig = ({
       </div>
 
       {/* Dynamic Inputs based on selected action */}
-      {!requiresConnection && operation && operation !== "custom" && (
+      {operation && operation !== "custom" && (
         <ActionInputs
           integrationId={definition?.rowId || integrationDefinitionId || ""}
           operation={operation}
@@ -178,7 +185,7 @@ export const IntegrationNodeConfig = ({
       )}
 
       {/* Custom action shows generic inputs */}
-      {!requiresConnection && operation === "custom" && (
+      {operation === "custom" && (
         <div className="space-y-4">
           <div className="flex items-start gap-3 rounded-lg border bg-muted/50 p-3">
             <AlertCircle className="h-4 w-4 shrink-0 text-muted-foreground" />
@@ -212,23 +219,22 @@ export const IntegrationNodeConfig = ({
 
           <div className="space-y-2">
             <Label htmlFor="params">Parameters (JSON)</Label>
-            <Textarea
-              id="params"
+            <JsonEditor
               value={
                 typeof inputs.params === "object"
                   ? JSON.stringify(inputs.params, null, 2)
-                  : (inputs.params as string) || ""
+                  : (inputs.params as string) || "{}"
               }
-              onChange={(e) => {
+              onChange={(value) => {
                 try {
-                  updateInput("params", JSON.parse(e.target.value));
+                  updateInput("params", JSON.parse(value));
                 } catch {
-                  updateInput("params", e.target.value);
+                  updateInput("params", value);
                 }
               }}
               placeholder='{"limit": 10}'
-              rows={4}
-              className="font-mono text-sm"
+              minHeight={100}
+              maxHeight={200}
             />
           </div>
         </div>
@@ -865,6 +871,459 @@ const ActionInputs = ({
                 <SelectItem value="all">All</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+        </div>
+      );
+    }
+  }
+
+  // MQTT-specific inputs
+  if (integrationId === "mqtt") {
+    if (
+      operation === "publish" ||
+      operation === "publish_json" ||
+      operation === "publish_retain"
+    ) {
+      return (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="topic">Topic</Label>
+            <Input
+              id="topic"
+              value={(inputs.topic as string) || ""}
+              onChange={(e) => updateInput("topic", e.target.value)}
+              placeholder="home/living-room/light/set"
+            />
+            <p className="text-muted-foreground text-xs">
+              MQTT topic to publish to (e.g., home/sensors/temperature)
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="payload">
+              {operation === "publish_json" ? "Payload (JSON)" : "Payload"}
+            </Label>
+            {operation === "publish_json" ? (
+              <JsonEditor
+                value={
+                  typeof inputs.payload === "object"
+                    ? JSON.stringify(inputs.payload, null, 2)
+                    : (inputs.payload as string) || "{}"
+                }
+                onChange={(value) => {
+                  try {
+                    updateInput("payload", JSON.parse(value));
+                  } catch {
+                    updateInput("payload", value);
+                  }
+                }}
+                placeholder='{"state": "ON", "brightness": 255}'
+                minHeight={100}
+                maxHeight={200}
+              />
+            ) : (
+              <Textarea
+                id="payload"
+                value={(inputs.payload as string) || ""}
+                onChange={(e) => updateInput("payload", e.target.value)}
+                placeholder="ON or {{variable}}"
+                rows={2}
+              />
+            )}
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="qos">QoS Level</Label>
+            <Select
+              value={String(inputs.qos ?? 0)}
+              onValueChange={(v) =>
+                updateInput("qos", Number.parseInt(v, 10))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">0 - At most once</SelectItem>
+                <SelectItem value="1">1 - At least once</SelectItem>
+                <SelectItem value="2">2 - Exactly once</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          {operation === "publish_retain" && (
+            <p className="text-muted-foreground text-xs">
+              Retained messages are stored by the broker and sent to new
+              subscribers.
+            </p>
+          )}
+        </div>
+      );
+    }
+
+    if (operation === "subscribe") {
+      return (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="topic">Topic Pattern</Label>
+            <Input
+              id="topic"
+              value={(inputs.topic as string) || ""}
+              onChange={(e) => updateInput("topic", e.target.value)}
+              placeholder="home/+/temperature or home/#"
+            />
+            <p className="text-muted-foreground text-xs">
+              Use + for single-level wildcard, # for multi-level wildcard
+            </p>
+          </div>
+        </div>
+      );
+    }
+  }
+
+  // Home Assistant-specific inputs
+  if (integrationId === "homeassistant") {
+    if (operation === "call_service") {
+      return (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="domain">Domain</Label>
+            <Input
+              id="domain"
+              value={(inputs.domain as string) || ""}
+              onChange={(e) => updateInput("domain", e.target.value)}
+              placeholder="light, switch, climate, automation..."
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="service">Service</Label>
+            <Input
+              id="service"
+              value={(inputs.service as string) || ""}
+              onChange={(e) => updateInput("service", e.target.value)}
+              placeholder="turn_on, turn_off, toggle..."
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="serviceData">Service Data (JSON)</Label>
+            <JsonEditor
+              value={
+                typeof inputs.service_data === "object"
+                  ? JSON.stringify(inputs.service_data, null, 2)
+                  : (inputs.service_data as string) || "{}"
+              }
+              onChange={(value) => {
+                try {
+                  updateInput("service_data", JSON.parse(value));
+                } catch {
+                  updateInput("service_data", value);
+                }
+              }}
+              placeholder='{"entity_id": "light.living_room", "brightness": 255}'
+              minHeight={100}
+              maxHeight={200}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (
+      operation === "get_state" ||
+      operation === "turn_on" ||
+      operation === "turn_off" ||
+      operation === "toggle"
+    ) {
+      return (
+        <div className="space-y-2">
+          <Label htmlFor="entity_id">Entity ID</Label>
+          <Input
+            id="entity_id"
+            value={(inputs.entity_id as string) || ""}
+            onChange={(e) => updateInput("entity_id", e.target.value)}
+            placeholder="light.living_room or switch.fan"
+          />
+          <p className="text-muted-foreground text-xs">
+            The entity to control (e.g., light.kitchen, switch.garage)
+          </p>
+        </div>
+      );
+    }
+
+    if (operation === "set_light") {
+      return (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="entity_id">Light Entity</Label>
+            <Input
+              id="entity_id"
+              value={(inputs.entity_id as string) || ""}
+              onChange={(e) => updateInput("entity_id", e.target.value)}
+              placeholder="light.living_room"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="brightness">Brightness (0-255)</Label>
+            <Input
+              id="brightness"
+              type="number"
+              value={(inputs.brightness as number) || ""}
+              onChange={(e) =>
+                updateInput(
+                  "brightness",
+                  e.target.value
+                    ? Number.parseInt(e.target.value, 10)
+                    : undefined,
+                )
+              }
+              placeholder="255"
+              min={0}
+              max={255}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="color_temp">Color Temperature (Mireds)</Label>
+            <Input
+              id="color_temp"
+              type="number"
+              value={(inputs.color_temp as number) || ""}
+              onChange={(e) =>
+                updateInput(
+                  "color_temp",
+                  e.target.value
+                    ? Number.parseInt(e.target.value, 10)
+                    : undefined,
+                )
+              }
+              placeholder="370 (warm) - 153 (cool)"
+              min={153}
+              max={500}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="rgb_color">RGB Color (optional)</Label>
+            <Input
+              id="rgb_color"
+              value={(inputs.rgb_color as string) || ""}
+              onChange={(e) => updateInput("rgb_color", e.target.value)}
+              placeholder="255, 128, 0"
+            />
+            <p className="text-muted-foreground text-xs">
+              Comma-separated RGB values (e.g., 255, 0, 0 for red)
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    if (operation === "set_climate") {
+      return (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="entity_id">Climate Entity</Label>
+            <Input
+              id="entity_id"
+              value={(inputs.entity_id as string) || ""}
+              onChange={(e) => updateInput("entity_id", e.target.value)}
+              placeholder="climate.living_room"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="temperature">Temperature</Label>
+            <Input
+              id="temperature"
+              type="number"
+              value={(inputs.temperature as number) || ""}
+              onChange={(e) =>
+                updateInput(
+                  "temperature",
+                  e.target.value
+                    ? Number.parseFloat(e.target.value)
+                    : undefined,
+                )
+              }
+              placeholder="72"
+              step="0.5"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="hvac_mode">HVAC Mode</Label>
+            <Select
+              value={(inputs.hvac_mode as string) || ""}
+              onValueChange={(v) => updateInput("hvac_mode", v)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select mode..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="off">Off</SelectItem>
+                <SelectItem value="heat">Heat</SelectItem>
+                <SelectItem value="cool">Cool</SelectItem>
+                <SelectItem value="heat_cool">Heat/Cool (Auto)</SelectItem>
+                <SelectItem value="fan_only">Fan Only</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      );
+    }
+
+    if (operation === "fire_event") {
+      return (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="event_type">Event Type</Label>
+            <Input
+              id="event_type"
+              value={(inputs.event_type as string) || ""}
+              onChange={(e) => updateInput("event_type", e.target.value)}
+              placeholder="my_custom_event"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="event_data">Event Data (JSON)</Label>
+            <JsonEditor
+              value={
+                typeof inputs.event_data === "object"
+                  ? JSON.stringify(inputs.event_data, null, 2)
+                  : (inputs.event_data as string) || "{}"
+              }
+              onChange={(value) => {
+                try {
+                  updateInput("event_data", JSON.parse(value));
+                } catch {
+                  updateInput("event_data", value);
+                }
+              }}
+              placeholder='{"message": "Hello from Vortex"}'
+              minHeight={80}
+              maxHeight={150}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (operation === "send_notification") {
+      return (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="message">Message</Label>
+            <Textarea
+              id="message"
+              value={(inputs.message as string) || ""}
+              onChange={(e) => updateInput("message", e.target.value)}
+              placeholder="Your notification message"
+              rows={2}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="title">Title (optional)</Label>
+            <Input
+              id="title"
+              value={(inputs.title as string) || ""}
+              onChange={(e) => updateInput("title", e.target.value)}
+              placeholder="Notification title"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="target">Target Device (optional)</Label>
+            <Input
+              id="target"
+              value={(inputs.target as string) || ""}
+              onChange={(e) => updateInput("target", e.target.value)}
+              placeholder="mobile_app_phone or leave empty for all"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (operation === "run_script" || operation === "trigger_automation") {
+      const entityType =
+        operation === "run_script" ? "script" : "automation";
+      return (
+        <div className="space-y-2">
+          <Label htmlFor="entity_id">
+            {operation === "run_script" ? "Script" : "Automation"} Entity
+          </Label>
+          <Input
+            id="entity_id"
+            value={(inputs.entity_id as string) || ""}
+            onChange={(e) => updateInput("entity_id", e.target.value)}
+            placeholder={`${entityType}.my_${entityType}`}
+          />
+        </div>
+      );
+    }
+  }
+
+  // Philips Hue-specific inputs
+  if (integrationId === "philipshue") {
+    if (operation === "set_light") {
+      return (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="light_id">Light ID or Name</Label>
+            <Input
+              id="light_id"
+              value={(inputs.light_id as string) || ""}
+              onChange={(e) => updateInput("light_id", e.target.value)}
+              placeholder="1 or 'Living Room Lamp'"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="on"
+              checked={(inputs.on as boolean) ?? true}
+              onChange={(e) => updateInput("on", e.target.checked)}
+              className="rounded"
+            />
+            <Label htmlFor="on" className="font-normal">
+              Light On
+            </Label>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="brightness">Brightness (1-254)</Label>
+            <Input
+              id="brightness"
+              type="number"
+              value={(inputs.bri as number) || ""}
+              onChange={(e) =>
+                updateInput(
+                  "bri",
+                  e.target.value
+                    ? Number.parseInt(e.target.value, 10)
+                    : undefined,
+                )
+              }
+              placeholder="254"
+              min={1}
+              max={254}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (operation === "set_scene") {
+      return (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="group_id">Group/Room ID</Label>
+            <Input
+              id="group_id"
+              value={(inputs.group_id as string) || ""}
+              onChange={(e) => updateInput("group_id", e.target.value)}
+              placeholder="1"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="scene_id">Scene ID</Label>
+            <Input
+              id="scene_id"
+              value={(inputs.scene_id as string) || ""}
+              onChange={(e) => updateInput("scene_id", e.target.value)}
+              placeholder="ABC123"
+            />
           </div>
         </div>
       );

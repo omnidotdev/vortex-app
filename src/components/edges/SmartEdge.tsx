@@ -9,8 +9,7 @@ const NODE_MIN_HEIGHT = 120;
 
 /** Edge styling constants */
 const EDGE_STROKE_WIDTH = 3;
-const CONNECTOR_SIZE = 10;
-const EDGE_OFFSET = 20; // Distance from node before first turn
+const EDGE_OFFSET = 20;
 
 interface NodeRect {
   x: number;
@@ -43,8 +42,6 @@ function distance(
 
 /**
  * Determine the best connection points between two nodes.
- * Finds the pair of sides (one from each node) that results in the shortest path
- * while respecting the natural flow direction.
  */
 function getBestConnectionPoints(
   sourceRect: NodeRect,
@@ -60,7 +57,6 @@ function getBestConnectionPoints(
   const sourceSides = getNodeSideCenters(sourceRect);
   const targetSides = getNodeSideCenters(targetRect);
 
-  // Define valid source-target position pairs (source flows out, target receives)
   const positionPairs: {
     sourcePos: Position;
     targetPos: Position;
@@ -93,39 +89,28 @@ function getBestConnectionPoints(
     },
   ];
 
-  // Calculate which pair gives us the best path
-  // Prefer natural flow directions based on relative positions
   let bestPair = positionPairs[0]!;
   let bestScore = Infinity;
 
   for (const pair of positionPairs) {
     const dist = distance(pair.source, pair.target);
-
-    // Add penalty for paths that go against natural flow
     let penalty = 0;
 
-    // Prefer bottom-to-top when target is below source
     if (pair.sourcePos === Position.Bottom && pair.targetPos === Position.Top) {
       if (targetRect.y > sourceRect.y + sourceRect.height) {
-        penalty -= 50; // Bonus for natural downward flow
+        penalty -= 50;
       }
     }
-
-    // Prefer top-to-bottom when target is above source
     if (pair.sourcePos === Position.Top && pair.targetPos === Position.Bottom) {
       if (targetRect.y + targetRect.height < sourceRect.y) {
         penalty -= 50;
       }
     }
-
-    // Prefer right-to-left when target is to the right
     if (pair.sourcePos === Position.Right && pair.targetPos === Position.Left) {
       if (targetRect.x > sourceRect.x + sourceRect.width) {
         penalty -= 50;
       }
     }
-
-    // Prefer left-to-right when target is to the left
     if (pair.sourcePos === Position.Left && pair.targetPos === Position.Right) {
       if (targetRect.x + targetRect.width < sourceRect.x) {
         penalty -= 50;
@@ -149,31 +134,53 @@ function getBestConnectionPoints(
   };
 }
 
-// Selector to get nodes from store - returns positions to trigger re-renders on move
-const nodesSelector = (state: ReactFlowState) => {
-  const nodes: Record<
-    string,
-    { x: number; y: number; width: number; height: number }
-  > = {};
-  for (const [id, node] of state.nodeInternals) {
-    nodes[id] = {
-      x: node.positionAbsolute?.x ?? node.position.x,
-      y: node.positionAbsolute?.y ?? node.position.y,
-      width: node.width ?? NODE_WIDTH,
-      height: node.height ?? NODE_MIN_HEIGHT,
-    };
-  }
-  return nodes;
+// Selector for source and target node positions only
+const createEdgePositionsSelector = (sourceId: string, targetId: string) => {
+  let prevResult: {
+    source: NodeRect | null;
+    target: NodeRect | null;
+  } | null = null;
+
+  return (state: ReactFlowState) => {
+    const sourceNode = state.nodeInternals.get(sourceId);
+    const targetNode = state.nodeInternals.get(targetId);
+
+    const source = sourceNode
+      ? {
+          x: sourceNode.positionAbsolute?.x ?? sourceNode.position.x,
+          y: sourceNode.positionAbsolute?.y ?? sourceNode.position.y,
+          width: sourceNode.width ?? NODE_WIDTH,
+          height: sourceNode.height ?? NODE_MIN_HEIGHT,
+        }
+      : null;
+
+    const target = targetNode
+      ? {
+          x: targetNode.positionAbsolute?.x ?? targetNode.position.x,
+          y: targetNode.positionAbsolute?.y ?? targetNode.position.y,
+          width: targetNode.width ?? NODE_WIDTH,
+          height: targetNode.height ?? NODE_MIN_HEIGHT,
+        }
+      : null;
+
+    // Return same reference if positions haven't changed
+    if (
+      prevResult &&
+      prevResult.source?.x === source?.x &&
+      prevResult.source?.y === source?.y &&
+      prevResult.target?.x === target?.x &&
+      prevResult.target?.y === target?.y
+    ) {
+      return prevResult;
+    }
+
+    prevResult = { source, target };
+    return prevResult;
+  };
 };
 
 /**
  * SmartEdge - A custom edge that automatically connects to the nearest sides of nodes.
- *
- * Features:
- * - Sharp/stepped path routing with 90-degree angles
- * - Dynamic connection points that update as nodes move
- * - Modern styling with larger connectors and thicker edges
- * - Animated connector dots at connection points
  */
 export const SmartEdge = memo(
   ({
@@ -194,95 +201,53 @@ export const SmartEdge = memo(
     labelBgStyle,
     selected,
   }: EdgeProps) => {
-    const nodePositions = useStore(nodesSelector);
-    const sourceNodePos = nodePositions[source];
-    const targetNodePos = nodePositions[target];
+    // Memoize the selector so it's not recreated on every render
+    const selector = useMemo(
+      () => createEdgePositionsSelector(source, target),
+      [source, target]
+    );
+    const { source: sourceNodePos, target: targetNodePos } = useStore(selector);
 
-    const { path, labelX, labelY, sourceX, sourceY, targetX, targetY } =
-      useMemo(() => {
-        if (!sourceNodePos || !targetNodePos) {
-          // Fallback to provided coordinates
-          const [edgePath, edgeLabelX, edgeLabelY] = getSmoothStepPath({
-            sourceX: _sourceX,
-            sourceY: _sourceY,
-            sourcePosition: _sourcePosition,
-            targetX: _targetX,
-            targetY: _targetY,
-            targetPosition: _targetPosition,
-            borderRadius: 0,
-            offset: EDGE_OFFSET,
-          });
-          return {
-            path: edgePath,
-            labelX: edgeLabelX,
-            labelY: edgeLabelY,
-            sourceX: _sourceX,
-            sourceY: _sourceY,
-            targetX: _targetX,
-            targetY: _targetY,
-          };
-        }
+    let path: string;
+    let labelX: number;
+    let labelY: number;
 
-        // Get actual node dimensions
-        const sourceRect: NodeRect = {
-          x: sourceNodePos.x,
-          y: sourceNodePos.y,
-          width: sourceNodePos.width,
-          height: sourceNodePos.height,
-        };
+    if (!sourceNodePos || !targetNodePos) {
+      // Fallback to provided coordinates
+      [path, labelX, labelY] = getSmoothStepPath({
+        sourceX: _sourceX,
+        sourceY: _sourceY,
+        sourcePosition: _sourcePosition,
+        targetX: _targetX,
+        targetY: _targetY,
+        targetPosition: _targetPosition,
+        borderRadius: 0,
+        offset: EDGE_OFFSET,
+      });
+    } else {
+      // Calculate best connection points
+      const {
+        sourceX,
+        sourceY,
+        targetX,
+        targetY,
+        sourcePosition,
+        targetPosition,
+      } = getBestConnectionPoints(sourceNodePos, targetNodePos);
 
-        const targetRect: NodeRect = {
-          x: targetNodePos.x,
-          y: targetNodePos.y,
-          width: targetNodePos.width,
-          height: targetNodePos.height,
-        };
+      [path, labelX, labelY] = getSmoothStepPath({
+        sourceX,
+        sourceY,
+        sourcePosition,
+        targetX,
+        targetY,
+        targetPosition,
+        borderRadius: 0,
+        offset: EDGE_OFFSET,
+      });
+    }
 
-        // Calculate best connection points
-        const {
-          sourceX: calcSourceX,
-          sourceY: calcSourceY,
-          targetX: calcTargetX,
-          targetY: calcTargetY,
-          sourcePosition,
-          targetPosition,
-        } = getBestConnectionPoints(sourceRect, targetRect);
-
-        // Generate the edge path with sharp corners (borderRadius: 0)
-        const [edgePath, edgeLabelX, edgeLabelY] = getSmoothStepPath({
-          sourceX: calcSourceX,
-          sourceY: calcSourceY,
-          sourcePosition,
-          targetX: calcTargetX,
-          targetY: calcTargetY,
-          targetPosition,
-          borderRadius: 0,
-          offset: EDGE_OFFSET,
-        });
-
-        return {
-          path: edgePath,
-          labelX: edgeLabelX,
-          labelY: edgeLabelY,
-          sourceX: calcSourceX,
-          sourceY: calcSourceY,
-          targetX: calcTargetX,
-          targetY: calcTargetY,
-        };
-      }, [
-        sourceNodePos,
-        targetNodePos,
-        _sourceX,
-        _sourceY,
-        _targetX,
-        _targetY,
-        _sourcePosition,
-        _targetPosition,
-      ]);
-
-    // Get colors from style or use defaults
     const strokeColor = (style.stroke as string) || "#6366f1";
-    const isSelected = selected;
 
     return (
       <g className="react-flow__edge-smart">
@@ -295,15 +260,14 @@ export const SmartEdge = memo(
           className="react-flow__edge-interaction"
         />
 
-        {/* Glow effect for selected/hover state */}
-        {isSelected && (
+        {/* Glow effect for selected state */}
+        {selected && (
           <path
             d={path}
             fill="none"
             strokeWidth={EDGE_STROKE_WIDTH + 6}
             stroke={strokeColor}
             strokeOpacity={0.3}
-            className="react-flow__edge-glow"
           />
         )}
 
@@ -313,50 +277,12 @@ export const SmartEdge = memo(
           className="react-flow__edge-path"
           d={path}
           fill="none"
-          strokeWidth={EDGE_STROKE_WIDTH}
+          strokeWidth={selected ? EDGE_STROKE_WIDTH + 1 : EDGE_STROKE_WIDTH}
           stroke={strokeColor}
           strokeLinecap="round"
           strokeLinejoin="round"
-          style={{
-            transition: "stroke 0.2s ease, stroke-width 0.2s ease",
-            ...style,
-            strokeWidth: isSelected ? EDGE_STROKE_WIDTH + 1 : EDGE_STROKE_WIDTH,
-          }}
+          style={style}
           markerEnd={markerEnd}
-        />
-
-        {/* Source connector dot */}
-        <circle
-          cx={sourceX}
-          cy={sourceY}
-          r={isSelected ? CONNECTOR_SIZE / 2 + 1 : CONNECTOR_SIZE / 2}
-          fill={strokeColor}
-          stroke="var(--background)"
-          strokeWidth={2}
-          className="react-flow__edge-connector"
-          style={{
-            transition: "r 0.2s ease, fill 0.2s ease",
-            filter: isSelected
-              ? `drop-shadow(0 0 4px ${strokeColor})`
-              : undefined,
-          }}
-        />
-
-        {/* Target connector dot */}
-        <circle
-          cx={targetX}
-          cy={targetY}
-          r={isSelected ? CONNECTOR_SIZE / 2 + 1 : CONNECTOR_SIZE / 2}
-          fill={strokeColor}
-          stroke="var(--background)"
-          strokeWidth={2}
-          className="react-flow__edge-connector"
-          style={{
-            transition: "r 0.2s ease, fill 0.2s ease",
-            filter: isSelected
-              ? `drop-shadow(0 0 4px ${strokeColor})`
-              : undefined,
-          }}
         />
 
         {/* Label */}

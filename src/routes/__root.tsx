@@ -109,7 +109,7 @@ function ErrorComponent({ error }: { error: Error }) {
 
 function MaintenancePage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-linear-to-br from-slate-900 to-slate-800 p-8 text-white">
       <div className="text-center">
         <div className="mb-6 text-9xl">🌪️</div>
         <h1 className="mb-4 font-bold text-4xl">Caught in a Whirlwind</h1>
@@ -168,13 +168,12 @@ function RootDocument({
           <TanStackDevtools
             config={{
               position: "bottom-left",
-              defaultOpen: true,
+              defaultOpen: false,
             }}
             plugins={[
               {
                 name: "Router",
                 render: <TanStackRouterDevtoolsPanel />,
-                defaultOpen: true,
               },
               {
                 name: "Query",

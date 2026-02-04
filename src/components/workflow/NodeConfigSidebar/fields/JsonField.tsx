@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 
+import { JsonEditor } from "@/components/ui/json-editor";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { VariablePicker } from "@/components/workflow/VariablePicker";
 
 import type { Node } from "reactflow";
@@ -17,6 +17,10 @@ interface JsonFieldProps {
   nodeId?: string;
   /** All nodes in the workflow for variable picker */
   allNodes?: Node[];
+  /** Minimum height in pixels */
+  minHeight?: number;
+  /** Maximum height in pixels */
+  maxHeight?: number;
 }
 
 export const JsonField = ({
@@ -28,61 +32,45 @@ export const JsonField = ({
   rows = 4,
   nodeId,
   allNodes,
+  minHeight,
+  maxHeight,
 }: JsonFieldProps) => {
-  const [error, setError] = useState<string | null>(null);
   const [rawValue, setRawValue] = useState(() =>
     JSON.stringify(value || {}, null, 2),
   );
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const editorRef = useRef<{ insertText: (text: string) => void } | null>(null);
 
   const handleChange = (text: string) => {
     setRawValue(text);
 
-    // Check if text contains template variables
+    // Check if text contains template variables - store as-is for runtime resolution
     const hasTemplates = text.includes("{{") && text.includes("}}");
 
     try {
       const parsed = JSON.parse(text);
       onChange(parsed);
-      setError(null);
     } catch {
-      // If it has templates and fails to parse, give a helpful hint
+      // If it has templates, store the raw string for runtime parsing
+      // The workflow engine will handle template substitution first
       if (hasTemplates) {
-        // Check if it looks like a bare template (not wrapped in JSON)
-        const trimmed = text.trim();
-        if (trimmed.startsWith("{{") && trimmed.endsWith("}}")) {
-          setError('Wrap in JSON, e.g.: {"content": "' + trimmed + '"}');
-        } else {
-          setError(
-            "Invalid JSON - ensure template variables are inside quoted strings",
-          );
-        }
-      } else {
-        setError("Invalid JSON");
+        // Store as a special marker that the engine can detect
+        onChange({ __raw: text } as Record<string, unknown>);
       }
+      // Otherwise just don't update - let the user fix the JSON
     }
   };
 
   const handleInsertVariable = (variable: string) => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const newValue =
-        rawValue.substring(0, start) + variable + rawValue.substring(end);
-      handleChange(newValue);
-
-      setTimeout(() => {
-        textarea.focus();
-        const newCursorPos = start + variable.length;
-        textarea.setSelectionRange(newCursorPos, newCursorPos);
-      }, 0);
-    } else {
-      handleChange(rawValue + variable);
-    }
+    // Insert at cursor position (or append)
+    const newValue = rawValue + variable;
+    handleChange(newValue);
   };
 
   const showVariablePicker = nodeId && allNodes && allNodes.length > 0;
+
+  // Calculate height from rows if not specified
+  const calculatedMinHeight = minHeight ?? Math.max(80, rows * 24);
+  const calculatedMaxHeight = maxHeight ?? Math.max(200, rows * 40);
 
   return (
     <div className="space-y-2">
@@ -96,16 +84,13 @@ export const JsonField = ({
           />
         )}
       </div>
-      <Textarea
-        ref={textareaRef}
-        id={id}
+      <JsonEditor
         value={rawValue}
-        onChange={(e) => handleChange(e.target.value)}
+        onChange={handleChange}
         placeholder={placeholder}
-        rows={rows}
-        className={`font-mono text-sm ${error ? "border-destructive" : ""}`}
+        minHeight={calculatedMinHeight}
+        maxHeight={calculatedMaxHeight}
       />
-      {error && <p className="text-destructive text-xs">{error}</p>}
     </div>
   );
 };

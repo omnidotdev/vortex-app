@@ -1278,6 +1278,146 @@ const integrationActions: Record<string, IntegrationAction[]> = {
     },
   ],
 
+  // Smart Home / IoT
+  mqtt: [
+    {
+      value: "publish",
+      label: "Publish Message",
+      description: "Publish a message to an MQTT topic",
+    },
+    {
+      value: "subscribe",
+      label: "Subscribe",
+      description: "Subscribe to topic (trigger only)",
+    },
+    {
+      value: "publish_json",
+      label: "Publish JSON",
+      description: "Publish JSON payload to topic",
+    },
+    {
+      value: "publish_retain",
+      label: "Publish Retained",
+      description: "Publish retained message",
+    },
+  ],
+  homeassistant: [
+    {
+      value: "call_service",
+      label: "Call Service",
+      description: "Call a Home Assistant service",
+    },
+    {
+      value: "get_state",
+      label: "Get State",
+      description: "Get entity state",
+    },
+    {
+      value: "get_states",
+      label: "Get All States",
+      description: "Get all entity states",
+    },
+    {
+      value: "set_state",
+      label: "Set State",
+      description: "Set entity state",
+    },
+    {
+      value: "fire_event",
+      label: "Fire Event",
+      description: "Fire a custom event",
+    },
+    {
+      value: "turn_on",
+      label: "Turn On",
+      description: "Turn on a device",
+    },
+    {
+      value: "turn_off",
+      label: "Turn Off",
+      description: "Turn off a device",
+    },
+    {
+      value: "toggle",
+      label: "Toggle",
+      description: "Toggle a device on/off",
+    },
+    {
+      value: "set_light",
+      label: "Set Light",
+      description: "Set light brightness/color",
+    },
+    {
+      value: "set_climate",
+      label: "Set Climate",
+      description: "Set thermostat/HVAC",
+    },
+    {
+      value: "send_notification",
+      label: "Send Notification",
+      description: "Send mobile notification",
+    },
+    {
+      value: "run_script",
+      label: "Run Script",
+      description: "Execute a script",
+    },
+    {
+      value: "trigger_automation",
+      label: "Trigger Automation",
+      description: "Trigger an automation",
+    },
+    {
+      value: "custom",
+      label: "Custom API Call",
+      description: "Make a custom API call",
+    },
+  ],
+  nodered: [
+    {
+      value: "inject",
+      label: "Inject",
+      description: "Trigger a Node-RED flow via HTTP",
+    },
+    {
+      value: "http_request",
+      label: "HTTP Request",
+      description: "Call Node-RED HTTP endpoint",
+    },
+  ],
+  philipshue: [
+    {
+      value: "set_light",
+      label: "Set Light",
+      description: "Control a light",
+    },
+    {
+      value: "set_group",
+      label: "Set Group/Room",
+      description: "Control a room or zone",
+    },
+    {
+      value: "set_scene",
+      label: "Set Scene",
+      description: "Activate a scene",
+    },
+    {
+      value: "get_lights",
+      label: "Get Lights",
+      description: "List all lights",
+    },
+    {
+      value: "get_sensors",
+      label: "Get Sensors",
+      description: "List all sensors",
+    },
+    {
+      value: "custom",
+      label: "Custom API Call",
+      description: "Make a custom API call",
+    },
+  ],
+
   // CMS
   wordpress: [
     {

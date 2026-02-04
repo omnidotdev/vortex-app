@@ -185,6 +185,12 @@
     font-weight: var(--text-weight);
   }
 
+  /* Optimize node rendering for drag performance */
+  .react-flow__node {
+    will-change: transform;
+    contain: layout style;
+  }
+
   /* ReactFlow handle positioning fixes */
   .react-flow__handle {
     /* Ensure handles are centered on their connection point */
@@ -283,59 +289,33 @@
 
   /* Handle styling - larger and more visible */
   .react-flow__handle {
-    width: 14px !important;
-    height: 14px !important;
+    width: 12px !important;
+    height: 12px !important;
     border: 2px solid var(--background) !important;
-    box-shadow: 0 2px 4px rgb(0 0 0 / 0.15);
-    transition:
-      transform 0.15s ease,
-      box-shadow 0.15s ease;
-  }
-
-  .react-flow__handle:hover {
-    transform: translate(-50%, -50%) scale(1.2);
-    box-shadow:
-      0 0 0 4px oklch(from var(--primary) l c h / 0.2),
-      0 2px 8px rgb(0 0 0 / 0.2);
-  }
-
-  .react-flow__handle.react-flow__handle-top:hover {
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-
-  .react-flow__handle.react-flow__handle-bottom:hover {
-    transform: translate(-50%, 50%) scale(1.2);
-  }
-
-  .react-flow__handle.react-flow__handle-left:hover {
-    transform: translate(-50%, -50%) scale(1.2);
-  }
-
-  .react-flow__handle.react-flow__handle-right:hover {
-    transform: translate(50%, -50%) scale(1.2);
-  }
-
-  /* Connecting state */
-  .react-flow__handle.connecting {
-    animation: pulse-handle 1s ease infinite;
-  }
-
-  @keyframes pulse-handle {
-    0%,
-    100% {
-      box-shadow:
-        0 0 0 0 oklch(from var(--primary) l c h / 0.4),
-        0 2px 4px rgb(0 0 0 / 0.15);
-    }
-    50% {
-      box-shadow:
-        0 0 0 8px oklch(from var(--primary) l c h / 0),
-        0 2px 4px rgb(0 0 0 / 0.15);
-    }
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
   }
 }
 
 @layer utilities {
+  /* Override accordion animations for Ark UI (uses --height instead of --radix-accordion-content-height) */
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--height);
+    }
+    to {
+      height: 0;
+    }
+  }
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
@@ -379,6 +359,61 @@
 
   .animate-glow-pulse {
     animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  /* Attention pulse animation for nodes that need configuration */
+  @keyframes attention-pulse {
+    0%,
+    100% {
+      box-shadow:
+        0 0 0 0 oklch(0.8 0.18 85 / 0),
+        0 0 0 0 oklch(0.8 0.18 85 / 0);
+    }
+    50% {
+      box-shadow:
+        0 0 0 4px oklch(0.8 0.18 85 / 0.4),
+        0 0 20px 4px oklch(0.8 0.18 85 / 0.2);
+    }
+  }
+
+  .animate-attention-pulse {
+    animation: attention-pulse 1s ease-in-out 3;
+  }
+
+  /* Workflow execution status highlighting for nodes */
+  @keyframes execution-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 2px oklch(0.6 0.2 240 / 0.6);
+    }
+    50% {
+      box-shadow:
+        0 0 0 2px oklch(0.6 0.2 240 / 0.8),
+        0 0 12px 4px oklch(0.6 0.2 240 / 0.4);
+    }
+  }
+
+  .execution-status-running > div {
+    box-shadow:
+      0 0 0 2px oklch(0.6 0.2 240),
+      0 0 8px 2px oklch(0.6 0.2 240 / 0.4) !important;
+    animation: execution-pulse 1.5s ease-in-out infinite;
+  }
+
+  .execution-status-completed > div {
+    box-shadow: 0 0 0 2px oklch(0.65 0.2 145) !important;
+  }
+
+  .execution-status-failed > div {
+    box-shadow: 0 0 0 2px oklch(0.6 0.25 25) !important;
+  }
+
+  .execution-status-skipped > div {
+    opacity: 0.6;
+  }
+
+  .execution-status-pending > div {
+    box-shadow: 0 0 0 2px oklch(0.7 0.15 85 / 0.5) !important;
   }
 
   /* Static glow utilities */

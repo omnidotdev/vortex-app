@@ -20,6 +20,7 @@ import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as PublicOauthErrorRouteImport } from './routes/_public/oauth/error'
 import { Route as PublicOauthCallbackRouteImport } from './routes/_public/oauth/callback'
 import { Route as AuthWorkspacesWorkspaceSlugIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/index'
+import { Route as ApiRunsRunIdStreamRouteImport } from './routes/api/runs/$runId/stream'
 import { Route as AuthWorkspacesWorkspaceSlugSettingsRouteImport } from './routes/_auth/workspaces/$workspaceSlug/settings'
 import { Route as AuthWorkspacesWorkspaceSlugWorkflowsIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/workflows/index'
 import { Route as AuthWorkspacesWorkspaceSlugIntegrationsIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/integrations/index'
@@ -82,6 +83,11 @@ const AuthWorkspacesWorkspaceSlugIndexRoute =
     path: '/workspaces/$workspaceSlug/',
     getParentRoute: () => AuthRoute,
   } as any)
+const ApiRunsRunIdStreamRoute = ApiRunsRunIdStreamRouteImport.update({
+  id: '/api/runs/$runId/stream',
+  path: '/api/runs/$runId/stream',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthWorkspacesWorkspaceSlugSettingsRoute =
   AuthWorkspacesWorkspaceSlugSettingsRouteImport.update({
     id: '/workspaces/$workspaceSlug/settings',
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/workspaces/': typeof AuthWorkspacesIndexRoute
   '/workspaces/$workspaceSlug/settings': typeof AuthWorkspacesWorkspaceSlugSettingsRoute
+  '/api/runs/$runId/stream': typeof ApiRunsRunIdStreamRoute
   '/workspaces/$workspaceSlug/': typeof AuthWorkspacesWorkspaceSlugIndexRoute
   '/workspaces/$workspaceSlug/integrations/$integrationId': typeof AuthWorkspacesWorkspaceSlugIntegrationsIntegrationIdRoute
   '/workspaces/$workspaceSlug/workflows/$workflowId': typeof AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute
@@ -153,6 +160,7 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/workspaces': typeof AuthWorkspacesIndexRoute
   '/workspaces/$workspaceSlug/settings': typeof AuthWorkspacesWorkspaceSlugSettingsRoute
+  '/api/runs/$runId/stream': typeof ApiRunsRunIdStreamRoute
   '/workspaces/$workspaceSlug': typeof AuthWorkspacesWorkspaceSlugIndexRoute
   '/workspaces/$workspaceSlug/integrations/$integrationId': typeof AuthWorkspacesWorkspaceSlugIntegrationsIntegrationIdRoute
   '/workspaces/$workspaceSlug/workflows/$workflowId': typeof AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute
@@ -174,6 +182,7 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_auth/workspaces/': typeof AuthWorkspacesIndexRoute
   '/_auth/workspaces/$workspaceSlug/settings': typeof AuthWorkspacesWorkspaceSlugSettingsRoute
+  '/api/runs/$runId/stream': typeof ApiRunsRunIdStreamRoute
   '/_auth/workspaces/$workspaceSlug/': typeof AuthWorkspacesWorkspaceSlugIndexRoute
   '/_auth/workspaces/$workspaceSlug/integrations/$integrationId': typeof AuthWorkspacesWorkspaceSlugIntegrationsIntegrationIdRoute
   '/_auth/workspaces/$workspaceSlug/workflows/$workflowId': typeof AuthWorkspacesWorkspaceSlugWorkflowsWorkflowIdRoute
@@ -194,6 +203,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/workspaces/'
     | '/workspaces/$workspaceSlug/settings'
+    | '/api/runs/$runId/stream'
     | '/workspaces/$workspaceSlug/'
     | '/workspaces/$workspaceSlug/integrations/$integrationId'
     | '/workspaces/$workspaceSlug/workflows/$workflowId'
@@ -212,6 +222,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/workspaces'
     | '/workspaces/$workspaceSlug/settings'
+    | '/api/runs/$runId/stream'
     | '/workspaces/$workspaceSlug'
     | '/workspaces/$workspaceSlug/integrations/$integrationId'
     | '/workspaces/$workspaceSlug/workflows/$workflowId'
@@ -232,6 +243,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/_auth/workspaces/'
     | '/_auth/workspaces/$workspaceSlug/settings'
+    | '/api/runs/$runId/stream'
     | '/_auth/workspaces/$workspaceSlug/'
     | '/_auth/workspaces/$workspaceSlug/integrations/$integrationId'
     | '/_auth/workspaces/$workspaceSlug/workflows/$workflowId'
@@ -247,6 +259,7 @@ export interface RootRouteChildren {
   ApiExecuteWorkflowRoute: typeof ApiExecuteWorkflowRoute
   ApiSendEmailRoute: typeof ApiSendEmailRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiRunsRunIdStreamRoute: typeof ApiRunsRunIdStreamRoute
   ApiWebhooksWorkflowWorkflowIdSecretRoute: typeof ApiWebhooksWorkflowWorkflowIdSecretRoute
 }
 
@@ -328,6 +341,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/workspaces/$workspaceSlug/'
       preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugIndexRouteImport
       parentRoute: typeof AuthRoute
+    }
+    '/api/runs/$runId/stream': {
+      id: '/api/runs/$runId/stream'
+      path: '/api/runs/$runId/stream'
+      fullPath: '/api/runs/$runId/stream'
+      preLoaderRoute: typeof ApiRunsRunIdStreamRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_auth/workspaces/$workspaceSlug/settings': {
       id: '/_auth/workspaces/$workspaceSlug/settings'
@@ -434,6 +454,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiExecuteWorkflowRoute: ApiExecuteWorkflowRoute,
   ApiSendEmailRoute: ApiSendEmailRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiRunsRunIdStreamRoute: ApiRunsRunIdStreamRoute,
   ApiWebhooksWorkflowWorkflowIdSecretRoute:
     ApiWebhooksWorkflowWorkflowIdSecretRoute,
 }

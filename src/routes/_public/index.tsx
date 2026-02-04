@@ -20,7 +20,7 @@ import type { ReactNode } from "react";
 
 export const Route = createFileRoute("/_public/")({
   beforeLoad: ({ context: { session } }) => {
-    if (session?.user?.rowId) throw redirect({ to: "/workspaces" });
+    if (session?.user) throw redirect({ to: "/workspaces" });
   },
   component: LandingPage,
 });
