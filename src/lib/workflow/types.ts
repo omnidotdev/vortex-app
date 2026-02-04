@@ -69,6 +69,8 @@ export const StepType = {
   // Flow control
   TRY_CATCH: "try_catch",
   RACE: "race",
+  // Documentation
+  COMMENT: "comment",
 } as const;
 
 export type StepTypeValue = (typeof StepType)[keyof typeof StepType];
@@ -686,6 +688,15 @@ export interface RaceStep extends Omit<StepBase, "type"> {
   };
 }
 
+// Documentation
+export interface CommentStep extends Omit<StepBase, "type"> {
+  type: "comment";
+  comment: {
+    text: string;
+    color?: string;
+  };
+}
+
 export type Step =
   | TriggerStep
   | ActionStep
@@ -752,7 +763,9 @@ export type Step =
   | SubWorkflowStep
   // Flow control
   | TryCatchStep
-  | RaceStep;
+  | RaceStep
+  // Documentation
+  | CommentStep;
 
 export interface EdgeDefinition {
   id: string;
