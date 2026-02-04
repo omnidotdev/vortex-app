@@ -9,6 +9,7 @@ import {
   NODE_MIN_HEIGHT,
   NODE_WIDTH,
   NodeInfoRow,
+  getIntegrationTheme,
   nodeThemes,
 } from "./BaseNode";
 
@@ -23,6 +24,7 @@ interface ActionNodeData {
   integrationDefinitionId?: string;
   connectedInstanceId?: string;
   requiresConnection?: boolean;
+  needsAttention?: boolean;
   onNodeSelect?: (node: {
     id: string;
     data: ActionNodeData;
@@ -48,19 +50,21 @@ export const ActionNode = memo(
     };
 
     const isIntegration = !!data.integrationDefinitionId;
-    const themeConfig = isIntegration ? nodeThemes.plugin : nodeThemes.action;
+    const themeKey = isIntegration
+      ? getIntegrationTheme(data.label || data.integrationDefinitionId || "")
+      : "action";
+    const themeConfig = nodeThemes[themeKey];
 
     return (
       <div
         className={cn(
-          "group relative cursor-pointer rounded-xl border px-4 py-3 transition-all duration-200",
-          "backdrop-blur-sm",
+          "group relative cursor-pointer rounded-xl border px-4 py-3",
           themeConfig.border,
           themeConfig.bg,
           themeConfig.glow,
-          "hover:scale-[1.02]",
           selected &&
             "ring-2 ring-primary ring-offset-2 ring-offset-background",
+          data.needsAttention && "animate-attention-pulse",
         )}
         style={{ width: NODE_WIDTH, minHeight: NODE_MIN_HEIGHT }}
         onClick={handleNodeClick}
@@ -83,7 +87,7 @@ export const ActionNode = memo(
           <div className="flex min-w-0 flex-1 items-center gap-3">
             {/* Icon - use integration logo or default icon */}
             {data.iconUrl ? (
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white shadow-sm transition-transform group-hover:scale-105 dark:bg-slate-800">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white shadow-sm dark:bg-slate-800">
                 <img
                   src={data.iconUrl}
                   alt={data.label}
@@ -97,7 +101,7 @@ export const ActionNode = memo(
             ) : (
               <div
                 className={cn(
-                  "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl shadow-sm transition-transform group-hover:scale-105",
+                  "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl shadow-sm",
                   themeConfig.iconBg,
                 )}
               >

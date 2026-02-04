@@ -1,3 +1,5 @@
+const env = { ...import.meta.env, ...process.env };
+
 /**
  * Environment variables.
  */
@@ -18,9 +20,19 @@ export const {
   // billing
   /** @knipignore - used by billing provider */
   VITE_BILLING_BASE_URL: BILLING_BASE_URL,
-} = { ...import.meta.env, ...process.env };
+} = env;
+
+// Internal API URL for server-to-server communication (Docker service name)
+// Falls back to API_BASE_URL for non-Docker environments
+export const API_INTERNAL_URL =
+  typeof window === "undefined"
+    ? env.API_INTERNAL_URL || API_BASE_URL
+    : API_BASE_URL;
 
 export const API_GRAPHQL_URL = `${API_BASE_URL}/graphql`;
+
+// Internal GraphQL URL for server-side requests
+export const API_INTERNAL_GRAPHQL_URL = `${API_INTERNAL_URL}/graphql`;
 
 // environment helpers
 export const isDevEnv = import.meta.env.DEV;

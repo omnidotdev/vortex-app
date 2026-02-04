@@ -49,10 +49,7 @@ function PublicLayout() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 items-center justify-between">
               <Link to="/" className="flex items-center gap-2 hover:opacity-80">
-                <span className="text-2xl">🌪️</span>
-                <span className="font-bold text-xl tracking-tight">
-                  {app.name}
-                </span>
+                <img src="/logo.png" alt="Vortex" className="h-7 w-7" />
                 <Badge className="hidden border-primary/20 bg-primary/10 text-primary text-xs sm:inline-flex">
                   Early Access
                 </Badge>
@@ -163,9 +160,13 @@ function PublicLayout() {
             <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
               {/* Brand */}
               <div className="flex items-center gap-2">
-                <span className="text-xl opacity-60">🌪️</span>
+                <img
+                  src="/logo.png"
+                  alt="Vortex"
+                  className="h-5 w-5 opacity-60"
+                />
                 <span className="text-muted-foreground text-sm">
-                  Made with 🌪️ by{" "}
+                  Made by{" "}
                   <a
                     href={app.organization.website}
                     target="_blank"
