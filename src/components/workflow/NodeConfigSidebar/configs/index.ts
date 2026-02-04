@@ -1,4 +1,5 @@
 import { ActionNodeConfig } from "./ActionNodeConfig";
+import { CommentConfig } from "./CommentConfig";
 import { ConditionNodeConfig } from "./ConditionNodeConfig";
 import { DelayNodeConfig } from "./DelayNodeConfig";
 import { GateNodeConfig } from "./GateNodeConfig";
@@ -32,6 +33,7 @@ export const nodeConfigRegistry: Record<
   subworkflowNode: SubWorkflowConfig,
   tryCatchNode: TryCatchConfig,
   raceNode: RaceConfig,
+  commentNode: CommentConfig,
 };
 
 export type { NodeConfigProps } from "./types";

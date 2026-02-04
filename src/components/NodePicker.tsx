@@ -16,6 +16,7 @@ import {
   Layers,
   Mail,
   MessageCircle,
+  MessageSquare,
   MousePointer,
   Puzzle,
   Repeat,
@@ -304,6 +305,15 @@ const BUILTIN_NODES = [
     nodeType: NodeTypes.MCP,
     pluginId: "builtin:mcp",
     operation: "call",
+  },
+  // Other
+  {
+    id: "utility-comment",
+    category: "other",
+    label: "Comment",
+    description: "Add notes and documentation to canvas",
+    icon: MessageSquare,
+    nodeType: NodeTypes.COMMENT,
   },
 ];
 
