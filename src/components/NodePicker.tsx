@@ -25,6 +25,7 @@ import {
   SplitSquareVertical,
   Timer,
   Webhook,
+  Workflow,
   Zap,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -219,6 +220,16 @@ const BUILTIN_NODES = [
     pluginId: "builtin:loop",
     operation: "iterate",
     config: { type: "count", count: 5 },
+  },
+  {
+    id: "flow-subworkflow",
+    category: "flow",
+    label: "Sub-Workflow",
+    description: "Call another workflow",
+    icon: Workflow,
+    nodeType: NodeTypes.SUBWORKFLOW,
+    pluginId: "builtin:subworkflow",
+    operation: "call",
   },
   // Transform
   {
