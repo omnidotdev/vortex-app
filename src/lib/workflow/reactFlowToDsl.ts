@@ -851,6 +851,7 @@ function groupNodeToStep(node: Node): Step {
     id: node.id,
     type: "group",
     name: (data.label as string) || "Group",
+    position: node.position,
     group: {
       source: (data.source as string) || "",
       keyExpression: (data.keyExpression as string) || "",
@@ -867,6 +868,7 @@ function flattenNodeToStep(node: Node): Step {
     id: node.id,
     type: "flatten",
     name: (data.label as string) || "Flatten",
+    position: node.position,
     flatten: {
       source: (data.source as string) || "",
       depth: (data.depth as number) || 1,
@@ -882,6 +884,7 @@ function chunkNodeToStep(node: Node): Step {
     id: node.id,
     type: "chunk",
     name: (data.label as string) || "Chunk",
+    position: node.position,
     chunk: {
       source: (data.source as string) || "",
       size: (data.size as number) || 10,
@@ -897,6 +900,7 @@ function zipNodeToStep(node: Node): Step {
     id: node.id,
     type: "zip",
     name: (data.label as string) || "Zip",
+    position: node.position,
     zip: {
       sources: (data.sources as string[]) || [],
       outputVariable: data.outputVariable as string | undefined,
@@ -911,6 +915,7 @@ function encryptNodeToStep(node: Node): Step {
     id: node.id,
     type: "encrypt",
     name: (data.label as string) || "Encrypt",
+    position: node.position,
     encrypt: {
       input: (data.input as string) || "",
       key: (data.key as string) || "",
@@ -927,6 +932,7 @@ function decryptNodeToStep(node: Node): Step {
     id: node.id,
     type: "decrypt",
     name: (data.label as string) || "Decrypt",
+    position: node.position,
     decrypt: {
       input: (data.input as string) || "",
       key: (data.key as string) || "",
@@ -943,6 +949,7 @@ function signNodeToStep(node: Node): Step {
     id: node.id,
     type: "sign",
     name: (data.label as string) || "Sign",
+    position: node.position,
     sign: {
       input: (data.input as string) || "",
       key: (data.key as string) || "",
@@ -961,6 +968,7 @@ function jwtNodeToStep(node: Node): Step {
     id: node.id,
     type: "jwt",
     name: (data.label as string) || "JWT",
+    position: node.position,
     jwt: {
       operation: (data.operation as "create" | "verify" | "decode") || "create",
       input: (data.input as string) || "",
@@ -979,6 +987,7 @@ function agentNodeToStep(node: Node): Step {
     id: node.id,
     type: "agent",
     name: (data.label as string) || "Agent",
+    position: node.position,
     agent: {
       serverId: (data.serverId as string) || "",
       model: data.model as string | undefined,
@@ -997,6 +1006,7 @@ function ragNodeToStep(node: Node): Step {
     id: node.id,
     type: "rag",
     name: (data.label as string) || "RAG",
+    position: node.position,
     rag: {
       serverId: (data.serverId as string) || "",
       model: data.model as string | undefined,
@@ -1016,6 +1026,7 @@ function visionNodeToStep(node: Node): Step {
     id: node.id,
     type: "vision",
     name: (data.label as string) || "Vision",
+    position: node.position,
     vision: {
       serverId: (data.serverId as string) || "",
       model: data.model as string | undefined,
@@ -1035,6 +1046,7 @@ function audioNodeToStep(node: Node): Step {
     id: node.id,
     type: "audio",
     name: (data.label as string) || "Audio",
+    position: node.position,
     audio: {
       serverId: (data.serverId as string) || "",
       model: data.model as string | undefined,
