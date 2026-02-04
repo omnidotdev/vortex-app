@@ -81,6 +81,11 @@ export const TriggerType = {
   EVENT: "event",
   MANUAL: "manual",
   OMNI: "omni",
+  POLLING: "polling",
+  KAFKA: "kafka",
+  SQS: "sqs",
+  S3: "s3",
+  CDC: "cdc",
 } as const;
 
 export type TriggerTypeValue = (typeof TriggerType)[keyof typeof TriggerType];
@@ -91,6 +96,60 @@ export interface OmniTriggerConfig {
     source: string; // "runa", "chronicle", "*"
     eventType: string; // "user.created", "payment.*"
     filter?: string; // JSONPath condition
+  };
+}
+
+export interface PollingTriggerConfig {
+  triggerType: "polling";
+  polling: {
+    url: string;
+    method: "GET" | "POST";
+    headers?: Record<string, string>;
+    body?: unknown;
+    interval: string; // "30s", "5m", "1h"
+    deduplication: "hash" | "field" | "none";
+    deduplicationField?: string;
+    credentials?: string; // Integration reference
+  };
+}
+
+export interface KafkaTriggerConfig {
+  triggerType: "kafka";
+  kafka: {
+    brokers: string[];
+    topic: string;
+    groupId: string;
+    fromBeginning?: boolean;
+  };
+}
+
+export interface SqsTriggerConfig {
+  triggerType: "sqs";
+  sqs: {
+    queueUrl: string;
+    region: string;
+    credentials: string; // Integration reference
+    batchSize?: number;
+  };
+}
+
+export interface S3TriggerConfig {
+  triggerType: "s3";
+  s3: {
+    bucket: string;
+    prefix?: string;
+    suffix?: string;
+    events: ("s3:ObjectCreated:*" | "s3:ObjectRemoved:*")[];
+    credentials: string; // Integration reference
+  };
+}
+
+export interface CdcTriggerConfig {
+  triggerType: "cdc";
+  cdc: {
+    connectionString: string; // Integration reference
+    table: string;
+    operations: ("INSERT" | "UPDATE" | "DELETE")[];
   };
 }
 
