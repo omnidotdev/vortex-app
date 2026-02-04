@@ -3,6 +3,7 @@ import { CheckCircle2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import authClient from "@/lib/auth/authClient";
+import { isSelfHosted } from "@/lib/config/env.config";
 
 export const Route = createFileRoute("/_public/pricing")({
   component: PricingPage,
@@ -87,7 +88,54 @@ const plans = [
   },
 ];
 
-function PricingPage() {
+const selfHostedFeatures = [
+  "Unlimited workflows",
+  "Unlimited runs",
+  "Unlimited integrations",
+  "Unlimited users",
+  "SSO/SAML",
+  "Audit logs",
+  "Full data control",
+  "Custom plugins",
+];
+
+function SelfHostedPricing() {
+  return (
+    <div className="px-4 py-20 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-3xl">
+        <div className="text-center">
+          <h1 className="font-bold text-4xl sm:text-5xl">Self-Hosted</h1>
+          <p className="mt-4 text-lg text-muted-foreground">
+            All features included with your self-hosted deployment
+          </p>
+        </div>
+
+        <div className="mt-16">
+          <div className="rounded-2xl border border-primary/50 bg-card p-8 glow-lg">
+            <h3 className="font-semibold text-xl">Enterprise</h3>
+            <div className="mt-4">
+              <span className="font-bold text-4xl">All Features</span>
+            </div>
+            <p className="mt-2 text-muted-foreground text-sm">
+              Everything unlocked for your self-hosted instance
+            </p>
+
+            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+              {selfHostedFeatures.map((feature) => (
+                <li key={feature} className="flex items-center gap-2 text-sm">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SaaSPricing() {
   const handleSignIn = () => {
     authClient.signIn.oauth2({
       providerId: "omni",
@@ -150,4 +198,12 @@ function PricingPage() {
       </div>
     </div>
   );
+}
+
+function PricingPage() {
+  if (isSelfHosted) {
+    return <SelfHostedPricing />;
+  }
+
+  return <SaaSPricing />;
 }

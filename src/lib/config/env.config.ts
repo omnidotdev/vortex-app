@@ -12,6 +12,12 @@ export const {
   // feature flags
   VITE_FLAGS_API_HOST: FLAGS_API_HOST,
   VITE_FLAGS_CLIENT_KEY: FLAGS_CLIENT_KEY,
+  // self-hosted mode
+  SELF_HOSTED,
+  VITE_SELF_HOSTED,
+  // billing
+  /** @knipignore - used by billing provider */
+  VITE_BILLING_BASE_URL: BILLING_BASE_URL,
 } = { ...import.meta.env, ...process.env };
 
 export const API_GRAPHQL_URL = `${API_BASE_URL}/graphql`;
@@ -20,3 +26,19 @@ export const API_GRAPHQL_URL = `${API_BASE_URL}/graphql`;
 export const isDevEnv = import.meta.env.DEV;
 /** @knipignore */
 export const isProdEnv = import.meta.env.PROD;
+
+/**
+ * Whether the app is running in self-hosted mode.
+ */
+export const isSelfHosted =
+  SELF_HOSTED === "true" || VITE_SELF_HOSTED === "true";
+
+/**
+ * Billing provider to use.
+ * - "local" for self-hosted (all features unlocked)
+ * - "aether" for SaaS (billing service)
+ * @knipignore - used by billing provider factory
+ */
+export const billingProvider: "local" | "aether" = isSelfHosted
+  ? "local"
+  : "aether";
