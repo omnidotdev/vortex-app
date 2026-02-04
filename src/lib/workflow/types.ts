@@ -64,6 +64,8 @@ export const StepType = {
   RAG: "rag",
   VISION: "vision",
   AUDIO: "audio",
+  // Workflow composition
+  SUBWORKFLOW: "subworkflow",
 } as const;
 
 export type StepTypeValue = (typeof StepType)[keyof typeof StepType];
@@ -645,6 +647,20 @@ export interface AudioStep extends Omit<StepBase, "type"> {
   };
 }
 
+// Workflow composition
+export interface SubWorkflowStep extends Omit<StepBase, "type"> {
+  type: "subworkflow";
+  subworkflow: {
+    workflowId: string;
+    version?: string;
+    input: Record<string, unknown>;
+    waitForCompletion: boolean;
+    timeout?: string;
+    onError?: "fail" | "continue";
+    outputVariable?: string;
+  };
+}
+
 export type Step =
   | TriggerStep
   | ActionStep
@@ -706,7 +722,9 @@ export type Step =
   | AgentStep
   | RagStep
   | VisionStep
-  | AudioStep;
+  | AudioStep
+  // Workflow composition
+  | SubWorkflowStep;
 
 export interface EdgeDefinition {
   id: string;
