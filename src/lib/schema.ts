@@ -12,6 +12,7 @@ export const NodeTypes = {
   PARALLEL: "parallelNode",
   PLUGIN: "pluginNode",
   MCP: "mcpNode",
+  SUBWORKFLOW: "subworkflowNode",
 } as const;
 
 // Base node schema
