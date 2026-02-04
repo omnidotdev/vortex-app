@@ -66,6 +66,9 @@ export const StepType = {
   AUDIO: "audio",
   // Workflow composition
   SUBWORKFLOW: "subworkflow",
+  // Flow control
+  TRY_CATCH: "try_catch",
+  RACE: "race",
 } as const;
 
 export type StepTypeValue = (typeof StepType)[keyof typeof StepType];
@@ -661,6 +664,28 @@ export interface SubWorkflowStep extends Omit<StepBase, "type"> {
   };
 }
 
+// Flow control
+export interface TryCatchStep extends Omit<StepBase, "type"> {
+  type: "try_catch";
+  tryCatch: {
+    tryBranch: string[];
+    catchBranch: string[];
+    errorOutput: string;
+    retries?: number;
+    retryDelay?: string;
+  };
+}
+
+export interface RaceStep extends Omit<StepBase, "type"> {
+  type: "race";
+  race: {
+    branches: string[][];
+    timeout?: string;
+    output: string;
+    winnerIndex: string;
+  };
+}
+
 export type Step =
   | TriggerStep
   | ActionStep
@@ -724,7 +749,10 @@ export type Step =
   | VisionStep
   | AudioStep
   // Workflow composition
-  | SubWorkflowStep;
+  | SubWorkflowStep
+  // Flow control
+  | TryCatchStep
+  | RaceStep;
 
 export interface EdgeDefinition {
   id: string;
