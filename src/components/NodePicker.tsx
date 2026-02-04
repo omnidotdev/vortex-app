@@ -21,6 +21,7 @@ import {
   Repeat,
   Search,
   Sheet,
+  Shield,
   ShoppingCart,
   SplitSquareVertical,
   Timer,
@@ -28,7 +29,7 @@ import {
   Workflow,
   Zap,
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import IntegrationPreviewModal from "@/components/integrations/IntegrationPreviewModal";
 import { Badge } from "@/components/ui/badge";
@@ -231,6 +232,26 @@ const BUILTIN_NODES = [
     pluginId: "builtin:subworkflow",
     operation: "call",
   },
+  {
+    id: "flow-trycatch",
+    category: "flow",
+    label: "Try/Catch",
+    description: "Error boundary with retry support",
+    icon: Shield,
+    nodeType: NodeTypes.TRY_CATCH,
+    pluginId: "builtin:trycatch",
+    operation: "execute",
+  },
+  {
+    id: "flow-race",
+    category: "flow",
+    label: "Race",
+    description: "Run branches in parallel, use first result",
+    icon: Zap,
+    nodeType: NodeTypes.RACE,
+    pluginId: "builtin:race",
+    operation: "execute",
+  },
   // Transform
   {
     id: "transform-jsonpath",
@@ -316,7 +337,11 @@ interface NodePickerProps {
   searchInputRef?: React.RefObject<HTMLInputElement | null>;
 }
 
-export function NodePicker({ organizationId, onSelectNode, searchInputRef: externalRef }: NodePickerProps) {
+export function NodePicker({
+  organizationId,
+  onSelectNode,
+  searchInputRef: externalRef,
+}: NodePickerProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<CategoryKey>("all");
   const [showOnlyConnected, setShowOnlyConnected] = useState(false);
