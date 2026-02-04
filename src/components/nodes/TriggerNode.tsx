@@ -7,7 +7,7 @@ import { BaseNode, NodeActionButton, NodeInfoRow } from "./BaseNode";
 interface TriggerNodeData {
   label: string;
   description?: string;
-  triggerType?: "manual" | "webhook" | "cron" | "event";
+  triggerType?: "manual" | "webhook" | "cron" | "event" | "omni";
   config?: Record<string, unknown>;
   onNodeSelect?: (node: {
     id: string;
@@ -89,6 +89,8 @@ export const TriggerNode = memo(
           return "Schedule";
         case "event":
           return "Event";
+        case "omni":
+          return "Omni";
         default:
           return "Manual";
       }

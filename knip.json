@@ -2,7 +2,8 @@
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "entry": [
     "src/server/functions/*.ts",
-    "src/lib/providers/billing/index.ts"
+    "src/lib/providers/billing/index.ts",
+    "src/lib/workflow/types.ts"
   ],
   "ignore": [
     "src/lib/payments.ts",
