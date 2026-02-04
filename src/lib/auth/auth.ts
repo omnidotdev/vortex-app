@@ -20,6 +20,8 @@ const auth = betterAuth({
   baseURL: BASE_URL,
   basePath: "/api/auth",
   secret: AUTH_SECRET,
+  // Trust the app's own origin for auth requests
+  trustedOrigins: BASE_URL ? [BASE_URL] : [],
   advanced: {
     // use custom cookie prefix to avoid collision with IDP cookies
     cookiePrefix: "vortex",

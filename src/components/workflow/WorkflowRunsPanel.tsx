@@ -34,11 +34,14 @@ interface RunData {
 interface WorkflowRunsPanelProps {
   runs: RunData[];
   totalCount: number;
+  /** Callback to notify parent of step status changes (for canvas highlighting) */
+  onStepStatusChange?: (stepStatuses: Record<string, string>) => void;
 }
 
 export function WorkflowRunsPanel({
   runs,
   totalCount,
+  onStepStatusChange,
 }: WorkflowRunsPanelProps) {
   const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
 
@@ -48,7 +51,15 @@ export function WorkflowRunsPanel({
 
   if (selectedRun) {
     return (
-      <RunDetail run={selectedRun} onBack={() => setSelectedRunId(null)} />
+      <RunDetail
+        run={selectedRun}
+        onBack={() => {
+          setSelectedRunId(null);
+          // Clear step statuses when going back
+          onStepStatusChange?.({});
+        }}
+        onStepStatusChange={onStepStatusChange}
+      />
     );
   }
 

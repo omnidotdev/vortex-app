@@ -6,6 +6,7 @@ import { LoopNodeConfig } from "./LoopNodeConfig";
 import { MCPNodeConfig } from "./MCPNodeConfig";
 import { ParallelNodeConfig } from "./ParallelNodeConfig";
 import { PluginNodeConfig } from "./PluginNodeConfig";
+import { SubWorkflowConfig } from "./SubWorkflowConfig";
 import { SwitchNodeConfig } from "./SwitchNodeConfig";
 import { TriggerNodeConfig } from "./TriggerNodeConfig";
 
@@ -26,6 +27,7 @@ export const nodeConfigRegistry: Record<
   parallelNode: ParallelNodeConfig,
   pluginNode: PluginNodeConfig,
   mcpNode: MCPNodeConfig,
+  subworkflowNode: SubWorkflowConfig,
 };
 
 export type { NodeConfigProps } from "./types";

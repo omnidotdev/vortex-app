@@ -1,18 +1,14 @@
-import { Collapsible } from "@ark-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  ArrowLeft,
-  CheckCircle2,
-  ChevronDown,
-  ChevronRight,
-  ExternalLink,
-  Eye,
-  EyeOff,
-  Loader2,
-  Zap,
-} from "lucide-react";
+import { ExternalLink, Eye, EyeOff, Loader2, Zap } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
+import {
+  AccordionItem,
+  AccordionItemContent,
+  AccordionItemTrigger,
+  AccordionRoot,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import {
   DialogBackdrop,
@@ -82,11 +78,7 @@ export function ConnectIntegrationDialog({
   const [jsonErrors, setJsonErrors] = useState<Record<string, string | null>>(
     {},
   );
-  const [instructionsOpen, setInstructionsOpen] = useState(
-    existingIntegrations.length === 0,
-  );
   const [connectionName, setConnectionName] = useState("");
-  const [successState, setSuccessState] = useState(false);
 
   const createIntegration = useCreateIntegrationMutation();
 
@@ -162,11 +154,20 @@ export function ConnectIntegrationDialog({
         queryKey: integrationsOptions({ organizationId }).queryKey,
       });
 
-      // Show success state briefly before closing
-      setSuccessState(true);
-      setTimeout(() => {
-        onClose();
-      }, 1500);
+      // Close dialog and show success toast
+      onClose();
+      toast.success(`${definition.name} connected`, {
+        description: "Your integration is ready to use.",
+        action: returnTo
+          ? {
+              label: "Back to workflow",
+              onClick: () => {
+                window.location.href = returnTo;
+              },
+            }
+          : undefined,
+        duration: 5000,
+      });
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       if (
@@ -185,36 +186,6 @@ export function ConnectIntegrationDialog({
   const toggleShowSecret = (field: string) => {
     setShowSecrets((prev) => ({ ...prev, [field]: !prev[field] }));
   };
-
-  // Success state view
-  if (successState) {
-    return (
-      <DialogRoot open onOpenChange={(e) => !e.open && onClose()}>
-        <DialogBackdrop />
-        <DialogPositioner>
-          <DialogContent className="max-w-md">
-            <div className="flex flex-col items-center justify-center py-8 text-center">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
-                <CheckCircle2 className="h-8 w-8 text-green-600 dark:text-green-400" />
-              </div>
-              <h2 className="font-semibold text-lg">Connected!</h2>
-              <p className="mt-1 text-muted-foreground text-sm">
-                {definition.name} has been connected successfully.
-              </p>
-              {returnTo && (
-                <Button variant="outline" size="sm" className="mt-4" asChild>
-                  <a href={returnTo}>
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to workflow
-                  </a>
-                </Button>
-              )}
-            </div>
-          </DialogContent>
-        </DialogPositioner>
-      </DialogRoot>
-    );
-  }
 
   return (
     <DialogRoot open onOpenChange={(e) => !e.open && onClose()}>
@@ -335,67 +306,52 @@ export function ConnectIntegrationDialog({
 
               {/* Setup Instructions */}
               {setupSteps && setupSteps.length > 0 && (
-                <Collapsible.Root
-                  open={instructionsOpen}
-                  onOpenChange={(details) => setInstructionsOpen(details.open)}
-                  className="overflow-hidden rounded-md border"
+                <AccordionRoot
+                  defaultValue={existingIntegrations.length === 0 ? ["instructions"] : []}
+                  collapsible
+                  className="rounded-md border"
                 >
-                  <Collapsible.Trigger className="flex w-full cursor-pointer items-center gap-2 bg-muted/50 p-3 text-left font-medium text-sm hover:bg-muted">
-                    {instructionsOpen ? (
-                      <ChevronDown className="h-4 w-4" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4" />
-                    )}
-                    Setup Instructions
-                  </Collapsible.Trigger>
-                  <Collapsible.Content className="grid transition-[grid-template-rows,opacity] duration-200 ease-out data-[state=closed]:grid-rows-[0fr] data-[state=closed]:opacity-0 data-[state=open]:grid-rows-[1fr] data-[state=open]:opacity-100">
-                    <div className="overflow-hidden">
-                      <div className="border-t bg-background p-3">
-                        <ol className="ml-4 list-decimal space-y-1.5 text-muted-foreground text-sm">
-                          {setupSteps.map((step, i) => (
-                            <li key={i}>{step}</li>
-                          ))}
-                        </ol>
-                        {docsUrl && (
-                          <a
-                            href={docsUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mt-3 inline-flex cursor-pointer items-center gap-1 text-primary text-sm hover:underline"
-                          >
-                            <ExternalLink className="h-3 w-3" />
-                            Open {definition.name} Developer Portal
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  </Collapsible.Content>
-                </Collapsible.Root>
+                  <AccordionItem value="instructions" className="border-none">
+                    <AccordionItemTrigger className="border-b bg-muted/50 px-3 py-3 hover:bg-muted">
+                      Setup Instructions
+                    </AccordionItemTrigger>
+                    <AccordionItemContent className="bg-background p-0">
+                      <ol className="ml-4 list-decimal space-y-1.5 p-3 text-muted-foreground text-sm">
+                        {setupSteps.map((step, i) => (
+                          <li key={i}>{step}</li>
+                        ))}
+                      </ol>
+                      {docsUrl && (
+                        <a
+                          href={docsUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex cursor-pointer items-center gap-1 px-3 pb-3 text-primary text-sm hover:underline"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          Open {definition.name} Developer Portal
+                        </a>
+                      )}
+                    </AccordionItemContent>
+                  </AccordionItem>
+                </AccordionRoot>
               )}
 
-              {/* Connection Name (for multi-account clarity) */}
+              {/* Connection Name (optional, auto-fills) */}
               <div className="space-y-2">
-                <Label htmlFor="connectionName">
-                  Connection Name
-                  {existingIntegrations.length > 0 && (
-                    <span className="ml-1 text-destructive">*</span>
-                  )}
-                </Label>
+                <Label htmlFor="connectionName">Connection Name</Label>
                 <Input
                   id="connectionName"
                   value={connectionName}
                   onChange={(e) => setConnectionName(e.target.value)}
                   placeholder={
                     existingIntegrations.length > 0
-                      ? `e.g., ${definition.name} - Production`
-                      : `${definition.name} (optional)`
+                      ? `${definition.name} (${existingIntegrations.length + 1})`
+                      : definition.name
                   }
-                  required={existingIntegrations.length > 0}
                 />
                 <p className="text-muted-foreground text-xs">
-                  {existingIntegrations.length > 0
-                    ? "Give this connection a unique name to distinguish it from other accounts."
-                    : "Optionally name this connection for easier identification."}
+                  Leave blank to use the default name
                 </p>
               </div>
 
@@ -502,7 +458,7 @@ export function ConnectIntegrationDialog({
               )}
             </div>
 
-            <DialogFooter className="shrink-0 border-t pt-4">
+            <DialogFooter className="shrink-0 pt-4">
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancel
               </Button>

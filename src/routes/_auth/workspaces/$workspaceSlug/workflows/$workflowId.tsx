@@ -1,3 +1,4 @@
+import { AsyncDebouncer } from "@tanstack/pacer";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   Link,
@@ -6,10 +7,12 @@ import {
   useNavigate,
 } from "@tanstack/react-router";
 import {
+  Check,
   Copy,
   Grid3X3,
   History,
   Loader2,
+  MessageSquare,
   PanelRightClose,
   Pencil,
   PlayCircle,
@@ -19,7 +22,8 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { RiDiscordLine as DiscordIcon } from "react-icons/ri";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactFlow, {
   Background,
   ConnectionLineType,
@@ -141,6 +145,7 @@ import {
   useWorkflowQuery,
   useWorkflowsQuery,
 } from "@/generated/graphql";
+import app from "@/lib/config/app.config";
 import workflowOptions from "@/lib/options/workflow.options";
 import { NodeTypes } from "@/lib/schema";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
@@ -347,8 +352,14 @@ function WorkflowEditorPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isExecuting, setIsExecuting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [saveStatus, setSaveStatus] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
+  const hasUnsavedChanges = useRef(false);
+  const isInitialMount = useRef(true);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [showRunsPanel, setShowRunsPanel] = useState(false);
+  const [stepStatuses, setStepStatuses] = useState<Record<string, string>>({});
   const [snapToGrid, setSnapToGrid] = useState(true);
   const [showRightSidebar, setShowRightSidebar] = useState(false);
   const [contextMenu, setContextMenu] = useState<{
@@ -375,6 +386,9 @@ function WorkflowEditorPage() {
   nodesRef.current = nodes;
   edgesRef.current = edges;
 
+  // Store position for adding nodes from context menu (in flow coordinates)
+  const pendingAddPositionRef = useRef<{ x: number; y: number } | null>(null);
+
   const { mutate: updateWorkflow } = useUpdateWorkflowMutation({
     meta: {
       invalidates: [
@@ -384,10 +398,15 @@ function WorkflowEditorPage() {
     },
     onSuccess: () => {
       setIsSaving(false);
+      setSaveStatus("saved");
+      hasUnsavedChanges.current = false;
       logToDebugPane("action", "Workflow saved", { name: workflow.name });
+      // Reset to idle after 3 seconds
+      setTimeout(() => setSaveStatus("idle"), 3000);
     },
     onError: (err) => {
       setIsSaving(false);
+      setSaveStatus("error");
       setError(err instanceof Error ? err.message : "Failed to save workflow");
     },
   });
@@ -482,42 +501,115 @@ function WorkflowEditorPage() {
     [setEdges, nodes, logToDebugPane],
   );
 
+  // Core save logic - extracted for reuse
+  const performSave = useCallback(
+    (currentNodes: Node[], currentEdges: Edge[]) => {
+      setSaveStatus("saving");
+      setError(null);
+
+      // Extract trigger configuration from trigger node
+      const triggerNode = currentNodes.find((n) => n.type === "triggerNode");
+      const triggerType = triggerNode?.data?.triggerType || "manual";
+      const triggerConfig = triggerNode?.data?.config || {};
+
+      // Build patch with trigger-specific fields
+      const patch: Record<string, unknown> = {
+        definition: {
+          nodes: currentNodes,
+          edges: currentEdges,
+          version: "1.0",
+        },
+      };
+
+      // Set cron expression if trigger is cron
+      if (triggerType === "cron" && triggerConfig.expression) {
+        patch.cronExpression = triggerConfig.expression;
+      } else {
+        patch.cronExpression = null;
+      }
+
+      // Generate webhook secret if trigger is webhook and none exists
+      if (triggerType === "webhook" && !workflow.webhookSecret) {
+        patch.webhookSecret = crypto.randomUUID();
+      }
+
+      updateWorkflow({
+        input: {
+          rowId: workflowId,
+          patch,
+        },
+      });
+    },
+    [updateWorkflow, workflowId, workflow.webhookSecret],
+  );
+
+  // Debounced autosave - waits 1.5s of inactivity before saving
+  const debouncedSave = useMemo(
+    () =>
+      new AsyncDebouncer(
+        async (currentNodes: Node[], currentEdges: Edge[]) => {
+          performSave(currentNodes, currentEdges);
+        },
+        {
+          wait: 1500,
+          onError: (error) => {
+            console.error("Autosave failed:", error);
+            setSaveStatus("error");
+          },
+          throwOnError: false,
+        },
+      ),
+    [performSave],
+  );
+
+  // Track changes and trigger autosave
+  useEffect(() => {
+    // Skip the initial mount - don't autosave on load
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    hasUnsavedChanges.current = true;
+    debouncedSave.maybeExecute(nodes, edges);
+  }, [nodes, edges, debouncedSave]);
+
+  // Cleanup debounced function on unmount
+  useEffect(() => {
+    return () => {
+      debouncedSave.cancel();
+    };
+  }, [debouncedSave]);
+
+  // Apply execution status highlighting to nodes
+  useEffect(() => {
+    if (Object.keys(stepStatuses).length === 0) {
+      // Clear any execution status classes when no statuses
+      setNodes((nds) =>
+        nds.map((node) => ({
+          ...node,
+          className: node.className?.replace(/execution-status-\w+/g, "").trim() || undefined,
+        })),
+      );
+      return;
+    }
+
+    setNodes((nds) =>
+      nds.map((node) => {
+        const status = stepStatuses[node.id];
+        const baseClassName = node.className?.replace(/execution-status-\w+/g, "").trim() || "";
+        const statusClass = status ? `execution-status-${status}` : "";
+        const newClassName = [baseClassName, statusClass].filter(Boolean).join(" ") || undefined;
+        return { ...node, className: newClassName };
+      }),
+    );
+  }, [stepStatuses, setNodes]);
+
   const handleSave = () => {
     setIsSaving(true);
-    setError(null);
-
-    // Extract trigger configuration from trigger node
-    const triggerNode = nodes.find((n) => n.type === "triggerNode");
-    const triggerType = triggerNode?.data?.triggerType || "manual";
-    const triggerConfig = triggerNode?.data?.config || {};
-
-    // Build patch with trigger-specific fields
-    const patch: Record<string, unknown> = {
-      definition: {
-        nodes,
-        edges,
-        version: "1.0",
-      },
-    };
-
-    // Set cron expression if trigger is cron
-    if (triggerType === "cron" && triggerConfig.expression) {
-      patch.cronExpression = triggerConfig.expression;
-    } else {
-      patch.cronExpression = null;
-    }
-
-    // Generate webhook secret if trigger is webhook and none exists
-    if (triggerType === "webhook" && !workflow.webhookSecret) {
-      patch.webhookSecret = crypto.randomUUID();
-    }
-
-    updateWorkflow({
-      input: {
-        rowId: workflowId,
-        patch,
-      },
-    });
+    // Cancel any pending autosave and save immediately
+    debouncedSave.cancel();
+    performSave(nodes, edges);
   };
 
   const handleExecute = useCallback(async () => {
@@ -863,14 +955,26 @@ function WorkflowEditorPage() {
   );
 
   // Handle pane context menu (right-click on canvas)
-  const onPaneContextMenu = useCallback((event: React.MouseEvent) => {
-    event.preventDefault();
-    setContextMenu({
-      x: event.clientX,
-      y: event.clientY,
-      type: "pane",
-    });
-  }, []);
+  const onPaneContextMenu = useCallback(
+    (event: React.MouseEvent) => {
+      event.preventDefault();
+
+      // Store the position in flow coordinates for adding nodes
+      if (reactFlowInstance) {
+        pendingAddPositionRef.current = reactFlowInstance.screenToFlowPosition({
+          x: event.clientX,
+          y: event.clientY,
+        });
+      }
+
+      setContextMenu({
+        x: event.clientX,
+        y: event.clientY,
+        type: "pane",
+      });
+    },
+    [reactFlowInstance],
+  );
 
   // Close context menu
   const closeContextMenu = useCallback(() => {
@@ -943,26 +1047,58 @@ function WorkflowEditorPage() {
     [setEdges, logToDebugPane],
   );
 
-  // Keyboard delete support and close context menu on Escape
+  // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      // Ignore if typing in input/textarea
+      const isTyping =
+        event.target instanceof HTMLInputElement ||
+        event.target instanceof HTMLTextAreaElement;
+
       if (event.key === "Escape") {
         setContextMenu(null);
+        setShowAddNodeDialog(false);
         return;
       }
+
+      // Delete selected node
       if (
         (event.key === "Delete" || event.key === "Backspace") &&
         selectedNode &&
-        !(event.target instanceof HTMLInputElement) &&
-        !(event.target instanceof HTMLTextAreaElement)
+        !isTyping
       ) {
         handleDeleteNode(selectedNode.id);
+        return;
+      }
+
+      // Skip other shortcuts if typing
+      if (isTyping) return;
+
+      // A - Add node
+      if (event.key === "a" || event.key === "A") {
+        event.preventDefault();
+        setShowAddNodeDialog(true);
+        return;
+      }
+
+      // Ctrl/Cmd + S - Save
+      if ((event.metaKey || event.ctrlKey) && event.key === "s") {
+        event.preventDefault();
+        handleSave();
+        return;
+      }
+
+      // Ctrl/Cmd + E - Execute
+      if ((event.metaKey || event.ctrlKey) && event.key === "e") {
+        event.preventDefault();
+        handleExecute();
+        return;
       }
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [selectedNode, handleDeleteNode]);
+  }, [selectedNode, handleDeleteNode, handleSave, handleExecute]);
 
   // Handle node update from config sidebar (auto-save)
   const handleNodeUpdate = useCallback(
@@ -973,7 +1109,7 @@ function WorkflowEditorPage() {
     [setNodes],
   );
 
-  // Handle adding node from sidebar (click, not drag)
+  // Handle adding node from sidebar or context menu
   const handleAddNode = useCallback(
     (type: string, data: Record<string, unknown>) => {
       const nodeId = getNodeId();
@@ -983,14 +1119,39 @@ function WorkflowEditorPage() {
         nodesRef.current,
       );
 
+      // Use stored position from context menu, or calculate viewport center
+      let position: { x: number; y: number };
+      if (pendingAddPositionRef.current) {
+        position = pendingAddPositionRef.current;
+        pendingAddPositionRef.current = null; // Clear after use
+      } else if (reactFlowInstance) {
+        // Place in center of current viewport
+        const viewport = reactFlowInstance.getViewport();
+        const bounds = reactFlowWrapper.current?.getBoundingClientRect();
+        if (bounds) {
+          position = reactFlowInstance.screenToFlowPosition({
+            x: bounds.width / 2,
+            y: bounds.height / 2,
+          });
+        } else {
+          position = { x: -viewport.x / viewport.zoom + 400, y: -viewport.y / viewport.zoom + 300 };
+        }
+      } else {
+        position = { x: 255, y: nodesRef.current.length * 105 + 45 };
+      }
+
+      // Check if node needs attention (requires connection but not connected)
+      const needsAttention = data.requiresConnection && !data.connectedInstanceId;
+
       const newNode: Node = {
         id: nodeId,
         type,
-        position: { x: 255, y: nodesRef.current.length * 105 + 45 },
+        position,
         data: {
           ...data,
           stepName,
           config: {},
+          needsAttention,
           onDelete: () => handleDeleteNode(nodeId),
           onConfigureIntegration: handleConfigureIntegration,
           onOpenIntegrationSettings: handleOpenIntegrationSettings,
@@ -998,7 +1159,34 @@ function WorkflowEditorPage() {
       };
       setNodes((nds) => [...nds, newNode]);
 
-      logToDebugPane("action", "Node added via sidebar", data, {
+      // Select the new node and open the sidebar
+      setSelectedNode(newNode);
+      setShowRightSidebar(true);
+
+      // Clear needsAttention after animation (3s)
+      if (needsAttention) {
+        setTimeout(() => {
+          setNodes((nds) =>
+            nds.map((n) =>
+              n.id === nodeId
+                ? { ...n, data: { ...n.data, needsAttention: false } }
+                : n,
+            ),
+          );
+        }, 3000);
+      }
+
+      // Center view on the new node
+      if (reactFlowInstance) {
+        setTimeout(() => {
+          reactFlowInstance.setCenter(position.x + 135, position.y + 60, {
+            zoom: reactFlowInstance.getZoom(),
+            duration: 300,
+          });
+        }, 50);
+      }
+
+      logToDebugPane("action", "Node added", data, {
         nodeType: type,
         nodeName: label,
         expectedOutcome: `Added ${label} node to workflow`,
@@ -1010,6 +1198,9 @@ function WorkflowEditorPage() {
       handleDeleteNode,
       handleConfigureIntegration,
       handleOpenIntegrationSettings,
+      reactFlowInstance,
+      setSelectedNode,
+      setShowRightSidebar,
     ],
   );
 
@@ -1178,8 +1369,27 @@ function WorkflowEditorPage() {
             <span className="hidden lg:inline">History</span>
           </Button>
 
-          <Button size="sm" onClick={handleSave} disabled={isSaving}>
-            {isSaving ? (
+          {/* Autosave status indicator */}
+          <div className="hidden items-center gap-1.5 text-muted-foreground text-xs sm:flex">
+            {saveStatus === "saving" && (
+              <>
+                <Loader2 className="h-3 w-3 animate-spin" />
+                <span>Saving...</span>
+              </>
+            )}
+            {saveStatus === "saved" && (
+              <>
+                <Check className="h-3 w-3 text-green-500" />
+                <span className="text-green-600 dark:text-green-400">Saved</span>
+              </>
+            )}
+            {saveStatus === "error" && (
+              <span className="text-destructive">Save failed</span>
+            )}
+          </div>
+
+          <Button size="sm" onClick={handleSave} disabled={isSaving || saveStatus === "saving"}>
+            {isSaving || saveStatus === "saving" ? (
               <Loader2 className="h-4 w-4 animate-spin lg:mr-1" />
             ) : (
               <Save className="h-4 w-4 lg:mr-1" />
@@ -1272,6 +1482,14 @@ function WorkflowEditorPage() {
               defaultEdgeOptions={{ type: "smart" }}
               deleteKeyCode={["Backspace", "Delete"]}
               fitView
+              fitViewOptions={{
+                padding: 0.3,
+                minZoom: 0.5,
+                maxZoom: 1.5,
+              }}
+              minZoom={0.25}
+              maxZoom={2}
+              defaultViewport={{ x: 0, y: 0, zoom: 1 }}
               className="bg-background"
               proOptions={{
                 // ? look into legality, replace xyflow if an issue
@@ -1360,9 +1578,39 @@ function WorkflowEditorPage() {
               />
             </div>
 
-            {/* Debug Console - floating button + slide-out sheet */}
-            <div className="absolute bottom-4 left-4 z-10">
+            {/* Debug Console + Feedback + Discord - floating buttons */}
+            <div className="absolute bottom-4 left-4 z-10 flex gap-2">
               <DebugPane />
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2 shadow-lg transition-all hover:shadow-glow"
+                asChild
+              >
+                <a
+                  href={app.links.feedback}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MessageSquare className="h-4 w-4" />
+                  <span className="hidden sm:inline">Feedback</span>
+                </a>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2 shadow-lg transition-all hover:shadow-glow"
+                asChild
+              >
+                <a
+                  href={app.organization.discord}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <DiscordIcon className="h-4 w-4" />
+                  <span className="hidden sm:inline">Discord</span>
+                </a>
+              </Button>
             </div>
           </div>
         </div>
@@ -1388,6 +1636,7 @@ function WorkflowEditorPage() {
                 <WorkflowRunsPanel
                   runs={workflow.workflowRuns?.nodes || []}
                   totalCount={workflow.workflowRuns?.totalCount || 0}
+                  onStepStatusChange={setStepStatuses}
                 />
               </aside>
             ) : selectedNode ? (

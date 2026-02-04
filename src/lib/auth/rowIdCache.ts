@@ -2,7 +2,7 @@ import { GraphQLClient } from "graphql-request";
 import * as jose from "jose";
 
 import { getSdk } from "@/generated/graphql.sdk";
-import { API_GRAPHQL_URL } from "@/lib/config/env.config";
+import { API_INTERNAL_GRAPHQL_URL } from "@/lib/config/env.config";
 
 export const COOKIE_NAME = "vortex_rowid_cache";
 export const COOKIE_TTL_SECONDS = 60 * 60 * 24 * 7; // 7 days
@@ -87,7 +87,8 @@ export async function fetchRowIdFromApi(
   identityProviderId: string,
 ): Promise<string | null> {
   try {
-    const graphqlClient = new GraphQLClient(API_GRAPHQL_URL!, {
+    // Use internal URL for server-to-server communication in Docker
+    const graphqlClient = new GraphQLClient(API_INTERNAL_GRAPHQL_URL!, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     const sdk = getSdk(graphqlClient);
