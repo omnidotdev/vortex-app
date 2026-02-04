@@ -15,6 +15,7 @@ export const NodeTypes = {
   SUBWORKFLOW: "subworkflowNode",
   TRY_CATCH: "tryCatchNode",
   RACE: "raceNode",
+  COMMENT: "commentNode",
 } as const;
 
 // Base node schema
