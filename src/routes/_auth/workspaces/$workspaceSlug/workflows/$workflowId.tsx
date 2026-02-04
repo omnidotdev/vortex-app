@@ -93,6 +93,7 @@ import { WebhookResponseNode } from "@/components/nodes/WebhookResponseNode";
 import { AgentNode } from "@/components/nodes/AgentNode";
 import { AudioNode } from "@/components/nodes/AudioNode";
 import { ChunkNode } from "@/components/nodes/ChunkNode";
+import { CommentNode } from "@/components/nodes/CommentNode";
 import { DecryptNode } from "@/components/nodes/DecryptNode";
 import { EncryptNode } from "@/components/nodes/EncryptNode";
 import { FlattenNode } from "@/components/nodes/FlattenNode";
@@ -242,6 +243,8 @@ const nodeTypes = {
   ragNode: RagNode,
   visionNode: VisionNode,
   audioNode: AudioNode,
+  // Documentation
+  commentNode: CommentNode,
 };
 
 // Define custom edge types - must be outside component to avoid re-creation
@@ -321,6 +324,8 @@ const nodeTypeMap: Record<string, string> = {
   rag: "ragNode",
   vision: "visionNode",
   audio: "audioNode",
+  // Documentation
+  comment: "commentNode",
 };
 
 let nodeIdCounter = 0;
