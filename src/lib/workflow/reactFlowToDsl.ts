@@ -81,6 +81,17 @@ const nodeTypeToStepType: Record<string, string> = {
   ragNode: "rag",
   visionNode: "vision",
   audioNode: "audio",
+  // Additional node types
+  mcpNode: "mcp",
+  llmNode: "llm",
+  codeNode: "code",
+  databaseNode: "database",
+  subworkflowNode: "subworkflow",
+  waitNode: "wait",
+  eventNode: "event",
+  aggregateNode: "aggregate",
+  cacheNode: "cache",
+  commentNode: "comment",
 };
 
 // Convert trigger node data to DSL step
@@ -1059,9 +1070,35 @@ function audioNodeToStep(node: Node): Step {
   };
 }
 
+// Generic converter for node types without dedicated functions
+// Inverse of `extendedStepToNodeData` in dslToReactFlow.ts
+function genericNodeToStep(node: Node, stepType: string): Step {
+  const data = node.data as Record<string, unknown>;
+  const typeData: Record<string, unknown> = {};
+
+  // Collect all data properties except label, description, and stepName
+  for (const [key, value] of Object.entries(data)) {
+    if (key !== "label" && key !== "description" && key !== "stepName") {
+      typeData[key] = value;
+    }
+  }
+
+  return {
+    id: node.id,
+    type: stepType,
+    name: (data.label as string) || stepType.charAt(0).toUpperCase() + stepType.slice(1),
+    description: data.description as string | undefined,
+    position: node.position,
+    [stepType]: typeData,
+  } as Step;
+}
+
 // Convert a ReactFlow node to a DSL step
 function nodeToStep(node: Node, edges: Edge[]): Step | null {
-  const stepType = nodeTypeToStepType[node.type || ""] || node.type;
+  const nodeType = node.type || "";
+  const stepType = nodeTypeToStepType[nodeType] || nodeType;
+
+  if (!stepType) return null;
 
   switch (stepType) {
     case "trigger":
@@ -1179,8 +1216,7 @@ function nodeToStep(node: Node, edges: Edge[]): Step | null {
     case "audio":
       return audioNodeToStep(node);
     default:
-      console.warn("Unknown node type:", node.type);
-      return null;
+      return genericNodeToStep(node, stepType);
   }
 }
 
