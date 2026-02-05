@@ -9,6 +9,7 @@ import {
 import {
   Check,
   Copy,
+  Download,
   Grid3X3,
   History,
   Loader2,
@@ -20,10 +21,11 @@ import {
   Save,
   Settings,
   Trash2,
+  Upload,
   X,
 } from "lucide-react";
-import { RiDiscordLine as DiscordIcon } from "react-icons/ri";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { RiDiscordLine as DiscordIcon } from "react-icons/ri";
 import ReactFlow, {
   Background,
   ConnectionLineType,
@@ -41,67 +43,67 @@ import { AddNodeButton } from "@/components/AddNodeButton";
 import DebugPane from "@/components/DebugPane";
 import { SmartEdge } from "@/components/edges/SmartEdge";
 import { ActionNode } from "@/components/nodes/ActionNode";
+import { AgentNode } from "@/components/nodes/AgentNode";
 import { AggregateNode } from "@/components/nodes/AggregateNode";
-import { CacheNode } from "@/components/nodes/CacheNode";
-import { CodeNode } from "@/components/nodes/CodeNode";
-import { ConditionNode } from "@/components/nodes/ConditionNode";
-import { DatabaseNode } from "@/components/nodes/DatabaseNode";
-import { DelayNode } from "@/components/nodes/DelayNode";
-import { EventNode } from "@/components/nodes/EventNode";
-import { GateNode } from "@/components/nodes/GateNode";
-import { LLMNode } from "@/components/nodes/LLMNode";
-import { LoopNode } from "@/components/nodes/LoopNode";
-import { MCPNode } from "@/components/nodes/MCPNode";
-import { ParallelNode } from "@/components/nodes/ParallelNode";
-import { PluginNode } from "@/components/nodes/PluginNode";
-import { SubworkflowNode } from "@/components/nodes/SubworkflowNode";
-import { SwitchNode } from "@/components/nodes/SwitchNode";
-import { TriggerNode } from "@/components/nodes/TriggerNode";
-import { WaitNode } from "@/components/nodes/WaitNode";
 import { ApprovalNode } from "@/components/nodes/ApprovalNode";
 import { AssertNode } from "@/components/nodes/AssertNode";
+import { AudioNode } from "@/components/nodes/AudioNode";
+import { CacheNode } from "@/components/nodes/CacheNode";
 import { ChatNode } from "@/components/nodes/ChatNode";
+import { ChunkNode } from "@/components/nodes/ChunkNode";
 import { ClassifyNode } from "@/components/nodes/ClassifyNode";
+import { CodeNode } from "@/components/nodes/CodeNode";
+import { CommentNode } from "@/components/nodes/CommentNode";
+import { ConditionNode } from "@/components/nodes/ConditionNode";
+import { DatabaseNode } from "@/components/nodes/DatabaseNode";
+import { DecryptNode } from "@/components/nodes/DecryptNode";
+import { DelayNode } from "@/components/nodes/DelayNode";
 import { EmailNode } from "@/components/nodes/EmailNode";
 import { EmbeddingNode } from "@/components/nodes/EmbeddingNode";
+import { EncryptNode } from "@/components/nodes/EncryptNode";
 import { ErrorNode } from "@/components/nodes/ErrorNode";
+import { EventNode } from "@/components/nodes/EventNode";
 import { FileNode } from "@/components/nodes/FileNode";
 import { FilterNode } from "@/components/nodes/FilterNode";
+import { FlattenNode } from "@/components/nodes/FlattenNode";
 import { FormatNode } from "@/components/nodes/FormatNode";
+import { GateNode } from "@/components/nodes/GateNode";
+import { GroupNode } from "@/components/nodes/GroupNode";
 import { HashNode } from "@/components/nodes/HashNode";
 import { InputNode } from "@/components/nodes/InputNode";
+import { JwtNode } from "@/components/nodes/JwtNode";
+import { LLMNode } from "@/components/nodes/LLMNode";
 import { LogNode } from "@/components/nodes/LogNode";
+import { LoopNode } from "@/components/nodes/LoopNode";
 import { MapNode } from "@/components/nodes/MapNode";
+import { MCPNode } from "@/components/nodes/MCPNode";
 import { MergeNode } from "@/components/nodes/MergeNode";
 import { NotificationNode } from "@/components/nodes/NotificationNode";
+import { ParallelNode } from "@/components/nodes/ParallelNode";
 import { ParseNode } from "@/components/nodes/ParseNode";
+import { PluginNode } from "@/components/nodes/PluginNode";
 import { PromptNode } from "@/components/nodes/PromptNode";
 import { QueueNode } from "@/components/nodes/QueueNode";
+import { RagNode } from "@/components/nodes/RagNode";
 import { ReduceNode } from "@/components/nodes/ReduceNode";
 import { RetryNode } from "@/components/nodes/RetryNode";
 import { SetNode } from "@/components/nodes/SetNode";
+import { SignNode } from "@/components/nodes/SignNode";
 import { SleepNode } from "@/components/nodes/SleepNode";
 import { SortNode } from "@/components/nodes/SortNode";
 import { SplitNode } from "@/components/nodes/SplitNode";
+import { SubworkflowNode } from "@/components/nodes/SubworkflowNode";
 import { SummarizeNode } from "@/components/nodes/SummarizeNode";
+import { SwitchNode } from "@/components/nodes/SwitchNode";
 import { TemplateNode } from "@/components/nodes/TemplateNode";
 import { TimeoutNode } from "@/components/nodes/TimeoutNode";
+import { TriggerNode } from "@/components/nodes/TriggerNode";
 import { UniqueNode } from "@/components/nodes/UniqueNode";
 import { ValidateNode } from "@/components/nodes/ValidateNode";
 import { VectorSearchNode } from "@/components/nodes/VectorSearchNode";
-import { WebhookResponseNode } from "@/components/nodes/WebhookResponseNode";
-import { AgentNode } from "@/components/nodes/AgentNode";
-import { AudioNode } from "@/components/nodes/AudioNode";
-import { ChunkNode } from "@/components/nodes/ChunkNode";
-import { CommentNode } from "@/components/nodes/CommentNode";
-import { DecryptNode } from "@/components/nodes/DecryptNode";
-import { EncryptNode } from "@/components/nodes/EncryptNode";
-import { FlattenNode } from "@/components/nodes/FlattenNode";
-import { GroupNode } from "@/components/nodes/GroupNode";
-import { JwtNode } from "@/components/nodes/JwtNode";
-import { RagNode } from "@/components/nodes/RagNode";
-import { SignNode } from "@/components/nodes/SignNode";
 import { VisionNode } from "@/components/nodes/VisionNode";
+import { WaitNode } from "@/components/nodes/WaitNode";
+import { WebhookResponseNode } from "@/components/nodes/WebhookResponseNode";
 import { ZipNode } from "@/components/nodes/ZipNode";
 import ThemeToggle from "@/components/ThemeToggle";
 import {
@@ -138,6 +140,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import ExportWorkflowDialog from "@/components/workflow/ExportWorkflowDialog";
+import ImportWorkflowDialog from "@/components/workflow/ImportWorkflowDialog";
 import { NodeConfigSidebar } from "@/components/workflow/NodeConfigSidebar";
 import { WorkflowRunsPanel } from "@/components/workflow/WorkflowRunsPanel";
 import {
@@ -376,6 +380,8 @@ function WorkflowEditorPage() {
   } | null>(null);
   const [showAddNodeDialog, setShowAddNodeDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const [showExportDialog, setShowExportDialog] = useState(false);
   const [editName, setEditName] = useState(workflow.name);
   const [editDescription, setEditDescription] = useState(
     workflow.description || "",
@@ -447,8 +453,17 @@ function WorkflowEditorPage() {
         expectedOutcome?: string;
       },
     ) => {
-      if (typeof window !== "undefined" && (window as any).logToDebugPane) {
-        (window as any).logToDebugPane(type, message, payload, details);
+      const w = window as unknown as Record<string, unknown>;
+      if (
+        typeof window !== "undefined" &&
+        typeof w.logToDebugPane === "function"
+      ) {
+        (w.logToDebugPane as (...args: unknown[]) => void)(
+          type,
+          message,
+          payload,
+          details,
+        );
       }
     },
     [],
@@ -593,7 +608,9 @@ function WorkflowEditorPage() {
       setNodes((nds) =>
         nds.map((node) => ({
           ...node,
-          className: node.className?.replace(/execution-status-\w+/g, "").trim() || undefined,
+          className:
+            node.className?.replace(/execution-status-\w+/g, "").trim() ||
+            undefined,
         })),
       );
       return;
@@ -602,20 +619,22 @@ function WorkflowEditorPage() {
     setNodes((nds) =>
       nds.map((node) => {
         const status = stepStatuses[node.id];
-        const baseClassName = node.className?.replace(/execution-status-\w+/g, "").trim() || "";
+        const baseClassName =
+          node.className?.replace(/execution-status-\w+/g, "").trim() || "";
         const statusClass = status ? `execution-status-${status}` : "";
-        const newClassName = [baseClassName, statusClass].filter(Boolean).join(" ") || undefined;
+        const newClassName =
+          [baseClassName, statusClass].filter(Boolean).join(" ") || undefined;
         return { ...node, className: newClassName };
       }),
     );
   }, [stepStatuses, setNodes]);
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     setIsSaving(true);
     // Cancel any pending autosave and save immediately
     debouncedSave.cancel();
     performSave(nodes, edges);
-  };
+  }, [debouncedSave, performSave, nodes, edges]);
 
   const handleExecute = useCallback(async () => {
     setIsExecuting(true);
@@ -1052,6 +1071,19 @@ function WorkflowEditorPage() {
     [setEdges, logToDebugPane],
   );
 
+  // Handle workflow import from DSL
+  const handleImport = useCallback(
+    (importedNodes: Node[], importedEdges: Edge[]) => {
+      const namedNodes = ensureStepNames(importedNodes);
+      setNodes(namedNodes);
+      setEdges(importedEdges);
+      setSelectedNode(null);
+      setShowRightSidebar(false);
+      hasUnsavedChanges.current = true;
+    },
+    [setNodes, setEdges],
+  );
+
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -1093,8 +1125,30 @@ function WorkflowEditorPage() {
         return;
       }
 
+      // Ctrl/Cmd + Shift + E - Export (must be checked before Ctrl+E)
+      if (
+        (event.metaKey || event.ctrlKey) &&
+        event.shiftKey &&
+        event.key === "E"
+      ) {
+        event.preventDefault();
+        setShowExportDialog(true);
+        return;
+      }
+
+      // Ctrl/Cmd + I - Import
+      if ((event.metaKey || event.ctrlKey) && event.key === "i") {
+        event.preventDefault();
+        setShowImportDialog(true);
+        return;
+      }
+
       // Ctrl/Cmd + E - Execute
-      if ((event.metaKey || event.ctrlKey) && event.key === "e") {
+      if (
+        (event.metaKey || event.ctrlKey) &&
+        !event.shiftKey &&
+        event.key === "e"
+      ) {
         event.preventDefault();
         handleExecute();
         return;
@@ -1139,14 +1193,18 @@ function WorkflowEditorPage() {
             y: bounds.height / 2,
           });
         } else {
-          position = { x: -viewport.x / viewport.zoom + 400, y: -viewport.y / viewport.zoom + 300 };
+          position = {
+            x: -viewport.x / viewport.zoom + 400,
+            y: -viewport.y / viewport.zoom + 300,
+          };
         }
       } else {
         position = { x: 255, y: nodesRef.current.length * 105 + 45 };
       }
 
       // Check if node needs attention (requires connection but not connected)
-      const needsAttention = data.requiresConnection && !data.connectedInstanceId;
+      const needsAttention =
+        data.requiresConnection && !data.connectedInstanceId;
 
       const newNode: Node = {
         id: nodeId,
@@ -1204,8 +1262,6 @@ function WorkflowEditorPage() {
       handleConfigureIntegration,
       handleOpenIntegrationSettings,
       reactFlowInstance,
-      setSelectedNode,
-      setShowRightSidebar,
     ],
   );
 
@@ -1373,6 +1429,24 @@ function WorkflowEditorPage() {
             <History className="h-4 w-4 lg:mr-1" />
             <span className="hidden lg:inline">History</span>
           </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowImportDialog(true)}
+            title="Import workflow (Ctrl+I)"
+          >
+            <Upload className="h-4 w-4 lg:mr-1" />
+            <span className="hidden lg:inline">Import</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowExportDialog(true)}
+            title="Export workflow (Ctrl+Shift+E)"
+          >
+            <Download className="h-4 w-4 lg:mr-1" />
+            <span className="hidden lg:inline">Export</span>
+          </Button>
 
           {/* Autosave status indicator */}
           <div className="hidden items-center gap-1.5 text-muted-foreground text-xs sm:flex">
@@ -1385,7 +1459,9 @@ function WorkflowEditorPage() {
             {saveStatus === "saved" && (
               <>
                 <Check className="h-3 w-3 text-green-500" />
-                <span className="text-green-600 dark:text-green-400">Saved</span>
+                <span className="text-green-600 dark:text-green-400">
+                  Saved
+                </span>
               </>
             )}
             {saveStatus === "error" && (
@@ -1393,7 +1469,11 @@ function WorkflowEditorPage() {
             )}
           </div>
 
-          <Button size="sm" onClick={handleSave} disabled={isSaving || saveStatus === "saving"}>
+          <Button
+            size="sm"
+            onClick={handleSave}
+            disabled={isSaving || saveStatus === "saving"}
+          >
             {isSaving || saveStatus === "saving" ? (
               <Loader2 className="h-4 w-4 animate-spin lg:mr-1" />
             ) : (
@@ -1707,6 +1787,19 @@ function WorkflowEditorPage() {
           </div>
         </div>
       </div>
+
+      <ImportWorkflowDialog
+        open={showImportDialog}
+        onOpenChange={setShowImportDialog}
+        onImport={handleImport}
+      />
+      <ExportWorkflowDialog
+        open={showExportDialog}
+        onOpenChange={setShowExportDialog}
+        nodes={nodes}
+        edges={edges}
+        workflowName={workflow.name}
+      />
     </div>
   );
 }
