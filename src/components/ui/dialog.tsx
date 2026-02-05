@@ -5,8 +5,6 @@ import { cn } from "@/lib/utils";
 
 import type { ComponentProps } from "react";
 
-const DialogProvider = ArkDialog.RootProvider;
-const DialogContext = ArkDialog.Context;
 const DialogRoot = ArkDialog.Root;
 
 const DialogTrigger = ({
@@ -137,8 +135,4 @@ export {
   DialogTitle,
   DialogDescription,
   DialogCloseTrigger,
-  /** @knipignore */
-  DialogProvider,
-  /** @knipignore */
-  DialogContext,
 };

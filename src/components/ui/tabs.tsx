@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import type { ComponentProps } from "react";
 
 const TabsProvider = ArkTabs.RootProvider;
-const TabsContext = ArkTabs.Context;
 
 const TabsRoot = ({
   className,
@@ -53,26 +52,4 @@ const TabsContent = ({
   />
 );
 
-const TabsIndicator = ({
-  className,
-  ...rest
-}: ComponentProps<typeof ArkTabs.Indicator>) => (
-  <ArkTabs.Indicator
-    className={cn(
-      "absolute transition-all duration-200 data-[orientation=vertical]:right-0 data-[orientation=horizontal]:bottom-0",
-      className,
-    )}
-    {...rest}
-  />
-);
-
-/** @knipignore */
-export {
-  TabsRoot,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-  TabsIndicator,
-  TabsProvider,
-  TabsContext,
-};
+export { TabsProvider, TabsRoot, TabsList, TabsTrigger, TabsContent };

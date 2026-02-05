@@ -4,7 +4,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export type WorkflowStepLog = {
+type WorkflowStepLog = {
   rowId: string;
   stepId: string;
   stepName: string;
@@ -185,5 +185,3 @@ export function useWorkflowRunStream(
     disconnect,
   };
 }
-
-export default useWorkflowRunStream;

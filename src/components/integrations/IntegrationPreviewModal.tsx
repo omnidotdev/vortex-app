@@ -239,5 +239,3 @@ function ActionCard({ action, onAdd }: ActionCardProps) {
 }
 
 export default IntegrationPreviewModal;
-
-export type { IntegrationPreviewModalProps };

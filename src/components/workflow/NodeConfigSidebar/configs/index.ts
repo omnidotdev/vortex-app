@@ -35,5 +35,3 @@ export const nodeConfigRegistry: Record<
   raceNode: RaceConfig,
   commentNode: CommentConfig,
 };
-
-export type { NodeConfigProps } from "./types";

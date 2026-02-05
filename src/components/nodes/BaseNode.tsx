@@ -11,7 +11,7 @@ import type { ReactNode } from "react";
 import type { Position } from "reactflow";
 
 /** Node color theme configuration */
-export interface NodeTheme {
+interface NodeTheme {
   border: string;
   bg: string;
   iconBg: string;
@@ -1219,7 +1219,7 @@ export function getIntegrationTheme(name: string): NodeThemeKey {
 export type NodeThemeKey = keyof typeof nodeThemes;
 
 /** Handle configuration */
-export interface NodeHandle {
+interface NodeHandle {
   type: "source" | "target";
   position: Position;
   id?: string;
@@ -1233,7 +1233,7 @@ export const NODE_WIDTH = 270;
 export const NODE_MIN_HEIGHT = 120;
 
 /** Base node props */
-export interface BaseNodeProps {
+interface BaseNodeProps {
   id: string;
   /** Node theme key or custom theme */
   theme: NodeThemeKey | NodeTheme;

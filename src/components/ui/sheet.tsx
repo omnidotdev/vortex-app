@@ -109,16 +109,6 @@ const SheetTitle = ({
   />
 );
 
-const SheetDescription = ({
-  className,
-  ...rest
-}: ComponentProps<typeof ArkDialog.Description>) => (
-  <ArkDialog.Description
-    className={cn("text-muted-foreground text-sm", className)}
-    {...rest}
-  />
-);
-
 export {
   SheetRoot,
   SheetTrigger,
@@ -127,7 +117,5 @@ export {
   SheetContent,
   SheetCloseTrigger,
   SheetTitle,
-  /** @knipignore */
-  SheetDescription,
   SheetContext,
 };
