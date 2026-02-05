@@ -211,6 +211,56 @@ export const ActionNodeConfig = (props: NodeConfigProps) => {
     );
   }
 
+  // Flow control primitives
+  if (
+    pluginId === "builtin:stop" ||
+    pluginId === "builtin:noop" ||
+    pluginId === "builtin:debounce" ||
+    pluginId === "builtin:time-window"
+  ) {
+    return (
+      <FlowPrimitivesConfig
+        data={data}
+        onChange={onChange}
+        operation={operation}
+        inputs={inputs}
+        updateInput={updateInput}
+        pluginId={pluginId}
+      />
+    );
+  }
+
+  // Data primitives
+  if (pluginId === "builtin:diff" || pluginId === "builtin:change-detector") {
+    return (
+      <DataPrimitivesConfig
+        data={data}
+        onChange={onChange}
+        operation={operation}
+        inputs={inputs}
+        updateInput={updateInput}
+        pluginId={pluginId}
+      />
+    );
+  }
+
+  // AI primitives
+  if (
+    pluginId === "builtin:ai-transform" ||
+    pluginId === "builtin:ai-guardrails"
+  ) {
+    return (
+      <AiPrimitivesConfig
+        data={data}
+        onChange={onChange}
+        operation={operation}
+        inputs={inputs}
+        updateInput={updateInput}
+        pluginId={pluginId}
+      />
+    );
+  }
+
   // For integration nodes (Shopify, Stripe, etc.), show friendly UI
   const integrationDefinitionId = data.integrationDefinitionId as
     | string
@@ -3485,6 +3535,528 @@ const HttpExtendedConfig = ({ data, onChange, inputs, updateInput, pluginId }: P
               value={(inputs.outputVariable as string) || ""}
               onChange={(e) => updateInput("outputVariable", e.target.value)}
               placeholder="rateLimitResult"
+            />
+          </div>
+        </>
+      )}
+    </>
+  );
+};
+
+// Flow control primitives config (stop, noop, debounce, time-window)
+const FlowPrimitivesConfig = ({
+  data,
+  onChange,
+  inputs,
+  updateInput,
+  pluginId,
+}: PluginSubConfigProps) => {
+  return (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="description">Description</Label>
+        <Textarea
+          id="description"
+          value={(data.description as string) || ""}
+          onChange={(e) => onChange("description", e.target.value)}
+          placeholder="What does this step do?"
+          rows={2}
+        />
+      </div>
+
+      {pluginId === "builtin:stop" && (
+        <>
+          <div className="space-y-2">
+            <Label>Status</Label>
+            <Select
+              value={(inputs.status as string) || "success"}
+              onValueChange={(value) => updateInput("status", value)}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="success">Success</SelectItem>
+                <SelectItem value="failure">Failure</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="reason">Reason</Label>
+            <Textarea
+              id="reason"
+              value={(inputs.reason as string) || ""}
+              onChange={(e) => updateInput("reason", e.target.value)}
+              placeholder="Why is the workflow stopping?"
+              rows={2}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="output">Output (JSON)</Label>
+            <Textarea
+              id="output"
+              value={(inputs.output as string) || ""}
+              onChange={(e) => updateInput("output", e.target.value)}
+              placeholder='{"result": "completed"}'
+              rows={3}
+              className="font-mono"
+            />
+          </div>
+        </>
+      )}
+
+      {pluginId === "builtin:noop" && (
+        <p className="text-muted-foreground text-sm">
+          No configuration needed. This step passes through without action.
+        </p>
+      )}
+
+      {pluginId === "builtin:debounce" && (
+        <>
+          <div className="space-y-2">
+            <Label htmlFor="key">Debounce Key</Label>
+            <Input
+              id="key"
+              value={(inputs.key as string) || ""}
+              onChange={(e) => updateInput("key", e.target.value)}
+              placeholder="{{trigger.userId}}"
+            />
+            <p className="text-muted-foreground text-xs">
+              Unique key to group triggers for debouncing
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="windowMs">Window (ms)</Label>
+            <Input
+              id="windowMs"
+              type="number"
+              value={(inputs.windowMs as number) || 5000}
+              onChange={(e) =>
+                updateInput(
+                  "windowMs",
+                  Number.parseInt(e.target.value, 10) || 5000,
+                )
+              }
+              min={100}
+            />
+            <p className="text-muted-foreground text-xs">
+              Time window in milliseconds to coalesce triggers
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label>Strategy</Label>
+            <Select
+              value={(inputs.strategy as string) || "last"}
+              onValueChange={(value) => updateInput("strategy", value)}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="first">First (use first trigger)</SelectItem>
+                <SelectItem value="last">Last (use last trigger)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="outputVariable">Output Variable</Label>
+            <Input
+              id="outputVariable"
+              value={(inputs.outputVariable as string) || ""}
+              onChange={(e) => updateInput("outputVariable", e.target.value)}
+              placeholder="debouncedResult"
+            />
+          </div>
+        </>
+      )}
+
+      {pluginId === "builtin:time-window" && (
+        <>
+          <div className="space-y-2">
+            <Label htmlFor="startTime">Start Time</Label>
+            <Input
+              id="startTime"
+              value={(inputs.startTime as string) || "09:00"}
+              onChange={(e) => updateInput("startTime", e.target.value)}
+              placeholder="09:00"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="endTime">End Time</Label>
+            <Input
+              id="endTime"
+              value={(inputs.endTime as string) || "17:00"}
+              onChange={(e) => updateInput("endTime", e.target.value)}
+              placeholder="17:00"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="timezone">Timezone</Label>
+            <Input
+              id="timezone"
+              value={(inputs.timezone as string) || "America/New_York"}
+              onChange={(e) => updateInput("timezone", e.target.value)}
+              placeholder="America/New_York"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>Days of Week</Label>
+            <div className="flex flex-wrap gap-2">
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                (day, idx) => {
+                  const currentDays =
+                    (inputs.daysOfWeek as number[]) || [1, 2, 3, 4, 5];
+                  const isChecked = currentDays.includes(idx);
+                  return (
+                    <label key={day} className="flex items-center gap-1 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={(e) => {
+                          const newDays = e.target.checked
+                            ? [...currentDays, idx].sort()
+                            : currentDays.filter((d) => d !== idx);
+                          updateInput("daysOfWeek", newDays);
+                        }}
+                        className="rounded"
+                      />
+                      {day}
+                    </label>
+                  );
+                },
+              )}
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>On Outside Window</Label>
+            <Select
+              value={(inputs.onOutside as string) || "skip"}
+              onValueChange={(value) => updateInput("onOutside", value)}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="skip">Skip (do nothing)</SelectItem>
+                <SelectItem value="queue">Queue (run when window opens)</SelectItem>
+                <SelectItem value="fail">Fail (throw error)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </>
+      )}
+    </>
+  );
+};
+
+// Data primitives config (diff, change-detector)
+const DataPrimitivesConfig = ({
+  data,
+  onChange,
+  inputs,
+  updateInput,
+  pluginId,
+}: PluginSubConfigProps) => {
+  return (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="description">Description</Label>
+        <Textarea
+          id="description"
+          value={(data.description as string) || ""}
+          onChange={(e) => onChange("description", e.target.value)}
+          placeholder="What does this step do?"
+          rows={2}
+        />
+      </div>
+
+      {pluginId === "builtin:diff" && (
+        <>
+          <div className="space-y-2">
+            <Label htmlFor="left">Left Source</Label>
+            <Input
+              id="left"
+              value={(inputs.left as string) || ""}
+              onChange={(e) => updateInput("left", e.target.value)}
+              placeholder="{{steps.previous.output}}"
+            />
+            <p className="text-muted-foreground text-xs">
+              First dataset to compare
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="right">Right Source</Label>
+            <Input
+              id="right"
+              value={(inputs.right as string) || ""}
+              onChange={(e) => updateInput("right", e.target.value)}
+              placeholder="{{steps.current.output}}"
+            />
+            <p className="text-muted-foreground text-xs">
+              Second dataset to compare
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="key">Key Field</Label>
+            <Input
+              id="key"
+              value={(inputs.key as string) || ""}
+              onChange={(e) => updateInput("key", e.target.value)}
+              placeholder="id"
+            />
+            <p className="text-muted-foreground text-xs">
+              Property to match items between datasets
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="outputVariable">Output Variable</Label>
+            <Input
+              id="outputVariable"
+              value={(inputs.outputVariable as string) || ""}
+              onChange={(e) => updateInput("outputVariable", e.target.value)}
+              placeholder="diffResult"
+            />
+          </div>
+        </>
+      )}
+
+      {pluginId === "builtin:change-detector" && (
+        <>
+          <div className="space-y-2">
+            <Label htmlFor="key">State Key</Label>
+            <Input
+              id="key"
+              value={(inputs.key as string) || ""}
+              onChange={(e) => updateInput("key", e.target.value)}
+              placeholder="myService.lastValue"
+            />
+            <p className="text-muted-foreground text-xs">
+              Unique key to track changes across runs
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="value">Value Expression</Label>
+            <Input
+              id="value"
+              value={(inputs.value as string) || ""}
+              onChange={(e) => updateInput("value", e.target.value)}
+              placeholder="{{steps.fetch.output.data}}"
+            />
+            <p className="text-muted-foreground text-xs">
+              Value to compare against the last stored value
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label>Strategy</Label>
+            <Select
+              value={(inputs.strategy as string) || "hash"}
+              onValueChange={(value) => updateInput("strategy", value)}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="hash">Hash (fast, less precise)</SelectItem>
+                <SelectItem value="deep_equal">
+                  Deep Equal (thorough comparison)
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="outputVariable">Output Variable</Label>
+            <Input
+              id="outputVariable"
+              value={(inputs.outputVariable as string) || ""}
+              onChange={(e) => updateInput("outputVariable", e.target.value)}
+              placeholder="changeResult"
+            />
+          </div>
+        </>
+      )}
+    </>
+  );
+};
+
+// AI primitives config (ai-transform, ai-guardrails)
+const AiPrimitivesConfig = ({
+  data,
+  onChange,
+  inputs,
+  updateInput,
+  pluginId,
+}: PluginSubConfigProps) => {
+  const [ruleCount, setRuleCount] = useState(
+    (inputs.rules as Array<{ type: string; value: string }>)?.length || 1,
+  );
+
+  return (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="description">Description</Label>
+        <Textarea
+          id="description"
+          value={(data.description as string) || ""}
+          onChange={(e) => onChange("description", e.target.value)}
+          placeholder="What does this step do?"
+          rows={2}
+        />
+      </div>
+
+      {pluginId === "builtin:ai-transform" && (
+        <>
+          <div className="space-y-2">
+            <Label htmlFor="model">Model</Label>
+            <Input
+              id="model"
+              value={(inputs.model as string) || ""}
+              onChange={(e) => updateInput("model", e.target.value)}
+              placeholder="gpt-4o"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="prompt">Prompt</Label>
+            <Textarea
+              id="prompt"
+              value={(inputs.prompt as string) || ""}
+              onChange={(e) => updateInput("prompt", e.target.value)}
+              placeholder="Extract the key facts from the following text and return as JSON..."
+              rows={4}
+            />
+            <p className="text-muted-foreground text-xs">
+              Prompt template describing the transformation
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="input">Input Source</Label>
+            <Input
+              id="input"
+              value={(inputs.input as string) || ""}
+              onChange={(e) => updateInput("input", e.target.value)}
+              placeholder="{{steps.previous.output}}"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="schema">Output Schema (optional)</Label>
+            <Textarea
+              id="schema"
+              value={(inputs.schema as string) || ""}
+              onChange={(e) => updateInput("schema", e.target.value)}
+              placeholder='{"type": "object", "properties": {"summary": {"type": "string"}}}'
+              rows={3}
+              className="font-mono"
+            />
+            <p className="text-muted-foreground text-xs">
+              JSON schema for structured output
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="outputVariable">Output Variable</Label>
+            <Input
+              id="outputVariable"
+              value={(inputs.outputVariable as string) || ""}
+              onChange={(e) => updateInput("outputVariable", e.target.value)}
+              placeholder="transformedData"
+            />
+          </div>
+        </>
+      )}
+
+      {pluginId === "builtin:ai-guardrails" && (
+        <>
+          <div className="space-y-2">
+            <Label htmlFor="input">Input Source</Label>
+            <Input
+              id="input"
+              value={(inputs.input as string) || ""}
+              onChange={(e) => updateInput("input", e.target.value)}
+              placeholder="{{steps.aiStep.output}}"
+            />
+            <p className="text-muted-foreground text-xs">
+              LLM output to validate
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label>Rules</Label>
+            {Array.from({ length: ruleCount }).map((_, idx) => {
+              const rules =
+                (inputs.rules as Array<{ type: string; value: string }>) || [];
+              const rule = rules[idx] || { type: "contains", value: "" };
+              return (
+                <div key={idx} className="flex gap-2">
+                  <Select
+                    value={rule.type}
+                    onValueChange={(value) => {
+                      const newRules = [...rules];
+                      newRules[idx] = { ...rule, type: value };
+                      updateInput("rules", newRules);
+                    }}
+                  >
+                    <SelectTrigger className="w-40">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="regex">Regex</SelectItem>
+                      <SelectItem value="contains">Contains</SelectItem>
+                      <SelectItem value="not_contains">Not Contains</SelectItem>
+                      <SelectItem value="max_length">Max Length</SelectItem>
+                      <SelectItem value="json_schema">JSON Schema</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Input
+                    value={rule.value}
+                    onChange={(e) => {
+                      const newRules = [...rules];
+                      newRules[idx] = { ...rule, value: e.target.value };
+                      updateInput("rules", newRules);
+                    }}
+                    placeholder="Rule value"
+                    className="flex-1"
+                  />
+                </div>
+              );
+            })}
+            <button
+              type="button"
+              className="text-primary text-sm hover:underline"
+              onClick={() => {
+                const rules =
+                  (inputs.rules as Array<{ type: string; value: string }>) ||
+                  [];
+                updateInput("rules", [
+                  ...rules,
+                  { type: "contains", value: "" },
+                ]);
+                setRuleCount(ruleCount + 1);
+              }}
+            >
+              + Add rule
+            </button>
+          </div>
+          <div className="space-y-2">
+            <Label>On Fail</Label>
+            <Select
+              value={(inputs.onFail as string) || "block"}
+              onValueChange={(value) => updateInput("onFail", value)}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="block">Block (stop workflow)</SelectItem>
+                <SelectItem value="warn">Warn (continue with warning)</SelectItem>
+                <SelectItem value="sanitize">Sanitize (clean output)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="outputVariable">Output Variable</Label>
+            <Input
+              id="outputVariable"
+              value={(inputs.outputVariable as string) || ""}
+              onChange={(e) => updateInput("outputVariable", e.target.value)}
+              placeholder="validatedOutput"
             />
           </div>
         </>
