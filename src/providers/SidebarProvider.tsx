@@ -44,7 +44,7 @@ interface SidebarContextValue {
   close: () => void;
 }
 
-import { createContext, use, useCallback, useState } from "react";
+import { createContext, useCallback, useState } from "react";
 
 const SidebarContext = createContext<SidebarContextValue | null>(null);
 
@@ -77,16 +77,6 @@ const SidebarProvider = ({ children }: PropsWithChildren) => {
       {children}
     </SidebarContext>
   );
-};
-
-/** @knipignore */
-export const useSidebar = () => {
-  const val = use(SidebarContext);
-
-  if (!val)
-    throw new Error("`useSidebar` called outside of `<SidebarProvider />`");
-
-  return val;
 };
 
 export default SidebarProvider;

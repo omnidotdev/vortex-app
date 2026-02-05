@@ -24,7 +24,7 @@ import { getSubscription } from "@/server/functions/subscriptions";
 import type { Price, Subscription } from "@/lib/providers/billing";
 
 // Free tier placeholder for display
-export const FREE_PRICE: Price = {
+const FREE_PRICE: Price = {
   id: "free",
   active: true,
   currency: "usd",
@@ -46,7 +46,7 @@ export const FREE_PRICE: Price = {
 };
 
 // Enterprise tier placeholder for display
-export const ENTERPRISE_PRICE: Price = {
+const ENTERPRISE_PRICE: Price = {
   id: "enterprise",
   active: true,
   currency: "usd",

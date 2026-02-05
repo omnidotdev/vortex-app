@@ -7,7 +7,7 @@ let flagClient: Awaited<ReturnType<typeof startUnleash>> | null = null;
 /**
  * Get Unleash feature flag client (singleton).
  */
-export const getFlagClient = async () => {
+const getFlagClient = async () => {
   if (flagClient) return flagClient;
 
   flagClient = await startUnleash({

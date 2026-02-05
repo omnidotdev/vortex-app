@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 
 import { isEnabled } from "./client";
 
-export const FLAGS = {
+const FLAGS = {
   MAINTENANCE_MODE: "vortex-app-maintenance-mode",
 } as const;
 

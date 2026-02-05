@@ -3,7 +3,8 @@
   "entry": [
     "src/server/functions/*.ts",
     "src/lib/providers/billing/index.ts",
-    "src/lib/workflow/types.ts"
+    "src/lib/workflow/types.ts",
+    "src/**/*.test.{ts,tsx}"
   ],
   "ignore": [
     "src/lib/payments.ts",
@@ -18,7 +19,6 @@
     "dotenv",
     "msw",
     "react-hotkeys-hook",
-    "ts-pattern",
-    "graphql-tag"
+    "ts-pattern"
   ]
 }
