@@ -1,13 +1,10 @@
 import { describe, expect, it } from "bun:test";
 
-import type { Edge, Node } from "reactflow";
-
-import dslToReactFlow, {
-  isDslFormat,
-} from "@/lib/workflow/dslToReactFlow";
+import dslToReactFlow, { isDslFormat } from "@/lib/workflow/dslToReactFlow";
 import dslToTypeScript from "@/lib/workflow/dslToTypeScript";
 import { reactFlowToDsl } from "@/lib/workflow/reactFlowToDsl";
 
+import type { Edge, Node } from "reactflow";
 import type { WorkflowDefinition } from "@/lib/workflow/types";
 
 // -- Helpers ------------------------------------------------------------------
@@ -39,8 +36,7 @@ function expectStructuralNodeEquivalence(
 function expectEdgeEquivalence(original: Edge[], roundTripped: Edge[]) {
   expect(roundTripped.length).toBe(original.length);
 
-  const key = (e: Edge) =>
-    `${e.source}::${e.target}::${e.sourceHandle ?? ""}`;
+  const key = (e: Edge) => `${e.source}::${e.target}::${e.sourceHandle ?? ""}`;
   const origKeys = new Set(original.map(key));
 
   for (const rt of roundTripped) {
@@ -97,11 +93,7 @@ function makeActionNode(
   };
 }
 
-function makeEdge(
-  source: string,
-  target: string,
-  sourceHandle?: string,
-): Edge {
+function makeEdge(source: string, target: string, sourceHandle?: string): Edge {
   const id = `${source}-${sourceHandle ?? "out"}-${target}`;
   return {
     id,
@@ -769,10 +761,12 @@ describe("unknown/generic step types", () => {
     ];
     const edges: Edge[] = [makeEdge("t1", "x1")];
 
-    // Unknown node types return null and are filtered out
+    // Unknown node types are handled by the generic converter
     const dsl = reactFlowToDsl(nodes, edges);
-    expect(dsl.steps.length).toBe(1); // Only trigger survives
+    expect(dsl.steps.length).toBe(2);
     expect(dsl.steps[0].type).toBe("trigger");
+    expect(dsl.steps[1].type).toBe("unknownCustomNode");
+    expect(dsl.steps[1].name).toBe("Custom Thing");
   });
 
   it("should handle unknown step types gracefully in dslToReactFlow", () => {
@@ -843,9 +837,7 @@ describe("dslToTypeScript", () => {
     const code = dslToTypeScript(dsl, "Order Notifications");
 
     // Verify import statement
-    expect(code).toContain(
-      'import { workflow } from "@omnidotdev/vortex-sdk"',
-    );
+    expect(code).toContain('import { workflow } from "@omnidotdev/vortex-sdk"');
 
     // Verify builder start
     expect(code).toContain(
