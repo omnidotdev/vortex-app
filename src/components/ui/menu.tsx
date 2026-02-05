@@ -1,14 +1,10 @@
 import { Menu as ArkMenu } from "@ark-ui/react/menu";
-import { Check, ChevronRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import type { ark } from "@ark-ui/react";
 import type { ComponentProps } from "react";
 
-const MenuProvider = ArkMenu.RootProvider;
 const MenuRoot = ArkMenu.Root;
-const PrimitiveMenuIndicator = ArkMenu.ItemIndicator;
 
 const MenuTrigger = ({
   className,
@@ -37,20 +33,6 @@ const MenuContent = ({
   />
 );
 
-const MenuArrow = ({
-  className,
-  ...rest
-}: ComponentProps<typeof ArkMenu.Arrow>) => (
-  <ArkMenu.Arrow className={cn("fill-popover", className)} {...rest} />
-);
-
-const MenuArrowTip = ({
-  className,
-  ...rest
-}: ComponentProps<typeof ArkMenu.ArrowTip>) => (
-  <ArkMenu.ArrowTip className={cn("fill-border", className)} {...rest} />
-);
-
 const MenuItem = ({
   className,
   children,
@@ -71,22 +53,6 @@ const MenuItem = ({
   >
     {children}
   </ArkMenu.Item>
-);
-
-const MenuCheckboxItem = ({
-  className,
-  children,
-  ...rest
-}: ComponentProps<typeof ArkMenu.CheckboxItem>) => (
-  <ArkMenu.CheckboxItem
-    className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-[state=checked]:bg-accent data-highlighted:bg-accent data-[state=checked]:text-accent-foreground data-highlighted:text-accent-foreground data-disabled:opacity-50 [&[data-state=checked][data-highlighted]]:bg-sidebar-accent/80",
-      className,
-    )}
-    {...rest}
-  >
-    {children}
-  </ArkMenu.CheckboxItem>
 );
 
 const MenuItemGroup = ({
@@ -116,44 +82,6 @@ const MenuItemText = ({
   <ArkMenu.ItemText className={className} {...rest} />
 );
 
-const MenuItemIndicator = ({
-  className,
-  ...rest
-}: ComponentProps<typeof ArkMenu.ItemIndicator>) => (
-  <ArkMenu.ItemIndicator
-    className={cn(
-      "ml-auto flex h-3.5 w-3.5 items-center justify-center",
-      className,
-    )}
-    {...rest}
-  >
-    <Check className="size-4" />
-  </ArkMenu.ItemIndicator>
-);
-
-const MenuRadioItem = ({
-  className,
-  children,
-  ...rest
-}: ComponentProps<typeof ArkMenu.RadioItem>) => (
-  <ArkMenu.RadioItem
-    className={cn(
-      "relative flex cursor-default select-none items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm outline-hidden focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-      className,
-    )}
-    {...rest}
-  >
-    {children}
-  </ArkMenu.RadioItem>
-);
-
-const MenuRadioItemGroup = ({
-  className,
-  ...rest
-}: ComponentProps<typeof ArkMenu.RadioItemGroup>) => (
-  <ArkMenu.RadioItemGroup className={className} {...rest} />
-);
-
 const MenuSeparator = ({
   className,
   ...rest
@@ -164,58 +92,14 @@ const MenuSeparator = ({
   />
 );
 
-const MenuTriggerItem = ({
-  className,
-  children,
-  ...rest
-}: ComponentProps<typeof ArkMenu.TriggerItem>) => (
-  <ArkMenu.TriggerItem
-    className={cn(
-      "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 data-disabled:pointer-events-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:opacity-50 [&>svg]:size-4",
-      className,
-    )}
-    {...rest}
-  >
-    {children}
-    <ChevronRight className="ml-auto h-4 w-4" />
-  </ArkMenu.TriggerItem>
-);
-
-const MenuItemShortcut = ({
-  className,
-  children,
-  ...rest
-}: ComponentProps<typeof ark.span>) => (
-  <span
-    className={cn(
-      "ml-auto text-muted-foreground text-xs tracking-widest",
-      className,
-    )}
-    {...rest}
-  >
-    {children}
-  </span>
-);
-
-/** @knipignore */
 export {
-  MenuArrow,
-  MenuArrowTip,
   MenuContent,
   MenuItem,
   MenuItemGroup,
   MenuItemGroupLabel,
-  MenuCheckboxItem,
-  MenuRadioItem,
-  MenuRadioItemGroup,
   MenuItemText,
-  MenuItemIndicator,
   MenuPositioner,
-  MenuProvider,
   MenuRoot,
   MenuSeparator,
   MenuTrigger,
-  MenuTriggerItem,
-  MenuItemShortcut,
-  PrimitiveMenuIndicator,
 };

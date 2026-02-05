@@ -39,7 +39,7 @@ const baseNodeSchema = z.object({
 });
 
 // Trigger node schema
-export const triggerNodeSchema = baseNodeSchema.extend({
+const triggerNodeSchema = baseNodeSchema.extend({
   type: z.literal(NodeTypes.TRIGGER),
   data: z.object({
     label: z.string(),
@@ -61,7 +61,7 @@ export const triggerNodeSchema = baseNodeSchema.extend({
 });
 
 // Action node schema
-export const actionNodeSchema = baseNodeSchema.extend({
+const actionNodeSchema = baseNodeSchema.extend({
   type: z.literal(NodeTypes.ACTION),
   data: z.object({
     label: z.string(),
@@ -75,7 +75,7 @@ export const actionNodeSchema = baseNodeSchema.extend({
 });
 
 // Condition node schema
-export const conditionNodeSchema = baseNodeSchema.extend({
+const conditionNodeSchema = baseNodeSchema.extend({
   type: z.literal(NodeTypes.CONDITION),
   data: z.object({
     label: z.string(),
@@ -96,7 +96,7 @@ export const conditionNodeSchema = baseNodeSchema.extend({
 });
 
 // Switch node schema
-export const switchNodeSchema = baseNodeSchema.extend({
+const switchNodeSchema = baseNodeSchema.extend({
   type: z.literal(NodeTypes.SWITCH),
   data: z.object({
     label: z.string(),
@@ -115,7 +115,7 @@ export const switchNodeSchema = baseNodeSchema.extend({
 });
 
 // Delay node schema
-export const delayNodeSchema = baseNodeSchema.extend({
+const delayNodeSchema = baseNodeSchema.extend({
   type: z.literal(NodeTypes.DELAY),
   data: z.object({
     label: z.string(),
@@ -129,7 +129,7 @@ export const delayNodeSchema = baseNodeSchema.extend({
 });
 
 // Loop node schema
-export const loopNodeSchema = baseNodeSchema.extend({
+const loopNodeSchema = baseNodeSchema.extend({
   type: z.literal(NodeTypes.LOOP),
   data: z.object({
     label: z.string(),
@@ -145,7 +145,7 @@ export const loopNodeSchema = baseNodeSchema.extend({
 });
 
 // Edge schema
-export const edgeSchema = z.object({
+const edgeSchema = z.object({
   id: z.string(),
   source: z.string(),
   target: z.string(),
@@ -154,7 +154,7 @@ export const edgeSchema = z.object({
 });
 
 // Workflow schema
-export const workflowSchema = z.object({
+const workflowSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string().optional(),
@@ -170,20 +170,3 @@ export const workflowSchema = z.object({
   ),
   edges: z.array(edgeSchema),
 });
-
-/** @knipignore */
-export type Workflow = z.infer<typeof workflowSchema>;
-/** @knipignore */
-export type TriggerNode = z.infer<typeof triggerNodeSchema>;
-/** @knipignore */
-export type ActionNode = z.infer<typeof actionNodeSchema>;
-/** @knipignore */
-export type ConditionNode = z.infer<typeof conditionNodeSchema>;
-/** @knipignore */
-export type SwitchNode = z.infer<typeof switchNodeSchema>;
-/** @knipignore */
-export type DelayNode = z.infer<typeof delayNodeSchema>;
-/** @knipignore */
-export type LoopNode = z.infer<typeof loopNodeSchema>;
-/** @knipignore */
-export type Edge = z.infer<typeof edgeSchema>;
