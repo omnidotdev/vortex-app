@@ -75,6 +75,15 @@ export const StepType = {
   STATE_GET: "state_get",
   STATE_SET: "state_set",
   STATE_WAIT: "state_wait",
+  // Workflow primitives
+  STOP: "stop",
+  NOOP: "noop",
+  DEBOUNCE: "debounce",
+  DIFF: "diff",
+  CHANGE_DETECTOR: "change_detector",
+  TIME_WINDOW: "time_window",
+  AI_TRANSFORM: "ai_transform",
+  AI_GUARDRAILS: "ai_guardrails",
 } as const;
 
 export type StepTypeValue = (typeof StepType)[keyof typeof StepType];
@@ -789,6 +798,85 @@ export interface StateWaitStep extends Omit<StepBase, "type"> {
   };
 }
 
+// Workflow primitives
+export interface StopStep extends Omit<StepBase, "type"> {
+  type: "stop";
+  stop: {
+    status: "success" | "failure" | "cancelled";
+    reason?: string;
+    output?: unknown;
+  };
+}
+
+export interface NoopStep extends Omit<StepBase, "type"> {
+  type: "noop";
+}
+
+export interface DebounceStep extends Omit<StepBase, "type"> {
+  type: "debounce";
+  debounce: {
+    key: string;
+    windowMs: number;
+    strategy: "first" | "last";
+    outputVariable?: string;
+  };
+}
+
+export interface DiffStep extends Omit<StepBase, "type"> {
+  type: "diff";
+  diff: {
+    left: string;
+    right: string;
+    key?: string;
+    outputVariable: string;
+  };
+}
+
+export interface ChangeDetectorStep extends Omit<StepBase, "type"> {
+  type: "change_detector";
+  changeDetector: {
+    key: string;
+    value: string;
+    strategy: "hash" | "deep_equal";
+    outputVariable?: string;
+  };
+}
+
+export interface TimeWindowStep extends Omit<StepBase, "type"> {
+  type: "time_window";
+  timeWindow: {
+    startTime: string;
+    endTime: string;
+    timezone: string;
+    daysOfWeek?: number[];
+    onOutside: "skip" | "queue" | "fail";
+  };
+}
+
+export interface AiTransformStep extends Omit<StepBase, "type"> {
+  type: "ai_transform";
+  aiTransform: {
+    model: string;
+    prompt: string;
+    input: string;
+    schema?: string;
+    outputVariable: string;
+  };
+}
+
+export interface AiGuardrailsStep extends Omit<StepBase, "type"> {
+  type: "ai_guardrails";
+  aiGuardrails: {
+    input: string;
+    rules: Array<{
+      type: "regex" | "contains" | "not_contains" | "max_length" | "json_schema";
+      value: string;
+    }>;
+    onFail: "block" | "warn" | "sanitize";
+    outputVariable?: string;
+  };
+}
+
 export type Step =
   | TriggerStep
   | ActionStep
@@ -861,7 +949,16 @@ export type Step =
   // State management
   | StateGetStep
   | StateSetStep
-  | StateWaitStep;
+  | StateWaitStep
+  // Workflow primitives
+  | StopStep
+  | NoopStep
+  | DebounceStep
+  | DiffStep
+  | ChangeDetectorStep
+  | TimeWindowStep
+  | AiTransformStep
+  | AiGuardrailsStep;
 
 export interface EdgeDefinition {
   id: string;
