@@ -397,6 +397,9 @@ function WorkflowEditorPage() {
   nodesRef.current = nodes;
   edgesRef.current = edges;
 
+  // Track drag state to defer autosave during node dragging
+  const isDragging = useRef(false);
+
   // Store position for adding nodes from context menu (in flow coordinates)
   const pendingAddPositionRef = useRef<{ x: number; y: number } | null>(null);
 
@@ -582,7 +585,7 @@ function WorkflowEditorPage() {
     [performSave],
   );
 
-  // Track changes and trigger autosave
+  // Track changes and trigger autosave (skip during drag to avoid per-frame work)
   useEffect(() => {
     // Skip the initial mount - don't autosave on load
     if (isInitialMount.current) {
@@ -591,6 +594,10 @@ function WorkflowEditorPage() {
     }
 
     hasUnsavedChanges.current = true;
+
+    // Defer autosave while dragging; onNodeDragStop triggers it instead
+    if (isDragging.current) return;
+
     debouncedSave.maybeExecute(nodes, edges);
   }, [nodes, edges, debouncedSave]);
 
@@ -942,6 +949,19 @@ function WorkflowEditorPage() {
       handleExecute,
     ],
   );
+
+  // Suppress autosave during drag to avoid per-frame effect overhead
+  const onNodeDragStart = useCallback(() => {
+    isDragging.current = true;
+  }, []);
+
+  const onNodeDragStop = useCallback(() => {
+    isDragging.current = false;
+    // Trigger deferred autosave with final positions
+    if (hasUnsavedChanges.current) {
+      debouncedSave.maybeExecute(nodesRef.current, edgesRef.current);
+    }
+  }, [debouncedSave]);
 
   // Handle node click to open config panel
   const onNodeClick = useCallback((_event: React.MouseEvent, node: Node) => {
@@ -1548,6 +1568,8 @@ function WorkflowEditorPage() {
               onEdgesChange={onEdgesChange}
               onConnect={onConnect}
               onInit={setReactFlowInstance}
+              onNodeDragStart={onNodeDragStart}
+              onNodeDragStop={onNodeDragStop}
               onDragOver={onDragOver}
               onDrop={onDrop}
               onNodeClick={(event, node) => {
