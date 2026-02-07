@@ -20,11 +20,12 @@ const knipConfig: KnipConfig = {
   ignoreExportsUsedInFile: true,
   ignore: ["src/generated/**", "src/routeTree.gen.ts"],
   ignoreDependencies: [
+    // GitHub dep not resolvable by knip
+    "@omnidotdev/providers",
     // used by GraphQL Code Generator scripts
     "dotenv",
     // Future use dependencies
     "react-hotkeys-hook",
-    "stripe",
     "ts-pattern",
   ],
   tags: ["-knipignore"],

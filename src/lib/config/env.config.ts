@@ -43,12 +43,3 @@ export const isDevEnv = import.meta.env.DEV;
 export const isSelfHosted =
   SELF_HOSTED === "true" || VITE_SELF_HOSTED === "true";
 
-/**
- * Billing provider to use.
- * - "local" for self-hosted (all features unlocked)
- * - "aether" for SaaS (billing service)
- * @knipignore - used by billing provider factory
- */
-export const billingProvider: "local" | "aether" = isSelfHosted
-  ? "local"
-  : "aether";
