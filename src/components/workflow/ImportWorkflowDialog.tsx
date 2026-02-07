@@ -16,7 +16,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import dslToReactFlow, { isDslFormat } from "@/lib/workflow/dslToReactFlow";
 
-import type { Node, Edge } from "reactflow";
+import type { Edge, Node } from "reactflow";
 
 type ImportWorkflowDialogProps = {
   open: boolean;

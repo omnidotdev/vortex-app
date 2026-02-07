@@ -1576,4 +1576,193 @@ git commit -m "feat(vortex): skip comment nodes during execution"
 
 **Total:** 23 tasks for Phases 1-4
 
-Phases 5-10 (Polling, Kafka, SQS, S3, CDC, State Store) will be planned after these foundational phases are complete.
+## Phase 5: Polling Trigger + Adapter
+
+### Task 5.1: Polling Trigger Type
+
+**Files:**
+- Modify: `vortex-app/src/lib/workflow/types.ts`
+- Modify: `vortex-app/src/lib/schema.ts`
+
+Add PollingTriggerConfig and POLLING to NodeTypes/StepType.
+
+### Task 5.2: Polling Trigger Config UI
+
+**Files:**
+- Modify: `vortex-app/src/components/workflow/NodeConfigSidebar/configs/TriggerNodeConfig.tsx`
+
+Add polling config fields: URL, method, headers, interval, dedup strategy.
+
+### Task 5.3: Polling Adapter (vortex-api)
+
+**Files:**
+- Create: `vortex-api/src/lib/triggers/polling.ts`
+- Modify: `vortex-api/src/index.ts`
+
+Extend the existing cron scheduler pattern. Check enabled workflows with triggerType=polling on their interval. Use Redis for dedup (hash or field-based). Push `workflow:execute` to Hatchet on new data.
+
+### Task 5.4: Add Polling Trigger to NodePicker
+
+**Files:**
+- Modify: `vortex-app/src/components/NodePicker.tsx`
+
+---
+
+## Phase 6: Kafka Adapter + Trigger
+
+### Task 6.1: Install kafkajs
+
+Run: `cd vortex-worker && bun add kafkajs`
+
+### Task 6.2: Kafka Trigger Type + Config UI
+
+**Files:**
+- Modify: `vortex-app/src/lib/workflow/types.ts`
+- Modify: `vortex-app/src/lib/schema.ts`
+- Modify: `vortex-app/src/components/workflow/NodeConfigSidebar/configs/TriggerNodeConfig.tsx`
+- Modify: `vortex-app/src/components/NodePicker.tsx`
+
+Add KafkaTriggerConfig with fields: brokers, topic, groupId, fromBeginning.
+
+### Task 6.3: Kafka Adapter (vortex-worker)
+
+**Files:**
+- Create: `vortex-worker/src/adapters/kafka.adapter.ts`
+- Create: `vortex-worker/src/adapters/types.ts`
+- Create: `vortex-worker/src/adapters/dispatcher.ts`
+- Create: `vortex-worker/src/adapters/index.ts`
+- Modify: `vortex-worker/src/index.ts`
+
+Create EventAdapter interface and KafkaAdapter using kafkajs. The adapter:
+1. Queries DB for enabled workflows with triggerType=kafka
+2. Creates Kafka consumers for each unique topic
+3. On message: normalize event, dispatch to matching workflows via Hatchet
+4. Starts/stops with the worker lifecycle
+
+---
+
+## Phase 7: SQS Adapter + Trigger
+
+### Task 7.1: SQS Trigger Type + Config UI
+
+**Files:**
+- Modify: `vortex-app/src/lib/workflow/types.ts`
+- Modify: `vortex-app/src/components/workflow/NodeConfigSidebar/configs/TriggerNodeConfig.tsx`
+- Modify: `vortex-app/src/components/NodePicker.tsx`
+
+Add SqsTriggerConfig: queueUrl, region, credentials (integration ref), batchSize.
+
+### Task 7.2: SQS Adapter (vortex-worker)
+
+**Files:**
+- Create: `vortex-worker/src/adapters/sqs.adapter.ts`
+- Modify: `vortex-worker/src/adapters/index.ts`
+
+Uses existing `@aws-sdk/client-sqs`. Long-polls SQS queues configured in workflows. On message: normalize, dispatch, delete message on success.
+
+---
+
+## Phase 8: S3 Adapter + Trigger
+
+### Task 8.1: S3 Trigger Type + Config UI
+
+**Files:**
+- Modify: `vortex-app/src/lib/workflow/types.ts`
+- Modify: `vortex-app/src/components/workflow/NodeConfigSidebar/configs/TriggerNodeConfig.tsx`
+- Modify: `vortex-app/src/components/NodePicker.tsx`
+
+Add S3TriggerConfig: bucket, prefix, suffix, events, credentials.
+
+### Task 8.2: S3 Event Webhook (vortex-api)
+
+**Files:**
+- Create: `vortex-api/src/lib/triggers/s3.ts`
+- Modify: `vortex-api/src/webhooks.ts`
+
+Add REST endpoint `POST /webhooks/s3/:secret` that receives S3 event notifications, matches against workflows with triggerType=s3, and triggers via Hatchet.
+
+---
+
+## Phase 9: CDC Adapter + Trigger
+
+### Task 9.1: CDC Trigger Type + Config UI
+
+**Files:**
+- Modify: `vortex-app/src/lib/workflow/types.ts`
+- Modify: `vortex-app/src/components/workflow/NodeConfigSidebar/configs/TriggerNodeConfig.tsx`
+- Modify: `vortex-app/src/components/NodePicker.tsx`
+
+Add CdcTriggerConfig: connectionString (integration ref), table, operations.
+
+### Task 9.2: CDC Webhook (vortex-api)
+
+**Files:**
+- Create: `vortex-api/src/lib/triggers/cdc.ts`
+- Modify: `vortex-api/src/webhooks.ts`
+
+Add REST endpoint `POST /webhooks/cdc/:secret` that receives Debezium-formatted CDC events. Match against workflows with triggerType=cdc by table name and operation type.
+
+---
+
+## Phase 10: Cross-Workflow State Store
+
+### Task 10.1: State Store Implementation (vortex-worker)
+
+**Files:**
+- Create: `vortex-worker/src/state/store.ts`
+- Create: `vortex-worker/src/state/index.ts`
+
+Redis-backed state store scoped by organization:
+- get/set/delete with optional TTL
+- increment, append for atomic ops
+- publish/subscribe for coordination
+
+Uses existing `ioredis` dependency.
+
+### Task 10.2: State Step Types
+
+**Files:**
+- Modify: `vortex-app/src/lib/workflow/types.ts`
+- Modify: `vortex-app/src/lib/schema.ts`
+
+Add StateGetStep, StateSetStep, StateWaitStep interfaces.
+
+### Task 10.3: State Step Execution
+
+**Files:**
+- Modify: `vortex-worker/src/dsl/executor.ts`
+- Modify: `vortex-worker/src/dsl/types.ts`
+
+Integrate state_get, state_set, state_wait into the DSL executor.
+
+### Task 10.4: State Config UIs
+
+**Files:**
+- Create: `vortex-app/src/components/workflow/NodeConfigSidebar/configs/StateGetConfig.tsx`
+- Create: `vortex-app/src/components/workflow/NodeConfigSidebar/configs/StateSetConfig.tsx`
+- Create: `vortex-app/src/components/workflow/NodeConfigSidebar/configs/StateWaitConfig.tsx`
+- Modify: `vortex-app/src/components/workflow/NodeConfigSidebar/configs/index.ts`
+
+### Task 10.5: State Nodes in NodePicker
+
+**Files:**
+- Modify: `vortex-app/src/components/NodePicker.tsx`
+
+Add State Get, State Set, State Wait to "storage" category.
+
+---
+
+## Summary (Updated)
+
+**Phase 1 (Omni Event Trigger):** 8 tasks - COMPLETE
+**Phase 2 (Sub-Workflow):** 4 tasks - COMPLETE
+**Phase 3 (Try/Catch + Race):** 6 tasks - COMPLETE
+**Phase 4 (Comment):** 5 tasks - COMPLETE
+**Phase 5 (Polling Trigger):** 4 tasks
+**Phase 6 (Kafka):** 3 tasks
+**Phase 7 (SQS):** 2 tasks
+**Phase 8 (S3):** 2 tasks
+**Phase 9 (CDC):** 2 tasks
+**Phase 10 (State Store):** 5 tasks
+
+**Total:** 41 tasks (23 complete, 18 remaining)

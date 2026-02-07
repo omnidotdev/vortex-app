@@ -22,7 +22,7 @@ import {
 import dslToTypeScript from "@/lib/workflow/dslToTypeScript";
 import { reactFlowToDsl } from "@/lib/workflow/reactFlowToDsl";
 
-import type { Node, Edge } from "reactflow";
+import type { Edge, Node } from "reactflow";
 
 type ExportWorkflowDialogProps = {
   open: boolean;
@@ -102,15 +102,12 @@ function ExportWorkflowDialog({
   }, [activeTab, jsonOutput, tsOutput, filenameSlug]);
 
   // Reset copied state when switching tabs
-  const handleTabChange = useCallback(
-    (details: { value: string | null }) => {
-      if (details.value) {
-        setActiveTab(details.value);
-        setCopied(false);
-      }
-    },
-    [],
-  );
+  const handleTabChange = useCallback((details: { value: string | null }) => {
+    if (details.value) {
+      setActiveTab(details.value);
+      setCopied(false);
+    }
+  }, []);
 
   return (
     <DialogRoot open={open} onOpenChange={(e) => onOpenChange(e.open)}>
