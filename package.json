@@ -57,7 +57,7 @@
     "reactflow": "^11.11.4",
     "resend": "^6.6.0",
     "sonner": "^2.0.7",
-    "stripe": "^20.1.0",
+    "@omnidotdev/providers": "github:omnidotdev/providers",
     "tailwind-merge": "^3.4.0",
     "ts-pattern": "^5.9.0",
     "unleash-client": "^6.3.0",
