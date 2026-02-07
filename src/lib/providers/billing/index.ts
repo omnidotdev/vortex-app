@@ -18,7 +18,7 @@ export type {
 } from "@omnidotdev/providers";
 
 const billing = createBillingProvider(isSelfHosted ? "local" : "aether", {
-  baseUrl: BILLING_BASE_URL ?? "",
+  baseUrl: BILLING_BASE_URL,
   appId: "vortex",
 });
 
