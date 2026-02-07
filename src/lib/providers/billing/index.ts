@@ -1,8 +1,12 @@
-import { billingProvider } from "@/lib/config/env.config";
-import AetherBillingProvider from "./aether.provider";
-import LocalBillingProvider from "./local.provider";
+/**
+ * Billing provider for Vortex.
+ *
+ * Thin wrapper around @omnidotdev/providers.
+ */
 
-import type { BillingProvider } from "./interface";
+import { createBillingProvider } from "@omnidotdev/providers";
+
+import { BILLING_BASE_URL, isSelfHosted } from "@/lib/config/env.config";
 
 export type {
   BillingProvider,
@@ -11,28 +15,11 @@ export type {
   EntitlementsResponse,
   Price,
   Subscription,
-} from "./interface";
+} from "@omnidotdev/providers";
 
-/**
- * Create the billing provider based on environment configuration.
- */
-const createBillingProvider = (): BillingProvider => {
-  switch (billingProvider) {
-    case "local":
-      return new LocalBillingProvider();
-    case "aether":
-      return new AetherBillingProvider();
-    default:
-      console.warn(
-        `[billing] Unknown provider "${billingProvider}", using local`,
-      );
-      return new LocalBillingProvider();
-  }
-};
-
-/**
- * Singleton billing provider instance.
- */
-const billing = createBillingProvider();
+const billing = createBillingProvider(isSelfHosted ? "local" : "aether", {
+  baseUrl: BILLING_BASE_URL ?? "",
+  appId: "vortex",
+});
 
 export default billing;
