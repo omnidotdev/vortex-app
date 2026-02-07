@@ -17,7 +17,7 @@ import {
   TabsProvider,
   TabsTrigger,
 } from "@/components/ui/tabs";
-import { BASE_URL, isSelfHosted } from "@/lib/config/env.config";
+import { isSelfHosted } from "@/lib/config/env.config";
 import pricesOptions from "@/lib/options/prices.options";
 import { getSubscription } from "@/server/functions/subscriptions";
 
@@ -154,7 +154,7 @@ function SelfHostedPricing() {
         </div>
 
         <div className="mt-16">
-          <div className="rounded-2xl border border-primary/50 bg-card p-8 glow-lg">
+          <div className="glow-lg rounded-2xl border border-primary/50 bg-card p-8">
             <h3 className="font-semibold text-xl">Enterprise</h3>
             <div className="mt-4">
               <span className="font-bold text-4xl">All Features</span>

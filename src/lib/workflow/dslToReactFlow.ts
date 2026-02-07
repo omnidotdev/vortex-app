@@ -127,9 +127,7 @@ function actionStepToNodeData(step: ActionStep): Record<string, unknown> {
 }
 
 // Convert condition step to node data
-function conditionStepToNodeData(
-  step: ConditionStep,
-): Record<string, unknown> {
+function conditionStepToNodeData(step: ConditionStep): Record<string, unknown> {
   return {
     label: step.name,
     description: step.description,
@@ -234,8 +232,7 @@ function extendedStepToNodeData(step: Step): Record<string, unknown> {
 
 // Convert a DSL step to a ReactFlow node
 function stepToNode(step: Step): Node {
-  const nodeType =
-    stepTypeToNodeType[step.type] || `${step.type}Node`;
+  const nodeType = stepTypeToNodeType[step.type] || `${step.type}Node`;
 
   let data: Record<string, unknown>;
 
@@ -434,14 +431,9 @@ function applyDagreLayout(nodes: Node[], edges: Edge[]): Node[] {
  * Check whether a workflow definition is in DSL format (steps + edges)
  * rather than ReactFlow format (nodes + edges with node types)
  */
-export function isDslFormat(
-  definition: Record<string, unknown>,
-): boolean {
+export function isDslFormat(definition: Record<string, unknown>): boolean {
   // DSL format has `steps` array; ReactFlow format has `nodes` array
-  return (
-    Array.isArray(definition.steps) &&
-    !Array.isArray(definition.nodes)
-  );
+  return Array.isArray(definition.steps) && !Array.isArray(definition.nodes);
 }
 
 /**
