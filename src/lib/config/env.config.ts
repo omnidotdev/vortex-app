@@ -42,4 +42,3 @@ export const isDevEnv = import.meta.env.DEV;
  */
 export const isSelfHosted =
   SELF_HOSTED === "true" || VITE_SELF_HOSTED === "true";
-

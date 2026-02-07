@@ -1086,7 +1086,9 @@ function genericNodeToStep(node: Node, stepType: string): Step {
   return {
     id: node.id,
     type: stepType,
-    name: (data.label as string) || stepType.charAt(0).toUpperCase() + stepType.slice(1),
+    name:
+      (data.label as string) ||
+      stepType.charAt(0).toUpperCase() + stepType.slice(1),
     description: data.description as string | undefined,
     position: node.position,
     [stepType]: typeData,

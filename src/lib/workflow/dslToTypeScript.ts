@@ -31,10 +31,7 @@ const stepDataKeyMap: Record<string, string> = {
  * Topologically sort steps using edge definitions.
  * Start from root nodes (no incoming edges), then follow outgoing edges
  */
-function topologicalSort(
-  steps: Step[],
-  edges: EdgeDefinition[],
-): Step[] {
+function topologicalSort(steps: Step[], edges: EdgeDefinition[]): Step[] {
   const stepMap = new Map<string, Step>();
   for (const step of steps) {
     stepMap.set(step.id, step);
@@ -136,13 +133,15 @@ function escapeString(value: string): string {
  * Convert a workflow name to a valid JS identifier in camelCase
  */
 function toIdentifier(name: string): string {
-  return name
-    .replace(/[^a-zA-Z0-9\s_-]/g, "")
-    .replace(/[-_\s]+(.)?/g, (_, c: string | undefined) =>
-      c ? c.toUpperCase() : "",
-    )
-    .replace(/^[A-Z]/, (c) => c.toLowerCase())
-    .replace(/^[^a-zA-Z_$]/, "_$&") || "myWorkflow";
+  return (
+    name
+      .replace(/[^a-zA-Z0-9\s_-]/g, "")
+      .replace(/[-_\s]+(.)?/g, (_, c: string | undefined) =>
+        c ? c.toUpperCase() : "",
+      )
+      .replace(/^[A-Z]/, (c) => c.toLowerCase())
+      .replace(/^[^a-zA-Z_$]/, "_$&") || "myWorkflow"
+  );
 }
 
 /**
