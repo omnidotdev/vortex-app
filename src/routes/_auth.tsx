@@ -7,7 +7,13 @@ import {
   useMatches,
   useParams,
 } from "@tanstack/react-router";
-import { BookOpen, LogOut, Menu, MessageSquare } from "lucide-react";
+import {
+  BookOpen,
+  ExternalLink,
+  LogOut,
+  Menu,
+  MessageSquare,
+} from "lucide-react";
 import { RiDiscordLine as DiscordIcon } from "react-icons/ri";
 
 import { Button } from "@/components/ui/button";
@@ -22,6 +28,7 @@ import {
 } from "@/components/ui/sheet";
 import signOut from "@/lib/auth/signOut";
 import app from "@/lib/config/app.config";
+import { CONSOLE_URL } from "@/lib/config/env.config";
 import SidebarProvider from "@/providers/SidebarProvider";
 
 export const Route = createFileRoute("/_auth")({
@@ -255,6 +262,18 @@ function MobileHeader() {
                         </p>
                       </div>
                     </div>
+                    {CONSOLE_URL && (
+                      <a
+                        href={CONSOLE_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-3 flex w-full items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent hover:text-foreground"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        Manage account
+                      </a>
+                    )}
+
                     <Button
                       variant="ghost"
                       size="sm"
@@ -409,6 +428,18 @@ function AppSidebar() {
               </p>
             </div>
           </div>
+          {CONSOLE_URL && (
+            <a
+              href={CONSOLE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 flex w-full items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent hover:text-foreground"
+            >
+              <ExternalLink className="h-4 w-4" />
+              Manage account
+            </a>
+          )}
+
           <Button
             variant="ghost"
             size="sm"
