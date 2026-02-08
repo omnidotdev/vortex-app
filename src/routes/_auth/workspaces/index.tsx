@@ -1,7 +1,7 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { ExternalLinkIcon, InfoIcon, LayersIcon } from "lucide-react";
 
-import { AUTH_BASE_URL } from "@/lib/config/env.config";
+import { AUTH_BASE_URL, CONSOLE_URL } from "@/lib/config/env.config";
 
 export const Route = createFileRoute("/_auth/workspaces/")({
   component: WorkspacesPage,
@@ -68,7 +68,7 @@ function WorkspacesPage() {
               </p>
             </div>
             <a
-              href={AUTH_BASE_URL}
+              href={CONSOLE_URL || AUTH_BASE_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-primary text-sm hover:underline"
