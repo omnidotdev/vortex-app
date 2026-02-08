@@ -20,6 +20,7 @@ export const {
   // billing
   /** @knipignore - used by billing provider */
   VITE_BILLING_BASE_URL: BILLING_BASE_URL,
+  VITE_CONSOLE_URL: CONSOLE_URL,
 } = env;
 
 // Internal API URL for server-to-server communication (Docker service name)
