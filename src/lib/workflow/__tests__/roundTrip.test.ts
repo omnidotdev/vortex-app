@@ -837,7 +837,7 @@ describe("dslToTypeScript", () => {
     const code = dslToTypeScript(dsl, "Order Notifications");
 
     // Verify import statement
-    expect(code).toContain('import { workflow } from "@omnidotdev/vortex-sdk"');
+    expect(code).toContain('import { workflow } from "@omnidotdev/vortex"');
 
     // Verify builder start
     expect(code).toContain(
