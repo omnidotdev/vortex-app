@@ -23,27 +23,6 @@ import type { ReactNode } from "react";
 import type { AuthSession } from "@/lib/auth/getAuth";
 import type { Theme } from "@/providers/ThemeProvider";
 
-/**
- * Log errors in a structured format for debugging and future Sentry integration.
- *
- * TODO: Integrate Sentry for production error tracking
- * - Install @sentry/react and @sentry/bun
- * - Initialize Sentry in app entry point
- * - Replace console.error with Sentry.captureException(error, { extra: context })
- */
-function logError(error: Error, context?: Record<string, unknown>) {
-  // TODO: Replace with Sentry.captureException(error, { extra: context })
-  // eslint-disable-next-line no-console
-  console.error("[App Error]", {
-    message: error.message,
-    name: error.name,
-    stack: error.stack,
-    timestamp: new Date().toISOString(),
-    url: typeof window !== "undefined" ? window.location.href : "server",
-    ...context,
-  });
-}
-
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   session: AuthSession | null;
@@ -90,7 +69,7 @@ export const Route = createRootRouteWithContext<{
 
 function ErrorComponent({ error }: { error: Error }) {
   useEffect(() => {
-    logError(error, { component: "RootErrorBoundary" });
+    console.error(error);
   }, [error]);
 
   return (
