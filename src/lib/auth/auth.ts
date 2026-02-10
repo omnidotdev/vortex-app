@@ -63,6 +63,7 @@ const auth = betterAuth({
           ],
           accessType: "offline",
           pkce: true,
+          prompt: "login",
         },
       ],
     }),
