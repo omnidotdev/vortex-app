@@ -255,7 +255,7 @@ function dslToTypeScript(
   lines.push("");
 
   // Import
-  lines.push('import { workflow } from "@omnidotdev/vortex-sdk";');
+  lines.push('import { workflow } from "@omnidotdev/vortex";');
   lines.push("");
 
   // Workflow builder
