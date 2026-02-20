@@ -8,11 +8,9 @@ import PluginCard from "@/components/plugins/PluginCard";
 import UploadPluginDialog from "@/components/plugins/UploadPluginDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { pluginsOptions } from "@/lib/options/plugins.options";
+import pluginsOptions from "@/lib/options/plugins.options";
 
-import type { PluginsQuery } from "@/generated/graphql";
-
-type Plugin = NonNullable<PluginsQuery["plugins"]>["nodes"][number];
+import type { Plugin } from "@/components/plugins/PluginCard";
 
 export const Route = createFileRoute(
   "/_auth/workspaces/$workspaceSlug/plugins/",
@@ -39,8 +37,8 @@ function PluginsPage() {
     plugin.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
+  // TODO: wire useUpdatePluginByIdMutation once types are regenerated from updatePlugin.mutation.graphql
   const handleToggle = (plugin: Plugin, enabled: boolean) => {
-    // Optimistic feedback — full mutation can be wired when the mutation is generated
     toast.info(
       `${enabled ? "Enabling" : "Disabling"} ${plugin.name} — coming soon`,
     );

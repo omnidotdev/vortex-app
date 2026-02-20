@@ -4,8 +4,10 @@ import { usePluginsQuery } from "@/generated/graphql";
 
 import type { PluginsQueryVariables } from "@/generated/graphql";
 
-export const pluginsOptions = (variables: PluginsQueryVariables) =>
+const pluginsOptions = (variables: PluginsQueryVariables) =>
   queryOptions({
     queryKey: usePluginsQuery.getKey(variables),
     queryFn: usePluginsQuery.fetcher(variables),
   });
+
+export default pluginsOptions;
