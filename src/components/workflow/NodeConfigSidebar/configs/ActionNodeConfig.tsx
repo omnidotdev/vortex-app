@@ -3107,7 +3107,7 @@ const StorageNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: Pl
                 <SelectValue placeholder="Select provider" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="redis">Redis</SelectItem>
+                <SelectItem value="valkey">Valkey</SelectItem>
                 <SelectItem value="sqs">Amazon SQS</SelectItem>
                 <SelectItem value="rabbitmq">RabbitMQ</SelectItem>
               </SelectContent>
