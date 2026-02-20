@@ -679,6 +679,7 @@ const BUILTIN_NODES = [
     nodeType: NodeTypes.ACTION,
     pluginId: "builtin:agent",
     operation: "run",
+    beta: true,
   },
   {
     id: "ai-rag",
@@ -689,6 +690,7 @@ const BUILTIN_NODES = [
     nodeType: NodeTypes.ACTION,
     pluginId: "builtin:rag",
     operation: "query",
+    beta: true,
   },
   {
     id: "ai-vision",
@@ -719,6 +721,7 @@ const BUILTIN_NODES = [
     nodeType: NodeTypes.ACTION,
     pluginId: "builtin:model-registry",
     operation: "call",
+    comingSoon: true,
   },
   {
     id: "ai-embedding",
@@ -729,6 +732,7 @@ const BUILTIN_NODES = [
     nodeType: NodeTypes.ACTION,
     pluginId: "builtin:embedding",
     operation: "generate",
+    beta: true,
   },
   {
     id: "ai-vector-search",
@@ -739,6 +743,7 @@ const BUILTIN_NODES = [
     nodeType: NodeTypes.ACTION,
     pluginId: "builtin:vector-search",
     operation: "search",
+    beta: true,
   },
 
   // Human-in-the-Loop
@@ -1009,6 +1014,7 @@ const BUILTIN_NODES = [
     nodeType: NodeTypes.ACTION,
     pluginId: "builtin:webhook-verify",
     operation: "verify",
+    comingSoon: true,
   },
 
   // Integration/Productivity
@@ -1021,6 +1027,7 @@ const BUILTIN_NODES = [
     nodeType: NodeTypes.ACTION,
     pluginId: "builtin:spreadsheet",
     operation: "read",
+    comingSoon: true,
   },
   {
     id: "productivity-google-sheets",
@@ -1031,6 +1038,7 @@ const BUILTIN_NODES = [
     nodeType: NodeTypes.ACTION,
     pluginId: "builtin:google-sheets",
     operation: "read",
+    comingSoon: true,
   },
   {
     id: "productivity-pdf",
@@ -1041,6 +1049,7 @@ const BUILTIN_NODES = [
     nodeType: NodeTypes.ACTION,
     pluginId: "builtin:pdf",
     operation: "generate",
+    comingSoon: true,
   },
 
   // HTTP (additional)
@@ -1063,6 +1072,7 @@ const BUILTIN_NODES = [
     nodeType: NodeTypes.ACTION,
     pluginId: "builtin:rate-limit",
     operation: "check",
+    comingSoon: true,
   },
 ];
 
@@ -1137,6 +1147,8 @@ export function NodePicker({
 
     // Filter built-in nodes
     const builtinFiltered = BUILTIN_NODES.filter((node) => {
+      // Hide unimplemented steps
+      if (node.comingSoon) return false;
       // Category filter
       if (selectedCategory !== "all" && node.category !== selectedCategory) {
         return false;
@@ -1388,8 +1400,18 @@ export function NodePicker({
                       <node.icon className="h-4 w-4 text-primary" />
                     </div>
                     <div className="min-w-0 flex-1 overflow-hidden">
-                      <div className="truncate font-medium text-sm">
-                        {node.label}
+                      <div className="flex items-center gap-2 overflow-hidden">
+                        <span className="truncate font-medium text-sm">
+                          {node.label}
+                        </span>
+                        {node.beta && (
+                          <Badge
+                            variant="secondary"
+                            className="h-4 shrink-0 px-1 text-[10px]"
+                          >
+                            Beta
+                          </Badge>
+                        )}
                       </div>
                       <div className="truncate text-muted-foreground text-xs">
                         {node.description}

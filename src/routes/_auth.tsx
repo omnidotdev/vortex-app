@@ -3,7 +3,6 @@ import {
   Outlet,
   createFileRoute,
   notFound,
-  redirect,
   useMatches,
   useParams,
 } from "@tanstack/react-router";
