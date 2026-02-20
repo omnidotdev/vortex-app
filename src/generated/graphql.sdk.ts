@@ -24,6 +24,32 @@ export type Scalars = {
   UUID: { input: string; output: string; }
 };
 
+/** A filter to be used against BigFloat fields. All fields are combined with a logical ‘and.’ */
+export type BigFloatFilter = {
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Equal to the specified value. */
+  equalTo?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Greater than the specified value. */
+  greaterThan?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Included in the specified list. */
+  in?: InputMaybe<Array<Scalars['BigFloat']['input']>>;
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Less than the specified value. */
+  lessThan?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: InputMaybe<Scalars['BigFloat']['input']>;
+  /** Not included in the specified list. */
+  notIn?: InputMaybe<Array<Scalars['BigFloat']['input']>>;
+};
+
 /** A filter to be used against BigInt fields. All fields are combined with a logical ‘and.’ */
 export type BigIntFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
@@ -74,6 +100,39 @@ export type BooleanFilter = {
   notEqualTo?: InputMaybe<Scalars['Boolean']['input']>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+};
+
+/** All input for the create `EventRoutingRule` mutation. */
+export type CreateEventRoutingRuleInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `EventRoutingRule` to be created by this mutation. */
+  eventRoutingRule: EventRoutingRuleInput;
+};
+
+/** The output of our create `EventRoutingRule` mutation. */
+export type CreateEventRoutingRulePayload = {
+  __typename?: 'CreateEventRoutingRulePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `EventRoutingRule` that was created by this mutation. */
+  eventRoutingRule?: Maybe<EventRoutingRule>;
+  /** An edge for our `EventRoutingRule`. May be used by Relay 1. */
+  eventRoutingRuleEdge?: Maybe<EventRoutingRuleEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `EventRoutingRule` mutation. */
+export type CreateEventRoutingRulePayloadEventRoutingRuleEdgeArgs = {
+  orderBy?: Array<EventRoutingRuleOrderBy>;
 };
 
 /** All input for the create `IntegrationDefinition` mutation. */
@@ -496,6 +555,50 @@ export type DatetimeFilter = {
   notEqualTo?: InputMaybe<Scalars['Datetime']['input']>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<Scalars['Datetime']['input']>>;
+};
+
+/** All input for the `deleteEventRoutingRuleById` mutation. */
+export type DeleteEventRoutingRuleByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `EventRoutingRule` to be deleted. */
+  id: Scalars['ID']['input'];
+};
+
+/** All input for the `deleteEventRoutingRule` mutation. */
+export type DeleteEventRoutingRuleInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  rowId: Scalars['UUID']['input'];
+};
+
+/** The output of our delete `EventRoutingRule` mutation. */
+export type DeleteEventRoutingRulePayload = {
+  __typename?: 'DeleteEventRoutingRulePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedEventRoutingRuleId?: Maybe<Scalars['ID']['output']>;
+  /** The `EventRoutingRule` that was deleted by this mutation. */
+  eventRoutingRule?: Maybe<EventRoutingRule>;
+  /** An edge for our `EventRoutingRule`. May be used by Relay 1. */
+  eventRoutingRuleEdge?: Maybe<EventRoutingRuleEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `EventRoutingRule` mutation. */
+export type DeleteEventRoutingRulePayloadEventRoutingRuleEdgeArgs = {
+  orderBy?: Array<EventRoutingRuleOrderBy>;
 };
 
 /** All input for the `deleteIntegrationById` mutation. */
@@ -1055,6 +1158,434 @@ export type DeleteWorkflowTemplatePayload = {
 /** The output of our delete `WorkflowTemplate` mutation. */
 export type DeleteWorkflowTemplatePayloadWorkflowTemplateEdgeArgs = {
   orderBy?: Array<WorkflowTemplateOrderBy>;
+};
+
+export type EventRoutingRule = Node & {
+  __typename?: 'EventRoutingRule';
+  condition?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  enabled: Scalars['Boolean']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  organizationId: Scalars['String']['output'];
+  priority: Scalars['Int']['output'];
+  rowId: Scalars['UUID']['output'];
+  sourcePattern?: Maybe<Scalars['String']['output']>;
+  transform?: Maybe<Scalars['String']['output']>;
+  typePattern: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `Workflow` that is related to this `EventRoutingRule`. */
+  workflow?: Maybe<Workflow>;
+  workflowId: Scalars['UUID']['output'];
+};
+
+export type EventRoutingRuleAggregates = {
+  __typename?: 'EventRoutingRuleAggregates';
+  /** Mean average aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  average?: Maybe<EventRoutingRuleAverageAggregates>;
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<EventRoutingRuleDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** Maximum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  max?: Maybe<EventRoutingRuleMaxAggregates>;
+  /** Minimum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  min?: Maybe<EventRoutingRuleMinAggregates>;
+  /** Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevPopulation?: Maybe<EventRoutingRuleStddevPopulationAggregates>;
+  /** Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevSample?: Maybe<EventRoutingRuleStddevSampleAggregates>;
+  /** Sum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  sum?: Maybe<EventRoutingRuleSumAggregates>;
+  /** Population variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  variancePopulation?: Maybe<EventRoutingRuleVariancePopulationAggregates>;
+  /** Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  varianceSample?: Maybe<EventRoutingRuleVarianceSampleAggregates>;
+};
+
+/** A filter to be used against aggregates of `EventRoutingRule` object types. */
+export type EventRoutingRuleAggregatesFilter = {
+  /** Mean average aggregate over matching `EventRoutingRule` objects. */
+  average?: InputMaybe<EventRoutingRuleAverageAggregateFilter>;
+  /** Distinct count aggregate over matching `EventRoutingRule` objects. */
+  distinctCount?: InputMaybe<EventRoutingRuleDistinctCountAggregateFilter>;
+  /** A filter that must pass for the relevant `EventRoutingRule` object to be included within the aggregate. */
+  filter?: InputMaybe<EventRoutingRuleFilter>;
+  /** Maximum aggregate over matching `EventRoutingRule` objects. */
+  max?: InputMaybe<EventRoutingRuleMaxAggregateFilter>;
+  /** Minimum aggregate over matching `EventRoutingRule` objects. */
+  min?: InputMaybe<EventRoutingRuleMinAggregateFilter>;
+  /** Population standard deviation aggregate over matching `EventRoutingRule` objects. */
+  stddevPopulation?: InputMaybe<EventRoutingRuleStddevPopulationAggregateFilter>;
+  /** Sample standard deviation aggregate over matching `EventRoutingRule` objects. */
+  stddevSample?: InputMaybe<EventRoutingRuleStddevSampleAggregateFilter>;
+  /** Sum aggregate over matching `EventRoutingRule` objects. */
+  sum?: InputMaybe<EventRoutingRuleSumAggregateFilter>;
+  /** Population variance aggregate over matching `EventRoutingRule` objects. */
+  variancePopulation?: InputMaybe<EventRoutingRuleVariancePopulationAggregateFilter>;
+  /** Sample variance aggregate over matching `EventRoutingRule` objects. */
+  varianceSample?: InputMaybe<EventRoutingRuleVarianceSampleAggregateFilter>;
+};
+
+export type EventRoutingRuleAverageAggregateFilter = {
+  priority?: InputMaybe<BigFloatFilter>;
+};
+
+export type EventRoutingRuleAverageAggregates = {
+  __typename?: 'EventRoutingRuleAverageAggregates';
+  /** Mean average of priority across the matching connection */
+  priority?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+/**
+ * A condition to be used against `EventRoutingRule` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type EventRoutingRuleCondition = {
+  /** Checks for equality with the object’s `condition` field. */
+  condition?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `enabled` field. */
+  enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `priority` field. */
+  priority?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `sourcePattern` field. */
+  sourcePattern?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `transform` field. */
+  transform?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `typePattern` field. */
+  typePattern?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `workflowId` field. */
+  workflowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `EventRoutingRule` values. */
+export type EventRoutingRuleConnection = {
+  __typename?: 'EventRoutingRuleConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<EventRoutingRuleAggregates>;
+  /** A list of edges which contains the `EventRoutingRule` and cursor to aid in pagination. */
+  edges: Array<EventRoutingRuleEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<EventRoutingRuleAggregates>>;
+  /** A list of `EventRoutingRule` objects. */
+  nodes: Array<EventRoutingRule>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `EventRoutingRule` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `EventRoutingRule` values. */
+export type EventRoutingRuleConnectionGroupedAggregatesArgs = {
+  groupBy: Array<EventRoutingRuleGroupBy>;
+  having?: InputMaybe<EventRoutingRuleHavingInput>;
+};
+
+export type EventRoutingRuleDistinctCountAggregateFilter = {
+  condition?: InputMaybe<BigIntFilter>;
+  createdAt?: InputMaybe<BigIntFilter>;
+  enabled?: InputMaybe<BigIntFilter>;
+  organizationId?: InputMaybe<BigIntFilter>;
+  priority?: InputMaybe<BigIntFilter>;
+  rowId?: InputMaybe<BigIntFilter>;
+  sourcePattern?: InputMaybe<BigIntFilter>;
+  transform?: InputMaybe<BigIntFilter>;
+  typePattern?: InputMaybe<BigIntFilter>;
+  updatedAt?: InputMaybe<BigIntFilter>;
+  workflowId?: InputMaybe<BigIntFilter>;
+};
+
+export type EventRoutingRuleDistinctCountAggregates = {
+  __typename?: 'EventRoutingRuleDistinctCountAggregates';
+  /** Distinct count of condition across the matching connection */
+  condition?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of enabled across the matching connection */
+  enabled?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of priority across the matching connection */
+  priority?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of sourcePattern across the matching connection */
+  sourcePattern?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of transform across the matching connection */
+  transform?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of typePattern across the matching connection */
+  typePattern?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of updatedAt across the matching connection */
+  updatedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of workflowId across the matching connection */
+  workflowId?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `EventRoutingRule` edge in the connection. */
+export type EventRoutingRuleEdge = {
+  __typename?: 'EventRoutingRuleEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `EventRoutingRule` at the end of the edge. */
+  node: EventRoutingRule;
+};
+
+/** A filter to be used against `EventRoutingRule` object types. All fields are combined with a logical ‘and.’ */
+export type EventRoutingRuleFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<EventRoutingRuleFilter>>;
+  /** Filter by the object’s `condition` field. */
+  condition?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `enabled` field. */
+  enabled?: InputMaybe<BooleanFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<EventRoutingRuleFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<EventRoutingRuleFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `priority` field. */
+  priority?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `sourcePattern` field. */
+  sourcePattern?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `transform` field. */
+  transform?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `typePattern` field. */
+  typePattern?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `workflow` relation. */
+  workflow?: InputMaybe<WorkflowFilter>;
+  /** Filter by the object’s `workflowId` field. */
+  workflowId?: InputMaybe<UuidFilter>;
+};
+
+/** Grouping methods for `EventRoutingRule` for usage during aggregation. */
+export enum EventRoutingRuleGroupBy {
+  Condition = 'CONDITION',
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  Enabled = 'ENABLED',
+  OrganizationId = 'ORGANIZATION_ID',
+  Priority = 'PRIORITY',
+  SourcePattern = 'SOURCE_PATTERN',
+  Transform = 'TRANSFORM',
+  TypePattern = 'TYPE_PATTERN',
+  UpdatedAt = 'UPDATED_AT',
+  UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
+  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR',
+  WorkflowId = 'WORKFLOW_ID'
+}
+
+export type EventRoutingRuleHavingAverageInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  priority?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventRoutingRuleHavingDistinctCountInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  priority?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `EventRoutingRule` aggregates. */
+export type EventRoutingRuleHavingInput = {
+  AND?: InputMaybe<Array<EventRoutingRuleHavingInput>>;
+  OR?: InputMaybe<Array<EventRoutingRuleHavingInput>>;
+  average?: InputMaybe<EventRoutingRuleHavingAverageInput>;
+  distinctCount?: InputMaybe<EventRoutingRuleHavingDistinctCountInput>;
+  max?: InputMaybe<EventRoutingRuleHavingMaxInput>;
+  min?: InputMaybe<EventRoutingRuleHavingMinInput>;
+  stddevPopulation?: InputMaybe<EventRoutingRuleHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<EventRoutingRuleHavingStddevSampleInput>;
+  sum?: InputMaybe<EventRoutingRuleHavingSumInput>;
+  variancePopulation?: InputMaybe<EventRoutingRuleHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<EventRoutingRuleHavingVarianceSampleInput>;
+};
+
+export type EventRoutingRuleHavingMaxInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  priority?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventRoutingRuleHavingMinInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  priority?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventRoutingRuleHavingStddevPopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  priority?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventRoutingRuleHavingStddevSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  priority?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventRoutingRuleHavingSumInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  priority?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventRoutingRuleHavingVariancePopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  priority?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventRoutingRuleHavingVarianceSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  priority?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** An input for mutations affecting `EventRoutingRule` */
+export type EventRoutingRuleInput = {
+  condition?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  organizationId: Scalars['String']['input'];
+  priority?: InputMaybe<Scalars['Int']['input']>;
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  sourcePattern?: InputMaybe<Scalars['String']['input']>;
+  transform?: InputMaybe<Scalars['String']['input']>;
+  typePattern: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  workflowId: Scalars['UUID']['input'];
+};
+
+export type EventRoutingRuleMaxAggregateFilter = {
+  priority?: InputMaybe<IntFilter>;
+};
+
+export type EventRoutingRuleMaxAggregates = {
+  __typename?: 'EventRoutingRuleMaxAggregates';
+  /** Maximum of priority across the matching connection */
+  priority?: Maybe<Scalars['Int']['output']>;
+};
+
+export type EventRoutingRuleMinAggregateFilter = {
+  priority?: InputMaybe<IntFilter>;
+};
+
+export type EventRoutingRuleMinAggregates = {
+  __typename?: 'EventRoutingRuleMinAggregates';
+  /** Minimum of priority across the matching connection */
+  priority?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Methods to use when ordering `EventRoutingRule`. */
+export enum EventRoutingRuleOrderBy {
+  ConditionAsc = 'CONDITION_ASC',
+  ConditionDesc = 'CONDITION_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  EnabledAsc = 'ENABLED_ASC',
+  EnabledDesc = 'ENABLED_DESC',
+  Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  PriorityAsc = 'PRIORITY_ASC',
+  PriorityDesc = 'PRIORITY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  SourcePatternAsc = 'SOURCE_PATTERN_ASC',
+  SourcePatternDesc = 'SOURCE_PATTERN_DESC',
+  TransformAsc = 'TRANSFORM_ASC',
+  TransformDesc = 'TRANSFORM_DESC',
+  TypePatternAsc = 'TYPE_PATTERN_ASC',
+  TypePatternDesc = 'TYPE_PATTERN_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC',
+  WorkflowIdAsc = 'WORKFLOW_ID_ASC',
+  WorkflowIdDesc = 'WORKFLOW_ID_DESC'
+}
+
+/** Represents an update to a `EventRoutingRule`. Fields that are set will be updated. */
+export type EventRoutingRulePatch = {
+  condition?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  priority?: InputMaybe<Scalars['Int']['input']>;
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  sourcePattern?: InputMaybe<Scalars['String']['input']>;
+  transform?: InputMaybe<Scalars['String']['input']>;
+  typePattern?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  workflowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+export type EventRoutingRuleStddevPopulationAggregateFilter = {
+  priority?: InputMaybe<BigFloatFilter>;
+};
+
+export type EventRoutingRuleStddevPopulationAggregates = {
+  __typename?: 'EventRoutingRuleStddevPopulationAggregates';
+  /** Population standard deviation of priority across the matching connection */
+  priority?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type EventRoutingRuleStddevSampleAggregateFilter = {
+  priority?: InputMaybe<BigFloatFilter>;
+};
+
+export type EventRoutingRuleStddevSampleAggregates = {
+  __typename?: 'EventRoutingRuleStddevSampleAggregates';
+  /** Sample standard deviation of priority across the matching connection */
+  priority?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type EventRoutingRuleSumAggregateFilter = {
+  priority?: InputMaybe<BigIntFilter>;
+};
+
+export type EventRoutingRuleSumAggregates = {
+  __typename?: 'EventRoutingRuleSumAggregates';
+  /** Sum of priority across the matching connection */
+  priority: Scalars['BigInt']['output'];
+};
+
+export type EventRoutingRuleVariancePopulationAggregateFilter = {
+  priority?: InputMaybe<BigFloatFilter>;
+};
+
+export type EventRoutingRuleVariancePopulationAggregates = {
+  __typename?: 'EventRoutingRuleVariancePopulationAggregates';
+  /** Population variance of priority across the matching connection */
+  priority?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type EventRoutingRuleVarianceSampleAggregateFilter = {
+  priority?: InputMaybe<BigFloatFilter>;
+};
+
+export type EventRoutingRuleVarianceSampleAggregates = {
+  __typename?: 'EventRoutingRuleVarianceSampleAggregates';
+  /** Sample variance of priority across the matching connection */
+  priority?: Maybe<Scalars['BigFloat']['output']>;
 };
 
 export type HavingDatetimeFilter = {
@@ -2353,6 +2884,8 @@ export type MemberRoleFilter = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Creates a single `EventRoutingRule`. */
+  createEventRoutingRule?: Maybe<CreateEventRoutingRulePayload>;
   /** Creates a single `Integration`. */
   createIntegration?: Maybe<CreateIntegrationPayload>;
   /** Creates a single `IntegrationDefinition`. */
@@ -2377,6 +2910,10 @@ export type Mutation = {
   createWorkflowStepLog?: Maybe<CreateWorkflowStepLogPayload>;
   /** Creates a single `WorkflowTemplate`. */
   createWorkflowTemplate?: Maybe<CreateWorkflowTemplatePayload>;
+  /** Deletes a single `EventRoutingRule` using a unique key. */
+  deleteEventRoutingRule?: Maybe<DeleteEventRoutingRulePayload>;
+  /** Deletes a single `EventRoutingRule` using its globally unique id. */
+  deleteEventRoutingRuleById?: Maybe<DeleteEventRoutingRulePayload>;
   /** Deletes a single `Integration` using a unique key. */
   deleteIntegration?: Maybe<DeleteIntegrationPayload>;
   /** Deletes a single `Integration` using its globally unique id. */
@@ -2431,6 +2968,17 @@ export type Mutation = {
   deleteWorkflowTemplate?: Maybe<DeleteWorkflowTemplatePayload>;
   /** Deletes a single `WorkflowTemplate` using its globally unique id. */
   deleteWorkflowTemplateById?: Maybe<DeleteWorkflowTemplatePayload>;
+  /**
+   * Publish an event to trigger matching workflows.
+   *
+   * Finds event routing rules that match the event type and triggers
+   * the associated workflows via Hatchet.
+   */
+  publishEvent?: Maybe<PublishEventPayload>;
+  /** Updates a single `EventRoutingRule` using a unique key and a patch. */
+  updateEventRoutingRule?: Maybe<UpdateEventRoutingRulePayload>;
+  /** Updates a single `EventRoutingRule` using its globally unique id and a patch. */
+  updateEventRoutingRuleById?: Maybe<UpdateEventRoutingRulePayload>;
   /** Updates a single `Integration` using a unique key and a patch. */
   updateIntegration?: Maybe<UpdateIntegrationPayload>;
   /** Updates a single `Integration` using its globally unique id and a patch. */
@@ -2485,6 +3033,12 @@ export type Mutation = {
   updateWorkflowTemplate?: Maybe<UpdateWorkflowTemplatePayload>;
   /** Updates a single `WorkflowTemplate` using its globally unique id and a patch. */
   updateWorkflowTemplateById?: Maybe<UpdateWorkflowTemplatePayload>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateEventRoutingRuleArgs = {
+  input: CreateEventRoutingRuleInput;
 };
 
 
@@ -2557,6 +3111,18 @@ export type MutationCreateWorkflowStepLogArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateWorkflowTemplateArgs = {
   input: CreateWorkflowTemplateInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteEventRoutingRuleArgs = {
+  input: DeleteEventRoutingRuleInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteEventRoutingRuleByIdArgs = {
+  input: DeleteEventRoutingRuleByIdInput;
 };
 
 
@@ -2719,6 +3285,24 @@ export type MutationDeleteWorkflowTemplateArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteWorkflowTemplateByIdArgs = {
   input: DeleteWorkflowTemplateByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationPublishEventArgs = {
+  input: PublishEventInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateEventRoutingRuleArgs = {
+  input: UpdateEventRoutingRuleInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateEventRoutingRuleByIdArgs = {
+  input: UpdateEventRoutingRuleByIdInput;
 };
 
 
@@ -3873,9 +4457,40 @@ export type PluginPatch = {
   wasmUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** Input for publishing an event to trigger workflows */
+export type PublishEventInput = {
+  /** Optional correlation ID for tracing related events */
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  /** Event data payload as JSON */
+  data?: InputMaybe<Scalars['JSON']['input']>;
+  /** Optional idempotency key for deduplication */
+  idempotencyKey?: InputMaybe<Scalars['String']['input']>;
+  /** Organization ID that owns the event routing rules */
+  organizationId: Scalars['String']['input'];
+  /** Optional event subject (e.g., user ID, subscription ID) */
+  subject?: InputMaybe<Scalars['String']['input']>;
+  /** Event type (e.g., "user.created", "subscription.updated") */
+  type: Scalars['String']['input'];
+};
+
+/** Result of publishing an event */
+export type PublishEventPayload = {
+  __typename?: 'PublishEventPayload';
+  /** Unique ID for this event (UUID) */
+  eventId: Scalars['UUID']['output'];
+  /** List of workflows that were triggered by this event */
+  workflowsTriggered: Array<TriggeredWorkflow>;
+};
+
 /** The root query type which gives access points into the data universe. */
 export type Query = Node & {
   __typename?: 'Query';
+  /** Get a single `EventRoutingRule`. */
+  eventRoutingRule?: Maybe<EventRoutingRule>;
+  /** Reads a single `EventRoutingRule` using its globally unique `ID`. */
+  eventRoutingRuleById?: Maybe<EventRoutingRule>;
+  /** Reads and enables pagination through a set of `EventRoutingRule`. */
+  eventRoutingRules?: Maybe<EventRoutingRuleConnection>;
   /** The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`. */
   id: Scalars['ID']['output'];
   /** Get a single `Integration`. */
@@ -3963,6 +4578,31 @@ export type Query = Node & {
   workflowTemplates?: Maybe<WorkflowTemplateConnection>;
   /** Reads and enables pagination through a set of `Workflow`. */
   workflows?: Maybe<WorkflowConnection>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventRoutingRuleArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventRoutingRuleByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventRoutingRulesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EventRoutingRuleCondition>;
+  filter?: InputMaybe<EventRoutingRuleFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventRoutingRuleOrderBy>>;
 };
 
 
@@ -4408,6 +5048,19 @@ export type StringListFilter = {
   overlaps?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
+/** Information about a workflow that was triggered by an event */
+export type TriggeredWorkflow = {
+  __typename?: 'TriggeredWorkflow';
+  /** ID of the workflow run */
+  runId: Scalars['UUID']['output'];
+  /** Status of the triggered workflow run */
+  status: Scalars['String']['output'];
+  /** ID of the workflow that was triggered */
+  workflowId: Scalars['UUID']['output'];
+  /** Name of the workflow */
+  workflowName: Scalars['String']['output'];
+};
+
 /** A filter to be used against UUID fields. All fields are combined with a logical ‘and.’ */
 export type UuidFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
@@ -4432,6 +5085,53 @@ export type UuidFilter = {
   notEqualTo?: InputMaybe<Scalars['UUID']['input']>;
   /** Not included in the specified list. */
   notIn?: InputMaybe<Array<Scalars['UUID']['input']>>;
+};
+
+/** All input for the `updateEventRoutingRuleById` mutation. */
+export type UpdateEventRoutingRuleByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The globally unique `ID` which will identify a single `EventRoutingRule` to be updated. */
+  id: Scalars['ID']['input'];
+  /** An object where the defined keys will be set on the `EventRoutingRule` being updated. */
+  patch: EventRoutingRulePatch;
+};
+
+/** All input for the `updateEventRoutingRule` mutation. */
+export type UpdateEventRoutingRuleInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** An object where the defined keys will be set on the `EventRoutingRule` being updated. */
+  patch: EventRoutingRulePatch;
+  rowId: Scalars['UUID']['input'];
+};
+
+/** The output of our update `EventRoutingRule` mutation. */
+export type UpdateEventRoutingRulePayload = {
+  __typename?: 'UpdateEventRoutingRulePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `EventRoutingRule` that was updated by this mutation. */
+  eventRoutingRule?: Maybe<EventRoutingRule>;
+  /** An edge for our `EventRoutingRule`. May be used by Relay 1. */
+  eventRoutingRuleEdge?: Maybe<EventRoutingRuleEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `EventRoutingRule` mutation. */
+export type UpdateEventRoutingRulePayloadEventRoutingRuleEdgeArgs = {
+  orderBy?: Array<EventRoutingRuleOrderBy>;
 };
 
 /** All input for the `updateIntegrationById` mutation. */
@@ -5741,6 +6441,8 @@ export type Workflow = Node & {
   cronExpression?: Maybe<Scalars['String']['output']>;
   definition: Scalars['JSON']['output'];
   description?: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `EventRoutingRule`. */
+  eventRoutingRules: EventRoutingRuleConnection;
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   id: Scalars['ID']['output'];
   isActive: Scalars['Boolean']['output'];
@@ -5755,6 +6457,18 @@ export type Workflow = Node & {
   webhookSecret?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `WorkflowRun`. */
   workflowRuns: WorkflowRunConnection;
+};
+
+
+export type WorkflowEventRoutingRulesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EventRoutingRuleCondition>;
+  filter?: InputMaybe<EventRoutingRuleFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventRoutingRuleOrderBy>>;
 };
 
 
@@ -5906,6 +6620,10 @@ export type WorkflowFilter = {
   cronExpression?: InputMaybe<StringFilter>;
   /** Filter by the object’s `description` field. */
   description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `eventRoutingRules` relation. */
+  eventRoutingRules?: InputMaybe<WorkflowToManyEventRoutingRuleFilter>;
+  /** Some related `eventRoutingRules` exist. */
+  eventRoutingRulesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `isActive` field. */
   isActive?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `lastRunAt` field. */
@@ -6054,6 +6772,46 @@ export enum WorkflowOrderBy {
   CronExpressionDesc = 'CRON_EXPRESSION_DESC',
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
+  EventRoutingRulesAveragePriorityAsc = 'EVENT_ROUTING_RULES_AVERAGE_PRIORITY_ASC',
+  EventRoutingRulesAveragePriorityDesc = 'EVENT_ROUTING_RULES_AVERAGE_PRIORITY_DESC',
+  EventRoutingRulesCountAsc = 'EVENT_ROUTING_RULES_COUNT_ASC',
+  EventRoutingRulesCountDesc = 'EVENT_ROUTING_RULES_COUNT_DESC',
+  EventRoutingRulesDistinctCountConditionAsc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_CONDITION_ASC',
+  EventRoutingRulesDistinctCountConditionDesc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_CONDITION_DESC',
+  EventRoutingRulesDistinctCountCreatedAtAsc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_CREATED_AT_ASC',
+  EventRoutingRulesDistinctCountCreatedAtDesc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_CREATED_AT_DESC',
+  EventRoutingRulesDistinctCountEnabledAsc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_ENABLED_ASC',
+  EventRoutingRulesDistinctCountEnabledDesc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_ENABLED_DESC',
+  EventRoutingRulesDistinctCountOrganizationIdAsc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_ORGANIZATION_ID_ASC',
+  EventRoutingRulesDistinctCountOrganizationIdDesc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
+  EventRoutingRulesDistinctCountPriorityAsc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_PRIORITY_ASC',
+  EventRoutingRulesDistinctCountPriorityDesc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_PRIORITY_DESC',
+  EventRoutingRulesDistinctCountRowIdAsc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_ROW_ID_ASC',
+  EventRoutingRulesDistinctCountRowIdDesc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_ROW_ID_DESC',
+  EventRoutingRulesDistinctCountSourcePatternAsc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_SOURCE_PATTERN_ASC',
+  EventRoutingRulesDistinctCountSourcePatternDesc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_SOURCE_PATTERN_DESC',
+  EventRoutingRulesDistinctCountTransformAsc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_TRANSFORM_ASC',
+  EventRoutingRulesDistinctCountTransformDesc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_TRANSFORM_DESC',
+  EventRoutingRulesDistinctCountTypePatternAsc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_TYPE_PATTERN_ASC',
+  EventRoutingRulesDistinctCountTypePatternDesc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_TYPE_PATTERN_DESC',
+  EventRoutingRulesDistinctCountUpdatedAtAsc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_UPDATED_AT_ASC',
+  EventRoutingRulesDistinctCountUpdatedAtDesc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_UPDATED_AT_DESC',
+  EventRoutingRulesDistinctCountWorkflowIdAsc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_WORKFLOW_ID_ASC',
+  EventRoutingRulesDistinctCountWorkflowIdDesc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_WORKFLOW_ID_DESC',
+  EventRoutingRulesMaxPriorityAsc = 'EVENT_ROUTING_RULES_MAX_PRIORITY_ASC',
+  EventRoutingRulesMaxPriorityDesc = 'EVENT_ROUTING_RULES_MAX_PRIORITY_DESC',
+  EventRoutingRulesMinPriorityAsc = 'EVENT_ROUTING_RULES_MIN_PRIORITY_ASC',
+  EventRoutingRulesMinPriorityDesc = 'EVENT_ROUTING_RULES_MIN_PRIORITY_DESC',
+  EventRoutingRulesStddevPopulationPriorityAsc = 'EVENT_ROUTING_RULES_STDDEV_POPULATION_PRIORITY_ASC',
+  EventRoutingRulesStddevPopulationPriorityDesc = 'EVENT_ROUTING_RULES_STDDEV_POPULATION_PRIORITY_DESC',
+  EventRoutingRulesStddevSamplePriorityAsc = 'EVENT_ROUTING_RULES_STDDEV_SAMPLE_PRIORITY_ASC',
+  EventRoutingRulesStddevSamplePriorityDesc = 'EVENT_ROUTING_RULES_STDDEV_SAMPLE_PRIORITY_DESC',
+  EventRoutingRulesSumPriorityAsc = 'EVENT_ROUTING_RULES_SUM_PRIORITY_ASC',
+  EventRoutingRulesSumPriorityDesc = 'EVENT_ROUTING_RULES_SUM_PRIORITY_DESC',
+  EventRoutingRulesVariancePopulationPriorityAsc = 'EVENT_ROUTING_RULES_VARIANCE_POPULATION_PRIORITY_ASC',
+  EventRoutingRulesVariancePopulationPriorityDesc = 'EVENT_ROUTING_RULES_VARIANCE_POPULATION_PRIORITY_DESC',
+  EventRoutingRulesVarianceSamplePriorityAsc = 'EVENT_ROUTING_RULES_VARIANCE_SAMPLE_PRIORITY_ASC',
+  EventRoutingRulesVarianceSamplePriorityDesc = 'EVENT_ROUTING_RULES_VARIANCE_SAMPLE_PRIORITY_DESC',
   IsActiveAsc = 'IS_ACTIVE_ASC',
   IsActiveDesc = 'IS_ACTIVE_DESC',
   LastRunAtAsc = 'LAST_RUN_AT_ASC',
@@ -7112,6 +7870,18 @@ export type WorkflowTemplatePatch = {
   sortOrder?: InputMaybe<Scalars['String']['input']>;
   tags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** A filter to be used against many `EventRoutingRule` object types. All fields are combined with a logical ‘and.’ */
+export type WorkflowToManyEventRoutingRuleFilter = {
+  /** Aggregates across related `EventRoutingRule` match the filter criteria. */
+  aggregates?: InputMaybe<EventRoutingRuleAggregatesFilter>;
+  /** Every related `EventRoutingRule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<EventRoutingRuleFilter>;
+  /** No related `EventRoutingRule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<EventRoutingRuleFilter>;
+  /** Some related `EventRoutingRule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<EventRoutingRuleFilter>;
 };
 
 /** A filter to be used against many `WorkflowRun` object types. All fields are combined with a logical ‘and.’ */

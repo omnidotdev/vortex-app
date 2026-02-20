@@ -1064,7 +1064,7 @@ export const nodeThemes = {
     handleColor: "!bg-[#00ED64]",
     glow: "shadow-[0_0_15px_rgba(0,237,100,0.2)] dark:shadow-[0_0_20px_rgba(0,237,100,0.3)]",
   },
-  redis: {
+  valkey: {
     border: "border-[#DC382D]/40 dark:border-[#DC382D]/50",
     bg: "bg-gradient-to-br from-[#DC382D]/10 via-[#DC382D]/5 to-red-50 dark:from-[#DC382D]/20 dark:via-[#DC382D]/10 dark:to-red-950",
     iconBg: "bg-[#DC382D]",
@@ -1200,7 +1200,7 @@ export function getIntegrationTheme(name: string): NodeThemeKey {
     postgres: "postgresql",
     mongodb: "mongodb",
     mongo: "mongodb",
-    redis: "redis",
+    valkey: "valkey",
     segment: "segment",
     mixpanel: "mixpanel",
     amplitude: "amplitude",
