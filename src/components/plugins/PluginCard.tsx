@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 import type { PluginsQuery } from "@/generated/graphql";
 
-type Plugin = NonNullable<PluginsQuery["plugins"]>["nodes"][number];
+export type Plugin = NonNullable<PluginsQuery["plugins"]>["nodes"][number];
 
 type PluginCardProps = {
   plugin: Plugin;

@@ -20,7 +20,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { API_BASE_URL } from "@/lib/config/env.config";
 import { getCurrentAuthHeaders } from "@/lib/graphql/graphqlClientFactory";
-import { pluginsOptions } from "@/lib/options/plugins.options";
+import pluginsOptions from "@/lib/options/plugins.options";
 
 const MANIFEST_PLACEHOLDER = JSON.stringify(
   {
