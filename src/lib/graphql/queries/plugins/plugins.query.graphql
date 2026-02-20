@@ -1,6 +1,6 @@
 query Plugins($organizationId: String!, $limit: Int) {
   plugins(
-    condition: { organizationId: $organizationId, isEnabled: true }
+    condition: { organizationId: $organizationId }
     orderBy: NAME_ASC
     first: $limit
   ) {
