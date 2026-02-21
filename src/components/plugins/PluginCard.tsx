@@ -17,13 +17,13 @@ function PluginCard({ plugin, onToggle }: PluginCardProps) {
   return (
     <div className="flex flex-col rounded-lg border bg-card p-4">
       <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="font-medium truncate">{plugin.name}</h3>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="truncate font-medium">{plugin.name}</h3>
             {plugin.isVerified && (
               <Badge
                 variant="secondary"
-                className="gap-1 shrink-0 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+                className="shrink-0 gap-1 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
               >
                 <ShieldCheck className="h-3 w-3" />
                 Verified
@@ -50,6 +50,8 @@ function PluginCard({ plugin, onToggle }: PluginCardProps) {
         <Button
           size="sm"
           variant="outline"
+          disabled
+          title="Coming soon"
           onClick={() => onToggle(plugin, !plugin.isEnabled)}
         >
           {plugin.isEnabled ? "Disable" : "Enable"}

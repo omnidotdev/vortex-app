@@ -43,7 +43,10 @@ type UploadPluginDialogProps = {
 };
 
 /** Dialog for uploading a WASM plugin with drag-drop file input and manifest JSON. */
-function UploadPluginDialog({ organizationId, onClose }: UploadPluginDialogProps) {
+function UploadPluginDialog({
+  organizationId,
+  onClose,
+}: UploadPluginDialogProps) {
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -125,13 +128,10 @@ function UploadPluginDialog({ organizationId, onClose }: UploadPluginDialogProps
       formData.append("wasm", wasmFile);
       formData.append("name", name.trim());
       formData.append("version", version.trim());
-      formData.append("organizationId", organizationId);
       if (description.trim()) {
         formData.append("description", description.trim());
       }
-      if (manifest.trim()) {
-        formData.append("manifest", manifest.trim());
-      }
+      formData.append("manifest", manifest.trim() || "{}");
 
       const authHeaders = getCurrentAuthHeaders();
       const response = await fetch(`${API_BASE_URL}/api/v1/plugins/upload`, {
