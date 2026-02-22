@@ -73,6 +73,12 @@ export const TriggerNodeConfig = ({
             <SelectItem value="sqs">SQS</SelectItem>
             <SelectItem value="s3">S3 Event</SelectItem>
             <SelectItem value="cdc">CDC (Change Data Capture)</SelectItem>
+            <SelectItem value="mqtt">MQTT</SelectItem>
+            <SelectItem value="websocket">WebSocket</SelectItem>
+            <SelectItem value="redis">Redis Pub/Sub</SelectItem>
+            <SelectItem value="nats">NATS</SelectItem>
+            <SelectItem value="amqp">AMQP (RabbitMQ)</SelectItem>
+            <SelectItem value="grpc_stream">gRPC Stream</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -275,11 +281,7 @@ export const TriggerNodeConfig = ({
                 id="dedupField"
                 value={(config.deduplicationField as string) || ""}
                 onChange={(e) =>
-                  onNestedChange(
-                    "config",
-                    "deduplicationField",
-                    e.target.value,
-                  )
+                  onNestedChange("config", "deduplicationField", e.target.value)
                 }
                 placeholder="$.id"
               />
@@ -468,7 +470,7 @@ export const TriggerNodeConfig = ({
                         : [...operations, op];
                       onNestedChange("config", "operations", newOps);
                     }}
-                    className={`rounded-md border px-3 py-1.5 text-xs font-medium transition-colors ${
+                    className={`rounded-md border px-3 py-1.5 font-medium text-xs transition-colors ${
                       isSelected
                         ? "border-primary bg-primary/10 text-primary"
                         : "border-muted text-muted-foreground hover:bg-muted"
@@ -479,6 +481,286 @@ export const TriggerNodeConfig = ({
                 );
               })}
             </div>
+          </div>
+        </div>
+      )}
+
+      {triggerType === "mqtt" && (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="mqttBrokerUrl">Broker URL</Label>
+            <Input
+              id="mqttBrokerUrl"
+              value={(config.brokerUrl as string) || ""}
+              onChange={(e) =>
+                onNestedChange("config", "brokerUrl", e.target.value)
+              }
+              placeholder="mqtt://broker.example.com:1883"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="mqttTopic">Topic</Label>
+            <Input
+              id="mqttTopic"
+              value={(config.topic as string) || ""}
+              onChange={(e) =>
+                onNestedChange("config", "topic", e.target.value)
+              }
+              placeholder="sensors/temperature/#"
+            />
+            <p className="text-muted-foreground text-xs">
+              MQTT topic pattern. Use # for multi-level and + for single-level
+              wildcards
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>QoS</Label>
+            <Select
+              value={String((config.qos as number) ?? 0)}
+              onValueChange={(value) =>
+                onNestedChange("config", "qos", parseInt(value, 10))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">0 - At most once</SelectItem>
+                <SelectItem value="1">1 - At least once</SelectItem>
+                <SelectItem value="2">2 - Exactly once</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      )}
+
+      {triggerType === "websocket" && (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="wsUrl">WebSocket URL</Label>
+            <Input
+              id="wsUrl"
+              value={(config.url as string) || ""}
+              onChange={(e) => onNestedChange("config", "url", e.target.value)}
+              placeholder="wss://stream.example.com/events"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="wsProtocols">Protocols (optional)</Label>
+            <Input
+              id="wsProtocols"
+              value={(config.protocols as string) || ""}
+              onChange={(e) =>
+                onNestedChange("config", "protocols", e.target.value)
+              }
+              placeholder="graphql-ws, json"
+            />
+            <p className="text-muted-foreground text-xs">
+              Comma-separated list of WebSocket subprotocols
+            </p>
+          </div>
+        </div>
+      )}
+
+      {triggerType === "redis" && (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="redisUrl">Redis URL</Label>
+            <Input
+              id="redisUrl"
+              value={(config.url as string) || ""}
+              onChange={(e) => onNestedChange("config", "url", e.target.value)}
+              placeholder="redis://localhost:6379"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="redisChannels">Channels</Label>
+            <Input
+              id="redisChannels"
+              value={(config.channels as string) || ""}
+              onChange={(e) =>
+                onNestedChange("config", "channels", e.target.value)
+              }
+              placeholder="events:*, notifications"
+            />
+            <p className="text-muted-foreground text-xs">
+              Comma-separated list of Redis Pub/Sub channels
+            </p>
+          </div>
+        </div>
+      )}
+
+      {triggerType === "nats" && (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="natsServers">Servers</Label>
+            <Input
+              id="natsServers"
+              value={(config.servers as string) || ""}
+              onChange={(e) =>
+                onNestedChange("config", "servers", e.target.value)
+              }
+              placeholder="nats://localhost:4222"
+            />
+            <p className="text-muted-foreground text-xs">
+              Comma-separated list of NATS server URLs
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="natsSubject">Subject</Label>
+            <Input
+              id="natsSubject"
+              value={(config.subject as string) || ""}
+              onChange={(e) =>
+                onNestedChange("config", "subject", e.target.value)
+              }
+              placeholder="events.>"
+            />
+            <p className="text-muted-foreground text-xs">
+              NATS subject to subscribe to. Use &gt; for wildcard
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="natsQueue">Queue Group (optional)</Label>
+            <Input
+              id="natsQueue"
+              value={(config.queue as string) || ""}
+              onChange={(e) =>
+                onNestedChange("config", "queue", e.target.value)
+              }
+              placeholder="vortex-workers"
+            />
+            <p className="text-muted-foreground text-xs">
+              Queue group for load-balanced consumption
+            </p>
+          </div>
+        </div>
+      )}
+
+      {triggerType === "amqp" && (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="amqpUrl">Connection URL</Label>
+            <Input
+              id="amqpUrl"
+              value={(config.url as string) || ""}
+              onChange={(e) => onNestedChange("config", "url", e.target.value)}
+              placeholder="amqp://guest:guest@localhost:5672"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="amqpQueue">Queue</Label>
+            <Input
+              id="amqpQueue"
+              value={(config.queue as string) || ""}
+              onChange={(e) =>
+                onNestedChange("config", "queue", e.target.value)
+              }
+              placeholder="my-queue"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="amqpExchange">Exchange (optional)</Label>
+            <Input
+              id="amqpExchange"
+              value={(config.exchange as string) || ""}
+              onChange={(e) =>
+                onNestedChange("config", "exchange", e.target.value)
+              }
+              placeholder="my-exchange"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="amqpRoutingKey">Routing Key (optional)</Label>
+            <Input
+              id="amqpRoutingKey"
+              value={(config.routingKey as string) || ""}
+              onChange={(e) =>
+                onNestedChange("config", "routingKey", e.target.value)
+              }
+              placeholder="events.#"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="amqpPrefetch">Prefetch</Label>
+            <Input
+              id="amqpPrefetch"
+              type="number"
+              min={1}
+              value={(config.prefetch as number) || 10}
+              onChange={(e) =>
+                onNestedChange(
+                  "config",
+                  "prefetch",
+                  parseInt(e.target.value, 10),
+                )
+              }
+            />
+            <p className="text-muted-foreground text-xs">
+              Max unacknowledged messages per consumer
+            </p>
+          </div>
+        </div>
+      )}
+
+      {triggerType === "grpc_stream" && (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="grpcAddress">Server Address</Label>
+            <Input
+              id="grpcAddress"
+              value={(config.address as string) || ""}
+              onChange={(e) =>
+                onNestedChange("config", "address", e.target.value)
+              }
+              placeholder="localhost:50051"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="grpcProtoPath">Proto Path</Label>
+            <Input
+              id="grpcProtoPath"
+              value={(config.protoPath as string) || ""}
+              onChange={(e) =>
+                onNestedChange("config", "protoPath", e.target.value)
+              }
+              placeholder="/path/to/service.proto"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="grpcService">Service Name</Label>
+            <Input
+              id="grpcService"
+              value={(config.service as string) || ""}
+              onChange={(e) =>
+                onNestedChange("config", "service", e.target.value)
+              }
+              placeholder="events.EventService"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="grpcMethod">Method Name</Label>
+            <Input
+              id="grpcMethod"
+              value={(config.method as string) || ""}
+              onChange={(e) =>
+                onNestedChange("config", "method", e.target.value)
+              }
+              placeholder="StreamEvents"
+            />
           </div>
         </div>
       )}

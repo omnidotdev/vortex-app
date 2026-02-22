@@ -7,7 +7,23 @@ import { BaseNode, NodeActionButton, NodeInfoRow } from "./BaseNode";
 interface TriggerNodeData {
   label: string;
   description?: string;
-  triggerType?: "manual" | "webhook" | "cron" | "event" | "omni";
+  triggerType?:
+    | "manual"
+    | "webhook"
+    | "cron"
+    | "event"
+    | "omni"
+    | "polling"
+    | "kafka"
+    | "sqs"
+    | "s3"
+    | "cdc"
+    | "mqtt"
+    | "websocket"
+    | "redis"
+    | "nats"
+    | "amqp"
+    | "grpc_stream";
   config?: Record<string, unknown>;
   onNodeSelect?: (node: {
     id: string;
@@ -91,6 +107,28 @@ export const TriggerNode = memo(
           return "Event";
         case "omni":
           return "Omni";
+        case "polling":
+          return "Polling";
+        case "kafka":
+          return "Kafka";
+        case "sqs":
+          return "SQS";
+        case "s3":
+          return "S3";
+        case "cdc":
+          return "CDC";
+        case "mqtt":
+          return "MQTT";
+        case "websocket":
+          return "WebSocket";
+        case "redis":
+          return "Redis";
+        case "nats":
+          return "NATS";
+        case "amqp":
+          return "AMQP";
+        case "grpc_stream":
+          return "gRPC Stream";
         default:
           return "Manual";
       }
