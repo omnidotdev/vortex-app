@@ -1,7 +1,15 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { ArrowLeft, Calendar, Clock, Hash, Loader2, Wifi, WifiOff } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+  Activity,
+  ArrowLeft,
+  Calendar,
+  Clock,
+  Hash,
+  Loader2,
+  Wifi,
+} from "lucide-react";
+import { useEffect, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -41,6 +49,8 @@ interface RunData {
 interface RunDetailProps {
   run: RunData;
   onBack: () => void;
+  /** Optional API key for authenticated SSE connection */
+  apiKey?: string | null;
   /** Callback to notify parent of step status changes (for canvas highlighting) */
   onStepStatusChange?: (stepStatuses: Record<string, string>) => void;
 }
@@ -67,16 +77,34 @@ function formatDuration(
   return `${Math.floor(durationMs / 3600000)}h ${Math.floor((durationMs % 3600000) / 60000)}m`;
 }
 
-export function RunDetail({ run, onBack, onStepStatusChange }: RunDetailProps) {
+export function RunDetail({
+  run,
+  onBack,
+  apiKey,
+  onStepStatusChange,
+}: RunDetailProps) {
   // Use real-time streaming for in-progress runs
   const isRunning = run.status === "running" || run.status === "pending";
-  const { run: streamedRun, isConnected, steps: streamedSteps } = useWorkflowRunStream(
-    isRunning ? run.rowId : null,
-  );
+  const {
+    run: streamedRun,
+    events,
+    isConnected,
+    steps: streamedSteps,
+  } = useWorkflowRunStream(isRunning ? run.rowId : null, { apiKey });
 
   // Use streamed data if available, otherwise fall back to initial data
   const currentRun = streamedRun || run;
-  const steps = streamedRun?.workflowStepLogs.nodes || run.workflowStepLogs.nodes;
+  const steps =
+    streamedSteps.length > 0 ? streamedSteps : run.workflowStepLogs.nodes;
+
+  // Ref for auto-scrolling the events log to the bottom
+  const eventsEndRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll events log to bottom on new events
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally re-run when event count changes
+  useEffect(() => {
+    eventsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [events.length]);
 
   // Notify parent of step status changes for canvas highlighting
   useEffect(() => {
@@ -111,7 +139,9 @@ export function RunDetail({ run, onBack, onStepStatusChange }: RunDetailProps) {
               {isConnected ? (
                 <>
                   <Wifi className="h-3 w-3 text-green-500" />
-                  <span className="text-green-600 dark:text-green-400">Live</span>
+                  <span className="text-green-600 dark:text-green-400">
+                    Live
+                  </span>
                 </>
               ) : (
                 <>
@@ -132,7 +162,9 @@ export function RunDetail({ run, onBack, onStepStatusChange }: RunDetailProps) {
           </div>
           <div className="flex items-center gap-2 text-muted-foreground">
             <Clock className="h-4 w-4" />
-            <span>{formatDuration(currentRun.startedAt, currentRun.completedAt)}</span>
+            <span>
+              {formatDuration(currentRun.startedAt, currentRun.completedAt)}
+            </span>
           </div>
           {currentRun.createdAt && (
             <div className="col-span-2 flex items-center gap-2 text-muted-foreground">
@@ -153,6 +185,46 @@ export function RunDetail({ run, onBack, onStepStatusChange }: RunDetailProps) {
           </div>
         )}
       </div>
+
+      {/* Live event log — shown while streaming */}
+      {isRunning && events.length > 0 && (
+        <div className="shrink-0 border-b">
+          <div className="flex items-center gap-1.5 px-4 py-2">
+            <Activity className="h-3 w-3 text-primary" />
+            <span className="font-medium text-muted-foreground text-xs uppercase tracking-wide">
+              Live Events
+            </span>
+          </div>
+          <ScrollArea className="max-h-36">
+            <div className="space-y-0.5 px-4 pb-3">
+              {events.map((event, index) => (
+                <div
+                  // biome-ignore lint/suspicious/noArrayIndexKey: event index is stable append-only
+                  key={index}
+                  className="flex gap-2 rounded px-2 py-1 font-mono text-xs hover:bg-muted/50"
+                >
+                  {event.type && (
+                    <span className="shrink-0 text-primary">{event.type}</span>
+                  )}
+                  {event.data !== undefined && (
+                    <span className="min-w-0 truncate text-muted-foreground">
+                      {typeof event.data === "string"
+                        ? event.data
+                        : JSON.stringify(event.data)}
+                    </span>
+                  )}
+                  {!event.type && !event.data && (
+                    <span className="text-muted-foreground">
+                      {JSON.stringify(event)}
+                    </span>
+                  )}
+                </div>
+              ))}
+              <div ref={eventsEndRef} />
+            </div>
+          </ScrollArea>
+        </div>
+      )}
 
       {/* Step logs */}
       <ScrollArea className="flex-1">

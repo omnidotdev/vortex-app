@@ -1,4 +1,5 @@
 import {
+  apiKeyClient,
   customSessionClient,
   genericOAuthClient,
 } from "better-auth/client/plugins";
@@ -10,7 +11,11 @@ import type auth from "@/lib/auth/auth";
  * Auth browser client.
  */
 const authClient = createAuthClient({
-  plugins: [genericOAuthClient(), customSessionClient<typeof auth>()],
+  plugins: [
+    genericOAuthClient(),
+    customSessionClient<typeof auth>(),
+    apiKeyClient(),
+  ],
 });
 
 export default authClient;
