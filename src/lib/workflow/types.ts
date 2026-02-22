@@ -99,6 +99,12 @@ export const TriggerType = {
   SQS: "sqs",
   S3: "s3",
   CDC: "cdc",
+  MQTT: "mqtt",
+  WEBSOCKET: "websocket",
+  REDIS: "redis",
+  NATS: "nats",
+  AMQP: "amqp",
+  GRPC_STREAM: "grpc_stream",
 } as const;
 
 export type TriggerTypeValue = (typeof TriggerType)[keyof typeof TriggerType];
@@ -163,6 +169,68 @@ export interface CdcTriggerConfig {
     connectionString: string; // Integration reference
     table: string;
     operations: ("INSERT" | "UPDATE" | "DELETE")[];
+  };
+}
+
+export interface MqttTriggerConfig {
+  triggerType: "mqtt";
+  mqtt: {
+    brokerUrl: string;
+    topic: string;
+    qos?: 0 | 1 | 2;
+    username?: string;
+    password?: string;
+  };
+}
+
+export interface WebSocketTriggerConfig {
+  triggerType: "websocket";
+  websocket: {
+    url: string;
+    protocols?: string[];
+    headers?: Record<string, string>;
+  };
+}
+
+export interface RedisTriggerConfig {
+  triggerType: "redis";
+  redis: {
+    url: string;
+    channels: string[];
+    pattern?: boolean;
+  };
+}
+
+export interface NatsTriggerConfig {
+  triggerType: "nats";
+  nats: {
+    servers: string;
+    subject: string;
+    queue?: string;
+    token?: string;
+  };
+}
+
+export interface AmqpTriggerConfig {
+  triggerType: "amqp";
+  amqp: {
+    url: string;
+    queue: string;
+    exchange?: string;
+    routingKey?: string;
+    prefetch?: number;
+    durable?: boolean;
+  };
+}
+
+export interface GrpcStreamTriggerConfig {
+  triggerType: "grpc_stream";
+  grpcStream: {
+    address: string;
+    protoPath: string;
+    service: string;
+    method: string;
+    tls?: boolean;
   };
 }
 
@@ -869,7 +937,12 @@ export interface AiGuardrailsStep extends Omit<StepBase, "type"> {
   aiGuardrails: {
     input: string;
     rules: Array<{
-      type: "regex" | "contains" | "not_contains" | "max_length" | "json_schema";
+      type:
+        | "regex"
+        | "contains"
+        | "not_contains"
+        | "max_length"
+        | "json_schema";
       value: string;
     }>;
     onFail: "block" | "warn" | "sanitize";
