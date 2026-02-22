@@ -341,7 +341,10 @@ const getNodeId = () => `node_${Date.now()}_${nodeIdCounter++}`;
 function WorkflowEditorPage() {
   const { workspaceSlug, workflowId } = Route.useParams();
   const { organizationId } = Route.useLoaderData();
+  const { session } = Route.useRouteContext();
   const navigate = useNavigate();
+
+  const accessToken = session?.accessToken;
 
   const { data: workflow } = useSuspenseQuery({
     ...workflowOptions({ rowId: workflowId }),
@@ -1743,6 +1746,7 @@ function WorkflowEditorPage() {
                 <WorkflowRunsPanel
                   runs={workflow.workflowRuns?.nodes || []}
                   totalCount={workflow.workflowRuns?.totalCount || 0}
+                  apiKey={accessToken}
                   onStepStatusChange={setStepStatuses}
                 />
               </aside>

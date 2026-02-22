@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { Package, Search, Upload } from "lucide-react";
 import { useState } from "react";
@@ -8,6 +8,8 @@ import PluginCard from "@/components/plugins/PluginCard";
 import UploadPluginDialog from "@/components/plugins/UploadPluginDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { API_BASE_URL } from "@/lib/config/env.config";
+import { getCurrentAuthHeaders } from "@/lib/graphql/graphqlClientFactory";
 import pluginsOptions from "@/lib/options/plugins.options";
 
 import type { Plugin } from "@/components/plugins/PluginCard";
@@ -25,8 +27,11 @@ export const Route = createFileRoute(
 
 function PluginsPage() {
   const { organizationId } = Route.useLoaderData();
+  const { workspaceSlug } = Route.useParams();
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const queryClient = useQueryClient();
+  const [isToggling, setIsToggling] = useState<string | null>(null);
 
   const { data: plugins } = useSuspenseQuery({
     ...pluginsOptions({ organizationId }),
@@ -37,11 +42,39 @@ function PluginsPage() {
     plugin.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  // TODO: wire useUpdatePluginByIdMutation once types are regenerated from updatePlugin.mutation.graphql
-  const handleToggle = (plugin: Plugin, enabled: boolean) => {
-    toast.info(
-      `${enabled ? "Enabling" : "Disabling"} ${plugin.name} — coming soon`,
-    );
+  const handleToggle = async (plugin: Plugin, enabled: boolean) => {
+    if (isToggling) return;
+    setIsToggling(plugin.rowId);
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/plugins/${plugin.rowId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            ...getCurrentAuthHeaders(),
+          },
+          body: JSON.stringify({ isEnabled: enabled }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to ${enabled ? "enable" : "disable"} plugin`);
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: pluginsOptions({ organizationId }).queryKey,
+      });
+
+      toast.success(`${plugin.name} ${enabled ? "enabled" : "disabled"}`);
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Failed to update plugin",
+      );
+    } finally {
+      setIsToggling(null);
+    }
   };
 
   return (
@@ -80,6 +113,8 @@ function PluginsPage() {
               key={plugin.rowId}
               plugin={plugin}
               onToggle={handleToggle}
+              isToggling={isToggling}
+              workspaceSlug={workspaceSlug}
             />
           ))}
         </div>
@@ -89,7 +124,9 @@ function PluginsPage() {
             <Package className="h-8 w-8 text-muted-foreground" />
           </div>
           <p className="mt-4 font-medium">
-            {searchQuery ? "No plugins match your search" : "No plugins installed"}
+            {searchQuery
+              ? "No plugins match your search"
+              : "No plugins installed"}
           </p>
           <p className="mt-1 max-w-sm text-muted-foreground text-sm">
             {searchQuery
