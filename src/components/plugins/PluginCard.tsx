@@ -1,4 +1,5 @@
-import { ShieldCheck } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Loader2, ShieldCheck } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,10 +11,17 @@ export type Plugin = NonNullable<PluginsQuery["plugins"]>["nodes"][number];
 type PluginCardProps = {
   plugin: Plugin;
   onToggle: (plugin: Plugin, enabled: boolean) => void;
+  isToggling?: string | null;
+  workspaceSlug: string;
 };
 
 /** Card displaying plugin metadata with enable/disable toggle. */
-function PluginCard({ plugin, onToggle }: PluginCardProps) {
+function PluginCard({
+  plugin,
+  onToggle,
+  isToggling,
+  workspaceSlug,
+}: PluginCardProps) {
   return (
     <div className="flex flex-col rounded-lg border bg-card p-4">
       <div className="flex items-start justify-between gap-3">
@@ -46,14 +54,23 @@ function PluginCard({ plugin, onToggle }: PluginCardProps) {
         </span>
       </div>
 
-      <div className="mt-4 flex justify-end">
+      <div className="mt-4 flex items-center justify-end gap-2">
+        <Link
+          to="/workspaces/$workspaceSlug/plugins/$pluginId"
+          params={{ workspaceSlug, pluginId: plugin.rowId }}
+          className="text-muted-foreground text-xs hover:text-foreground"
+        >
+          View Details
+        </Link>
         <Button
           size="sm"
           variant="outline"
-          disabled
-          title="Coming soon"
+          disabled={isToggling === plugin.rowId}
           onClick={() => onToggle(plugin, !plugin.isEnabled)}
         >
+          {isToggling === plugin.rowId && (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          )}
           {plugin.isEnabled ? "Disable" : "Enable"}
         </Button>
       </div>

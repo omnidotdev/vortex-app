@@ -34,6 +34,8 @@ interface RunData {
 interface WorkflowRunsPanelProps {
   runs: RunData[];
   totalCount: number;
+  /** Optional API key for authenticated SSE streaming */
+  apiKey?: string | null;
   /** Callback to notify parent of step status changes (for canvas highlighting) */
   onStepStatusChange?: (stepStatuses: Record<string, string>) => void;
 }
@@ -41,6 +43,7 @@ interface WorkflowRunsPanelProps {
 export function WorkflowRunsPanel({
   runs,
   totalCount,
+  apiKey,
   onStepStatusChange,
 }: WorkflowRunsPanelProps) {
   const [selectedRunId, setSelectedRunId] = useState<string | null>(null);
@@ -53,6 +56,7 @@ export function WorkflowRunsPanel({
     return (
       <RunDetail
         run={selectedRun}
+        apiKey={apiKey}
         onBack={() => {
           setSelectedRunId(null);
           // Clear step statuses when going back
