@@ -7,6 +7,7 @@ import {
   useParams,
 } from "@tanstack/react-router";
 import {
+  AlertTriangle,
   BookOpen,
   ExternalLink,
   LogOut,
@@ -204,6 +205,16 @@ function MobileHeader() {
                           Plugins
                         </Link>
                         <Link
+                          to="/workspaces/$workspaceSlug/dlq"
+                          params={{ workspaceSlug }}
+                          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent"
+                          activeProps={{ className: "bg-accent" }}
+                          onClick={() => setOpen(false)}
+                        >
+                          <AlertTriangle className="h-4 w-4" />
+                          Dead Letter Queue
+                        </Link>
+                        <Link
                           to="/workspaces/$workspaceSlug/settings"
                           params={{ workspaceSlug }}
                           className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
@@ -376,6 +387,15 @@ function AppSidebar() {
                 activeProps={{ className: "bg-accent" }}
               >
                 Plugins
+              </Link>
+              <Link
+                to="/workspaces/$workspaceSlug/dlq"
+                params={{ workspaceSlug }}
+                className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent"
+                activeProps={{ className: "bg-accent" }}
+              >
+                <AlertTriangle className="h-4 w-4" />
+                Dead Letter Queue
               </Link>
 
               <Link
