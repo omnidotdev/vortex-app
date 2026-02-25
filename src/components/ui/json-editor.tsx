@@ -85,6 +85,7 @@ export function JsonEditor({
   }, [value]);
 
   // Initialize editor
+  // biome-ignore lint/correctness/useExhaustiveDependencies: editor is initialized once per mount; value/onChange/placeholder are handled by separate effects or refs to avoid destroying the editor on every keystroke
   useEffect(() => {
     if (!containerRef.current) return;
 
