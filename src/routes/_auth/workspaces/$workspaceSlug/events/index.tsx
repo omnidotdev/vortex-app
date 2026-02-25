@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +17,8 @@ import eventSchemasOptions from "@/lib/options/eventSchemas.options";
 export const Route = createFileRoute(
   "/_auth/workspaces/$workspaceSlug/events/",
 )({
-  loader: async ({ context: { queryClient } }) => {
+  loader: async ({ context: { queryClient, organizationId } }) => {
+    if (!organizationId) throw notFound();
     await queryClient.ensureQueryData(eventSchemasOptions({}));
   },
   component: EventSchemasPage,
