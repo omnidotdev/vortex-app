@@ -27,7 +27,7 @@
     "@codemirror/state": "^6.5.4",
     "@codemirror/view": "^6.39.12",
     "@hatchet-dev/typescript-sdk": "^1.10.3",
-    "@omnidotdev/providers": "github:omnidotdev/providers#64ba2c0",
+    "@omnidotdev/providers": "github:omnidotdev/providers#567a9b7",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-popover": "^1.1.15",
