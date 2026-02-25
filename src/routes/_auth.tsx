@@ -209,6 +209,15 @@ function MobileHeader() {
                           Integrations
                         </Link>
                         <Link
+                          to="/workspaces/$workspaceSlug/events"
+                          params={{ workspaceSlug }}
+                          className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
+                          activeProps={{ className: "bg-accent" }}
+                          onClick={() => setOpen(false)}
+                        >
+                          Events
+                        </Link>
+                        <Link
                           to="/workspaces/$workspaceSlug/plugins"
                           params={{ workspaceSlug }}
                           className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
@@ -392,6 +401,14 @@ function AppSidebar() {
                 activeProps={{ className: "bg-accent" }}
               >
                 Integrations
+              </Link>
+              <Link
+                to="/workspaces/$workspaceSlug/events"
+                params={{ workspaceSlug }}
+                className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
+                activeProps={{ className: "bg-accent" }}
+              >
+                Events
               </Link>
               <Link
                 to="/workspaces/$workspaceSlug/plugins"
