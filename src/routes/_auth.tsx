@@ -1,3 +1,4 @@
+import { createEventsProvider } from "@omnidotdev/providers";
 import {
   Link,
   Outlet,
@@ -29,7 +30,10 @@ import {
 import signOut from "@/lib/auth/signOut";
 import app from "@/lib/config/app.config";
 import { CONSOLE_URL } from "@/lib/config/env.config";
+import { EventsProvider } from "@/providers/EventsProvider";
 import SidebarProvider from "@/providers/SidebarProvider";
+
+const eventsProvider = createEventsProvider({});
 
 export const Route = createFileRoute("/_auth")({
   beforeLoad: async ({ params, context: { session } }) => {
@@ -80,20 +84,22 @@ function AuthenticatedLayout() {
   );
 
   return (
-    <SidebarProvider>
-      <div className="flex h-dvh w-full flex-col lg:flex-row">
-        {/* Mobile header - hidden in workflow editor and on lg+ */}
-        {!isWorkflowEditor && <MobileHeader />}
+    <EventsProvider provider={eventsProvider}>
+      <SidebarProvider>
+        <div className="flex h-dvh w-full flex-col lg:flex-row">
+          {/* Mobile header - hidden in workflow editor and on lg+ */}
+          {!isWorkflowEditor && <MobileHeader />}
 
-        {/* Desktop sidebar - hidden in workflow editor */}
-        {!isWorkflowEditor && <AppSidebar />}
+          {/* Desktop sidebar - hidden in workflow editor */}
+          {!isWorkflowEditor && <AppSidebar />}
 
-        {/* Main content */}
-        <main className="flex-1 overflow-auto">
-          <Outlet />
-        </main>
-      </div>
-    </SidebarProvider>
+          {/* Main content */}
+          <main className="flex-1 overflow-auto">
+            <Outlet />
+          </main>
+        </div>
+      </SidebarProvider>
+    </EventsProvider>
   );
 }
 
