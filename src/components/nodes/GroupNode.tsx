@@ -38,7 +38,10 @@ export const GroupNode = memo(
           { type: "source", position: Position.Bottom },
         ]}
       >
-        <NodeInfoRow label="Key" value={data.keyExpression || "Not configured"} />
+        <NodeInfoRow
+          label="Key"
+          value={data.keyExpression || "Not configured"}
+        />
         <NodeInfoRow
           label="Output"
           value={data.outputVariable || "Not configured"}

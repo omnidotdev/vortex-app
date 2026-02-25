@@ -36,7 +36,9 @@ const formatDuration = (ms: number): string => {
 
   if (hours > 0) {
     const remainingMinutes = minutes % 60;
-    return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
+    return remainingMinutes > 0
+      ? `${hours}h ${remainingMinutes}m`
+      : `${hours}h`;
   }
 
   if (minutes > 0) {
@@ -82,7 +84,9 @@ export const TimeoutNode = memo(
       >
         <NodeInfoRow
           label="Duration"
-          value={data.durationMs ? formatDuration(data.durationMs) : "Not configured"}
+          value={
+            data.durationMs ? formatDuration(data.durationMs) : "Not configured"
+          }
         />
         <NodeInfoRow label="On Timeout" value={onTimeoutDisplay} />
       </BaseNode>

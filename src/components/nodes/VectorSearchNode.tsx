@@ -48,10 +48,7 @@ export const VectorSearchNode = memo(
           { type: "source", position: Position.Bottom },
         ]}
       >
-        <NodeInfoRow
-          label="Index"
-          value={data.indexName || "Not configured"}
-        />
+        <NodeInfoRow label="Index" value={data.indexName || "Not configured"} />
         <NodeInfoRow label="Top K" value={topK} />
       </BaseNode>
     );

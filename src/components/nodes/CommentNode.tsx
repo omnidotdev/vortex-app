@@ -76,9 +76,7 @@ export const CommentNode = memo(
       >
         <div className="mb-2 flex items-center gap-2">
           <MessageSquare className={cn("h-4 w-4", theme.icon)} />
-          <span className="font-medium text-sm">
-            {data.label || "Comment"}
-          </span>
+          <span className="font-medium text-sm">{data.label || "Comment"}</span>
         </div>
 
         {data.note && (
