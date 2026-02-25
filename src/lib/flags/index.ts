@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 
-import { isEnabled } from "./client";
+import { flags } from "@/lib/providers";
 
 const FLAGS = {
   MAINTENANCE_MODE: "vortex-app-maintenance-mode",
@@ -11,7 +11,7 @@ const FLAGS = {
  */
 export const fetchMaintenanceMode = createServerFn({ method: "GET" }).handler(
   async () => {
-    const isMaintenanceMode = await isEnabled(FLAGS.MAINTENANCE_MODE, false);
+    const isMaintenanceMode = await flags.isEnabled(FLAGS.MAINTENANCE_MODE);
     return { isMaintenanceMode };
   },
 );
