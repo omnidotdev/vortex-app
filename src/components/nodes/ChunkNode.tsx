@@ -41,7 +41,11 @@ export const ChunkNode = memo(
       >
         <NodeInfoRow
           label="Size"
-          value={data.chunkSize !== undefined ? String(data.chunkSize) : "Not configured"}
+          value={
+            data.chunkSize !== undefined
+              ? String(data.chunkSize)
+              : "Not configured"
+          }
         />
         <NodeInfoRow
           label="Output"

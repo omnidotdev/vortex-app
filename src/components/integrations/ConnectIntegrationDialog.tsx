@@ -307,7 +307,9 @@ export function ConnectIntegrationDialog({
               {/* Setup Instructions */}
               {setupSteps && setupSteps.length > 0 && (
                 <AccordionRoot
-                  defaultValue={existingIntegrations.length === 0 ? ["instructions"] : []}
+                  defaultValue={
+                    existingIntegrations.length === 0 ? ["instructions"] : []
+                  }
                   collapsible
                   className="rounded-md border"
                 >

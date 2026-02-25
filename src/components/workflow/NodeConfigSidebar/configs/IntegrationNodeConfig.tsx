@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { JsonEditor } from "@/components/ui/json-editor";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -19,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { VariablePicker } from "@/components/workflow/VariablePicker";
 import { getIntegrationActions } from "@/lib/integrations/actions";
 import { integrationDefinitionOptions } from "@/lib/options/integrations.options";
+import { cn } from "@/lib/utils";
 
 import type { Node } from "reactflow";
 import type { NodeConfigProps } from "./types";
@@ -934,9 +934,7 @@ const ActionInputs = ({
             <Label htmlFor="qos">QoS Level</Label>
             <Select
               value={String(inputs.qos ?? 0)}
-              onValueChange={(v) =>
-                updateInput("qos", Number.parseInt(v, 10))
-              }
+              onValueChange={(v) => updateInput("qos", Number.parseInt(v, 10))}
             >
               <SelectTrigger>
                 <SelectValue />
@@ -1237,8 +1235,7 @@ const ActionInputs = ({
     }
 
     if (operation === "run_script" || operation === "trigger_automation") {
-      const entityType =
-        operation === "run_script" ? "script" : "automation";
+      const entityType = operation === "run_script" ? "script" : "automation";
       return (
         <div className="space-y-2">
           <Label htmlFor="entity_id">

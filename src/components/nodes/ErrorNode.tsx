@@ -46,10 +46,7 @@ export const ErrorNode = memo(
           { type: "source", position: Position.Bottom },
         ]}
       >
-        <NodeInfoRow
-          label="Type"
-          value={data.errorType || "Not configured"}
-        />
+        <NodeInfoRow label="Type" value={data.errorType || "Not configured"} />
         <NodeInfoRow
           label="Message"
           value={truncatedMessage || "Not configured"}

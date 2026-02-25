@@ -37,10 +37,7 @@ export const EventNode = memo(
           { type: "source", position: Position.Bottom },
         ]}
       >
-        <NodeInfoRow
-          label="Event"
-          value={data.eventName || "Not configured"}
-        />
+        <NodeInfoRow label="Event" value={data.eventName || "Not configured"} />
       </BaseNode>
     );
   },

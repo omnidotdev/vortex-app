@@ -728,7 +728,12 @@ const TransformInputs = ({
               id="batchSize"
               type="number"
               value={(inputs.batchSize as number) || 10}
-              onChange={(e) => updateInput("batchSize", Number.parseInt(e.target.value, 10) || 10)}
+              onChange={(e) =>
+                updateInput(
+                  "batchSize",
+                  Number.parseInt(e.target.value, 10) || 10,
+                )
+              }
               min={1}
             />
           </div>
@@ -750,7 +755,14 @@ const TransformInputs = ({
               id="maxItems"
               type="number"
               value={(inputs.maxItems as number) || ""}
-              onChange={(e) => updateInput("maxItems", e.target.value ? Number.parseInt(e.target.value, 10) : undefined)}
+              onChange={(e) =>
+                updateInput(
+                  "maxItems",
+                  e.target.value
+                    ? Number.parseInt(e.target.value, 10)
+                    : undefined,
+                )
+              }
               placeholder="No limit"
               min={1}
             />
@@ -771,9 +783,7 @@ const TransformInputs = ({
               onChange={(e) => updateInput("source", e.target.value)}
               placeholder="{{steps.previous.output}}"
             />
-            <p className="text-muted-foreground text-xs">
-              Array to filter
-            </p>
+            <p className="text-muted-foreground text-xs">Array to filter</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="expression">Expression</Label>
@@ -829,9 +839,7 @@ const TransformInputs = ({
               onChange={(e) => updateInput("source", e.target.value)}
               placeholder="{{steps.previous.output}}"
             />
-            <p className="text-muted-foreground text-xs">
-              Array to sort
-            </p>
+            <p className="text-muted-foreground text-xs">Array to sort</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="sortKey">Sort Key</Label>
@@ -841,9 +849,7 @@ const TransformInputs = ({
               onChange={(e) => updateInput("sortKey", e.target.value)}
               placeholder="name"
             />
-            <p className="text-muted-foreground text-xs">
-              Property to sort by
-            </p>
+            <p className="text-muted-foreground text-xs">Property to sort by</p>
           </div>
           <div className="space-y-2">
             <Label>Direction</Label>
@@ -920,9 +926,7 @@ const TransformInputs = ({
               onChange={(e) => updateInput("source", e.target.value)}
               placeholder="{{steps.previous.output}}"
             />
-            <p className="text-muted-foreground text-xs">
-              Array to reduce
-            </p>
+            <p className="text-muted-foreground text-xs">Array to reduce</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="expression">Expression</Label>
@@ -951,7 +955,9 @@ const TransformInputs = ({
             <Input
               id="accumulatorVariable"
               value={(inputs.accumulatorVariable as string) || "acc"}
-              onChange={(e) => updateInput("accumulatorVariable", e.target.value)}
+              onChange={(e) =>
+                updateInput("accumulatorVariable", e.target.value)
+              }
               placeholder="acc"
             />
           </div>
@@ -977,9 +983,7 @@ const TransformInputs = ({
               onChange={(e) => updateInput("source", e.target.value)}
               placeholder="{{steps.previous.output}}"
             />
-            <p className="text-muted-foreground text-xs">
-              Array to group
-            </p>
+            <p className="text-muted-foreground text-xs">Array to group</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="keyExpression">Key Expression</Label>
@@ -1035,7 +1039,9 @@ const TransformInputs = ({
               id="depth"
               type="number"
               value={(inputs.depth as number) || 1}
-              onChange={(e) => updateInput("depth", Number.parseInt(e.target.value, 10) || 1)}
+              onChange={(e) =>
+                updateInput("depth", Number.parseInt(e.target.value, 10) || 1)
+              }
               min={1}
             />
             <p className="text-muted-foreground text-xs">
@@ -1074,7 +1080,12 @@ const TransformInputs = ({
               id="chunkSize"
               type="number"
               value={(inputs.chunkSize as number) || 10}
-              onChange={(e) => updateInput("chunkSize", Number.parseInt(e.target.value, 10) || 10)}
+              onChange={(e) =>
+                updateInput(
+                  "chunkSize",
+                  Number.parseInt(e.target.value, 10) || 10,
+                )
+              }
               min={1}
             />
           </div>
@@ -1120,7 +1131,12 @@ const TransformInputs = ({
 };
 
 // AI node config (LLM, code, prompt, chat, summarize, classify, agent, RAG, vision, audio, model-registry, embedding, vector-search)
-const AiNodeConfig = ({ data, onChange, inputs, updateInput }: SubConfigProps) => {
+const AiNodeConfig = ({
+  data,
+  onChange,
+  inputs,
+  updateInput,
+}: SubConfigProps) => {
   const pluginId = (data.pluginId as string) || "";
 
   return (
@@ -1189,7 +1205,9 @@ const AiNodeConfig = ({ data, onChange, inputs, updateInput }: SubConfigProps) =
                 id="temperature"
                 type="number"
                 value={(inputs.temperature as number) ?? 0.7}
-                onChange={(e) => updateInput("temperature", Number.parseFloat(e.target.value))}
+                onChange={(e) =>
+                  updateInput("temperature", Number.parseFloat(e.target.value))
+                }
                 min={0}
                 max={2}
                 step={0.1}
@@ -1201,7 +1219,14 @@ const AiNodeConfig = ({ data, onChange, inputs, updateInput }: SubConfigProps) =
                 id="maxTokens"
                 type="number"
                 value={(inputs.maxTokens as number) || ""}
-                onChange={(e) => updateInput("maxTokens", e.target.value ? Number.parseInt(e.target.value, 10) : undefined)}
+                onChange={(e) =>
+                  updateInput(
+                    "maxTokens",
+                    e.target.value
+                      ? Number.parseInt(e.target.value, 10)
+                      : undefined,
+                  )
+                }
                 placeholder="Auto"
                 min={1}
               />
@@ -1310,7 +1335,9 @@ const AiNodeConfig = ({ data, onChange, inputs, updateInput }: SubConfigProps) =
               id="temperature"
               type="number"
               value={(inputs.temperature as number) ?? 0.7}
-              onChange={(e) => updateInput("temperature", Number.parseFloat(e.target.value))}
+              onChange={(e) =>
+                updateInput("temperature", Number.parseFloat(e.target.value))
+              }
               min={0}
               max={2}
               step={0.1}
@@ -1352,7 +1379,9 @@ const AiNodeConfig = ({ data, onChange, inputs, updateInput }: SubConfigProps) =
               id="temperature"
               type="number"
               value={(inputs.temperature as number) ?? 0.7}
-              onChange={(e) => updateInput("temperature", Number.parseFloat(e.target.value))}
+              onChange={(e) =>
+                updateInput("temperature", Number.parseFloat(e.target.value))
+              }
               min={0}
               max={2}
               step={0.1}
@@ -1440,9 +1469,7 @@ const AiNodeConfig = ({ data, onChange, inputs, updateInput }: SubConfigProps) =
               onChange={(e) => updateInput("source", e.target.value)}
               placeholder="{{trigger.data.text}}"
             />
-            <p className="text-muted-foreground text-xs">
-              Text to classify
-            </p>
+            <p className="text-muted-foreground text-xs">Text to classify</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="categories">Categories</Label>
@@ -1510,7 +1537,12 @@ const AiNodeConfig = ({ data, onChange, inputs, updateInput }: SubConfigProps) =
               id="maxIterations"
               type="number"
               value={(inputs.maxIterations as number) || 10}
-              onChange={(e) => updateInput("maxIterations", Number.parseInt(e.target.value, 10) || 10)}
+              onChange={(e) =>
+                updateInput(
+                  "maxIterations",
+                  Number.parseInt(e.target.value, 10) || 10,
+                )
+              }
               min={1}
               max={100}
             />
@@ -1568,7 +1600,9 @@ const AiNodeConfig = ({ data, onChange, inputs, updateInput }: SubConfigProps) =
               id="topK"
               type="number"
               value={(inputs.topK as number) || 5}
-              onChange={(e) => updateInput("topK", Number.parseInt(e.target.value, 10) || 5)}
+              onChange={(e) =>
+                updateInput("topK", Number.parseInt(e.target.value, 10) || 5)
+              }
               min={1}
               max={100}
             />
@@ -1671,8 +1705,12 @@ const AiNodeConfig = ({ data, onChange, inputs, updateInput }: SubConfigProps) =
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="transcribe">Transcribe (Speech to Text)</SelectItem>
-                <SelectItem value="synthesize">Synthesize (Text to Speech)</SelectItem>
+                <SelectItem value="transcribe">
+                  Transcribe (Speech to Text)
+                </SelectItem>
+                <SelectItem value="synthesize">
+                  Synthesize (Text to Speech)
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -1795,7 +1833,9 @@ const AiNodeConfig = ({ data, onChange, inputs, updateInput }: SubConfigProps) =
               id="temperature"
               type="number"
               value={(inputs.temperature as number) ?? 0.7}
-              onChange={(e) => updateInput("temperature", Number.parseFloat(e.target.value))}
+              onChange={(e) =>
+                updateInput("temperature", Number.parseFloat(e.target.value))
+              }
               min={0}
               max={2}
               step={0.1}
@@ -1903,7 +1943,9 @@ const AiNodeConfig = ({ data, onChange, inputs, updateInput }: SubConfigProps) =
                 id="topK"
                 type="number"
                 value={(inputs.topK as number) || 10}
-                onChange={(e) => updateInput("topK", Number.parseInt(e.target.value, 10) || 10)}
+                onChange={(e) =>
+                  updateInput("topK", Number.parseInt(e.target.value, 10) || 10)
+                }
                 min={1}
               />
             </div>
@@ -1913,7 +1955,9 @@ const AiNodeConfig = ({ data, onChange, inputs, updateInput }: SubConfigProps) =
                 id="minScore"
                 type="number"
                 value={(inputs.minScore as number) ?? 0}
-                onChange={(e) => updateInput("minScore", Number.parseFloat(e.target.value))}
+                onChange={(e) =>
+                  updateInput("minScore", Number.parseFloat(e.target.value))
+                }
                 min={0}
                 max={1}
                 step={0.05}
@@ -1936,7 +1980,13 @@ const AiNodeConfig = ({ data, onChange, inputs, updateInput }: SubConfigProps) =
 };
 
 // Developer / utility node config
-const DeveloperNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: PluginSubConfigProps) => {
+const DeveloperNodeConfig = ({
+  data,
+  onChange,
+  inputs,
+  updateInput,
+  pluginId,
+}: PluginSubConfigProps) => {
   return (
     <>
       <div className="space-y-2">
@@ -2038,7 +2088,12 @@ const DeveloperNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: 
               id="duration"
               type="number"
               value={(inputs.duration as number) || 1}
-              onChange={(e) => updateInput("duration", Number.parseInt(e.target.value, 10) || 1)}
+              onChange={(e) =>
+                updateInput(
+                  "duration",
+                  Number.parseInt(e.target.value, 10) || 1,
+                )
+              }
               min={0}
             />
           </div>
@@ -2149,9 +2204,7 @@ const DeveloperNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: 
               onChange={(e) => updateInput("source", e.target.value)}
               placeholder="{{steps.previous.output}}"
             />
-            <p className="text-muted-foreground text-xs">
-              Data to validate
-            </p>
+            <p className="text-muted-foreground text-xs">Data to validate</p>
           </div>
           <JsonField
             id="schema"
@@ -2312,7 +2365,12 @@ const DeveloperNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: 
               id="maxAttempts"
               type="number"
               value={(inputs.maxAttempts as number) || 3}
-              onChange={(e) => updateInput("maxAttempts", Number.parseInt(e.target.value, 10) || 3)}
+              onChange={(e) =>
+                updateInput(
+                  "maxAttempts",
+                  Number.parseInt(e.target.value, 10) || 3,
+                )
+              }
               min={1}
               max={50}
             />
@@ -2323,7 +2381,12 @@ const DeveloperNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: 
               id="initialDelay"
               type="number"
               value={(inputs.initialDelay as number) || 1000}
-              onChange={(e) => updateInput("initialDelay", Number.parseInt(e.target.value, 10) || 1000)}
+              onChange={(e) =>
+                updateInput(
+                  "initialDelay",
+                  Number.parseInt(e.target.value, 10) || 1000,
+                )
+              }
               min={0}
             />
           </div>
@@ -2366,7 +2429,12 @@ const DeveloperNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: 
               id="duration"
               type="number"
               value={(inputs.duration as number) || 30000}
-              onChange={(e) => updateInput("duration", Number.parseInt(e.target.value, 10) || 30000)}
+              onChange={(e) =>
+                updateInput(
+                  "duration",
+                  Number.parseInt(e.target.value, 10) || 30000,
+                )
+              }
               min={100}
             />
           </div>
@@ -2425,7 +2493,12 @@ const DeveloperNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: 
               id="timeout"
               type="number"
               value={(inputs.timeout as number) || 86400000}
-              onChange={(e) => updateInput("timeout", Number.parseInt(e.target.value, 10) || 86400000)}
+              onChange={(e) =>
+                updateInput(
+                  "timeout",
+                  Number.parseInt(e.target.value, 10) || 86400000,
+                )
+              }
               min={0}
             />
             <p className="text-muted-foreground text-xs">
@@ -2550,7 +2623,8 @@ const DeveloperNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: 
               placeholder="user:{{trigger.data.userId}}"
             />
           </div>
-          {((inputs.operation as string) === "set" || (inputs.operation as string) === "getOrSet") && (
+          {((inputs.operation as string) === "set" ||
+            (inputs.operation as string) === "getOrSet") && (
             <div className="space-y-2">
               <Label htmlFor="value">Value</Label>
               <Input
@@ -2567,7 +2641,14 @@ const DeveloperNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: 
               id="ttl"
               type="number"
               value={(inputs.ttl as number) || ""}
-              onChange={(e) => updateInput("ttl", e.target.value ? Number.parseInt(e.target.value, 10) : undefined)}
+              onChange={(e) =>
+                updateInput(
+                  "ttl",
+                  e.target.value
+                    ? Number.parseInt(e.target.value, 10)
+                    : undefined,
+                )
+              }
               placeholder="3600"
               min={0}
             />
@@ -2591,7 +2672,13 @@ const DeveloperNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: 
 };
 
 // Security node config (encrypt, decrypt, sign, JWT, webhook verify)
-const SecurityNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: PluginSubConfigProps) => {
+const SecurityNodeConfig = ({
+  data,
+  onChange,
+  inputs,
+  updateInput,
+  pluginId,
+}: PluginSubConfigProps) => {
   return (
     <>
       <div className="space-y-2">
@@ -2615,9 +2702,7 @@ const SecurityNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: P
               onChange={(e) => updateInput("input", e.target.value)}
               placeholder="{{steps.previous.output}}"
             />
-            <p className="text-muted-foreground text-xs">
-              Data to encrypt
-            </p>
+            <p className="text-muted-foreground text-xs">Data to encrypt</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="keyReference">Key Reference</Label>
@@ -2718,9 +2803,7 @@ const SecurityNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: P
               onChange={(e) => updateInput("input", e.target.value)}
               placeholder="{{steps.previous.output}}"
             />
-            <p className="text-muted-foreground text-xs">
-              Data to sign
-            </p>
+            <p className="text-muted-foreground text-xs">Data to sign</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="keyReference">Key Reference</Label>
@@ -2929,7 +3012,13 @@ const SecurityNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: P
 };
 
 // Storage / messaging node config (email, file, queue, database)
-const StorageNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: PluginSubConfigProps) => {
+const StorageNodeConfig = ({
+  data,
+  onChange,
+  inputs,
+  updateInput,
+  pluginId,
+}: PluginSubConfigProps) => {
   return (
     <>
       <div className="space-y-2">
@@ -3211,7 +3300,13 @@ const StorageNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: Pl
 };
 
 // Built-in integration node config (spreadsheet, google-sheets, pdf)
-const IntegrationBuiltinNodeConfig = ({ data, onChange, inputs, updateInput, pluginId }: PluginSubConfigProps) => {
+const IntegrationBuiltinNodeConfig = ({
+  data,
+  onChange,
+  inputs,
+  updateInput,
+  pluginId,
+}: PluginSubConfigProps) => {
   return (
     <>
       <div className="space-y-2">
@@ -3399,7 +3494,13 @@ const IntegrationBuiltinNodeConfig = ({ data, onChange, inputs, updateInput, plu
 };
 
 // HTTP extended config (webhook-response, rate-limit)
-const HttpExtendedConfig = ({ data, onChange, inputs, updateInput, pluginId }: PluginSubConfigProps) => {
+const HttpExtendedConfig = ({
+  data,
+  onChange,
+  inputs,
+  updateInput,
+  pluginId,
+}: PluginSubConfigProps) => {
   return (
     <>
       <div className="space-y-2">
@@ -3421,7 +3522,12 @@ const HttpExtendedConfig = ({ data, onChange, inputs, updateInput, pluginId }: P
               id="statusCode"
               type="number"
               value={(inputs.statusCode as number) || 200}
-              onChange={(e) => updateInput("statusCode", Number.parseInt(e.target.value, 10) || 200)}
+              onChange={(e) =>
+                updateInput(
+                  "statusCode",
+                  Number.parseInt(e.target.value, 10) || 200,
+                )
+              }
               min={100}
               max={599}
             />
@@ -3497,7 +3603,12 @@ const HttpExtendedConfig = ({ data, onChange, inputs, updateInput, pluginId }: P
                 id="limit"
                 type="number"
                 value={(inputs.limit as number) || 100}
-                onChange={(e) => updateInput("limit", Number.parseInt(e.target.value, 10) || 100)}
+                onChange={(e) =>
+                  updateInput(
+                    "limit",
+                    Number.parseInt(e.target.value, 10) || 100,
+                  )
+                }
                 min={1}
               />
             </div>
@@ -3507,7 +3618,12 @@ const HttpExtendedConfig = ({ data, onChange, inputs, updateInput, pluginId }: P
                 id="window"
                 type="number"
                 value={(inputs.window as number) || 60}
-                onChange={(e) => updateInput("window", Number.parseInt(e.target.value, 10) || 60)}
+                onChange={(e) =>
+                  updateInput(
+                    "window",
+                    Number.parseInt(e.target.value, 10) || 60,
+                  )
+                }
                 min={1}
               />
             </div>
@@ -3705,11 +3821,15 @@ const FlowPrimitivesConfig = ({
             <div className="flex flex-wrap gap-2">
               {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
                 (day, idx) => {
-                  const currentDays =
-                    (inputs.daysOfWeek as number[]) || [1, 2, 3, 4, 5];
+                  const currentDays = (inputs.daysOfWeek as number[]) || [
+                    1, 2, 3, 4, 5,
+                  ];
                   const isChecked = currentDays.includes(idx);
                   return (
-                    <label key={day} className="flex items-center gap-1 text-sm">
+                    <label
+                      key={day}
+                      className="flex items-center gap-1 text-sm"
+                    >
                       <input
                         type="checkbox"
                         checked={isChecked}
@@ -3739,7 +3859,9 @@ const FlowPrimitivesConfig = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="skip">Skip (do nothing)</SelectItem>
-                <SelectItem value="queue">Queue (run when window opens)</SelectItem>
+                <SelectItem value="queue">
+                  Queue (run when window opens)
+                </SelectItem>
                 <SelectItem value="fail">Fail (throw error)</SelectItem>
               </SelectContent>
             </Select>
@@ -4045,8 +4167,12 @@ const AiPrimitivesConfig = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="block">Block (stop workflow)</SelectItem>
-                <SelectItem value="warn">Warn (continue with warning)</SelectItem>
-                <SelectItem value="sanitize">Sanitize (clean output)</SelectItem>
+                <SelectItem value="warn">
+                  Warn (continue with warning)
+                </SelectItem>
+                <SelectItem value="sanitize">
+                  Sanitize (clean output)
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>

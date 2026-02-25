@@ -44,9 +44,7 @@ export const CommentConfig = ({ data, onChange }: NodeConfigProps) => {
                   : "border-transparent hover:bg-muted",
               )}
             >
-              <span
-                className={cn("h-3 w-3 rounded-full", option.swatch)}
-              />
+              <span className={cn("h-3 w-3 rounded-full", option.swatch)} />
               {option.label}
             </button>
           ))}
@@ -55,9 +53,8 @@ export const CommentConfig = ({ data, onChange }: NodeConfigProps) => {
 
       <div className="rounded-md border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-950">
         <p className="text-muted-foreground text-xs">
-          Comments are visual-only and do not affect workflow execution.
-          Use them to document your workflow logic for yourself and
-          collaborators.
+          Comments are visual-only and do not affect workflow execution. Use
+          them to document your workflow logic for yourself and collaborators.
         </p>
       </div>
     </>

@@ -24,7 +24,9 @@ export const SetNode = memo(
     };
 
     const scope = data.scope || "workflow";
-    const variableCount = data.variables ? Object.keys(data.variables).length : 0;
+    const variableCount = data.variables
+      ? Object.keys(data.variables).length
+      : 0;
 
     return (
       <BaseNode
