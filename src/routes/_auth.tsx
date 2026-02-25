@@ -1,4 +1,3 @@
-import { createEventsProvider } from "@omnidotdev/providers";
 import {
   Link,
   Outlet,
@@ -33,7 +32,15 @@ import { CONSOLE_URL } from "@/lib/config/env.config";
 import { EventsProvider } from "@/providers/EventsProvider";
 import SidebarProvider from "@/providers/SidebarProvider";
 
-const eventsProvider = createEventsProvider({});
+// Noop provider for client-side (main @omnidotdev/providers entry requires Node.js)
+const eventsProvider = {
+  async emit() {
+    return {
+      eventId: crypto.randomUUID(),
+      timestamp: new Date().toISOString(),
+    };
+  },
+};
 
 export const Route = createFileRoute("/_auth")({
   beforeLoad: async ({ params, context: { session } }) => {
