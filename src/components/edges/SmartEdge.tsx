@@ -204,7 +204,7 @@ export const SmartEdge = memo(
     // Memoize the selector so it's not recreated on every render
     const selector = useMemo(
       () => createEdgePositionsSelector(source, target),
-      [source, target]
+      [source, target],
     );
     const { source: sourceNodePos, target: targetNodePos } = useStore(selector);
 

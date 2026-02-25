@@ -6,7 +6,7 @@ import {
   foldGutter,
   indentOnInput,
 } from "@codemirror/language";
-import { linter, lintGutter } from "@codemirror/lint";
+import { lintGutter, linter } from "@codemirror/lint";
 import { EditorState } from "@codemirror/state";
 import {
   EditorView,
@@ -143,7 +143,9 @@ export function JsonEditor({
         theme,
         updateListener,
         EditorState.readOnly.of(readOnly),
-        placeholder ? EditorView.contentAttributes.of({ "data-placeholder": placeholder }) : [],
+        placeholder
+          ? EditorView.contentAttributes.of({ "data-placeholder": placeholder })
+          : [],
       ],
     });
 
@@ -226,9 +228,7 @@ export function JsonEditor({
           </button>
         </div>
       )}
-      {error && (
-        <p className="mt-1 text-destructive text-xs">{error}</p>
-      )}
+      {error && <p className="mt-1 text-destructive text-xs">{error}</p>}
     </div>
   );
 }

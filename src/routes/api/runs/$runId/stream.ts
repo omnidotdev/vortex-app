@@ -105,7 +105,9 @@ export const Route = createFileRoute("/api/runs/$runId/stream")({
           headers.Authorization = authHeader;
         }
 
-        const client = new GraphQLClient(API_INTERNAL_GRAPHQL_URL!, { headers });
+        const client = new GraphQLClient(API_INTERNAL_GRAPHQL_URL!, {
+          headers,
+        });
 
         // Create SSE stream
         const stream = new ReadableStream({
