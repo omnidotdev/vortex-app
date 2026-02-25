@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { diffLines } from "diff";
 import { useMemo, useState } from "react";
 
@@ -21,7 +21,8 @@ export const Route = createFileRoute(
     versionA: (search.versionA as string) ?? "",
     versionB: (search.versionB as string) ?? "",
   }),
-  loader: async ({ context: { queryClient } }) => {
+  loader: async ({ context: { queryClient, organizationId } }) => {
+    if (!organizationId) throw notFound();
     await queryClient.ensureQueryData(eventSchemasOptions({}));
   },
   component: EventSchemaDiffPage,
