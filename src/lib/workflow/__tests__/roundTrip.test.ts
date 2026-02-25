@@ -678,7 +678,7 @@ describe("round trip: ReactFlow -> DSL -> ReactFlow", () => {
 
     // Verify all step types are preserved
     expect(dsl.steps.length).toBe(6);
-    const types = dsl.steps.map((s) => s.type).sort();
+    const types = dsl.steps.map((s) => s.type).sort() as string[];
     expect(types).toEqual(
       ["action", "action", "condition", "gate", "loop", "trigger"].sort(),
     );
@@ -765,7 +765,7 @@ describe("unknown/generic step types", () => {
     const dsl = reactFlowToDsl(nodes, edges);
     expect(dsl.steps.length).toBe(2);
     expect(dsl.steps[0].type).toBe("trigger");
-    expect(dsl.steps[1].type).toBe("unknownCustomNode");
+    expect(dsl.steps[1].type as string).toBe("unknownCustomNode");
     expect(dsl.steps[1].name).toBe("Custom Thing");
   });
 

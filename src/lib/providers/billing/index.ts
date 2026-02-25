@@ -6,7 +6,7 @@
 
 import { createBillingProvider } from "@omnidotdev/providers";
 
-import { BILLING_BASE_URL, isSelfHosted } from "@/lib/config/env.config";
+import { BILLING_BASE_URL } from "@/lib/config/env.config";
 
 export type {
   BillingProvider,
@@ -17,7 +17,7 @@ export type {
   Subscription,
 } from "@omnidotdev/providers";
 
-const billing = createBillingProvider(isSelfHosted ? "local" : "aether", {
+const billing = createBillingProvider({
   baseUrl: BILLING_BASE_URL,
   appId: "vortex",
 });
