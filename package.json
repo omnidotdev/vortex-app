@@ -42,7 +42,7 @@
     "@tanstack/react-start": "^1.143.4",
     "@tanstack/zod-adapter": "^1.143.4",
     "@uiw/codemirror-theme-github": "^4.25.4",
-    "better-all": "^0.0.4",
+    "better-all": "^0.0.7",
     "better-auth": "^1.4.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
