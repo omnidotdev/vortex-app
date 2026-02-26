@@ -9,6 +9,10 @@ const knipConfig: KnipConfig = {
     "src/routes/**/*.{ts,tsx}",
     "src/router.tsx",
     "src/lib/graphql/graphqlFetch.ts",
+    "src/server/functions/*.ts",
+    "src/lib/providers/billing/index.ts",
+    "src/lib/workflow/types.ts",
+    "src/**/*.test.{ts,tsx}",
   ],
   // NB: files are reported as unused if they are in the set of project files, but not in the set of files resolved from the entry files. See: https://knip.dev/guides/configuring-project-files
   project: ["src/**/*.{ts,tsx,css}"],
@@ -20,8 +24,8 @@ const knipConfig: KnipConfig = {
   ignoreExportsUsedInFile: true,
   ignore: ["src/generated/**", "src/routeTree.gen.ts"],
   ignoreDependencies: [
-    // GitHub dep not resolvable by knip
-    "@omnidotdev/providers",
+    // used by GraphQL Code Generator scripts
+    "@graphql-codegen/*",
     // used by GraphQL Code Generator scripts
     "dotenv",
     // Future use dependencies

@@ -3,7 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 
 import { FLAGS_API_HOST, FLAGS_CLIENT_KEY } from "@/lib/config/env.config";
 
-export const flags = createFlagProvider(
+const flags = createFlagProvider(
   FLAGS_API_HOST
     ? {
         provider: "unleash",
