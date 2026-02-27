@@ -30,13 +30,13 @@ import {
   MenuTrigger,
 } from "@/components/ui/menu";
 import signIn from "@/lib/auth/signIn";
-import type { OrganizationClaim } from "@/lib/auth/getAuth";
 import { BASE_URL, isSelfHosted } from "@/lib/config/env.config";
 import useDialogStore, { DialogType } from "@/lib/hooks/store/useDialogStore";
 import capitalizeFirstLetter from "@/lib/util/capitalizeFirstLetter";
 import { cn } from "@/lib/utils";
 import { createCheckoutWithWorkspace } from "@/server/functions/subscriptions";
 
+import type { OrganizationClaim } from "@/lib/auth/getAuth";
 import type { Price, Subscription } from "@/lib/providers/billing";
 
 interface Props {

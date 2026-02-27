@@ -72,14 +72,11 @@ function EventSandboxPage() {
   // Deduplicate to latest version per name
   const latestSchemas = Array.from(
     schemas
-      .reduce(
-        (acc, s) => {
-          const existing = acc.get(s.name);
-          if (!existing || s.version > existing.version) acc.set(s.name, s);
-          return acc;
-        },
-        new Map<string, (typeof schemas)[number]>(),
-      )
+      .reduce((acc, s) => {
+        const existing = acc.get(s.name);
+        if (!existing || s.version > existing.version) acc.set(s.name, s);
+        return acc;
+      }, new Map<string, (typeof schemas)[number]>())
       .values(),
   ).sort((a, b) => a.name.localeCompare(b.name));
 
@@ -88,7 +85,9 @@ function EventSandboxPage() {
     if (initialType) {
       const schema = latestSchemas.find((s) => s.name === initialType);
       if (schema?.payloadSchema) {
-        return generateSkeleton(schema.payloadSchema as Record<string, unknown>);
+        return generateSkeleton(
+          schema.payloadSchema as Record<string, unknown>,
+        );
       }
     }
     return "{}";

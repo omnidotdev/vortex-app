@@ -123,16 +123,18 @@ export const Route = createFileRoute("/_public/pricing")({
     const orgSubscriptions: Record<string, Subscription | null> = {};
 
     if (session?.organizations) {
-      const subscriptionPromises = session.organizations.map(async (org: { id: string }) => {
-        try {
-          const subscription = await getSubscription({
-            data: { organizationId: org.id },
-          });
-          return { orgId: org.id, subscription };
-        } catch {
-          return { orgId: org.id, subscription: null };
-        }
-      });
+      const subscriptionPromises = session.organizations.map(
+        async (org: { id: string }) => {
+          try {
+            const subscription = await getSubscription({
+              data: { organizationId: org.id },
+            });
+            return { orgId: org.id, subscription };
+          } catch {
+            return { orgId: org.id, subscription: null };
+          }
+        },
+      );
 
       const results = await Promise.all(subscriptionPromises);
       for (const { orgId, subscription } of results) {
