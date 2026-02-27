@@ -41,6 +41,7 @@ const stepTypeToNodeType: Record<string, string> = {
   event: "eventNode",
   aggregate: "aggregateNode",
   cache: "cacheNode",
+  collect: "collectNode",
   comment: "commentNode",
   // Extended core nodes
   merge: "mergeNode",
@@ -94,6 +95,8 @@ const stepTypeToNodeType: Record<string, string> = {
   rag: "ragNode",
   vision: "visionNode",
   audio: "audioNode",
+  // Distributed transactions
+  saga: "sagaNode",
 };
 
 // Layout constants for dagre auto-layout

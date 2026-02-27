@@ -19,6 +19,8 @@ export const NodeTypes = {
   STATE_GET: "stateGetNode",
   STATE_SET: "stateSetNode",
   STATE_WAIT: "stateWaitNode",
+  SAGA: "sagaNode",
+  COLLECT: "collectNode",
 } as const;
 
 // Base node schema

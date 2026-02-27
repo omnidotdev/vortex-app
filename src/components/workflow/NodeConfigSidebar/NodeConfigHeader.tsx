@@ -1,5 +1,6 @@
 import {
   Clock,
+  Combine,
   GitFork,
   Layers,
   Play,
@@ -29,6 +30,7 @@ const nodeIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   delayNode: Clock,
   parallelNode: Layers,
   pluginNode: Puzzle,
+  collectNode: Combine,
 };
 
 const nodeLabels: Record<string, string> = {
@@ -41,6 +43,7 @@ const nodeLabels: Record<string, string> = {
   delayNode: "Delay",
   parallelNode: "Parallel",
   pluginNode: "Plugin",
+  collectNode: "Collect Events",
 };
 
 interface NodeConfigHeaderProps {

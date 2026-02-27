@@ -84,6 +84,10 @@ export const StepType = {
   TIME_WINDOW: "time_window",
   AI_TRANSFORM: "ai_transform",
   AI_GUARDRAILS: "ai_guardrails",
+  // Distributed transactions
+  SAGA: "saga",
+  // Cross-service event collection
+  COLLECT: "collect",
 } as const;
 
 export type StepTypeValue = (typeof StepType)[keyof typeof StepType];
@@ -806,6 +810,36 @@ export interface SubWorkflowStep extends Omit<StepBase, "type"> {
   };
 }
 
+// Distributed transactions
+export interface SagaStepAction {
+  type: "http" | "emit" | "action";
+  url?: string;
+  method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+  headers?: Record<string, string>;
+  body?: unknown;
+  event?: string;
+  data?: Record<string, unknown>;
+  integrationId?: string;
+  operation?: string;
+  config?: Record<string, unknown>;
+}
+
+export interface SagaStepDefinition {
+  name: string;
+  execute: SagaStepAction;
+  compensate: SagaStepAction;
+  timeout?: string;
+  retries?: number;
+}
+
+export interface SagaStep extends Omit<StepBase, "type"> {
+  type: "saga";
+  saga: {
+    steps: SagaStepDefinition[];
+    parallel?: boolean;
+  };
+}
+
 // Flow control
 export interface TryCatchStep extends Omit<StepBase, "type"> {
   type: "try_catch";
@@ -950,6 +984,23 @@ export interface AiGuardrailsStep extends Omit<StepBase, "type"> {
   };
 }
 
+export interface CollectEventMatcher {
+  name: string;
+  sourcePattern: string;
+  typePattern: string;
+}
+
+export interface CollectStep extends Omit<StepBase, "type"> {
+  type: "collect";
+  collect: {
+    events: CollectEventMatcher[];
+    correlationKey: string;
+    timeout: string;
+    mode: "all" | "any" | "n_of_m";
+    minRequired?: number;
+  };
+}
+
 export type Step =
   | TriggerStep
   | ActionStep
@@ -1014,6 +1065,8 @@ export type Step =
   | AudioStep
   // Workflow composition
   | SubWorkflowStep
+  // Distributed transactions
+  | SagaStep
   // Flow control
   | TryCatchStep
   | RaceStep
@@ -1031,7 +1084,9 @@ export type Step =
   | ChangeDetectorStep
   | TimeWindowStep
   | AiTransformStep
-  | AiGuardrailsStep;
+  | AiGuardrailsStep
+  // Cross-service event collection
+  | CollectStep;
 
 export interface EdgeDefinition {
   id: string;
