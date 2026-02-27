@@ -91,7 +91,10 @@ const nodeTypeToStepType: Record<string, string> = {
   eventNode: "event",
   aggregateNode: "aggregate",
   cacheNode: "cache",
+  collectNode: "collect",
   commentNode: "comment",
+  // Distributed transactions
+  sagaNode: "saga",
 };
 
 // Convert trigger node data to DSL step
@@ -1070,6 +1073,51 @@ function audioNodeToStep(node: Node): Step {
   };
 }
 
+// Convert saga node data to DSL step
+function sagaNodeToStep(node: Node): Step {
+  const data = node.data as Record<string, unknown>;
+  return {
+    id: node.id,
+    type: "saga",
+    name: (data.label as string) || "Saga",
+    description: data.description as string | undefined,
+    position: node.position,
+    saga: {
+      steps: (data.steps as Array<{
+        name: string;
+        execute: { type: string };
+        compensate: { type: string };
+        timeout?: string;
+        retries?: number;
+      }>) || [],
+      parallel: (data.parallel as boolean) ?? false,
+    },
+  } as Step;
+}
+
+// Convert collect node data to DSL step
+function collectNodeToStep(node: Node): Step {
+  const data = node.data as Record<string, unknown>;
+  return {
+    id: node.id,
+    type: "collect",
+    name: (data.label as string) || "Collect Events",
+    description: data.description as string | undefined,
+    position: node.position,
+    collect: {
+      events: (data.events as Array<{
+        name: string;
+        sourcePattern: string;
+        typePattern: string;
+      }>) || [],
+      correlationKey: (data.correlationKey as string) || "",
+      timeout: (data.timeout as string) || "5m",
+      mode: (data.mode as "all" | "any" | "n_of_m") || "all",
+      minRequired: data.minRequired as number | undefined,
+    },
+  } as Step;
+}
+
 // Generic converter for node types without dedicated functions
 // Inverse of `extendedStepToNodeData` in dslToReactFlow.ts
 function genericNodeToStep(node: Node, stepType: string): Step {
@@ -1217,6 +1265,12 @@ function nodeToStep(node: Node, edges: Edge[]): Step | null {
       return visionNodeToStep(node);
     case "audio":
       return audioNodeToStep(node);
+    // Cross-service event collection
+    case "collect":
+      return collectNodeToStep(node);
+    // Distributed transactions
+    case "saga":
+      return sagaNodeToStep(node);
     default:
       return genericNodeToStep(node, stepType);
   }

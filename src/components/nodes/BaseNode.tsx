@@ -1138,6 +1138,17 @@ export const nodeThemes = {
     handleColor: "!bg-[#0065D3]",
     glow: "shadow-[0_0_15px_rgba(0,101,211,0.2)] dark:shadow-[0_0_20px_rgba(0,101,211,0.3)]",
   },
+  // Steel Blue - saga (distributed transactions)
+  saga: {
+    border: "border-sky-300/60 dark:border-sky-600/40",
+    bg: "bg-gradient-to-br from-sky-50 via-blue-50/50 to-indigo-50 dark:from-sky-950 dark:via-blue-950/50 dark:to-indigo-950",
+    iconBg:
+      "bg-gradient-to-br from-sky-600 to-blue-700 dark:from-sky-500 dark:to-blue-600",
+    iconText: "text-white",
+    accent: "text-sky-700 dark:text-sky-400",
+    handleColor: "!bg-sky-600",
+    glow: "shadow-[0_0_15px_rgba(2,132,199,0.15)] dark:shadow-[0_0_20px_rgba(2,132,199,0.25)]",
+  },
 } as const;
 
 /** Map integration/plugin names to their brand theme */

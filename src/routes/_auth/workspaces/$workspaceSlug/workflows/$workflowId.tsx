@@ -53,6 +53,7 @@ import { ChatNode } from "@/components/nodes/ChatNode";
 import { ChunkNode } from "@/components/nodes/ChunkNode";
 import { ClassifyNode } from "@/components/nodes/ClassifyNode";
 import { CodeNode } from "@/components/nodes/CodeNode";
+import { CollectNode } from "@/components/nodes/CollectNode";
 import { CommentNode } from "@/components/nodes/CommentNode";
 import { ConditionNode } from "@/components/nodes/ConditionNode";
 import { DatabaseNode } from "@/components/nodes/DatabaseNode";
@@ -87,6 +88,7 @@ import { QueueNode } from "@/components/nodes/QueueNode";
 import { RagNode } from "@/components/nodes/RagNode";
 import { ReduceNode } from "@/components/nodes/ReduceNode";
 import { RetryNode } from "@/components/nodes/RetryNode";
+import { SagaNode } from "@/components/nodes/SagaNode";
 import { SetNode } from "@/components/nodes/SetNode";
 import { SignNode } from "@/components/nodes/SignNode";
 import { SleepNode } from "@/components/nodes/SleepNode";
@@ -195,6 +197,7 @@ const nodeTypes = {
   eventNode: EventNode,
   aggregateNode: AggregateNode,
   cacheNode: CacheNode,
+  collectNode: CollectNode,
   // Extended core nodes
   mergeNode: MergeNode,
   splitNode: SplitNode,
@@ -249,6 +252,8 @@ const nodeTypes = {
   audioNode: AudioNode,
   // Documentation
   commentNode: CommentNode,
+  // Distributed transactions
+  sagaNode: SagaNode,
 };
 
 // Define custom edge types - must be outside component to avoid re-creation
@@ -276,6 +281,7 @@ const nodeTypeMap: Record<string, string> = {
   event: "eventNode",
   aggregate: "aggregateNode",
   cache: "cacheNode",
+  collect: "collectNode",
   // Extended core nodes
   merge: "mergeNode",
   split: "splitNode",
@@ -330,6 +336,8 @@ const nodeTypeMap: Record<string, string> = {
   audio: "audioNode",
   // Documentation
   comment: "commentNode",
+  // Distributed transactions
+  saga: "sagaNode",
 };
 
 let nodeIdCounter = 0;

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import {
+  ArrowDownUp,
   Bot,
   Cable,
   CheckCircle2,
@@ -350,6 +351,16 @@ const BUILTIN_NODES = [
     icon: Zap,
     nodeType: NodeTypes.RACE,
     pluginId: "builtin:race",
+    operation: "execute",
+  },
+  {
+    id: "flow-saga",
+    category: "flow",
+    label: "Saga",
+    description: "Distributed transaction with execute/compensate pairs",
+    icon: ArrowDownUp,
+    nodeType: NodeTypes.SAGA,
+    pluginId: "builtin:saga",
     operation: "execute",
   },
   // State Management
@@ -952,6 +963,16 @@ const BUILTIN_NODES = [
     nodeType: NodeTypes.ACTION,
     pluginId: "builtin:event",
     operation: "emit",
+  },
+  {
+    id: "developer-collect",
+    category: "developer",
+    label: "Collect Events",
+    description: "Wait for cross-service events",
+    icon: Cable,
+    nodeType: NodeTypes.COLLECT,
+    pluginId: "builtin:collect",
+    operation: "wait",
   },
   {
     id: "developer-aggregate",
