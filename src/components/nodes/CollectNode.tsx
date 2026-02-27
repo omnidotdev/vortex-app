@@ -68,13 +68,10 @@ export const CollectNode = memo(
             {data.events.map((evt) => (
               <div
                 key={evt.name}
-                className="text-xs text-muted-foreground truncate"
+                className="truncate text-muted-foreground text-xs"
                 title={`${evt.sourcePattern} / ${evt.typePattern}`}
               >
-                <span className="font-medium text-foreground">
-                  {evt.name}
-                </span>
-                {" "}
+                <span className="font-medium text-foreground">{evt.name}</span>{" "}
                 <span className="opacity-70">
                   {evt.sourcePattern}:{evt.typePattern}
                 </span>
@@ -82,9 +79,7 @@ export const CollectNode = memo(
             ))}
           </div>
         )}
-        {data.timeout && (
-          <NodeInfoRow label="Timeout" value={data.timeout} />
-        )}
+        {data.timeout && <NodeInfoRow label="Timeout" value={data.timeout} />}
       </BaseNode>
     );
   },
