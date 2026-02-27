@@ -9,7 +9,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { graphqlFetch } from "@/lib/graphql/graphqlFetch";
 
-import type { UseMutationOptions, UseQueryOptions } from "@tanstack/react-query";
+import type {
+  UseMutationOptions,
+  UseQueryOptions,
+} from "@tanstack/react-query";
 
 // -- Event schema node type (mirrors the expected GraphQL query shape) --
 
@@ -140,10 +143,7 @@ const PublishEventDocument = `
   }
 `;
 
-export const usePublishEventMutation = <
-  TError = unknown,
-  TContext = unknown,
->(
+export const usePublishEventMutation = <TError = unknown, TContext = unknown>(
   options?: UseMutationOptions<
     PublishEventMutation,
     TError,
