@@ -111,7 +111,10 @@ export const Route = createFileRoute("/_public/pricing")({
   loader: async ({ context: { queryClient, session } }) => {
     // Only fetch prices in SaaS mode
     if (isSelfHosted) {
-      return { prices: [], orgSubscriptions: {} };
+      return {
+        prices: [] as Price[],
+        orgSubscriptions: {} as Record<string, Subscription | null>,
+      };
     }
 
     const prices = await queryClient.ensureQueryData(pricesOptions());
@@ -120,7 +123,7 @@ export const Route = createFileRoute("/_public/pricing")({
     const orgSubscriptions: Record<string, Subscription | null> = {};
 
     if (session?.organizations) {
-      const subscriptionPromises = session.organizations.map(async (org) => {
+      const subscriptionPromises = session.organizations.map(async (org: { id: string }) => {
         try {
           const subscription = await getSubscription({
             data: { organizationId: org.id },

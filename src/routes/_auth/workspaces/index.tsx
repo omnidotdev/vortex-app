@@ -3,6 +3,8 @@ import { ExternalLinkIcon, InfoIcon, LayersIcon } from "lucide-react";
 
 import { AUTH_BASE_URL, CONSOLE_URL } from "@/lib/config/env.config";
 
+import type { OrganizationClaim } from "@/lib/auth/getAuth";
+
 export const Route = createFileRoute("/_auth/workspaces/")({
   component: WorkspacesPage,
 });
@@ -37,7 +39,7 @@ function WorkspacesPage() {
         <div className="mx-auto w-full max-w-4xl">
           {!!organizations.length && (
             <div className="mb-8 grid grid-cols-[repeat(auto-fit,minmax(16rem,1fr))] justify-center gap-6">
-              {organizations.map((org) => (
+              {organizations.map((org: OrganizationClaim) => (
                 <Link
                   key={org.id}
                   to="/workspaces/$workspaceSlug"
