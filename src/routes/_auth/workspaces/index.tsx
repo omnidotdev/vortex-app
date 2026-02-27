@@ -63,9 +63,6 @@ function WorkspacesPage() {
               <p className="text-muted-foreground text-sm">
                 Workspaces are currently managed via Omni Organizations.
               </p>
-              <p className="text-muted-foreground text-xs">
-                This experience will be improved soon.
-              </p>
             </div>
             <a
               href={CONSOLE_URL || AUTH_BASE_URL}

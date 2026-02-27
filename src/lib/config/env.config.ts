@@ -43,3 +43,16 @@ export const isDevEnv = import.meta.env.DEV;
  */
 export const isSelfHosted =
   SELF_HOSTED === "true" || VITE_SELF_HOSTED === "true";
+
+/**
+ * Assert that a required environment variable is set
+ */
+function assertEnv(name: string, value: string | undefined): void {
+  if (!value) throw new Error(`Missing required environment variable: ${name}`);
+}
+
+// Validate required server-side env vars at startup
+if (typeof window === "undefined") {
+  assertEnv("VITE_API_BASE_URL", API_BASE_URL);
+  assertEnv("VITE_BASE_URL", BASE_URL);
+}

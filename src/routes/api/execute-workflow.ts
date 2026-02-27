@@ -27,14 +27,6 @@ export const Route = createFileRoute("/api/execute-workflow")({
             workflowDefinition.edges || [],
           );
 
-          console.log("Starting Vortex workflow via Hatchet");
-          console.log("Workflow Run ID:", workflowRunId);
-          console.log("Workflow ID:", hatchetWorkflowId);
-          console.log(
-            "DSL Definition:",
-            JSON.stringify(dslDefinition, null, 2),
-          );
-
           // Initialize Hatchet client
           const hatchet = Hatchet.init();
 
@@ -51,12 +43,9 @@ export const Route = createFileRoute("/api/execute-workflow")({
             workflowId: hatchetWorkflowId,
             workflowRunId,
             status: "pending",
-            hatchetUI: "http://localhost:8888",
             message: "Workflow execution triggered via Hatchet",
           });
         } catch (error) {
-          console.error("Workflow execution failed:", error);
-
           return Response.json(
             {
               success: false,
@@ -91,7 +80,6 @@ export const Route = createFileRoute("/api/execute-workflow")({
             variables: "optional variable definitions",
             settings: "optional workflow settings",
           },
-          hatchetUI: "http://localhost:8888",
         });
       },
     },
