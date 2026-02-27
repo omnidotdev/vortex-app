@@ -1083,13 +1083,14 @@ function sagaNodeToStep(node: Node): Step {
     description: data.description as string | undefined,
     position: node.position,
     saga: {
-      steps: (data.steps as Array<{
-        name: string;
-        execute: { type: string };
-        compensate: { type: string };
-        timeout?: string;
-        retries?: number;
-      }>) || [],
+      steps:
+        (data.steps as Array<{
+          name: string;
+          execute: { type: string };
+          compensate: { type: string };
+          timeout?: string;
+          retries?: number;
+        }>) || [],
       parallel: (data.parallel as boolean) ?? false,
     },
   } as Step;
@@ -1105,11 +1106,12 @@ function collectNodeToStep(node: Node): Step {
     description: data.description as string | undefined,
     position: node.position,
     collect: {
-      events: (data.events as Array<{
-        name: string;
-        sourcePattern: string;
-        typePattern: string;
-      }>) || [],
+      events:
+        (data.events as Array<{
+          name: string;
+          sourcePattern: string;
+          typePattern: string;
+        }>) || [],
       correlationKey: (data.correlationKey as string) || "",
       timeout: (data.timeout as string) || "5m",
       mode: (data.mode as "all" | "any" | "n_of_m") || "all",
