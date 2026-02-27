@@ -12,8 +12,16 @@ export const Route = createFileRoute("/api/send-email")({
 
           // Send email directly via Resend
           // For workflow-based email sending, use the workflow execution API
+          const from = process.env.EMAIL_FROM;
+          if (!from) {
+            return Response.json(
+              { error: "Email sender not configured" },
+              { status: 503 },
+            );
+          }
+
           const result = await resend.emails.send({
-            from: process.env.EMAIL_FROM || "noreply@example.com",
+            from,
             to,
             subject,
             html: content,
@@ -24,7 +32,6 @@ export const Route = createFileRoute("/api/send-email")({
             messageId: result.data?.id,
           });
         } catch (error) {
-          console.error("Error sending email:", error);
           return Response.json(
             {
               error: "Failed to send email",
