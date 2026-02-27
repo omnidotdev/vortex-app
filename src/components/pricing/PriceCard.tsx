@@ -30,6 +30,7 @@ import {
   MenuTrigger,
 } from "@/components/ui/menu";
 import signIn from "@/lib/auth/signIn";
+import type { OrganizationClaim } from "@/lib/auth/getAuth";
 import { BASE_URL, isSelfHosted } from "@/lib/config/env.config";
 import useDialogStore, { DialogType } from "@/lib/hooks/store/useDialogStore";
 import capitalizeFirstLetter from "@/lib/util/capitalizeFirstLetter";
@@ -80,7 +81,7 @@ export const PriceCard = ({ price, orgSubscriptions = {} }: Props) => {
 
   // Filter organizations that can upgrade to this tier
   const upgradeableOrgs =
-    session?.organizations?.filter((org) => {
+    session?.organizations?.filter((org: OrganizationClaim) => {
       const orgTier = getOrgTier(org.id);
       // Free tier card: no upgrades shown (use "Get Started" flow)
       if (isFreeTier) return false;
@@ -292,7 +293,7 @@ export const PriceCard = ({ price, orgSubscriptions = {} }: Props) => {
                           Upgrade existing workspace
                         </MenuItemGroupLabel>
 
-                        {upgradeableOrgs.map((org) => (
+                        {upgradeableOrgs.map((org: OrganizationClaim) => (
                           <MenuItem
                             key={org.id}
                             value={org.id}

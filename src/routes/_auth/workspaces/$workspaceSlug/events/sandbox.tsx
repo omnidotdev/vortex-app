@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { usePublishEventMutation } from "@/generated/graphql";
+import { usePublishEventMutation } from "@/lib/graphql/eventSchemaStubs";
 import eventSchemasOptions from "@/lib/options/eventSchemas.options";
 
 import type { PublishEventPayload } from "@/generated/graphql";

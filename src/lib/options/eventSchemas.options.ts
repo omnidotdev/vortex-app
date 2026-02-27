@@ -1,8 +1,8 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { useEventSchemasQuery } from "@/generated/graphql";
+import { useEventSchemasQuery } from "@/lib/graphql/eventSchemaStubs";
 
-import type { EventSchemasQueryVariables } from "@/generated/graphql";
+import type { EventSchemasQueryVariables } from "@/lib/graphql/eventSchemaStubs";
 
 const eventSchemasOptions = (variables: EventSchemasQueryVariables) =>
   queryOptions({
