@@ -1,118 +1,40 @@
+import { extractOrgClaims } from "@omnidotdev/providers";
 import { setCookie } from "@tanstack/react-start/server";
-import { all } from "better-all";
-import * as jose from "jose";
-import ms from "ms";
+import { GraphQLClient } from "graphql-request";
 
+import { getSdk } from "@/generated/graphql.sdk";
 import auth from "@/lib/auth/auth";
-import {
-  COOKIE_NAME,
-  COOKIE_TTL_SECONDS,
-  encryptRowId,
-  fetchRowIdFromApi,
-} from "@/lib/auth/rowIdCache";
-import { AUTH_BASE_URL } from "@/lib/config/env.config";
+import { authCache, oidc } from "@/lib/auth/authCache";
+import { API_INTERNAL_GRAPHQL_URL } from "@/lib/config/env.config";
 
-const OMNI_CLAIMS_KEY = "https://manifold.omni.dev/@omni/claims/organizations";
+import type { OrganizationClaim } from "@omnidotdev/providers";
+
+export type { OrganizationClaim } from "@omnidotdev/providers";
 
 /**
- * OIDC Discovery document structure.
+ * Fetch rowId from GraphQL API by identity provider ID.
  */
-interface OIDCDiscovery {
-  issuer: string;
-  jwks_uri: string;
-}
+async function fetchRowIdFromApi(
+  accessToken: string,
+  identityProviderId: string,
+): Promise<string | null> {
+  try {
+    const graphqlClient = new GraphQLClient(API_INTERNAL_GRAPHQL_URL!, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const sdk = getSdk(graphqlClient);
+    const { userByIdentityProviderId } = await sdk.UserByIdentityProviderId({
+      identityProviderId,
+    });
 
-// Cache OIDC discovery and JWKS separately
-let oidcDiscoveryCache: OIDCDiscovery | null = null;
-let oidcDiscoveryCacheExpiry = 0;
-let jwksCache: jose.JWTVerifyGetKey | null = null;
-let jwksCacheExpiry = 0;
-
-const OIDC_DISCOVERY_CACHE_TTL = ms("24h");
-const JWKS_CACHE_TTL = ms("1h");
-
-/**
- * Fetch OIDC discovery document.
- */
-async function getOidcDiscovery(): Promise<OIDCDiscovery> {
-  const now = Date.now();
-
-  if (oidcDiscoveryCache && now < oidcDiscoveryCacheExpiry)
-    return oidcDiscoveryCache;
-
-  const discoveryUrl = new URL(
-    "/.well-known/openid-configuration",
-    AUTH_BASE_URL,
-  );
-  const response = await fetch(discoveryUrl, {
-    signal: AbortSignal.timeout(15000), // 15 second timeout
-  });
-
-  if (!response.ok)
-    throw new Error(
-      `OIDC discovery failed: ${response.status} ${response.statusText}`,
-    );
-
-  const discovery = (await response.json()) as OIDCDiscovery;
-
-  if (!discovery.issuer || !discovery.jwks_uri)
-    throw new Error("Invalid OIDC discovery document");
-
-  oidcDiscoveryCache = discovery;
-  oidcDiscoveryCacheExpiry = now + OIDC_DISCOVERY_CACHE_TTL;
-
-  return discovery;
-}
-
-/**
- * Get JWKS using OIDC discovery.
- */
-async function getJwks(): Promise<jose.JWTVerifyGetKey> {
-  const now = Date.now();
-
-  if (jwksCache && now < jwksCacheExpiry) {
-    return jwksCache;
+    return userByIdentityProviderId?.rowId ?? null;
+  } catch (error) {
+    console.error("[getAuth] Failed to fetch rowId:", error);
+    return null;
   }
-
-  const discovery = await getOidcDiscovery();
-  jwksCache = jose.createRemoteJWKSet(new URL(discovery.jwks_uri), {
-    timeoutDuration: 15000, // 15 seconds
-    cooldownDuration: 30000, // wait 30s before retrying after failure
-  });
-  jwksCacheExpiry = now + JWKS_CACHE_TTL;
-
-  return jwksCache;
 }
 
-export interface OrganizationClaim {
-  id: string;
-  name: string;
-  slug: string;
-  type: "personal" | "team";
-  roles: string[];
-  teams: Array<{ id: string; name: string }>;
-}
-
-export interface AuthSession {
-  session: {
-    id: string;
-    userId: string;
-    expiresAt: Date;
-  };
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    image?: string | null;
-    rowId?: string | null;
-    identityProviderId?: string | null;
-    username?: string;
-  };
-  accessToken?: string;
-  organizations?: OrganizationClaim[];
-}
-
-export async function getAuth(request: Request): Promise<AuthSession | null> {
+export async function getAuth(request: Request) {
   try {
     const session = await auth.api.getSession({
       headers: request.headers,
@@ -120,14 +42,26 @@ export async function getAuth(request: Request): Promise<AuthSession | null> {
 
     if (!session) return null;
 
-    // get access token and organizations for GraphQL requests
     let accessToken: string | undefined;
-    let organizations: OrganizationClaim[] | undefined;
+    let organizations: OrganizationClaim[] = [];
 
-    // rowId and identityProviderId may come from customSession cache
-    let identityProviderId = (session.user as { identityProviderId?: string })
-      .identityProviderId;
-    let rowId = (session.user as { rowId?: string }).rowId;
+    // Cast to access custom session properties added by customSession plugin
+    const customUser = session.user as typeof session.user & {
+      identityProviderId?: string | null;
+      rowId?: string | null;
+      organizations?: OrganizationClaim[];
+    };
+    let identityProviderId = customUser.identityProviderId;
+    let rowId = customUser.rowId;
+    const cachedOrganizations = customUser.organizations;
+
+    // Check if we have complete cached data (avoids API call on every request)
+    const hasCachedData =
+      rowId && identityProviderId && cachedOrganizations?.length;
+
+    if (hasCachedData) {
+      organizations = cachedOrganizations;
+    }
 
     try {
       const tokenResult = await auth.api.getAccessToken({
@@ -136,50 +70,39 @@ export async function getAuth(request: Request): Promise<AuthSession | null> {
       });
       accessToken = tokenResult?.accessToken;
 
-      // extract claims from the ID token via JWKS verification
+      // Extract claims from ID token (verified via OIDC discovery + JWKS)
       if (tokenResult?.idToken) {
         try {
-          const { discovery, jwks } = await all({
-            async discovery() {
-              return getOidcDiscovery();
-            },
-            async jwks() {
-              return getJwks();
-            },
-          });
-          const { payload } = await jose.jwtVerify(tokenResult.idToken, jwks, {
-            issuer: discovery.issuer,
-          });
+          const payload = await oidc.verifyIdToken(tokenResult.idToken);
 
-          // Extract identityProviderId from ID token if not in cache
           if (!identityProviderId) {
-            identityProviderId = payload.sub ?? undefined;
+            identityProviderId = payload.sub ?? null;
           }
 
-          // extract organization claims from the ID token
-          const orgClaims = payload[OMNI_CLAIMS_KEY];
-          if (Array.isArray(orgClaims))
-            organizations = orgClaims as OrganizationClaim[];
+          if (!hasCachedData) {
+            organizations = extractOrgClaims(payload);
+          }
         } catch (jwtError) {
           console.error("[getAuth] JWT verification failed:", jwtError);
         }
       }
 
-      // Handle rowId cache miss: fetch from API and populate cache
+      // Handle rowId cache miss — fetch from API and cache
       if (!rowId && accessToken && identityProviderId) {
-        rowId =
-          (await fetchRowIdFromApi(accessToken, identityProviderId)) ??
-          undefined;
+        rowId = await fetchRowIdFromApi(accessToken, identityProviderId);
 
-        // Cache the rowId for subsequent requests
         if (rowId) {
-          const encrypted = await encryptRowId(rowId, identityProviderId);
-          setCookie(COOKIE_NAME, encrypted, {
+          const encrypted = await authCache.encrypt({
+            rowId,
+            identityProviderId,
+            organizations,
+          });
+          setCookie(authCache.cookieName, encrypted, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
             path: "/",
-            maxAge: COOKIE_TTL_SECONDS,
+            maxAge: authCache.cookieTtlSeconds,
           });
         }
       }

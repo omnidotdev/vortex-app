@@ -3,13 +3,15 @@ import { betterAuth } from "better-auth/minimal";
 import { customSession, genericOAuth } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 
-import { COOKIE_NAME, decryptCache } from "@/lib/auth/rowIdCache";
+import { authCache } from "@/lib/auth/authCache";
 import {
   AUTH_BASE_URL,
   AUTH_CLIENT_ID,
   AUTH_CLIENT_SECRET,
   BASE_URL,
 } from "@/lib/config/env.config";
+
+import type { OrganizationClaim } from "@omnidotdev/providers";
 
 const { AUTH_SECRET } = process.env;
 
@@ -68,30 +70,29 @@ const auth = betterAuth({
       ],
     }),
     customSession(async ({ user, session }) => {
-      // Try to get rowId and identityProviderId from cache
-      // The identityProviderId (IDP sub) is stored in the cache and extracted
-      // from the ID token in getAuth().
+      // Try to get cached auth data (rowId, identityProviderId, organizations)
       let rowId: string | null = null;
       let identityProviderId: string | null = null;
+      let organizations: OrganizationClaim[] = [];
 
-      const cachedValue = getCookie(COOKIE_NAME);
+      const cachedValue = getCookie(authCache.cookieName);
       if (cachedValue) {
-        const cached = await decryptCache(cachedValue);
+        const cached = await authCache.decrypt(cachedValue);
         if (cached) {
           rowId = cached.rowId;
           identityProviderId = cached.identityProviderId;
+          organizations = cached.organizations;
         }
       }
 
-      // If cache miss, rowId and identityProviderId will be null.
-      // The getAuth() function will handle fetching from the API and
-      // populating the cache when it has access to the ID token.
+      // If cache miss, getAuth() will sync with the API and populate the cache
 
       return {
         user: {
           ...user,
           rowId,
           identityProviderId,
+          organizations,
         },
         session,
       };
