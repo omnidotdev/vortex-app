@@ -13,6 +13,7 @@ import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
 import { Route as ApiExecuteWorkflowRouteImport } from './routes/api/execute-workflow'
+import { Route as ApiHealthRouteImport } from './routes/api/[_]health'
 import { Route as PublicPricingRouteImport } from './routes/_public/pricing'
 import { Route as AuthWorkspacesIndexRouteImport } from './routes/_auth/workspaces/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -50,6 +51,11 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
 const ApiExecuteWorkflowRoute = ApiExecuteWorkflowRouteImport.update({
   id: '/api/execute-workflow',
   path: '/api/execute-workflow',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHealthRoute = ApiHealthRouteImport.update({
+  id: '/api/_health',
+  path: '/api/_health',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicPricingRoute = PublicPricingRouteImport.update({
@@ -170,6 +176,7 @@ const AuthWorkspacesWorkspaceSlugEventsSchemaNameRoute =
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/pricing': typeof PublicPricingRoute
+  '/api/_health': typeof ApiHealthRoute
   '/api/execute-workflow': typeof ApiExecuteWorkflowRoute
   '/oauth/callback': typeof PublicOauthCallbackRoute
   '/oauth/error': typeof PublicOauthErrorRoute
@@ -194,6 +201,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/pricing': typeof PublicPricingRoute
+  '/api/_health': typeof ApiHealthRoute
   '/api/execute-workflow': typeof ApiExecuteWorkflowRoute
   '/oauth/callback': typeof PublicOauthCallbackRoute
   '/oauth/error': typeof PublicOauthErrorRoute
@@ -220,6 +228,7 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
   '/_public/pricing': typeof PublicPricingRoute
+  '/api/_health': typeof ApiHealthRoute
   '/api/execute-workflow': typeof ApiExecuteWorkflowRoute
   '/_public/': typeof PublicIndexRoute
   '/_public/oauth/callback': typeof PublicOauthCallbackRoute
@@ -247,6 +256,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/pricing'
+    | '/api/_health'
     | '/api/execute-workflow'
     | '/oauth/callback'
     | '/oauth/error'
@@ -271,6 +281,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/pricing'
+    | '/api/_health'
     | '/api/execute-workflow'
     | '/oauth/callback'
     | '/oauth/error'
@@ -296,6 +307,7 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/_public'
     | '/_public/pricing'
+    | '/api/_health'
     | '/api/execute-workflow'
     | '/_public/'
     | '/_public/oauth/callback'
@@ -322,6 +334,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   PublicRoute: typeof PublicRouteWithChildren
+  ApiHealthRoute: typeof ApiHealthRoute
   ApiExecuteWorkflowRoute: typeof ApiExecuteWorkflowRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiRunsRunIdStreamRoute: typeof ApiRunsRunIdStreamRoute
@@ -355,6 +368,13 @@ declare module '@tanstack/react-router' {
       path: '/api/execute-workflow'
       fullPath: '/api/execute-workflow'
       preLoaderRoute: typeof ApiExecuteWorkflowRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/_health': {
+      id: '/api/_health'
+      path: '/api/_health'
+      fullPath: '/api/_health'
+      preLoaderRoute: typeof ApiHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_public/pricing': {
@@ -571,6 +591,7 @@ const PublicRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
+  ApiHealthRoute: ApiHealthRoute,
   ApiExecuteWorkflowRoute: ApiExecuteWorkflowRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiRunsRunIdStreamRoute: ApiRunsRunIdStreamRoute,
