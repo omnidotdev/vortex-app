@@ -1,5 +1,7 @@
+import { Loader2, UserMinus } from "lucide-react";
 import { useState } from "react";
 
+import RoleSelector from "@/components/settings/RoleSelector";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,9 +16,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Loader2, UserMinus } from "lucide-react";
-
-import RoleSelector from "@/components/settings/RoleSelector";
 
 import type { Member } from "@/lib/types/members";
 
