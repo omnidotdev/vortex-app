@@ -147,7 +147,10 @@ function VersionDiff({
                     {" "}
                     {formatValue(entry.oldValue)}
                   </span>
-                  <span> {"\u2192"} {formatValue(entry.newValue)}</span>
+                  <span>
+                    {" "}
+                    {"\u2192"} {formatValue(entry.newValue)}
+                  </span>
                 </>
               )}
             </div>

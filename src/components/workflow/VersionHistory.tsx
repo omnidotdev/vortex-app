@@ -1,7 +1,15 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { ArrowLeft, Clock, GitCompare, List, Loader2, RotateCcw, X } from "lucide-react";
+import {
+  ArrowLeft,
+  Clock,
+  GitCompare,
+  List,
+  Loader2,
+  RotateCcw,
+  X,
+} from "lucide-react";
 import { useCallback, useState } from "react";
 
 import {
@@ -21,8 +29,8 @@ import VersionDiff from "@/components/workflow/VersionDiff";
 import { useWorkflowQuery } from "@/generated/graphql";
 import { API_BASE_URL } from "@/lib/config/env.config";
 import { getCurrentAuthHeaders } from "@/lib/graphql/graphqlClientFactory";
-import { cn } from "@/lib/utils";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
+import { cn } from "@/lib/utils";
 
 dayjs.extend(relativeTime);
 
@@ -120,7 +128,11 @@ async function fetchVersionDetail(
   return res.json();
 }
 
-function VersionHistory({ workflowId, currentDefinition, onClose }: VersionHistoryProps) {
+function VersionHistory({
+  workflowId,
+  currentDefinition,
+  onClose,
+}: VersionHistoryProps) {
   const queryClient = useQueryClient();
   const [loadedCount, setLoadedCount] = useState(PAGE_SIZE);
   const [restoreTarget, setRestoreTarget] = useState<VersionEntry | null>(null);
@@ -206,7 +218,7 @@ function VersionHistory({ workflowId, currentDefinition, onClose }: VersionHisto
                 setDiffTarget(null);
               }}
               className={cn(
-                "flex flex-1 items-center justify-center gap-1.5 rounded px-2 py-1 text-xs font-medium transition-colors",
+                "flex flex-1 items-center justify-center gap-1.5 rounded px-2 py-1 font-medium text-xs transition-colors",
                 viewMode === "list"
                   ? "bg-background text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground",
@@ -219,7 +231,7 @@ function VersionHistory({ workflowId, currentDefinition, onClose }: VersionHisto
               type="button"
               onClick={() => setViewMode("diff")}
               className={cn(
-                "flex flex-1 items-center justify-center gap-1.5 rounded px-2 py-1 text-xs font-medium transition-colors",
+                "flex flex-1 items-center justify-center gap-1.5 rounded px-2 py-1 font-medium text-xs transition-colors",
                 viewMode === "diff"
                   ? "bg-background text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground",
@@ -322,33 +334,36 @@ function VersionHistory({ workflowId, currentDefinition, onClose }: VersionHisto
           )}
 
           {/* Diff view — version selector */}
-          {viewMode === "diff" && !isLoading && versions.length > 0 && !diffTarget && (
-            <div className="space-y-2">
-              <p className="text-muted-foreground text-xs">
-                Select a version to compare against the current definition
-              </p>
-              {versions.map((entry) => (
-                <button
-                  key={entry.id}
-                  type="button"
-                  onClick={() => setDiffTarget(entry)}
-                  className="w-full rounded-md border border-border p-3 text-left transition-colors hover:bg-muted/50"
-                >
-                  <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="shrink-0">
-                      v{entry.version}
-                    </Badge>
-                    <span className="truncate text-muted-foreground text-xs">
-                      {entry.createdByName ?? "System"}
-                    </span>
-                    <span className="ml-auto text-muted-foreground text-xs">
-                      {dayjs(entry.createdAt).fromNow()}
-                    </span>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+          {viewMode === "diff" &&
+            !isLoading &&
+            versions.length > 0 &&
+            !diffTarget && (
+              <div className="space-y-2">
+                <p className="text-muted-foreground text-xs">
+                  Select a version to compare against the current definition
+                </p>
+                {versions.map((entry) => (
+                  <button
+                    key={entry.id}
+                    type="button"
+                    onClick={() => setDiffTarget(entry)}
+                    className="w-full rounded-md border border-border p-3 text-left transition-colors hover:bg-muted/50"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary" className="shrink-0">
+                        v{entry.version}
+                      </Badge>
+                      <span className="truncate text-muted-foreground text-xs">
+                        {entry.createdByName ?? "System"}
+                      </span>
+                      <span className="ml-auto text-muted-foreground text-xs">
+                        {dayjs(entry.createdAt).fromNow()}
+                      </span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
 
           {/* Diff view — diff display */}
           {viewMode === "diff" && diffTarget && (
