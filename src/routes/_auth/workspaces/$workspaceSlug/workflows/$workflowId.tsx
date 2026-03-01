@@ -7,6 +7,7 @@ import {
   useNavigate,
 } from "@tanstack/react-router";
 import {
+  Activity,
   Check,
   Clock,
   Copy,
@@ -43,6 +44,7 @@ import "reactflow/dist/style.css";
 import { AddNodeButton } from "@/components/AddNodeButton";
 import DebugPane from "@/components/DebugPane";
 import { SmartEdge } from "@/components/edges/SmartEdge";
+import WorkflowStats from "@/components/monitoring/WorkflowStats";
 import { ActionNode } from "@/components/nodes/ActionNode";
 import { AgentNode } from "@/components/nodes/AgentNode";
 import { AggregateNode } from "@/components/nodes/AggregateNode";
@@ -382,6 +384,7 @@ function WorkflowEditorPage() {
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [showRunsPanel, setShowRunsPanel] = useState(false);
   const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [showMonitoring, setShowMonitoring] = useState(false);
   const [stepStatuses, setStepStatuses] = useState<Record<string, string>>({});
   const [snapToGrid, setSnapToGrid] = useState(true);
   const [showRightSidebar, setShowRightSidebar] = useState(false);
@@ -1457,6 +1460,7 @@ function WorkflowEditorPage() {
             onClick={() => {
               setShowRunsPanel(!showRunsPanel);
               setShowVersionHistory(false);
+              setShowMonitoring(false);
               setShowRightSidebar(true);
               if (!showRunsPanel) setSelectedNode(null);
             }}
@@ -1470,12 +1474,27 @@ function WorkflowEditorPage() {
             onClick={() => {
               setShowVersionHistory(!showVersionHistory);
               setShowRunsPanel(false);
+              setShowMonitoring(false);
               setShowRightSidebar(true);
               if (!showVersionHistory) setSelectedNode(null);
             }}
           >
             <Clock className="h-4 w-4 lg:mr-1" />
             <span className="hidden lg:inline">Versions</span>
+          </Button>
+          <Button
+            variant={showMonitoring ? "default" : "outline"}
+            size="sm"
+            onClick={() => {
+              setShowMonitoring(!showMonitoring);
+              setShowRunsPanel(false);
+              setShowVersionHistory(false);
+              setShowRightSidebar(true);
+              if (!showMonitoring) setSelectedNode(null);
+            }}
+          >
+            <Activity className="h-4 w-4 lg:mr-1" />
+            <span className="hidden lg:inline">Monitoring</span>
           </Button>
           <Button
             variant="outline"
@@ -1605,6 +1624,7 @@ function WorkflowEditorPage() {
                 // Open right sidebar when node is selected
                 setShowRightSidebar(true);
                 setShowRunsPanel(false);
+                setShowMonitoring(false);
               }}
               onNodeContextMenu={onNodeContextMenu}
               onEdgeContextMenu={onEdgeContextMenu}
@@ -1770,6 +1790,9 @@ function WorkflowEditorPage() {
               <aside className="h-full w-full overflow-hidden">
                 <VersionHistory
                   workflowId={workflowId}
+                  currentDefinition={
+                    (workflow.definition as Record<string, unknown>) ?? {}
+                  }
                   onClose={() => {
                     setShowVersionHistory(false);
                     if (window.innerWidth < 768) {
@@ -1785,6 +1808,13 @@ function WorkflowEditorPage() {
                   totalCount={workflow.workflowRuns?.totalCount || 0}
                   apiKey={accessToken}
                   onStepStatusChange={setStepStatuses}
+                />
+              </aside>
+            ) : showMonitoring ? (
+              <aside className="h-full w-full overflow-y-auto">
+                <WorkflowStats
+                  workflowId={workflowId}
+                  workspaceSlug={workspaceSlug}
                 />
               </aside>
             ) : selectedNode ? (

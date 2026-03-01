@@ -48,4 +48,25 @@ type ErrorsStats = {
   errors: StatsError[];
 };
 
-export type { ErrorsStats, OrgStats, StatsError, TimelineDataPoint, TimelineStats };
+/**
+ * Per-workflow execution stats from GET /api/v1/stats/workflows/:workflowId.
+ */
+type WorkflowStats = {
+  workflowId: string;
+  period: { since: string; until: string };
+  total: number;
+  succeeded: number;
+  failed: number;
+  cancelled: number;
+  avgDurationMs: number | null;
+  p95DurationMs: number | null;
+};
+
+export type {
+  ErrorsStats,
+  OrgStats,
+  StatsError,
+  TimelineDataPoint,
+  TimelineStats,
+  WorkflowStats,
+};

@@ -57,9 +57,7 @@ function TimelineSkeleton() {
  * Skeleton for the error table.
  */
 function TableSkeleton() {
-  return (
-    <div className="h-64 animate-pulse rounded-lg border bg-muted/30" />
-  );
+  return <div className="h-64 animate-pulse rounded-lg border bg-muted/30" />;
 }
 
 /**
