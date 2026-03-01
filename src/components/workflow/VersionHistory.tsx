@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { Clock, Loader2, RotateCcw, X } from "lucide-react";
+import { ArrowLeft, Clock, GitCompare, List, Loader2, RotateCcw, X } from "lucide-react";
 import { useCallback, useState } from "react";
 
 import {
@@ -17,9 +17,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import VersionDiff from "@/components/workflow/VersionDiff";
 import { useWorkflowQuery } from "@/generated/graphql";
 import { API_BASE_URL } from "@/lib/config/env.config";
 import { getCurrentAuthHeaders } from "@/lib/graphql/graphqlClientFactory";
+import { cn } from "@/lib/utils";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
 
 dayjs.extend(relativeTime);
@@ -37,8 +39,19 @@ type VersionsResponse = {
   total: number;
 };
 
+type VersionDetailResponse = {
+  id: string;
+  version: number;
+  definition: Record<string, unknown>;
+  changeNote: string | null;
+  createdAt: string;
+};
+
+type ViewMode = "list" | "diff";
+
 type VersionHistoryProps = {
   workflowId: string;
+  currentDefinition: Record<string, unknown>;
   onClose: () => void;
 };
 
@@ -88,12 +101,33 @@ async function revertToVersion(
   }
 }
 
-function VersionHistory({ workflowId, onClose }: VersionHistoryProps) {
+/**
+ * Fetch a specific version's full definition from the REST API.
+ */
+async function fetchVersionDetail(
+  workflowId: string,
+  version: number,
+): Promise<VersionDetailResponse> {
+  const res = await fetch(
+    `${API_BASE_URL}/api/v1/workflows/${workflowId}/versions/${version}`,
+    { headers: getCurrentAuthHeaders() },
+  );
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch version detail: ${res.status}`);
+  }
+
+  return res.json();
+}
+
+function VersionHistory({ workflowId, currentDefinition, onClose }: VersionHistoryProps) {
   const queryClient = useQueryClient();
   const [loadedCount, setLoadedCount] = useState(PAGE_SIZE);
   const [restoreTarget, setRestoreTarget] = useState<VersionEntry | null>(null);
   const [isRestoring, setIsRestoring] = useState(false);
   const [restoreError, setRestoreError] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [diffTarget, setDiffTarget] = useState<VersionEntry | null>(null);
 
   const {
     data,
@@ -102,6 +136,16 @@ function VersionHistory({ workflowId, onClose }: VersionHistoryProps) {
   } = useQuery({
     queryKey: ["workflowVersions", workflowId, loadedCount],
     queryFn: () => fetchVersions(workflowId, loadedCount, 0),
+  });
+
+  const {
+    data: versionDetail,
+    isLoading: isLoadingDetail,
+    error: detailError,
+  } = useQuery({
+    queryKey: ["workflowVersionDetail", workflowId, diffTarget?.version],
+    queryFn: () => fetchVersionDetail(workflowId, diffTarget!.version),
+    enabled: viewMode === "diff" && !!diffTarget,
   });
 
   const versions = data?.versions ?? [];
@@ -140,15 +184,52 @@ function VersionHistory({ workflowId, onClose }: VersionHistoryProps) {
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between border-b px-4 py-3">
-        <h2 className="font-semibold text-sm">Version History</h2>
-        <button
-          type="button"
-          onClick={onClose}
-          className="rounded-sm text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <X className="h-4 w-4" />
-        </button>
+      <div className="space-y-2 border-b px-4 py-3">
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-sm">Version History</h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* View mode toggle */}
+        {versions.length > 0 && (
+          <div className="flex gap-1 rounded-md bg-muted p-0.5">
+            <button
+              type="button"
+              onClick={() => {
+                setViewMode("list");
+                setDiffTarget(null);
+              }}
+              className={cn(
+                "flex flex-1 items-center justify-center gap-1.5 rounded px-2 py-1 text-xs font-medium transition-colors",
+                viewMode === "list"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              <List className="h-3.5 w-3.5" />
+              List
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("diff")}
+              className={cn(
+                "flex flex-1 items-center justify-center gap-1.5 rounded px-2 py-1 text-xs font-medium transition-colors",
+                viewMode === "diff"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              <GitCompare className="h-3.5 w-3.5" />
+              Diff
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Content */}
@@ -182,7 +263,8 @@ function VersionHistory({ workflowId, onClose }: VersionHistoryProps) {
             </div>
           )}
 
-          {!isLoading && versions.length > 0 && (
+          {/* List view */}
+          {viewMode === "list" && !isLoading && versions.length > 0 && (
             <div className="space-y-2">
               {versions.map((entry) => (
                 <div
@@ -235,6 +317,75 @@ function VersionHistory({ workflowId, onClose }: VersionHistoryProps) {
                 >
                   Load more ({totalCount - versions.length} remaining)
                 </Button>
+              )}
+            </div>
+          )}
+
+          {/* Diff view — version selector */}
+          {viewMode === "diff" && !isLoading && versions.length > 0 && !diffTarget && (
+            <div className="space-y-2">
+              <p className="text-muted-foreground text-xs">
+                Select a version to compare against the current definition
+              </p>
+              {versions.map((entry) => (
+                <button
+                  key={entry.id}
+                  type="button"
+                  onClick={() => setDiffTarget(entry)}
+                  className="w-full rounded-md border border-border p-3 text-left transition-colors hover:bg-muted/50"
+                >
+                  <div className="flex items-center gap-2">
+                    <Badge variant="secondary" className="shrink-0">
+                      v{entry.version}
+                    </Badge>
+                    <span className="truncate text-muted-foreground text-xs">
+                      {entry.createdByName ?? "System"}
+                    </span>
+                    <span className="ml-auto text-muted-foreground text-xs">
+                      {dayjs(entry.createdAt).fromNow()}
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Diff view — diff display */}
+          {viewMode === "diff" && diffTarget && (
+            <div className="space-y-3">
+              <button
+                type="button"
+                onClick={() => setDiffTarget(null)}
+                className="flex items-center gap-1 text-muted-foreground text-xs transition-colors hover:text-foreground"
+              >
+                <ArrowLeft className="h-3 w-3" />
+                Back to version list
+              </button>
+
+              {isLoadingDetail && (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                </div>
+              )}
+
+              {detailError && (
+                <div className="py-8 text-center">
+                  <p className="text-destructive text-sm">
+                    {detailError instanceof Error
+                      ? detailError.message
+                      : "Failed to load version details"}
+                  </p>
+                </div>
+              )}
+
+              {versionDetail && !isLoadingDetail && (
+                <VersionDiff
+                  currentDefinition={currentDefinition}
+                  selectedDefinition={
+                    versionDetail.definition as Record<string, unknown>
+                  }
+                  selectedVersion={diffTarget.version}
+                />
               )}
             </div>
           )}

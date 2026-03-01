@@ -1,4 +1,4 @@
-import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { Users } from "lucide-react";
 import { toast } from "sonner";
@@ -93,9 +93,7 @@ function MembersPage() {
       queryClient.invalidateQueries({ queryKey: ["members"] });
       toast.success("Role updated");
     } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "Failed to update role",
-      );
+      toast.error(err instanceof Error ? err.message : "Failed to update role");
     }
   };
 

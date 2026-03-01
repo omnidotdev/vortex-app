@@ -1,3 +1,5 @@
+import { Shield, User } from "lucide-react";
+
 import {
   Select,
   SelectContent,
@@ -5,7 +7,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Shield, User } from "lucide-react";
 
 type RoleSelectorProps = {
   currentRole: string;
