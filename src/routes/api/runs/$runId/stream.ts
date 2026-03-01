@@ -6,6 +6,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { GraphQLClient, gql } from "graphql-request";
 
+import { getAuth } from "@/lib/auth/getAuth";
 import { API_INTERNAL_GRAPHQL_URL } from "@/lib/config/env.config";
 
 const POLL_INTERVAL_MS = 500;
@@ -94,6 +95,14 @@ export const Route = createFileRoute("/api/runs/$runId/stream")({
   server: {
     handlers: {
       GET: async ({ request, params }) => {
+        const auth = await getAuth(request);
+        if (!auth) {
+          return new Response(JSON.stringify({ error: "Unauthorized" }), {
+            status: 401,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
         const { runId } = params;
 
         // Get auth token from request headers
