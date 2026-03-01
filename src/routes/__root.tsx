@@ -11,8 +11,8 @@ import { useEffect } from "react";
 import { Toaster } from "sonner";
 
 import { isDevEnv } from "@/lib/config/env.config";
-import { fetchMaintenanceMode } from "@/lib/providers";
 import { setAccessToken } from "@/lib/graphql/graphqlClientFactory";
+import { fetchMaintenanceMode } from "@/lib/providers";
 import appCss from "@/lib/styles/globals.css?url";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { fetchSession } from "@/server/functions/auth";
