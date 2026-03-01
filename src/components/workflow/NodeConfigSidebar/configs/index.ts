@@ -1,4 +1,5 @@
 import { ActionNodeConfig } from "./ActionNodeConfig";
+import { CollectNodeConfig } from "./CollectNodeConfig";
 import { CommentConfig } from "./CommentConfig";
 import { ConditionNodeConfig } from "./ConditionNodeConfig";
 import { DelayNodeConfig } from "./DelayNodeConfig";
@@ -8,6 +9,10 @@ import { MCPNodeConfig } from "./MCPNodeConfig";
 import { ParallelNodeConfig } from "./ParallelNodeConfig";
 import { PluginNodeConfig } from "./PluginNodeConfig";
 import { RaceConfig } from "./RaceConfig";
+import { SagaNodeConfig } from "./SagaNodeConfig";
+import { StateGetNodeConfig } from "./StateGetNodeConfig";
+import { StateSetNodeConfig } from "./StateSetNodeConfig";
+import { StateWaitNodeConfig } from "./StateWaitNodeConfig";
 import { SubWorkflowConfig } from "./SubWorkflowConfig";
 import { SwitchNodeConfig } from "./SwitchNodeConfig";
 import { TriggerNodeConfig } from "./TriggerNodeConfig";
@@ -34,4 +39,9 @@ export const nodeConfigRegistry: Record<
   tryCatchNode: TryCatchConfig,
   raceNode: RaceConfig,
   commentNode: CommentConfig,
+  sagaNode: SagaNodeConfig,
+  collectNode: CollectNodeConfig,
+  stateGetNode: StateGetNodeConfig,
+  stateSetNode: StateSetNodeConfig,
+  stateWaitNode: StateWaitNodeConfig,
 };
