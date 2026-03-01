@@ -37,6 +37,7 @@ export const clearRowIdCache = createServerFn({ method: "POST" }).handler(
 
 /**
  * Sign out the current user and redirect to home.
+ * @knipignore - Used via dynamic import in _auth route guard
  */
 export const signOutAndRedirect = createServerFn({ method: "POST" }).handler(
   async () => {
