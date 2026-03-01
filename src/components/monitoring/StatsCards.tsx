@@ -28,7 +28,8 @@ function successRateColor(rate: number): string {
 function StatsCards({ since, until }: DateRange) {
   const { data: stats } = useSuspenseQuery(orgStatsOptions({ since, until }));
 
-  const successRate = stats.total > 0 ? (stats.succeeded / stats.total) * 100 : 0;
+  const successRate =
+    stats.total > 0 ? (stats.succeeded / stats.total) * 100 : 0;
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -47,7 +48,12 @@ function StatsCards({ since, until }: DateRange) {
           <CheckCircle2 className="h-4 w-4" />
           <span>Success Rate</span>
         </div>
-        <p className={cn("mt-2 font-bold text-3xl", successRateColor(successRate))}>
+        <p
+          className={cn(
+            "mt-2 font-bold text-3xl",
+            successRateColor(successRate),
+          )}
+        >
           {successRate.toFixed(1)}%
         </p>
       </div>
@@ -67,7 +73,9 @@ function StatsCards({ since, until }: DateRange) {
           <GitBranch className="h-4 w-4" />
           <span>Active Workflows</span>
         </div>
-        <p className="mt-2 font-bold text-3xl">{formatNumber(stats.activeWorkflows)}</p>
+        <p className="mt-2 font-bold text-3xl">
+          {formatNumber(stats.activeWorkflows)}
+        </p>
       </div>
     </div>
   );

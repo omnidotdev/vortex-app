@@ -30,7 +30,10 @@ function formatXAxis(timestamp: string, bucket: "day" | "hour"): string {
   const date = new Date(timestamp);
 
   if (bucket === "hour") {
-    return date.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+    return date.toLocaleTimeString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   }
 
   return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });

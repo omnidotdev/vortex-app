@@ -3,7 +3,12 @@ import { queryOptions } from "@tanstack/react-query";
 import { API_BASE_URL } from "@/lib/config/env.config";
 import { getCurrentAuthHeaders } from "@/lib/graphql/graphqlClientFactory";
 
-import type { ErrorsStats, OrgStats, TimelineStats } from "@/lib/types/stats";
+import type {
+  ErrorsStats,
+  OrgStats,
+  TimelineStats,
+  WorkflowStats,
+} from "@/lib/types/stats";
 
 /**
  * Query options for fetching organization-level execution stats.
@@ -77,4 +82,41 @@ const errorsStatsOptions = (params: { since: string; limit?: number }) =>
     },
   });
 
-export { errorsStatsOptions, orgStatsOptions, timelineStatsOptions };
+/**
+ * Query options for fetching per-workflow execution stats.
+ */
+const workflowStatsOptions = (params: {
+  workflowId: string;
+  since: string;
+  until: string;
+}) =>
+  queryOptions<WorkflowStats>({
+    queryKey: [
+      "stats",
+      "workflow",
+      params.workflowId,
+      { since: params.since, until: params.until },
+    ],
+    queryFn: async () => {
+      const searchParams = new URLSearchParams({
+        since: params.since,
+        until: params.until,
+      });
+
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/stats/workflows/${params.workflowId}?${searchParams.toString()}`,
+        { headers: getCurrentAuthHeaders() },
+      );
+
+      if (!response.ok) throw new Error("Failed to fetch workflow stats");
+
+      return response.json();
+    },
+  });
+
+export {
+  errorsStatsOptions,
+  orgStatsOptions,
+  timelineStatsOptions,
+  workflowStatsOptions,
+};
