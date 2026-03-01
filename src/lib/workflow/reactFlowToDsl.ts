@@ -95,6 +95,10 @@ const nodeTypeToStepType: Record<string, string> = {
   commentNode: "comment",
   // Distributed transactions
   sagaNode: "saga",
+  // State management nodes
+  stateGetNode: "state_get",
+  stateSetNode: "state_set",
+  stateWaitNode: "state_wait",
 };
 
 // Convert trigger node data to DSL step
@@ -1120,6 +1124,58 @@ function collectNodeToStep(node: Node): Step {
   } as Step;
 }
 
+// Convert state get node data to DSL step
+function stateGetNodeToStep(node: Node): Step {
+  const data = node.data as Record<string, unknown>;
+  return {
+    id: node.id,
+    type: "state_get",
+    name: (data.label as string) || "State Get",
+    description: data.description as string | undefined,
+    position: node.position,
+    stateGet: {
+      key: (data.key as string) || "",
+      outputVariable: (data.outputVariable as string) || "",
+    },
+  } as Step;
+}
+
+// Convert state set node data to DSL step
+function stateSetNodeToStep(node: Node): Step {
+  const data = node.data as Record<string, unknown>;
+  return {
+    id: node.id,
+    type: "state_set",
+    name: (data.label as string) || "State Set",
+    description: data.description as string | undefined,
+    position: node.position,
+    stateSet: {
+      key: (data.key as string) || "",
+      value: (data.value as string) || "",
+      ttl: data.ttl as number | undefined,
+    },
+  } as Step;
+}
+
+// Convert state wait node data to DSL step
+function stateWaitNodeToStep(node: Node): Step {
+  const data = node.data as Record<string, unknown>;
+  return {
+    id: node.id,
+    type: "state_wait",
+    name: (data.label as string) || "State Wait",
+    description: data.description as string | undefined,
+    position: node.position,
+    stateWait: {
+      key: (data.key as string) || "",
+      condition:
+        (data.condition as "exists" | "equals" | "changed") || "exists",
+      value: data.expectedValue as string | undefined,
+      timeout: (data.timeout as string) || "5m",
+    },
+  } as Step;
+}
+
 // Generic converter for node types without dedicated functions
 // Inverse of `extendedStepToNodeData` in dslToReactFlow.ts
 function genericNodeToStep(node: Node, stepType: string): Step {
@@ -1273,6 +1329,13 @@ function nodeToStep(node: Node, edges: Edge[]): Step | null {
     // Distributed transactions
     case "saga":
       return sagaNodeToStep(node);
+    // State management nodes
+    case "state_get":
+      return stateGetNodeToStep(node);
+    case "state_set":
+      return stateSetNodeToStep(node);
+    case "state_wait":
+      return stateWaitNodeToStep(node);
     default:
       return genericNodeToStep(node, stepType);
   }
