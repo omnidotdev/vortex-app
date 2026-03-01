@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Hatchet } from "@hatchet-dev/typescript-sdk";
 
+import { getAuth } from "@/lib/auth/getAuth";
 import { reactFlowToDsl } from "../../lib/workflow/reactFlowToDsl";
 import type { WorkflowDefinition } from "../../lib/workflow/types";
 
@@ -8,6 +9,11 @@ export const Route = createFileRoute("/api/execute-workflow")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const auth = await getAuth(request);
+        if (!auth) {
+          return Response.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
         try {
           const body = await request.json();
           const {
