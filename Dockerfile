@@ -21,5 +21,10 @@ ENV NODE_ENV=production
 # Nitro bundles production deps into .output/server/node_modules.
 COPY --from=builder /app/.output ./.output
 
+RUN addgroup --system --gid 1001 app && \
+    adduser --system --uid 1001 -G app app && \
+    chown -R app:app /app
+USER app
+
 EXPOSE 3000
 CMD ["node", ".output/server/index.mjs"]
