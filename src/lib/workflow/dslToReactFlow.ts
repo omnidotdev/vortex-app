@@ -97,6 +97,10 @@ const stepTypeToNodeType: Record<string, string> = {
   audio: "audioNode",
   // Distributed transactions
   saga: "sagaNode",
+  // State management nodes
+  state_get: "stateGetNode",
+  state_set: "stateSetNode",
+  state_wait: "stateWaitNode",
 };
 
 // Layout constants for dagre auto-layout
@@ -217,6 +221,36 @@ function pluginStepToNodeData(step: PluginStep): Record<string, unknown> {
   };
 }
 
+// Convert state_get step to node data
+function stateGetStepToNodeData(step: Step): Record<string, unknown> {
+  const s = step as unknown as { stateGet: Record<string, unknown> };
+  return {
+    label: step.name,
+    description: step.description,
+    ...s.stateGet,
+  };
+}
+
+// Convert state_set step to node data
+function stateSetStepToNodeData(step: Step): Record<string, unknown> {
+  const s = step as unknown as { stateSet: Record<string, unknown> };
+  return {
+    label: step.name,
+    description: step.description,
+    ...s.stateSet,
+  };
+}
+
+// Convert state_wait step to node data
+function stateWaitStepToNodeData(step: Step): Record<string, unknown> {
+  const s = step as unknown as { stateWait: Record<string, unknown> };
+  return {
+    label: step.name,
+    description: step.description,
+    ...s.stateWait,
+  };
+}
+
 // Convert extended step types by spreading the nested type-specific object into data
 function extendedStepToNodeData(step: Step): Record<string, unknown> {
   const data: Record<string, unknown> = {
@@ -266,6 +300,15 @@ function stepToNode(step: Step): Node {
       break;
     case "plugin":
       data = pluginStepToNodeData(step);
+      break;
+    case "state_get":
+      data = stateGetStepToNodeData(step);
+      break;
+    case "state_set":
+      data = stateSetStepToNodeData(step);
+      break;
+    case "state_wait":
+      data = stateWaitStepToNodeData(step);
       break;
     default:
       // Handle all extended types generically

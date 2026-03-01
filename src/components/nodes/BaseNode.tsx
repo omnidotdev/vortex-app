@@ -1149,6 +1149,16 @@ export const nodeThemes = {
     handleColor: "!bg-sky-600",
     glow: "shadow-[0_0_15px_rgba(2,132,199,0.15)] dark:shadow-[0_0_20px_rgba(2,132,199,0.25)]",
   },
+  state: {
+    border: "border-teal-300/60 dark:border-teal-600/40",
+    bg: "bg-gradient-to-br from-teal-50 via-teal-50/80 to-cyan-50 dark:from-teal-950 dark:via-teal-950/80 dark:to-cyan-950",
+    iconBg:
+      "bg-gradient-to-br from-teal-600 to-cyan-700 dark:from-teal-500 dark:to-cyan-600",
+    iconText: "text-white",
+    accent: "text-teal-700 dark:text-teal-400",
+    handleColor: "!bg-teal-600",
+    glow: "shadow-[0_0_15px_rgba(13,148,136,0.15)] dark:shadow-[0_0_20px_rgba(13,148,136,0.25)]",
+  },
 } as const;
 
 /** Map integration/plugin names to their brand theme */
