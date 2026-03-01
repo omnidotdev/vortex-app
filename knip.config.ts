@@ -30,6 +30,7 @@ const knipConfig: KnipConfig = {
     "dotenv",
     // Future use dependencies
     "react-hotkeys-hook",
+    "recharts",
     "ts-pattern",
   ],
   tags: ["-knipignore"],

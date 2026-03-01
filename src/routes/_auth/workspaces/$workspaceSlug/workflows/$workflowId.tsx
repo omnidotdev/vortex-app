@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-router";
 import {
   Check,
+  Clock,
   Copy,
   Download,
   Grid3X3,
@@ -145,6 +146,7 @@ import { Textarea } from "@/components/ui/textarea";
 import ExportWorkflowDialog from "@/components/workflow/ExportWorkflowDialog";
 import ImportWorkflowDialog from "@/components/workflow/ImportWorkflowDialog";
 import { NodeConfigSidebar } from "@/components/workflow/NodeConfigSidebar";
+import VersionHistory from "@/components/workflow/VersionHistory";
 import { WorkflowRunsPanel } from "@/components/workflow/WorkflowRunsPanel";
 import {
   useDeleteWorkflowMutation,
@@ -379,6 +381,7 @@ function WorkflowEditorPage() {
   const isInitialMount = useRef(true);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [showRunsPanel, setShowRunsPanel] = useState(false);
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [stepStatuses, setStepStatuses] = useState<Record<string, string>>({});
   const [snapToGrid, setSnapToGrid] = useState(true);
   const [showRightSidebar, setShowRightSidebar] = useState(false);
@@ -1453,12 +1456,26 @@ function WorkflowEditorPage() {
             size="sm"
             onClick={() => {
               setShowRunsPanel(!showRunsPanel);
+              setShowVersionHistory(false);
               setShowRightSidebar(true);
               if (!showRunsPanel) setSelectedNode(null);
             }}
           >
             <History className="h-4 w-4 lg:mr-1" />
-            <span className="hidden lg:inline">History</span>
+            <span className="hidden lg:inline">Runs</span>
+          </Button>
+          <Button
+            variant={showVersionHistory ? "default" : "outline"}
+            size="sm"
+            onClick={() => {
+              setShowVersionHistory(!showVersionHistory);
+              setShowRunsPanel(false);
+              setShowRightSidebar(true);
+              if (!showVersionHistory) setSelectedNode(null);
+            }}
+          >
+            <Clock className="h-4 w-4 lg:mr-1" />
+            <span className="hidden lg:inline">Versions</span>
           </Button>
           <Button
             variant="outline"
@@ -1749,7 +1766,19 @@ function WorkflowEditorPage() {
             >
               <X className="h-4 w-4" />
             </Button>
-            {showRunsPanel ? (
+            {showVersionHistory ? (
+              <aside className="h-full w-full overflow-hidden">
+                <VersionHistory
+                  workflowId={workflowId}
+                  onClose={() => {
+                    setShowVersionHistory(false);
+                    if (window.innerWidth < 768) {
+                      setShowRightSidebar(false);
+                    }
+                  }}
+                />
+              </aside>
+            ) : showRunsPanel ? (
               <aside className="h-full w-full overflow-hidden">
                 <WorkflowRunsPanel
                   runs={workflow.workflowRuns?.nodes || []}
