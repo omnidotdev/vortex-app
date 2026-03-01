@@ -55,7 +55,7 @@ export const Route = createRootRouteWithContext<{
       },
       {
         name: "description",
-        content: "Coming soon",
+        content: "Workflow automation for the decentralized web",
       },
     ],
     links: [
