@@ -92,14 +92,14 @@ import { RagNode } from "@/components/nodes/RagNode";
 import { ReduceNode } from "@/components/nodes/ReduceNode";
 import { RetryNode } from "@/components/nodes/RetryNode";
 import { SagaNode } from "@/components/nodes/SagaNode";
-import { StateGetNode } from "@/components/nodes/StateGetNode";
-import { StateSetNode } from "@/components/nodes/StateSetNode";
-import { StateWaitNode } from "@/components/nodes/StateWaitNode";
 import { SetNode } from "@/components/nodes/SetNode";
 import { SignNode } from "@/components/nodes/SignNode";
 import { SleepNode } from "@/components/nodes/SleepNode";
 import { SortNode } from "@/components/nodes/SortNode";
 import { SplitNode } from "@/components/nodes/SplitNode";
+import { StateGetNode } from "@/components/nodes/StateGetNode";
+import { StateSetNode } from "@/components/nodes/StateSetNode";
+import { StateWaitNode } from "@/components/nodes/StateWaitNode";
 import { SubworkflowNode } from "@/components/nodes/SubworkflowNode";
 import { SummarizeNode } from "@/components/nodes/SummarizeNode";
 import { SwitchNode } from "@/components/nodes/SwitchNode";
@@ -1657,10 +1657,6 @@ function WorkflowEditorPage() {
               maxZoom={2}
               defaultViewport={{ x: 0, y: 0, zoom: 1 }}
               className="bg-background"
-              proOptions={{
-                // ? look into legality, replace xyflow if an issue
-                hideAttribution: true,
-              }}
             >
               <Background />
               <Controls />
