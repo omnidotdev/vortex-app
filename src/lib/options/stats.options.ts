@@ -1,0 +1,80 @@
+import { queryOptions } from "@tanstack/react-query";
+
+import { API_BASE_URL } from "@/lib/config/env.config";
+import { getCurrentAuthHeaders } from "@/lib/graphql/graphqlClientFactory";
+
+import type { ErrorsStats, OrgStats, TimelineStats } from "@/lib/types/stats";
+
+/**
+ * Query options for fetching organization-level execution stats.
+ */
+const orgStatsOptions = (params: { since: string; until: string }) =>
+  queryOptions<OrgStats>({
+    queryKey: ["stats", "organization", params],
+    queryFn: async () => {
+      const searchParams = new URLSearchParams({
+        since: params.since,
+        until: params.until,
+      });
+
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/stats/organization?${searchParams.toString()}`,
+        { headers: getCurrentAuthHeaders() },
+      );
+
+      if (!response.ok) throw new Error("Failed to fetch organization stats");
+
+      return response.json();
+    },
+  });
+
+/**
+ * Query options for fetching the execution timeline.
+ */
+const timelineStatsOptions = (params: {
+  since: string;
+  until: string;
+  bucket: "day" | "hour";
+}) =>
+  queryOptions<TimelineStats>({
+    queryKey: ["stats", "timeline", params],
+    queryFn: async () => {
+      const searchParams = new URLSearchParams({
+        since: params.since,
+        until: params.until,
+        bucket: params.bucket,
+      });
+
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/stats/timeline?${searchParams.toString()}`,
+        { headers: getCurrentAuthHeaders() },
+      );
+
+      if (!response.ok) throw new Error("Failed to fetch timeline stats");
+
+      return response.json();
+    },
+  });
+
+/**
+ * Query options for fetching top errors.
+ */
+const errorsStatsOptions = (params: { since: string; limit?: number }) =>
+  queryOptions<ErrorsStats>({
+    queryKey: ["stats", "errors", params],
+    queryFn: async () => {
+      const searchParams = new URLSearchParams({ since: params.since });
+      if (params.limit) searchParams.set("limit", String(params.limit));
+
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/stats/errors?${searchParams.toString()}`,
+        { headers: getCurrentAuthHeaders() },
+      );
+
+      if (!response.ok) throw new Error("Failed to fetch error stats");
+
+      return response.json();
+    },
+  });
+
+export { errorsStatsOptions, orgStatsOptions, timelineStatsOptions };

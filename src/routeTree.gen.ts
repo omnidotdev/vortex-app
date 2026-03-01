@@ -24,6 +24,8 @@ import { Route as ApiRunsRunIdStreamRouteImport } from './routes/api/runs/$runId
 import { Route as AuthWorkspacesWorkspaceSlugSettingsRouteImport } from './routes/_auth/workspaces/$workspaceSlug/settings'
 import { Route as AuthWorkspacesWorkspaceSlugWorkflowsIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/workflows/index'
 import { Route as AuthWorkspacesWorkspaceSlugPluginsIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/plugins/index'
+import { Route as AuthWorkspacesWorkspaceSlugMonitoringIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/monitoring/index'
+import { Route as AuthWorkspacesWorkspaceSlugMembersIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/members/index'
 import { Route as AuthWorkspacesWorkspaceSlugIntegrationsIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/integrations/index'
 import { Route as AuthWorkspacesWorkspaceSlugEventsIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/events/index'
 import { Route as AuthWorkspacesWorkspaceSlugDlqIndexRouteImport } from './routes/_auth/workspaces/$workspaceSlug/dlq/index'
@@ -112,6 +114,18 @@ const AuthWorkspacesWorkspaceSlugPluginsIndexRoute =
     path: '/workspaces/$workspaceSlug/plugins/',
     getParentRoute: () => AuthRoute,
   } as any)
+const AuthWorkspacesWorkspaceSlugMonitoringIndexRoute =
+  AuthWorkspacesWorkspaceSlugMonitoringIndexRouteImport.update({
+    id: '/workspaces/$workspaceSlug/monitoring/',
+    path: '/workspaces/$workspaceSlug/monitoring/',
+    getParentRoute: () => AuthRoute,
+  } as any)
+const AuthWorkspacesWorkspaceSlugMembersIndexRoute =
+  AuthWorkspacesWorkspaceSlugMembersIndexRouteImport.update({
+    id: '/workspaces/$workspaceSlug/members/',
+    path: '/workspaces/$workspaceSlug/members/',
+    getParentRoute: () => AuthRoute,
+  } as any)
 const AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute =
   AuthWorkspacesWorkspaceSlugIntegrationsIndexRouteImport.update({
     id: '/workspaces/$workspaceSlug/integrations/',
@@ -195,6 +209,8 @@ export interface FileRoutesByFullPath {
   '/workspaces/$workspaceSlug/dlq/': typeof AuthWorkspacesWorkspaceSlugDlqIndexRoute
   '/workspaces/$workspaceSlug/events/': typeof AuthWorkspacesWorkspaceSlugEventsIndexRoute
   '/workspaces/$workspaceSlug/integrations/': typeof AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute
+  '/workspaces/$workspaceSlug/members/': typeof AuthWorkspacesWorkspaceSlugMembersIndexRoute
+  '/workspaces/$workspaceSlug/monitoring/': typeof AuthWorkspacesWorkspaceSlugMonitoringIndexRoute
   '/workspaces/$workspaceSlug/plugins/': typeof AuthWorkspacesWorkspaceSlugPluginsIndexRoute
   '/workspaces/$workspaceSlug/workflows/': typeof AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute
 }
@@ -220,6 +236,8 @@ export interface FileRoutesByTo {
   '/workspaces/$workspaceSlug/dlq': typeof AuthWorkspacesWorkspaceSlugDlqIndexRoute
   '/workspaces/$workspaceSlug/events': typeof AuthWorkspacesWorkspaceSlugEventsIndexRoute
   '/workspaces/$workspaceSlug/integrations': typeof AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute
+  '/workspaces/$workspaceSlug/members': typeof AuthWorkspacesWorkspaceSlugMembersIndexRoute
+  '/workspaces/$workspaceSlug/monitoring': typeof AuthWorkspacesWorkspaceSlugMonitoringIndexRoute
   '/workspaces/$workspaceSlug/plugins': typeof AuthWorkspacesWorkspaceSlugPluginsIndexRoute
   '/workspaces/$workspaceSlug/workflows': typeof AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute
 }
@@ -248,6 +266,8 @@ export interface FileRoutesById {
   '/_auth/workspaces/$workspaceSlug/dlq/': typeof AuthWorkspacesWorkspaceSlugDlqIndexRoute
   '/_auth/workspaces/$workspaceSlug/events/': typeof AuthWorkspacesWorkspaceSlugEventsIndexRoute
   '/_auth/workspaces/$workspaceSlug/integrations/': typeof AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute
+  '/_auth/workspaces/$workspaceSlug/members/': typeof AuthWorkspacesWorkspaceSlugMembersIndexRoute
+  '/_auth/workspaces/$workspaceSlug/monitoring/': typeof AuthWorkspacesWorkspaceSlugMonitoringIndexRoute
   '/_auth/workspaces/$workspaceSlug/plugins/': typeof AuthWorkspacesWorkspaceSlugPluginsIndexRoute
   '/_auth/workspaces/$workspaceSlug/workflows/': typeof AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute
 }
@@ -275,6 +295,8 @@ export interface FileRouteTypes {
     | '/workspaces/$workspaceSlug/dlq/'
     | '/workspaces/$workspaceSlug/events/'
     | '/workspaces/$workspaceSlug/integrations/'
+    | '/workspaces/$workspaceSlug/members/'
+    | '/workspaces/$workspaceSlug/monitoring/'
     | '/workspaces/$workspaceSlug/plugins/'
     | '/workspaces/$workspaceSlug/workflows/'
   fileRoutesByTo: FileRoutesByTo
@@ -300,6 +322,8 @@ export interface FileRouteTypes {
     | '/workspaces/$workspaceSlug/dlq'
     | '/workspaces/$workspaceSlug/events'
     | '/workspaces/$workspaceSlug/integrations'
+    | '/workspaces/$workspaceSlug/members'
+    | '/workspaces/$workspaceSlug/monitoring'
     | '/workspaces/$workspaceSlug/plugins'
     | '/workspaces/$workspaceSlug/workflows'
   id:
@@ -327,6 +351,8 @@ export interface FileRouteTypes {
     | '/_auth/workspaces/$workspaceSlug/dlq/'
     | '/_auth/workspaces/$workspaceSlug/events/'
     | '/_auth/workspaces/$workspaceSlug/integrations/'
+    | '/_auth/workspaces/$workspaceSlug/members/'
+    | '/_auth/workspaces/$workspaceSlug/monitoring/'
     | '/_auth/workspaces/$workspaceSlug/plugins/'
     | '/_auth/workspaces/$workspaceSlug/workflows/'
   fileRoutesById: FileRoutesById
@@ -447,6 +473,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugPluginsIndexRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/workspaces/$workspaceSlug/monitoring/': {
+      id: '/_auth/workspaces/$workspaceSlug/monitoring/'
+      path: '/workspaces/$workspaceSlug/monitoring'
+      fullPath: '/workspaces/$workspaceSlug/monitoring/'
+      preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugMonitoringIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/workspaces/$workspaceSlug/members/': {
+      id: '/_auth/workspaces/$workspaceSlug/members/'
+      path: '/workspaces/$workspaceSlug/members'
+      fullPath: '/workspaces/$workspaceSlug/members/'
+      preLoaderRoute: typeof AuthWorkspacesWorkspaceSlugMembersIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_auth/workspaces/$workspaceSlug/integrations/': {
       id: '/_auth/workspaces/$workspaceSlug/integrations/'
       path: '/workspaces/$workspaceSlug/integrations'
@@ -534,6 +574,8 @@ interface AuthRouteChildren {
   AuthWorkspacesWorkspaceSlugDlqIndexRoute: typeof AuthWorkspacesWorkspaceSlugDlqIndexRoute
   AuthWorkspacesWorkspaceSlugEventsIndexRoute: typeof AuthWorkspacesWorkspaceSlugEventsIndexRoute
   AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute: typeof AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute
+  AuthWorkspacesWorkspaceSlugMembersIndexRoute: typeof AuthWorkspacesWorkspaceSlugMembersIndexRoute
+  AuthWorkspacesWorkspaceSlugMonitoringIndexRoute: typeof AuthWorkspacesWorkspaceSlugMonitoringIndexRoute
   AuthWorkspacesWorkspaceSlugPluginsIndexRoute: typeof AuthWorkspacesWorkspaceSlugPluginsIndexRoute
   AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute: typeof AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute
 }
@@ -563,6 +605,10 @@ const AuthRouteChildren: AuthRouteChildren = {
     AuthWorkspacesWorkspaceSlugEventsIndexRoute,
   AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute:
     AuthWorkspacesWorkspaceSlugIntegrationsIndexRoute,
+  AuthWorkspacesWorkspaceSlugMembersIndexRoute:
+    AuthWorkspacesWorkspaceSlugMembersIndexRoute,
+  AuthWorkspacesWorkspaceSlugMonitoringIndexRoute:
+    AuthWorkspacesWorkspaceSlugMonitoringIndexRoute,
   AuthWorkspacesWorkspaceSlugPluginsIndexRoute:
     AuthWorkspacesWorkspaceSlugPluginsIndexRoute,
   AuthWorkspacesWorkspaceSlugWorkflowsIndexRoute:

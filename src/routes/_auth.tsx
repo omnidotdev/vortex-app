@@ -7,12 +7,14 @@ import {
   useParams,
 } from "@tanstack/react-router";
 import {
+  Activity,
   AlertTriangle,
   BookOpen,
   ExternalLink,
   LogOut,
   Menu,
   MessageSquare,
+  Users,
 } from "lucide-react";
 import { RiDiscordLine as DiscordIcon } from "react-icons/ri";
 
@@ -237,6 +239,26 @@ function MobileHeader() {
                           Dead Letter Queue
                         </Link>
                         <Link
+                          to="/workspaces/$workspaceSlug/monitoring"
+                          params={{ workspaceSlug }}
+                          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent"
+                          activeProps={{ className: "bg-accent" }}
+                          onClick={() => setOpen(false)}
+                        >
+                          <Activity className="h-4 w-4" />
+                          Monitoring
+                        </Link>
+                        <Link
+                          to="/workspaces/$workspaceSlug/members"
+                          params={{ workspaceSlug }}
+                          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent"
+                          activeProps={{ className: "bg-accent" }}
+                          onClick={() => setOpen(false)}
+                        >
+                          <Users className="h-4 w-4" />
+                          Members
+                        </Link>
+                        <Link
                           to="/workspaces/$workspaceSlug/settings"
                           params={{ workspaceSlug }}
                           className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
@@ -426,6 +448,24 @@ function AppSidebar() {
               >
                 <AlertTriangle className="h-4 w-4" />
                 Dead Letter Queue
+              </Link>
+              <Link
+                to="/workspaces/$workspaceSlug/monitoring"
+                params={{ workspaceSlug }}
+                className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent"
+                activeProps={{ className: "bg-accent" }}
+              >
+                <Activity className="h-4 w-4" />
+                Monitoring
+              </Link>
+              <Link
+                to="/workspaces/$workspaceSlug/members"
+                params={{ workspaceSlug }}
+                className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent"
+                activeProps={{ className: "bg-accent" }}
+              >
+                <Users className="h-4 w-4" />
+                Members
               </Link>
 
               <Link
