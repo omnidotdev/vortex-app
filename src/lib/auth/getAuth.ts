@@ -34,6 +34,8 @@ async function fetchRowIdFromApi(
   }
 }
 
+export type AuthSession = NonNullable<Awaited<ReturnType<typeof getAuth>>>;
+
 export async function getAuth(request: Request) {
   try {
     const session = await auth.api.getSession({

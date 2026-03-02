@@ -102,8 +102,17 @@ const selfHostedFeatures = [
   "Custom plugins",
 ];
 
+/** Map legacy tier names to current values */
+const TIER_ALIASES: Record<string, string> = {
+  basic: "starter",
+};
+
 const searchSchema = z.object({
-  tier: z.enum(["free", "starter", "pro", "team", "enterprise"]).optional(),
+  tier: z
+    .string()
+    .transform((v) => TIER_ALIASES[v] ?? v)
+    .pipe(z.enum(["free", "starter", "pro", "team", "enterprise"]))
+    .optional(),
 });
 
 export const Route = createFileRoute("/_public/pricing")({
@@ -189,7 +198,7 @@ function SaaSPricing() {
   const tabs = useTabs({ defaultValue: "month" });
 
   const filteredPrices = prices.filter(
-    (price) => price.recurring?.interval === tabs.value,
+    (price: Price) => price.recurring?.interval === tabs.value,
   );
 
   return (
@@ -231,7 +240,7 @@ function SaaSPricing() {
                   orgSubscriptions={orgSubscriptions}
                 />
 
-                {filteredPrices.map((price) => (
+                {filteredPrices.map((price: Price) => (
                   <PriceCard
                     key={price.id}
                     price={price}
