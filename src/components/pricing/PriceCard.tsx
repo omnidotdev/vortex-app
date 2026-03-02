@@ -79,17 +79,14 @@ export const PriceCard = ({ price, orgSubscriptions = {} }: Props) => {
   // Get tier index for comparison
   const getTierIndex = (t: Tier): number => TIER_ORDER.indexOf(t);
 
-  // Filter organizations that can upgrade to this tier
-  const upgradeableOrgs =
-    session?.organizations?.filter((org: OrganizationClaim) => {
-      const orgTier = getOrgTier(org.id);
-      // Free tier card: no upgrades shown (use "Get Started" flow)
-      if (isFreeTier) return false;
-      // Enterprise tier: contact sales, no self-service upgrade
-      if (isEnterpriseTier) return false;
-      // Show orgs with lower tier than this card's tier
-      return getTierIndex(orgTier) < getTierIndex(tier);
-    }) ?? [];
+  // Categorize organizations by their upgrade eligibility for this tier
+  const allOrgs = (session?.organizations ?? []) as OrganizationClaim[];
+  const upgradeableOrgs = allOrgs.filter(
+    (org) => getTierIndex(getOrgTier(org.id)) < getTierIndex(tier),
+  );
+  const nonUpgradeableOrgs = allOrgs.filter(
+    (org) => getTierIndex(getOrgTier(org.id)) >= getTierIndex(tier),
+  );
 
   // Check if this card's tier matches the URL param (for post-sign-in auto-open)
   const shouldAutoOpen = search.tier === tier && !!session;
@@ -286,11 +283,11 @@ export const PriceCard = ({ price, orgSubscriptions = {} }: Props) => {
               </MenuTrigger>
               <MenuPositioner className="!w-[var(--reference-width)]">
                 <MenuContent className="w-full">
-                  {upgradeableOrgs.length > 0 && (
+                  {allOrgs.length > 0 && (
                     <>
                       <MenuItemGroup>
                         <MenuItemGroupLabel className="text-muted-foreground">
-                          Upgrade existing workspace
+                          Your workspaces
                         </MenuItemGroupLabel>
 
                         {upgradeableOrgs.map((org: OrganizationClaim) => (
@@ -307,9 +304,41 @@ export const PriceCard = ({ price, orgSubscriptions = {} }: Props) => {
                               <span className="flex-1 truncate font-medium text-sm">
                                 {org.name}
                               </span>
+                              <span className="rounded bg-primary/10 px-1.5 py-0.5 text-primary text-xs">
+                                Upgrade
+                              </span>
                             </MenuItemText>
                           </MenuItem>
                         ))}
+
+                        {nonUpgradeableOrgs.map((org: OrganizationClaim) => {
+                          const orgTier = getOrgTier(org.id);
+                          const isSameTier = orgTier === tier;
+
+                          return (
+                            <MenuItem
+                              key={org.id}
+                              value={org.id}
+                              disabled
+                              className="opacity-60"
+                            >
+                              <MenuItemText className="flex w-full items-center gap-2">
+                                <BuildingIcon
+                                  size={16}
+                                  className="text-muted-foreground"
+                                />
+                                <span className="flex-1 truncate font-medium text-sm">
+                                  {org.name}
+                                </span>
+                                <span className="rounded bg-muted px-1.5 py-0.5 text-muted-foreground text-xs">
+                                  {isSameTier
+                                    ? "Current plan"
+                                    : capitalizeFirstLetter(orgTier)}
+                                </span>
+                              </MenuItemText>
+                            </MenuItem>
+                          );
+                        })}
                       </MenuItemGroup>
 
                       <MenuSeparator />
@@ -317,10 +346,6 @@ export const PriceCard = ({ price, orgSubscriptions = {} }: Props) => {
                   )}
 
                   <MenuItemGroup>
-                    <MenuItemGroupLabel className="text-muted-foreground">
-                      Create new workspace
-                    </MenuItemGroupLabel>
-
                     <MenuItem value="create-new" className="cursor-pointer">
                       <MenuItemText className="flex w-full items-center gap-2">
                         <PlusIcon size={16} className="text-muted-foreground" />

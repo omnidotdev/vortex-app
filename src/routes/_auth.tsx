@@ -14,6 +14,7 @@ import {
   LogOut,
   Menu,
   MessageSquare,
+  Tag,
   Users,
 } from "lucide-react";
 import { RiDiscordLine as DiscordIcon } from "react-icons/ri";
@@ -273,6 +274,14 @@ function MobileHeader() {
 
                   {/* Omni Links */}
                   <div className="space-y-1 border-t p-4">
+                    <Link
+                      to="/pricing"
+                      className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent hover:text-foreground"
+                      onClick={() => setOpen(false)}
+                    >
+                      <Tag className="h-4 w-4" />
+                      Pricing
+                    </Link>
                     <a
                       href={app.links.docs}
                       target="_blank"
@@ -482,6 +491,13 @@ function AppSidebar() {
 
         {/* Omni Links */}
         <div className="space-y-1 border-t p-4">
+          <Link
+            to="/pricing"
+            className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent hover:text-foreground"
+          >
+            <Tag className="h-4 w-4" />
+            Pricing
+          </Link>
           <a
             href={app.links.docs}
             target="_blank"
