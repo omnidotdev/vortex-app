@@ -47,9 +47,7 @@ function computeFieldChanges(
       changes.push({ field: key, type: "added" });
     } else if (!(key in propsB)) {
       changes.push({ field: key, type: "removed" });
-    } else if (
-      JSON.stringify(propsA[key]) !== JSON.stringify(propsB[key])
-    ) {
+    } else if (JSON.stringify(propsA[key]) !== JSON.stringify(propsB[key])) {
       changes.push({ field: key, type: "changed" });
     }
   }

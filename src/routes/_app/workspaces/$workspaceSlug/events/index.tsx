@@ -14,15 +14,15 @@ import {
 } from "@/components/ui/select";
 import eventSchemasOptions from "@/lib/options/eventSchemas.options";
 
-export const Route = createFileRoute(
-  "/_app/workspaces/$workspaceSlug/events/",
-)({
-  loader: async ({ context: { queryClient, organizationId } }) => {
-    if (!organizationId) throw notFound();
-    await queryClient.ensureQueryData(eventSchemasOptions({}));
+export const Route = createFileRoute("/_app/workspaces/$workspaceSlug/events/")(
+  {
+    loader: async ({ context: { queryClient, organizationId } }) => {
+      if (!organizationId) throw notFound();
+      await queryClient.ensureQueryData(eventSchemasOptions({}));
+    },
+    component: EventSchemasPage,
   },
-  component: EventSchemasPage,
-});
+);
 
 /**
  * Event schemas browse page.
@@ -39,16 +39,13 @@ function EventSchemasPage() {
   });
 
   // Deduplicate to show only latest version per event name
-  const latestSchemas = schemas.reduce(
-    (acc, schema) => {
-      const existing = acc.get(schema.name);
-      if (!existing || schema.version > existing.version) {
-        acc.set(schema.name, schema);
-      }
-      return acc;
-    },
-    new Map<string, (typeof schemas)[number]>(),
-  );
+  const latestSchemas = schemas.reduce((acc, schema) => {
+    const existing = acc.get(schema.name);
+    if (!existing || schema.version > existing.version) {
+      acc.set(schema.name, schema);
+    }
+    return acc;
+  }, new Map<string, (typeof schemas)[number]>());
 
   const filteredSchemas = Array.from(latestSchemas.values()).filter(
     (schema) => {
@@ -71,15 +68,12 @@ function EventSchemasPage() {
   const sources = [...new Set(schemas.map((s) => s.source))].sort();
 
   // Group by source
-  const grouped = filteredSchemas.reduce(
-    (acc, schema) => {
-      const group = acc.get(schema.source) ?? [];
-      group.push(schema);
-      acc.set(schema.source, group);
-      return acc;
-    },
-    new Map<string, typeof filteredSchemas>(),
-  );
+  const grouped = filteredSchemas.reduce((acc, schema) => {
+    const group = acc.get(schema.source) ?? [];
+    group.push(schema);
+    acc.set(schema.source, group);
+    return acc;
+  }, new Map<string, typeof filteredSchemas>());
 
   return (
     <div className="p-8">

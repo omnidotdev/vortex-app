@@ -18,11 +18,7 @@ export const Route = createFileRoute(
 /**
  * Render a JSON Schema properties object as a table.
  */
-function SchemaPropertyTable({
-  schema,
-}: {
-  schema: Record<string, unknown>;
-}) {
+function SchemaPropertyTable({ schema }: { schema: Record<string, unknown> }) {
   const properties = (schema.properties ?? {}) as Record<
     string,
     Record<string, unknown>
@@ -106,8 +102,7 @@ function EventSchemaDetailPage() {
     );
   }
 
-  const payloadSchema =
-    (latest.payloadSchema as Record<string, unknown>) ?? {};
+  const payloadSchema = (latest.payloadSchema as Record<string, unknown>) ?? {};
 
   return (
     <div className="p-8">
