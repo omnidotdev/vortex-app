@@ -170,7 +170,7 @@ import {
 } from "@/lib/workflow/stepNames";
 
 export const Route = createFileRoute(
-  "/_auth/workspaces/$workspaceSlug/workflows/$workflowId",
+  "/_app/workspaces/$workspaceSlug/workflows/$workflowId",
 )({
   loader: async ({ params, context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();

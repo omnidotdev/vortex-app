@@ -18,7 +18,7 @@ import eventSchemasOptions from "@/lib/options/eventSchemas.options";
 import type { PublishEventPayload } from "@/generated/graphql";
 
 export const Route = createFileRoute(
-  "/_auth/workspaces/$workspaceSlug/events/sandbox",
+  "/_app/workspaces/$workspaceSlug/events/sandbox",
 )({
   validateSearch: (search: Record<string, unknown>) => ({
     type: (search.type as string) ?? "",

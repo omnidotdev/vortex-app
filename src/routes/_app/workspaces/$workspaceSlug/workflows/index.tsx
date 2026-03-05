@@ -45,7 +45,7 @@ import workflowsOptions from "@/lib/options/workflows.options";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
 
 export const Route = createFileRoute(
-  "/_auth/workspaces/$workspaceSlug/workflows/",
+  "/_app/workspaces/$workspaceSlug/workflows/",
 )({
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import eventSchemasOptions from "@/lib/options/eventSchemas.options";
 
 export const Route = createFileRoute(
-  "/_auth/workspaces/$workspaceSlug/events/$schemaName",
+  "/_app/workspaces/$workspaceSlug/events/$schemaName",
 )({
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();

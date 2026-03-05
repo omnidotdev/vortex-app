@@ -14,7 +14,7 @@ import {
 import eventSchemasOptions from "@/lib/options/eventSchemas.options";
 
 export const Route = createFileRoute(
-  "/_auth/workspaces/$workspaceSlug/events/diff",
+  "/_app/workspaces/$workspaceSlug/events/diff",
 )({
   validateSearch: (search: Record<string, unknown>) => ({
     name: (search.name as string) ?? "",

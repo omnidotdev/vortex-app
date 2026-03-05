@@ -5,7 +5,7 @@ import { AUTH_BASE_URL, CONSOLE_URL } from "@/lib/config/env.config";
 
 import type { OrganizationClaim } from "@/lib/auth/getAuth";
 
-export const Route = createFileRoute("/_auth/workspaces/")({
+export const Route = createFileRoute("/_app/workspaces/")({
   component: WorkspacesPage,
 });
 

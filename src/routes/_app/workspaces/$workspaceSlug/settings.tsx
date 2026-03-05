@@ -26,7 +26,7 @@ import type { ApiKey } from "better-auth/client/plugins";
 type ListedApiKey = Omit<ApiKey, "key">;
 
 export const Route = createFileRoute(
-  "/_auth/workspaces/$workspaceSlug/settings",
+  "/_app/workspaces/$workspaceSlug/settings",
 )({
   loader: async ({ context: { organizationId } }) => {
     if (!organizationId) throw notFound();

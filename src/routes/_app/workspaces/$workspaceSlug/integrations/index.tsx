@@ -34,7 +34,7 @@ const searchSchema = z.object({
 });
 
 export const Route = createFileRoute(
-  "/_auth/workspaces/$workspaceSlug/integrations/",
+  "/_app/workspaces/$workspaceSlug/integrations/",
 )({
   validateSearch: searchSchema,
   loader: async ({ context: { queryClient, organizationId } }) => {

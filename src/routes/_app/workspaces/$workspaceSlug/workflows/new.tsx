@@ -19,7 +19,7 @@ import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute(
-  "/_auth/workspaces/$workspaceSlug/workflows/new",
+  "/_app/workspaces/$workspaceSlug/workflows/new",
 )({
   loader: async ({ context: { organizationId } }) => {
     if (!organizationId) throw notFound();
