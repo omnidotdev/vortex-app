@@ -19,7 +19,7 @@ function getDefaultRange(): DateRange {
 }
 
 export const Route = createFileRoute(
-  "/_auth/workspaces/$workspaceSlug/monitoring/",
+  "/_app/workspaces/$workspaceSlug/monitoring/",
 )({
   loader: async ({ context: { organizationId } }) => {
     if (!organizationId) throw notFound();

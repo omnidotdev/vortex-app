@@ -10,7 +10,7 @@ import {
 } from "@/lib/options/integrations.options";
 import workflowsOptions from "@/lib/options/workflows.options";
 
-export const Route = createFileRoute("/_auth/workspaces/$workspaceSlug/")({
+export const Route = createFileRoute("/_app/workspaces/$workspaceSlug/")({
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
 

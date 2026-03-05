@@ -9,7 +9,7 @@ import { getCurrentAuthHeaders } from "@/lib/graphql/graphqlClientFactory";
 import { membersOptions } from "@/lib/options/members.options";
 
 export const Route = createFileRoute(
-  "/_auth/workspaces/$workspaceSlug/members/",
+  "/_app/workspaces/$workspaceSlug/members/",
 )({
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();

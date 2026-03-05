@@ -15,7 +15,7 @@ import {
 import eventSchemasOptions from "@/lib/options/eventSchemas.options";
 
 export const Route = createFileRoute(
-  "/_auth/workspaces/$workspaceSlug/events/",
+  "/_app/workspaces/$workspaceSlug/events/",
 )({
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();

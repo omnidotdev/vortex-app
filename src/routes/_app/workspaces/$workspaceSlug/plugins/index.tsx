@@ -15,7 +15,7 @@ import pluginsOptions from "@/lib/options/plugins.options";
 import type { Plugin } from "@/components/plugins/PluginCard";
 
 export const Route = createFileRoute(
-  "/_auth/workspaces/$workspaceSlug/plugins/",
+  "/_app/workspaces/$workspaceSlug/plugins/",
 )({
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();

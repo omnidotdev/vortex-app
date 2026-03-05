@@ -43,7 +43,7 @@ import {
 } from "@/lib/options/integrations.options";
 
 export const Route = createFileRoute(
-  "/_auth/workspaces/$workspaceSlug/integrations/$integrationId",
+  "/_app/workspaces/$workspaceSlug/integrations/$integrationId",
 )({
   loader: async ({ context: { queryClient, organizationId }, params }) => {
     if (!organizationId) throw notFound();

@@ -31,14 +31,14 @@ type PluginDetail = {
 };
 
 export const Route = createFileRoute(
-  "/_auth/workspaces/$workspaceSlug/plugins/$pluginId",
+  "/_app/workspaces/$workspaceSlug/plugins/$pluginId",
 )({
   component: PluginDetailPage,
 });
 
 function PluginDetailPage() {
   const { workspaceSlug, pluginId } = useParams({
-    from: "/_auth/workspaces/$workspaceSlug/plugins/$pluginId",
+    from: "/_app/workspaces/$workspaceSlug/plugins/$pluginId",
   });
 
   const [isToggling, setIsToggling] = useState(false);

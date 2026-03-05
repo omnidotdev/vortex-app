@@ -45,7 +45,7 @@ const eventsProvider = {
   },
 };
 
-export const Route = createFileRoute("/_auth")({
+export const Route = createFileRoute("/_app")({
   beforeLoad: async ({ params, context: { session } }) => {
     // If session doesn't exist or rowId is missing, sign out to clear stale session
     // The user may exist in the identity provider but not in the database
