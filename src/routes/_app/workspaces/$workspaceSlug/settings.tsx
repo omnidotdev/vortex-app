@@ -397,7 +397,7 @@ function WorkspaceSettingsPage() {
             <div>
               <p className="font-medium">Free Plan</p>
               <p className="text-muted-foreground text-sm">
-                5 workflows, 100 runs/day
+                3 workflows, 500 runs/month
               </p>
             </div>
           </div>

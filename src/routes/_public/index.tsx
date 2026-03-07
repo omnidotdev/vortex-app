@@ -158,9 +158,11 @@ function LandingPage() {
               </div>
               <div className="text-center">
                 <div className="font-bold text-2xl text-foreground sm:text-3xl">
-                  Unlimited
+                  Visual
                 </div>
-                <div className="text-muted-foreground text-sm">Workflows</div>
+                <div className="text-muted-foreground text-sm">
+                  Workflow Builder
+                </div>
               </div>
             </div>
           </div>
