@@ -41,15 +41,15 @@ export type EventSchemasQueryVariables = {
 };
 
 export type EventSchemasQuery = {
-  eventSchemas: {
+  eventSchemata: {
     nodes: EventSchemaNode[];
     totalCount: number;
   };
 };
 
 const EventSchemasDocument = `
-  query EventSchemas($first: Int, $offset: Int, $orderBy: [EventSchemasOrderBy!], $filter: EventSchemaFilter) {
-    eventSchemas(first: $first, offset: $offset, orderBy: $orderBy, filter: $filter) {
+  query EventSchemas($first: Int, $offset: Int, $orderBy: [EventSchemaOrderBy!], $filter: EventSchemaFilter) {
+    eventSchemata(first: $first, offset: $offset, orderBy: $orderBy, filter: $filter) {
       nodes {
         rowId
         name

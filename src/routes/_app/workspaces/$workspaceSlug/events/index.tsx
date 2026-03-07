@@ -35,7 +35,7 @@ function EventSchemasPage() {
 
   const { data: schemas } = useSuspenseQuery({
     ...eventSchemasOptions({}),
-    select: (data) => data?.eventSchemas?.nodes ?? [],
+    select: (data) => data?.eventSchemata?.nodes ?? [],
   });
 
   // Deduplicate to show only latest version per event name

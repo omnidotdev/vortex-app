@@ -68,7 +68,7 @@ function EventSchemaDiffPage() {
 
   const { data: schemas } = useSuspenseQuery({
     ...eventSchemasOptions({}),
-    select: (data) => data?.eventSchemas?.nodes ?? [],
+    select: (data) => data?.eventSchemata?.nodes ?? [],
   });
 
   const schemaNames = [...new Set(schemas.map((s) => s.name))].sort();
