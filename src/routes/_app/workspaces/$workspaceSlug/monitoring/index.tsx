@@ -1,5 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import DateRangePicker from "@/components/monitoring/DateRangePicker";
 import ErrorTable from "@/components/monitoring/ErrorTable";
@@ -9,7 +9,7 @@ import StatsCards from "@/components/monitoring/StatsCards";
 import type { DateRange } from "@/components/monitoring/types";
 
 /**
- * Default to a 7-day range.
+ * Default to a 7-day range. Only called client-side to avoid hydration mismatch.
  */
 function getDefaultRange(): DateRange {
   return {
@@ -65,7 +65,12 @@ function TableSkeleton() {
  */
 function MonitoringPage() {
   const [preset, setPreset] = useState("7d");
-  const [range, setRange] = useState<DateRange>(getDefaultRange);
+  const [range, setRange] = useState<DateRange | null>(null);
+
+  // Initialize date range client-side to avoid hydration mismatch
+  useEffect(() => {
+    setRange(getDefaultRange());
+  }, []);
 
   const handleRangeChange = (newPreset: string, newRange: DateRange) => {
     setPreset(newPreset);
@@ -85,26 +90,42 @@ function MonitoringPage() {
         <DateRangePicker value={preset} onChange={handleRangeChange} />
       </div>
 
-      {/* Stats cards */}
-      <div className="mt-6">
-        <Suspense fallback={<CardsSkeleton />}>
-          <StatsCards since={range.since} until={range.until} />
-        </Suspense>
-      </div>
+      {range ? (
+        <>
+          {/* Stats cards */}
+          <div className="mt-6">
+            <Suspense fallback={<CardsSkeleton />}>
+              <StatsCards since={range.since} until={range.until} />
+            </Suspense>
+          </div>
 
-      {/* Timeline chart */}
-      <div className="mt-6">
-        <Suspense fallback={<TimelineSkeleton />}>
-          <ExecutionTimeline since={range.since} until={range.until} />
-        </Suspense>
-      </div>
+          {/* Timeline chart */}
+          <div className="mt-6">
+            <Suspense fallback={<TimelineSkeleton />}>
+              <ExecutionTimeline since={range.since} until={range.until} />
+            </Suspense>
+          </div>
 
-      {/* Error table */}
-      <div className="mt-6">
-        <Suspense fallback={<TableSkeleton />}>
-          <ErrorTable since={range.since} />
-        </Suspense>
-      </div>
+          {/* Error table */}
+          <div className="mt-6">
+            <Suspense fallback={<TableSkeleton />}>
+              <ErrorTable since={range.since} />
+            </Suspense>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="mt-6">
+            <CardsSkeleton />
+          </div>
+          <div className="mt-6">
+            <TimelineSkeleton />
+          </div>
+          <div className="mt-6">
+            <TableSkeleton />
+          </div>
+        </>
+      )}
     </div>
   );
 }

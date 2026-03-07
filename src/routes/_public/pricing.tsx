@@ -45,6 +45,112 @@ const FREE_PRICE: Price = {
   },
 };
 
+// Starter tier placeholder for display
+const STARTER_PRODUCT = {
+  id: "starter-product",
+  name: "Starter",
+  description: "For individuals getting serious about automation",
+  marketing_features: [
+    { name: "10 workflows" },
+    { name: "5,000 runs/month" },
+    { name: "15 integrations" },
+    { name: "1 user" },
+    { name: "Email support" },
+  ],
+};
+
+const STARTER_PRICE_MONTHLY: Price = {
+  id: "starter-monthly",
+  active: true,
+  currency: "usd",
+  unit_amount: 900,
+  recurring: { interval: "month", interval_count: 1 },
+  metadata: { tier: "starter" },
+  product: STARTER_PRODUCT,
+};
+
+const STARTER_PRICE_YEARLY: Price = {
+  ...STARTER_PRICE_MONTHLY,
+  id: "starter-yearly",
+  unit_amount: 8100,
+  recurring: { interval: "year", interval_count: 1 },
+};
+
+// Pro tier placeholder for display
+const PRO_PRODUCT = {
+  id: "pro-product",
+  name: "Pro",
+  description: "For power users and small teams",
+  marketing_features: [
+    { name: "50 workflows" },
+    { name: "50,000 runs/month" },
+    { name: "Unlimited integrations" },
+    { name: "3 users" },
+    { name: "Priority support" },
+    { name: "Custom plugins" },
+  ],
+};
+
+const PRO_PRICE_MONTHLY: Price = {
+  id: "pro-monthly",
+  active: true,
+  currency: "usd",
+  unit_amount: 2900,
+  recurring: { interval: "month", interval_count: 1 },
+  metadata: { tier: "pro" },
+  product: PRO_PRODUCT,
+};
+
+const PRO_PRICE_YEARLY: Price = {
+  ...PRO_PRICE_MONTHLY,
+  id: "pro-yearly",
+  unit_amount: 26100,
+  recurring: { interval: "year", interval_count: 1 },
+};
+
+// Team tier placeholder for display
+const TEAM_PRODUCT = {
+  id: "team-product",
+  name: "Team",
+  description: "For growing teams and organizations",
+  marketing_features: [
+    { name: "200 workflows" },
+    { name: "500,000 runs/month" },
+    { name: "Unlimited integrations" },
+    { name: "10 users" },
+    { name: "Priority support" },
+    { name: "SSO/SAML" },
+    { name: "Audit logs" },
+  ],
+};
+
+const TEAM_PRICE_MONTHLY: Price = {
+  id: "team-monthly",
+  active: true,
+  currency: "usd",
+  unit_amount: 7900,
+  recurring: { interval: "month", interval_count: 1 },
+  metadata: { tier: "team" },
+  product: TEAM_PRODUCT,
+};
+
+const TEAM_PRICE_YEARLY: Price = {
+  ...TEAM_PRICE_MONTHLY,
+  id: "team-yearly",
+  unit_amount: 71100,
+  recurring: { interval: "year", interval_count: 1 },
+};
+
+/** Fallback paid tiers when billing products are not yet configured */
+const FALLBACK_PAID_PRICES: Price[] = [
+  STARTER_PRICE_MONTHLY,
+  STARTER_PRICE_YEARLY,
+  PRO_PRICE_MONTHLY,
+  PRO_PRICE_YEARLY,
+  TEAM_PRICE_MONTHLY,
+  TEAM_PRICE_YEARLY,
+];
+
 // Enterprise tier placeholder for display
 const ENTERPRISE_PRICE: Price = {
   id: "enterprise",
@@ -197,7 +303,9 @@ function SaaSPricing() {
 
   const tabs = useTabs({ defaultValue: "month" });
 
-  const filteredPrices = prices.filter(
+  const activePrices = prices.length > 0 ? prices : FALLBACK_PAID_PRICES;
+
+  const filteredPrices = activePrices.filter(
     (price: Price) => price.recurring?.interval === tabs.value,
   );
 
