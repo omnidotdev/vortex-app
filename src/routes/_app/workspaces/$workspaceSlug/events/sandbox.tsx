@@ -66,7 +66,7 @@ function EventSandboxPage() {
 
   const { data: schemas } = useSuspenseQuery({
     ...eventSchemasOptions({}),
-    select: (data) => data?.eventSchemas?.nodes ?? [],
+    select: (data) => data?.eventSchemata?.nodes ?? [],
   });
 
   // Deduplicate to latest version per name

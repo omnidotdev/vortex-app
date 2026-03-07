@@ -679,67 +679,27 @@ function WorkflowEditorPage() {
     });
 
     try {
-      // Get action nodes to execute
-      const currentNodes = nodesRef.current;
-      const currentEdges = edgesRef.current;
-      const actionNodes = currentNodes.filter(
-        (node) => node.type === "actionNode",
-      );
-
-      if (actionNodes.length === 0) {
-        logToDebugPane("action", "No action nodes to execute");
-        setIsExecuting(false);
-        return;
-      }
-
-      // Prepare workflow definition
-      const workflowDefinition = {
-        nodes: currentNodes.map((node) => ({
-          id: node.id,
-          type: node.type,
-          data: node.data,
-          position: node.position,
-        })),
-        edges: currentEdges.map((edge) => ({
-          id: edge.id,
-          source: edge.source,
-          target: edge.target,
-        })),
-      };
-
       const response = await fetch("/api/execute-workflow", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          workflowId: `vortex-workflow-${Date.now()}`,
-          organizationId, // Include org ID for credential lookup
-          workflowDefinition,
-          workflowType: "executeVortexWorkflow",
+          workflowId,
+          triggerData: {},
         }),
       });
 
+      const result = await response.json();
+
       if (response.ok) {
-        const result = await response.json();
-        // TODO vendor agnostic
-        logToDebugPane("action", "Workflow executed via executor", result, {
+        logToDebugPane("action", "Workflow executed successfully", result, {
           nodeType: "Workflow",
           nodeName: workflow.name,
-          expectedOutcome: "Temporal workflow completed",
         });
       } else {
-        // fall back to direct execution
-        logToDebugPane(
-          "action",
-          "Temporal unavailable, executing directly",
-          null,
-        );
-        for (const node of actionNodes) {
-          logToDebugPane("action", `Executing: ${node.data.label}`, node.data, {
-            nodeType: node.type,
-            nodeName: node.data.label,
-          });
-          await new Promise((resolve) => setTimeout(resolve, 500));
-        }
+        logToDebugPane("action", "Workflow execution failed", {
+          status: response.status,
+          error: result.error ?? "Unknown error",
+        });
       }
     } catch (err) {
       logToDebugPane("action", "Execution failed", {
@@ -748,7 +708,7 @@ function WorkflowEditorPage() {
     } finally {
       setIsExecuting(false);
     }
-  }, [workflowId, organizationId, workflow.name, logToDebugPane]);
+  }, [workflowId, workflow.name, logToDebugPane]);
 
   // Execute connected actions from a trigger node
   const executeConnectedActions = useCallback(

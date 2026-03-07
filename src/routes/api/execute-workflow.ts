@@ -1,9 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Hatchet } from "@hatchet-dev/typescript-sdk";
 
 import { getAuth } from "@/lib/auth/getAuth";
-import { reactFlowToDsl } from "../../lib/workflow/reactFlowToDsl";
-import type { WorkflowDefinition } from "../../lib/workflow/types";
+import { API_BASE_URL } from "@/lib/config/env.config";
 
 export const Route = createFileRoute("/api/execute-workflow")({
   server: {
@@ -16,52 +14,46 @@ export const Route = createFileRoute("/api/execute-workflow")({
 
         try {
           const body = await request.json();
-          const {
-            workflowId,
-            organizationId,
-            workflowDefinition,
-            triggerData = {},
-          } = body;
+          const { workflowId, triggerData = {} } = body;
 
-          // Generate workflow run ID
-          const workflowRunId = `wf-run-${Date.now()}-${Math.random().toString(36).substring(7)}`;
-          const hatchetWorkflowId = workflowId || `wf-${Date.now()}`;
+          if (!workflowId) {
+            return Response.json(
+              { success: false, error: "workflowId is required" },
+              { status: 400 },
+            );
+          }
 
-          // Convert ReactFlow format (nodes/edges) to DSL format (steps/edges)
-          const dslDefinition = reactFlowToDsl(
-            workflowDefinition.nodes || [],
-            workflowDefinition.edges || [],
-          );
+          // Proxy to the API's trigger endpoint
+          const apiUrl = `${API_BASE_URL}/api/v1/workflows/${workflowId}/trigger`;
+          const internalSecret = process.env.INTERNAL_API_SECRET;
 
-          // Initialize Hatchet client
-          const hatchet = Hatchet.init();
-
-          // Trigger the DSL workflow via event
-          await hatchet.event.push("workflow:execute", {
-            workflowId: hatchetWorkflowId,
-            organizationId, // Include org ID for credential lookup
-            triggerData,
-            definition: dslDefinition,
+          const res = await fetch(apiUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${internalSecret}`,
+            },
+            body: JSON.stringify({ data: triggerData }),
           });
+
+          const result = await res.json();
+
+          if (!res.ok) {
+            return Response.json(
+              { success: false, error: result.error ?? "Trigger failed" },
+              { status: res.status },
+            );
+          }
 
           return Response.json({
             success: true,
-            workflowId: hatchetWorkflowId,
-            workflowRunId,
-            status: "pending",
-            message: "Workflow execution triggered via Hatchet",
+            ...result,
           });
         } catch (error) {
           return Response.json(
             {
               success: false,
               error: error instanceof Error ? error.message : "Unknown error",
-              troubleshooting: {
-                checkWorker:
-                  "Make sure vortex-worker is running (check Tilt dashboard)",
-                checkHatchet:
-                  "Make sure Hatchet is running: docker compose up -d",
-              },
             },
             { status: 500 },
           );
@@ -74,17 +66,9 @@ export const Route = createFileRoute("/api/execute-workflow")({
           usage: {
             method: "POST",
             body: {
-              workflowId: "string (optional, will be auto-generated)",
-              workflowDefinition: "WorkflowDefinition (DSL format)",
+              workflowId: "string (required, the workflow database ID)",
               triggerData: "object (optional, data passed to trigger)",
             },
-          },
-          format: {
-            version: "1.0",
-            steps: "array of Step objects",
-            edges: "array of EdgeDefinition objects",
-            variables: "optional variable definitions",
-            settings: "optional workflow settings",
           },
         });
       },

@@ -77,7 +77,7 @@ function EventSchemaDetailPage() {
   const { data: allVersions } = useSuspenseQuery({
     ...eventSchemasOptions({}),
     select: (data) =>
-      (data?.eventSchemas?.nodes ?? [])
+      (data?.eventSchemata?.nodes ?? [])
         .filter((s) => s.name === schemaName)
         .sort((a, b) => b.version - a.version),
   });

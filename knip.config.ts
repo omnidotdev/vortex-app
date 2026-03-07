@@ -25,12 +25,9 @@ const knipConfig: KnipConfig = {
   ignore: ["src/generated/**", "src/routeTree.gen.ts"],
   ignoreDependencies: [
     // used by GraphQL Code Generator scripts
-    "@graphql-codegen/*",
-    // used by GraphQL Code Generator scripts
     "dotenv",
     // Future use dependencies
     "react-hotkeys-hook",
-    "recharts",
     "ts-pattern",
   ],
   tags: ["-knipignore"],
