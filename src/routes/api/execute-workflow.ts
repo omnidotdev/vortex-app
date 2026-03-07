@@ -27,11 +27,15 @@ export const Route = createFileRoute("/api/execute-workflow")({
           const apiUrl = `${API_BASE_URL}/api/v1/workflows/${workflowId}/trigger`;
           const internalSecret = process.env.INTERNAL_API_SECRET;
 
+          // Prefer internal secret for service-to-service auth,
+          // fall back to user's access token for session-based auth
+          const bearerToken = internalSecret || auth.accessToken;
+
           const res = await fetch(apiUrl, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${internalSecret}`,
+              Authorization: `Bearer ${bearerToken}`,
             },
             body: JSON.stringify({ data: triggerData }),
           });
