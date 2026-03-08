@@ -1,6 +1,13 @@
 import { GraphQLClient } from "graphql-request";
 
-import { API_GRAPHQL_URL } from "@/lib/config/env.config";
+import {
+  API_GRAPHQL_URL,
+  API_INTERNAL_GRAPHQL_URL,
+} from "@/lib/config/env.config";
+
+/** Use internal URL for server-side requests to bypass reverse proxy */
+const graphqlUrl =
+  typeof window === "undefined" ? API_INTERNAL_GRAPHQL_URL : API_GRAPHQL_URL;
 
 let client: GraphQLClient | null = null;
 let accessToken: string | null = null;
@@ -12,7 +19,7 @@ const getAuthHeaders = (): Record<string, string> => {
 
 export const getGraphQLClient = (): GraphQLClient => {
   if (!client) {
-    client = new GraphQLClient(API_GRAPHQL_URL!, {
+    client = new GraphQLClient(graphqlUrl!, {
       headers: { "Content-Type": "application/json" },
     });
   }
