@@ -415,6 +415,7 @@ function WorkflowEditorPage() {
     workflow.description || "",
   );
   const [editIsActive, setEditIsActive] = useState(workflow.isActive);
+  const [editSelectOpen, setEditSelectOpen] = useState(false);
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
@@ -1290,7 +1291,10 @@ function WorkflowEditorPage() {
               <h1 className="truncate font-semibold">{workflow.name}</h1>
               <DialogRoot
                 open={showEditDialog}
-                onOpenChange={(e) => setShowEditDialog(e.open)}
+                onOpenChange={(e) => {
+                  if (!e.open) setEditSelectOpen(false);
+                  setShowEditDialog(e.open);
+                }}
               >
                 <DialogTrigger asChild>
                   <button
@@ -1338,6 +1342,8 @@ function WorkflowEditorPage() {
                       <div className="space-y-2">
                         <Label htmlFor="edit-status">Status</Label>
                         <Select
+                          open={editSelectOpen}
+                          onOpenChange={setEditSelectOpen}
                           value={editIsActive ? "active" : "inactive"}
                           onValueChange={(value) =>
                             setEditIsActive(value === "active")
@@ -1702,7 +1708,7 @@ function WorkflowEditorPage() {
             </div>
 
             {/* Debug Console + Feedback + Discord - floating buttons */}
-            <div className="absolute bottom-4 left-4 z-10 flex gap-2">
+            <div className="pointer-events-none absolute bottom-4 left-4 z-10 flex gap-2 [&>*]:pointer-events-auto">
               <DebugPane />
               <Button
                 variant="outline"
