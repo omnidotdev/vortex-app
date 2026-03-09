@@ -22,11 +22,9 @@ export const executeWorkflow = createServerFn({ method: "POST" })
     const { workflowId, triggerData } = data;
 
     const apiUrl = `${API_INTERNAL_URL}/api/v1/workflows/${workflowId}/trigger`;
-    const internalSecret = process.env.INTERNAL_API_SECRET;
-
-    // Prefer internal secret for service-to-service auth,
-    // fall back to user's access token for session-based auth
-    const bearerToken = internalSecret || context.session.accessToken;
+    // Use the user's access token so the API resolves the correct organization.
+    // Internal secret maps to SERVICE_ORG_ID which won't match user-owned workflows
+    const bearerToken = context.session.accessToken;
 
     if (!bearerToken) {
       throw new Error("No credentials available for workflow execution");
