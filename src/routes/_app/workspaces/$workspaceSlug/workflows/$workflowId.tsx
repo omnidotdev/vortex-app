@@ -161,6 +161,7 @@ import {
   useWorkflowsQuery,
 } from "@/generated/graphql";
 import app from "@/lib/config/app.config";
+import extractErrorMessage from "@/lib/graphql/extractErrorMessage";
 import workflowOptions from "@/lib/options/workflow.options";
 import { NodeTypes } from "@/lib/schema";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
@@ -452,7 +453,7 @@ function WorkflowEditorPage() {
     onError: (err) => {
       setIsSaving(false);
       setSaveStatus("error");
-      setError(err instanceof Error ? err.message : "Failed to save workflow");
+      setError(extractErrorMessage(err, "Failed to save workflow"));
     },
   });
 
@@ -468,9 +469,7 @@ function WorkflowEditorPage() {
         });
       },
       onError: (err) => {
-        setError(
-          err instanceof Error ? err.message : "Failed to delete workflow",
-        );
+        setError(extractErrorMessage(err, "Failed to delete workflow"));
       },
     });
 
@@ -692,7 +691,7 @@ function WorkflowEditorPage() {
       });
       toast.success("Workflow executed successfully");
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unknown error";
+      const message = extractErrorMessage(err, "Unknown error");
       logToDebugPane("action", "Workflow execution failed", {
         error: message,
       });
