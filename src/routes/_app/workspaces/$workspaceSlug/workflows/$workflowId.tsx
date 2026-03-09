@@ -28,7 +28,6 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { RiDiscordLine as DiscordIcon } from "react-icons/ri";
-import { toast } from "sonner";
 import ReactFlow, {
   Background,
   ConnectionLineType,
@@ -38,6 +37,7 @@ import ReactFlow, {
   useEdgesState,
   useNodesState,
 } from "reactflow";
+import { toast } from "sonner";
 
 import type { Connection, Edge, Node, ReactFlowInstance } from "reactflow";
 import "reactflow/dist/style.css";
