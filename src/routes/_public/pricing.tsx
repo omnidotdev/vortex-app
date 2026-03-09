@@ -72,7 +72,7 @@ const STARTER_PRICE_MONTHLY: Price = {
 const STARTER_PRICE_YEARLY: Price = {
   ...STARTER_PRICE_MONTHLY,
   id: "starter-yearly",
-  unit_amount: 11500,
+  unit_amount: 10800,
   recurring: { interval: "year", interval_count: 1 },
 };
 
@@ -105,7 +105,7 @@ const PRO_PRICE_MONTHLY: Price = {
 const PRO_PRICE_YEARLY: Price = {
   ...PRO_PRICE_MONTHLY,
   id: "pro-yearly",
-  unit_amount: 37400,
+  unit_amount: 35100,
   recurring: { interval: "year", interval_count: 1 },
 };
 
@@ -139,7 +139,7 @@ const TEAM_PRICE_MONTHLY: Price = {
 const TEAM_PRICE_YEARLY: Price = {
   ...TEAM_PRICE_MONTHLY,
   id: "team-yearly",
-  unit_amount: 95000,
+  unit_amount: 89100,
   recurring: { interval: "year", interval_count: 1 },
 };
 
@@ -307,12 +307,15 @@ function SaaSPricing() {
 
   // Use Aether prices only if they include the expected tiers (starter/pro/team);
   // otherwise fall back to hardcoded values to avoid showing stale Stripe data
+  const EXPECTED_TIERS = ["starter", "pro", "team"];
   const hasExpectedTiers =
     prices.length > 0 &&
-    ["starter", "pro", "team"].every((tier) =>
+    EXPECTED_TIERS.every((tier) =>
       prices.some((p: Price) => p.metadata?.tier === tier),
     );
-  const activePrices = hasExpectedTiers ? prices : FALLBACK_PAID_PRICES;
+  const activePrices = hasExpectedTiers
+    ? prices.filter((p: Price) => EXPECTED_TIERS.includes(p.metadata?.tier))
+    : FALLBACK_PAID_PRICES;
 
   const filteredPrices = activePrices.filter(
     (price: Price) => price.recurring?.interval === tabs.value,
