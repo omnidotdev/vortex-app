@@ -18,6 +18,7 @@ export type {
 } from "@omnidotdev/providers/billing";
 
 const billing = createBillingProvider({
+  provider: "aether",
   baseUrl: BILLING_BASE_URL,
   appId: "vortex",
 });
