@@ -305,7 +305,14 @@ function SaaSPricing() {
 
   const tabs = useTabs({ defaultValue: "month" });
 
-  const activePrices = prices.length > 0 ? prices : FALLBACK_PAID_PRICES;
+  // Use Aether prices only if they include the expected tiers (starter/pro/team);
+  // otherwise fall back to hardcoded values to avoid showing stale Stripe data
+  const hasExpectedTiers =
+    prices.length > 0 &&
+    ["starter", "pro", "team"].every((tier) =>
+      prices.some((p: Price) => p.metadata?.tier === tier),
+    );
+  const activePrices = hasExpectedTiers ? prices : FALLBACK_PAID_PRICES;
 
   const filteredPrices = activePrices.filter(
     (price: Price) => price.recurring?.interval === tabs.value,
