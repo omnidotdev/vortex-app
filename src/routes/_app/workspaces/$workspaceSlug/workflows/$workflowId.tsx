@@ -41,6 +41,8 @@ import ReactFlow, {
 import type { Connection, Edge, Node, ReactFlowInstance } from "reactflow";
 import "reactflow/dist/style.css";
 
+import { executeWorkflow } from "@/server/functions/executeWorkflow";
+
 import { AddNodeButton } from "@/components/AddNodeButton";
 import DebugPane from "@/components/DebugPane";
 import { SmartEdge } from "@/components/edges/SmartEdge";
@@ -680,30 +682,16 @@ function WorkflowEditorPage() {
     });
 
     try {
-      const response = await fetch("/api/execute-workflow", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          workflowId,
-          triggerData: {},
-        }),
+      const result = await executeWorkflow({
+        data: { workflowId, triggerData: {} },
       });
 
-      const result = await response.json();
-
-      if (response.ok) {
-        logToDebugPane("action", "Workflow executed successfully", result, {
-          nodeType: "Workflow",
-          nodeName: workflow.name,
-        });
-      } else {
-        logToDebugPane("action", "Workflow execution failed", {
-          status: response.status,
-          error: result.error ?? "Unknown error",
-        });
-      }
+      logToDebugPane("action", "Workflow executed successfully", result, {
+        nodeType: "Workflow",
+        nodeName: workflow.name,
+      });
     } catch (err) {
-      logToDebugPane("action", "Execution failed", {
+      logToDebugPane("action", "Workflow execution failed", {
         error: err instanceof Error ? err.message : "Unknown error",
       });
     } finally {
