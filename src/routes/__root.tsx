@@ -79,7 +79,7 @@ export const Route = createRootRouteWithContext<{
       },
     ],
     links: [
-      { rel: "icon", type: "image/png", href: "/logo.png" },
+      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
       { rel: "stylesheet", href: appCss },
     ],
   }),
