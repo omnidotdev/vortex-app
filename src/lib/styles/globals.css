@@ -185,6 +185,11 @@
     font-weight: var(--text-weight);
   }
 
+  /* Ensure SimpleIcons are visible on dark backgrounds */
+  .dark img[src*="cdn.simpleicons.org"] {
+    filter: brightness(0) invert(1);
+  }
+
   /* Optimize node rendering for drag performance */
   .react-flow__node {
     will-change: transform;
