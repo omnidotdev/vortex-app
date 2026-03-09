@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { RiDiscordLine as DiscordIcon } from "react-icons/ri";
+import { toast } from "sonner";
 import ReactFlow, {
   Background,
   ConnectionLineType,
@@ -40,8 +41,6 @@ import ReactFlow, {
 
 import type { Connection, Edge, Node, ReactFlowInstance } from "reactflow";
 import "reactflow/dist/style.css";
-
-import { executeWorkflow } from "@/server/functions/executeWorkflow";
 
 import { AddNodeButton } from "@/components/AddNodeButton";
 import DebugPane from "@/components/DebugPane";
@@ -170,6 +169,7 @@ import {
   generateUniqueStepName,
   getNodeBaseName,
 } from "@/lib/workflow/stepNames";
+import { executeWorkflow } from "@/server/functions/executeWorkflow";
 
 export const Route = createFileRoute(
   "/_app/workspaces/$workspaceSlug/workflows/$workflowId",
@@ -690,10 +690,13 @@ function WorkflowEditorPage() {
         nodeType: "Workflow",
         nodeName: workflow.name,
       });
+      toast.success("Workflow executed successfully");
     } catch (err) {
+      const message = err instanceof Error ? err.message : "Unknown error";
       logToDebugPane("action", "Workflow execution failed", {
-        error: err instanceof Error ? err.message : "Unknown error",
+        error: message,
       });
+      toast.error(`Execution failed: ${message}`);
     } finally {
       setIsExecuting(false);
     }

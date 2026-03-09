@@ -36,9 +36,9 @@ const FREE_PRICE: Price = {
     name: "Free",
     description: "For individuals exploring automation",
     marketing_features: [
-      { name: "3 workflows" },
-      { name: "500 runs/month" },
-      { name: "5 integrations" },
+      { name: "5 workflows" },
+      { name: "1,000 runs/month" },
+      { name: "All integrations" },
       { name: "1 user" },
       { name: "Community support" },
     ],
@@ -51,10 +51,10 @@ const STARTER_PRODUCT = {
   name: "Starter",
   description: "For individuals getting serious about automation",
   marketing_features: [
-    { name: "10 workflows" },
-    { name: "5,000 runs/month" },
-    { name: "15 integrations" },
-    { name: "1 user" },
+    { name: "25 workflows" },
+    { name: "10,000 runs/month" },
+    { name: "All integrations" },
+    { name: "2 users" },
     { name: "Email support" },
   ],
 };
@@ -63,7 +63,7 @@ const STARTER_PRICE_MONTHLY: Price = {
   id: "starter-monthly",
   active: true,
   currency: "usd",
-  unit_amount: 900,
+  unit_amount: 1200,
   recurring: { interval: "month", interval_count: 1 },
   metadata: { tier: "starter" },
   product: STARTER_PRODUCT,
@@ -72,7 +72,7 @@ const STARTER_PRICE_MONTHLY: Price = {
 const STARTER_PRICE_YEARLY: Price = {
   ...STARTER_PRICE_MONTHLY,
   id: "starter-yearly",
-  unit_amount: 8100,
+  unit_amount: 11500,
   recurring: { interval: "year", interval_count: 1 },
 };
 
@@ -82,11 +82,12 @@ const PRO_PRODUCT = {
   name: "Pro",
   description: "For power users and small teams",
   marketing_features: [
-    { name: "50 workflows" },
+    { name: "Unlimited workflows" },
     { name: "50,000 runs/month" },
-    { name: "Unlimited integrations" },
-    { name: "3 users" },
+    { name: "All integrations" },
+    { name: "5 users" },
     { name: "Priority support" },
+    { name: "SSO/SAML" },
     { name: "Custom plugins" },
   ],
 };
@@ -95,7 +96,7 @@ const PRO_PRICE_MONTHLY: Price = {
   id: "pro-monthly",
   active: true,
   currency: "usd",
-  unit_amount: 2900,
+  unit_amount: 3900,
   recurring: { interval: "month", interval_count: 1 },
   metadata: { tier: "pro" },
   product: PRO_PRODUCT,
@@ -104,7 +105,7 @@ const PRO_PRICE_MONTHLY: Price = {
 const PRO_PRICE_YEARLY: Price = {
   ...PRO_PRICE_MONTHLY,
   id: "pro-yearly",
-  unit_amount: 26100,
+  unit_amount: 37400,
   recurring: { interval: "year", interval_count: 1 },
 };
 
@@ -114,13 +115,14 @@ const TEAM_PRODUCT = {
   name: "Team",
   description: "For growing teams and organizations",
   marketing_features: [
-    { name: "200 workflows" },
+    { name: "Unlimited workflows" },
     { name: "500,000 runs/month" },
-    { name: "Unlimited integrations" },
-    { name: "10 users" },
+    { name: "All integrations" },
+    { name: "25 users" },
     { name: "Priority support" },
     { name: "SSO/SAML" },
     { name: "Audit logs" },
+    { name: "SLA guarantee" },
   ],
 };
 
@@ -128,7 +130,7 @@ const TEAM_PRICE_MONTHLY: Price = {
   id: "team-monthly",
   active: true,
   currency: "usd",
-  unit_amount: 7900,
+  unit_amount: 9900,
   recurring: { interval: "month", interval_count: 1 },
   metadata: { tier: "team" },
   product: TEAM_PRODUCT,
@@ -137,7 +139,7 @@ const TEAM_PRICE_MONTHLY: Price = {
 const TEAM_PRICE_YEARLY: Price = {
   ...TEAM_PRICE_MONTHLY,
   id: "team-yearly",
-  unit_amount: 71100,
+  unit_amount: 95000,
   recurring: { interval: "year", interval_count: 1 },
 };
 
@@ -166,10 +168,10 @@ const ENTERPRISE_PRICE: Price = {
     marketing_features: [
       { name: "Unlimited everything" },
       { name: "Custom SLAs" },
-      { name: "Dedicated support" },
-      { name: "Self-hosted option" },
+      { name: "Dedicated support engineer" },
+      { name: "Self-hosted deployment" },
       { name: "SOC 2 compliance" },
-      { name: "On-premise deployment" },
+      { name: "Data residency controls" },
     ],
   },
 };

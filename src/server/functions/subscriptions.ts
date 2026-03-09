@@ -16,13 +16,13 @@ const billingPortalSchema = z.object({
 
 const createSubscriptionSchema = z.object({
   organizationId: z.string().min(1),
-  priceId: z.string().startsWith("price_"),
+  priceId: z.string().min(1),
   successUrl: z.string().url(),
 });
 
 const checkoutWithWorkspaceSchema = z
   .object({
-    priceId: z.string().startsWith("price_"),
+    priceId: z.string().min(1),
     successUrl: z.string().url(),
     cancelUrl: z.string().url(),
     // Either workspaceId or createWorkspace must be provided

@@ -113,7 +113,7 @@ function ExportWorkflowDialog({
     <DialogRoot open={open} onOpenChange={(e) => onOpenChange(e.open)}>
       <DialogBackdrop />
       <DialogPositioner>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Export Workflow</DialogTitle>
             <DialogDescription>

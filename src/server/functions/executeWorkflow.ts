@@ -9,7 +9,7 @@ const API_INTERNAL_URL =
 
 const executeWorkflowSchema = z.object({
   workflowId: z.string().uuid(),
-  triggerData: z.record(z.unknown()).optional().default({}),
+  triggerData: z.record(z.string(), z.unknown()).optional().default({}),
 });
 
 /**
