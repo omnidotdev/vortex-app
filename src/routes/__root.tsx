@@ -7,7 +7,7 @@ import {
   createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 
 import { isDevEnv } from "@/lib/config/env.config";
@@ -22,6 +22,26 @@ import type { QueryClient } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import type { AuthSession } from "@/lib/auth/getAuth";
 import type { Theme } from "@/providers/ThemeProvider";
+
+/** Parse exp claim from a JWT without verifying signature */
+function getTokenExpMs(token: string): number | null {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return (payload.exp as number) * 1000;
+  } catch {
+    return null;
+  }
+}
+
+/** Fetch a fresh access token from the server session */
+async function refreshAccessToken(): Promise<string | null> {
+  try {
+    const { session } = await fetchSession();
+    return session?.accessToken ?? null;
+  } catch {
+    return null;
+  }
+}
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -104,13 +124,38 @@ function RootComponent() {
   const theme = Route.useLoaderData();
   const { isMaintenanceMode, session } = Route.useRouteContext();
 
+  const [currentToken, setCurrentToken] = useState(session?.accessToken);
+
   // Set access token on client-side after hydration
-  // The beforeLoad sets it during SSR, but the client needs it too
   useEffect(() => {
-    if (session?.accessToken) {
-      setAccessToken(session.accessToken);
+    const token = currentToken ?? session?.accessToken;
+    if (token) {
+      setAccessToken(token);
     }
-  }, [session?.accessToken]);
+  }, [currentToken, session?.accessToken]);
+
+  // Proactively refresh the token before it expires
+  useEffect(() => {
+    const token = currentToken ?? session?.accessToken;
+    if (!token) return;
+
+    const expMs = getTokenExpMs(token);
+    if (!expMs) return;
+
+    // Refresh 60s before expiry
+    const refreshAt = expMs - Date.now() - 60_000;
+    if (refreshAt <= 0) {
+      // Already expired or about to — refresh immediately
+      refreshAccessToken().then(setCurrentToken);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      refreshAccessToken().then(setCurrentToken);
+    }, refreshAt);
+
+    return () => clearTimeout(timer);
+  }, [currentToken, session?.accessToken]);
 
   if (isMaintenanceMode) {
     return (
