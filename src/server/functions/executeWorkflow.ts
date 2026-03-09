@@ -1,8 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-import { API_BASE_URL } from "@/lib/config/env.config";
 import { authMiddleware } from "@/server/middleware";
+
+// Internal URL for server-to-server communication (bypasses CDN/Cloudflare)
+const API_INTERNAL_URL =
+  process.env.API_INTERNAL_URL || process.env.VITE_API_BASE_URL;
 
 const executeWorkflowSchema = z.object({
   workflowId: z.string().uuid(),
@@ -18,12 +21,16 @@ export const executeWorkflow = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { workflowId, triggerData } = data;
 
-    const apiUrl = `${API_BASE_URL}/api/v1/workflows/${workflowId}/trigger`;
+    const apiUrl = `${API_INTERNAL_URL}/api/v1/workflows/${workflowId}/trigger`;
     const internalSecret = process.env.INTERNAL_API_SECRET;
 
     // Prefer internal secret for service-to-service auth,
     // fall back to user's access token for session-based auth
     const bearerToken = internalSecret || context.session.accessToken;
+
+    if (!bearerToken) {
+      throw new Error("No credentials available for workflow execution");
+    }
 
     const res = await fetch(apiUrl, {
       method: "POST",
