@@ -1,4 +1,9 @@
-query EventSchemas($first: Int, $offset: Int, $orderBy: [EventSchemasOrderBy!], $filter: EventSchemaFilter) {
+query EventSchemas(
+  $first: Int
+  $offset: Int
+  $orderBy: [EventSchemasOrderBy!]
+  $filter: EventSchemaFilter
+) {
   eventSchemas(
     first: $first
     offset: $offset
