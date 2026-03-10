@@ -1262,9 +1262,7 @@ function WorkflowEditorPage() {
       // Skip if the new node is a trigger (triggers are sources, not targets)
       if (type !== "triggerNode") {
         const sourceNode =
-          selectedNode ??
-          nodesRef.current[nodesRef.current.length - 1] ??
-          null;
+          selectedNode ?? nodesRef.current[nodesRef.current.length - 1] ?? null;
 
         if (sourceNode) {
           // Only auto-connect if the source doesn't already have an outgoing edge
