@@ -165,12 +165,12 @@ function RootComponent() {
     const refreshAt = expMs - Date.now() - 60_000;
     if (refreshAt <= 0) {
       // Already expired or about to — refresh immediately
-      refreshAccessToken().then(setCurrentToken);
+      refreshAccessToken().then((t) => setCurrentToken(t ?? undefined));
       return;
     }
 
     const timer = setTimeout(() => {
-      refreshAccessToken().then(setCurrentToken);
+      refreshAccessToken().then((t) => setCurrentToken(t ?? undefined));
     }, refreshAt);
 
     return () => clearTimeout(timer);

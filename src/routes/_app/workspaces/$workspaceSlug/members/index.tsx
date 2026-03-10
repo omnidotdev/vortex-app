@@ -77,7 +77,7 @@ async function removeMember(
 function MembersPage() {
   const { organizationId } = Route.useLoaderData();
   const context = Route.useRouteContext();
-  const currentUserId = context.session?.user?.rowId;
+  const currentUserId = context.session?.user?.rowId ?? undefined;
   const queryClient = useQueryClient();
 
   const { data } = useSuspenseQuery(membersOptions(organizationId));

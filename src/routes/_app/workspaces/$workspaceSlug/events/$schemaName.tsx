@@ -144,7 +144,11 @@ function EventSchemaDetailPage() {
               <Link
                 to="/workspaces/$workspaceSlug/events/diff"
                 params={{ workspaceSlug }}
-                search={{ name: latest.name }}
+                search={{
+                  name: latest.name,
+                  versionA: String(allVersions[1]?.version ?? latest.version),
+                  versionB: String(latest.version),
+                }}
               >
                 Compare Versions
               </Link>
@@ -192,6 +196,7 @@ function EventSchemaDetailPage() {
                         search={{
                           name: latest.name,
                           versionA: String(version.version),
+                          versionB: String(latest.version),
                         }}
                       >
                         Compare
