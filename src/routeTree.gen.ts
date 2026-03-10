@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
-import { Route as ApiExecuteWorkflowRouteImport } from './routes/api/execute-workflow'
 import { Route as ApiHealthRouteImport } from './routes/api/[_]health'
 import { Route as PublicPricingRouteImport } from './routes/_public/pricing'
 import { Route as AppWorkspacesIndexRouteImport } from './routes/_app/workspaces/index'
@@ -49,11 +48,6 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PublicRoute,
-} as any)
-const ApiExecuteWorkflowRoute = ApiExecuteWorkflowRouteImport.update({
-  id: '/api/execute-workflow',
-  path: '/api/execute-workflow',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiHealthRoute = ApiHealthRouteImport.update({
   id: '/api/_health',
@@ -191,7 +185,6 @@ export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
   '/pricing': typeof PublicPricingRoute
   '/api/_health': typeof ApiHealthRoute
-  '/api/execute-workflow': typeof ApiExecuteWorkflowRoute
   '/oauth/callback': typeof PublicOauthCallbackRoute
   '/oauth/error': typeof PublicOauthErrorRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -218,7 +211,6 @@ export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
   '/pricing': typeof PublicPricingRoute
   '/api/_health': typeof ApiHealthRoute
-  '/api/execute-workflow': typeof ApiExecuteWorkflowRoute
   '/oauth/callback': typeof PublicOauthCallbackRoute
   '/oauth/error': typeof PublicOauthErrorRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -247,7 +239,6 @@ export interface FileRoutesById {
   '/_public': typeof PublicRouteWithChildren
   '/_public/pricing': typeof PublicPricingRoute
   '/api/_health': typeof ApiHealthRoute
-  '/api/execute-workflow': typeof ApiExecuteWorkflowRoute
   '/_public/': typeof PublicIndexRoute
   '/_public/oauth/callback': typeof PublicOauthCallbackRoute
   '/_public/oauth/error': typeof PublicOauthErrorRoute
@@ -277,7 +268,6 @@ export interface FileRouteTypes {
     | '/'
     | '/pricing'
     | '/api/_health'
-    | '/api/execute-workflow'
     | '/oauth/callback'
     | '/oauth/error'
     | '/api/auth/$'
@@ -304,7 +294,6 @@ export interface FileRouteTypes {
     | '/'
     | '/pricing'
     | '/api/_health'
-    | '/api/execute-workflow'
     | '/oauth/callback'
     | '/oauth/error'
     | '/api/auth/$'
@@ -332,7 +321,6 @@ export interface FileRouteTypes {
     | '/_public'
     | '/_public/pricing'
     | '/api/_health'
-    | '/api/execute-workflow'
     | '/_public/'
     | '/_public/oauth/callback'
     | '/_public/oauth/error'
@@ -361,7 +349,6 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   PublicRoute: typeof PublicRouteWithChildren
   ApiHealthRoute: typeof ApiHealthRoute
-  ApiExecuteWorkflowRoute: typeof ApiExecuteWorkflowRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiRunsRunIdStreamRoute: typeof ApiRunsRunIdStreamRoute
 }
@@ -388,13 +375,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRoute
-    }
-    '/api/execute-workflow': {
-      id: '/api/execute-workflow'
-      path: '/api/execute-workflow'
-      fullPath: '/api/execute-workflow'
-      preLoaderRoute: typeof ApiExecuteWorkflowRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/api/_health': {
       id: '/api/_health'
@@ -638,10 +618,18 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
   ApiHealthRoute: ApiHealthRoute,
-  ApiExecuteWorkflowRoute: ApiExecuteWorkflowRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiRunsRunIdStreamRoute: ApiRunsRunIdStreamRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
