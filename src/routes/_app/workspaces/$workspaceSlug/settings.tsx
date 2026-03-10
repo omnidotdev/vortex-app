@@ -18,12 +18,19 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import authClient from "@/lib/auth/authClient";
 
-import type { ApiKey } from "better-auth/client/plugins";
-
-// The list endpoint omits the plaintext `key` field (only returned at creation)
-type ListedApiKey = Omit<ApiKey, "key">;
+/** Shape returned by the Gatekeeper API key list endpoint */
+interface ListedApiKey {
+  id: string;
+  name: string;
+  start: string;
+  prefix: string;
+  createdAt: string;
+  updatedAt: string;
+  expiresAt: string | null;
+  lastRequest: string | null;
+  metadata: Record<string, unknown> | null;
+}
 
 export const Route = createFileRoute(
   "/_app/workspaces/$workspaceSlug/settings",
@@ -206,14 +213,17 @@ function ApiKeysSection({
   const loadKeys = useCallback(async () => {
     setIsLoading(true);
     try {
-      const result = await authClient.apiKey.list();
-      if (result.error) {
-        toast.error("Failed to load API keys");
+      const res = await fetch("/api/auth/api-key/list", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!res.ok) {
         setKeys([]);
         return;
       }
+      const data: ListedApiKey[] = await res.json();
       // Filter to keys belonging to this organization via metadata
-      const orgKeys = (result.data ?? []).filter((k) => {
+      const orgKeys = data.filter((k) => {
         if (!k.metadata) return false;
         try {
           const meta = k.metadata as { organizationId?: string };
@@ -241,21 +251,27 @@ function ApiKeysSection({
 
     setIsCreating(true);
     try {
-      const result = await authClient.apiKey.create({
-        name: newKeyName.trim(),
-        metadata: { organizationId, workspaceSlug },
+      const res = await fetch("/api/auth/api-key/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newKeyName.trim(),
+          metadata: { organizationId, workspaceSlug },
+        }),
       });
 
-      if (result.error || !result.data) {
+      if (!res.ok) {
         toast.error("Failed to create API key");
         return;
       }
 
-      setNewKeyResult({ key: result.data.key, name: result.data.name });
+      const data = await res.json();
+      setNewKeyResult({ key: data.key, name: data.name });
       setNewKeyName("");
       setCreateOpen(false);
-      // Reload the key list
       await loadKeys();
+    } catch {
+      toast.error("Failed to create API key");
     } finally {
       setIsCreating(false);
     }
@@ -264,13 +280,19 @@ function ApiKeysSection({
   const handleRevoke = async (keyId: string) => {
     setRevokingId(keyId);
     try {
-      const result = await authClient.apiKey.delete({ keyId });
-      if (result.error) {
+      const res = await fetch("/api/auth/api-key/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ keyId }),
+      });
+      if (!res.ok) {
         toast.error("Failed to revoke API key");
         return;
       }
       toast.success("API key revoked");
       setKeys((prev) => prev?.filter((k) => k.id !== keyId) ?? null);
+    } catch {
+      toast.error("Failed to revoke API key");
     } finally {
       setRevokingId(null);
     }

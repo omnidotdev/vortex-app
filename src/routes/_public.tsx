@@ -1,12 +1,11 @@
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { LuGithub as GithubIcon } from "react-icons/lu";
 import {
-  SiDiscord as DiscordIcon,
-  SiLinkedin as LinkedinIcon,
-  SiX as XIcon,
-} from "react-icons/si";
+  LuGithub as GithubIcon,
+  LuLinkedin as LinkedinIcon,
+} from "react-icons/lu";
+import { SiDiscord as DiscordIcon, SiX as XIcon } from "react-icons/si";
 
 import ThemeToggle from "@/components/ThemeToggle";
 import { Badge } from "@/components/ui/badge";
