@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 
 import { isDevEnv } from "@/lib/config/env.config";
+import createMetaTags from "@/lib/util/createMetaTags";
 import { setAccessToken } from "@/lib/graphql/graphqlClientFactory";
 import { fetchMaintenanceMode } from "@/lib/providers";
 import appCss from "@/lib/styles/globals.css?url";
@@ -70,13 +71,7 @@ export const Route = createRootRouteWithContext<{
         name: "viewport",
         content: "width=device-width, initial-scale=1",
       },
-      {
-        title: "Vortex",
-      },
-      {
-        name: "description",
-        content: "Workflow automation for the decentralized web",
-      },
+      ...createMetaTags(),
     ],
     links: [
       { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
