@@ -54,12 +54,21 @@ export function getRouter() {
     // Scroll restoration on navigation
     scrollRestoration: true,
     defaultNotFoundComponent: () => (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-background p-8">
         <div className="text-center">
-          <h1 className="font-bold text-2xl">Page Not Found</h1>
-          <p className="mt-2 text-gray-600">
-            The page you're looking for doesn't exist.
+          <div className="mb-6 text-6xl">🌪️</div>
+          <h1 className="font-bold text-2xl text-foreground">Page Not Found</h1>
+          <p className="mt-2 max-w-md text-muted-foreground">
+            The page you're looking for doesn't exist or has been moved.
           </p>
+          <div className="mt-6">
+            <a
+              href="/workspaces"
+              className="rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
+            >
+              Go to workspaces
+            </a>
+          </div>
         </div>
       </div>
     ),

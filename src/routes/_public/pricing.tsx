@@ -49,7 +49,7 @@ const FREE_PRICE: Price = {
 const STARTER_PRODUCT = {
   id: "starter-product",
   name: "Starter",
-  description: "For individuals getting serious about automation",
+  description: "\uD83C\uDF2A\uFE0F Workflow automation for the decentralized web",
   marketing_features: [
     { name: "25 workflows" },
     { name: "10,000 runs/month" },
@@ -80,7 +80,7 @@ const STARTER_PRICE_YEARLY: Price = {
 const PRO_PRODUCT = {
   id: "pro-product",
   name: "Pro",
-  description: "For power users and small teams",
+  description: "\uD83C\uDF2A\uFE0F Advanced workflow automation with full platform access",
   marketing_features: [
     { name: "Unlimited workflows" },
     { name: "50,000 runs/month" },
@@ -113,7 +113,7 @@ const PRO_PRICE_YEARLY: Price = {
 const TEAM_PRODUCT = {
   id: "team-product",
   name: "Team",
-  description: "For growing teams and organizations",
+  description: "\uD83C\uDF2A\uFE0F Workflow automation at scale for organizations",
   marketing_features: [
     { name: "Unlimited workflows" },
     { name: "500,000 runs/month" },
@@ -305,6 +305,28 @@ function SaaSPricing() {
 
   const tabs = useTabs({ defaultValue: "month" });
 
+  // Compute actual yearly discount from the lowest paid tier's monthly vs yearly price
+  const computeYearlyDiscount = (): number => {
+    const allPrices =
+      prices.length > 0 ? prices : FALLBACK_PAID_PRICES;
+    const monthlyStarter = allPrices.find(
+      (p: Price) =>
+        p.metadata?.tier === "starter" &&
+        p.recurring?.interval === "month",
+    );
+    const yearlyStarter = allPrices.find(
+      (p: Price) =>
+        p.metadata?.tier === "starter" &&
+        p.recurring?.interval === "year",
+    );
+    if (!monthlyStarter?.unit_amount || !yearlyStarter?.unit_amount) return 25;
+    const fullYearly = monthlyStarter.unit_amount * 12;
+    return Math.round(
+      ((fullYearly - yearlyStarter.unit_amount) / fullYearly) * 100,
+    );
+  };
+  const yearlyDiscount = computeYearlyDiscount();
+
   // Use Aether prices only if they include the expected tiers (starter/pro/team);
   // otherwise fall back to hardcoded values to avoid showing stale Stripe data
   const EXPECTED_TIERS = ["starter", "pro", "team"];
@@ -360,7 +382,7 @@ function SaaSPricing() {
             <TabsTrigger value="year" className="relative rounded-lg">
               Yearly{" "}
               <Badge className="absolute -top-4 -right-4 rotate-12 px-1">
-                save 25%
+                save {yearlyDiscount}%
               </Badge>
             </TabsTrigger>
           </TabsList>
