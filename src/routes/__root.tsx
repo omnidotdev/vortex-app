@@ -196,11 +196,11 @@ function RootDocument({
   theme,
 }: Readonly<{ children: ReactNode; theme: Theme }>) {
   return (
-    <html lang="en" className={theme}>
+    <html lang="en" className={theme} suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased" suppressHydrationWarning>
         <ThemeProvider theme={theme}>
           {children}
           <Toaster position="top-center" richColors />
