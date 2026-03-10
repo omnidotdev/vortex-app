@@ -14,7 +14,9 @@ export async function proxyToGatekeeper(
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const url = `${AUTH_BASE_URL}${path}`;
+  // Strip /api/auth prefix so /api/auth/api-key/create → /api-key/create
+  const forwardPath = path.replace(/^\/api\/auth/, "");
+  const url = `${AUTH_BASE_URL}${forwardPath}`;
   const headers: Record<string, string> = {
     Authorization: `Bearer ${session.accessToken}`,
     Origin: AUTH_BASE_URL!,
