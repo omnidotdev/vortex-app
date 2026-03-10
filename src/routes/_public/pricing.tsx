@@ -337,30 +337,29 @@ function SaaSPricing() {
     );
   // Filter to expected tiers, then deduplicate by tier+interval (keep highest
   // price to discard legacy/stale Stripe products with outdated pricing)
-  const activePrices = hasExpectedTiers
+  const activePrices: Price[] = hasExpectedTiers
     ? prices.filter((p: Price) => EXPECTED_TIERS.includes(p.metadata?.tier))
     : FALLBACK_PAID_PRICES;
 
-  const filteredPrices = activePrices
-    .filter((price: Price) => price.recurring?.interval === tabs.value)
-    .reduce<Price[]>((acc, price) => {
-      const existing = acc.find(
-        (p) => p.metadata?.tier === price.metadata?.tier,
-      );
-      if (!existing) return [...acc, price];
-      // Keep the higher-priced (current) product, discard the legacy one
-      if ((price.unit_amount ?? 0) > (existing.unit_amount ?? 0)) {
-        return acc.map((p) =>
-          p.metadata?.tier === price.metadata?.tier ? price : p,
-        );
-      }
-      return acc;
-    }, [])
-    .sort(
-      (a, b) =>
-        EXPECTED_TIERS.indexOf(a.metadata?.tier ?? "") -
-        EXPECTED_TIERS.indexOf(b.metadata?.tier ?? ""),
+  const deduped: Price[] = [];
+  for (const price of activePrices.filter(
+    (p) => p.recurring?.interval === tabs.value,
+  )) {
+    const idx = deduped.findIndex(
+      (p) => p.metadata?.tier === price.metadata?.tier,
     );
+    if (idx === -1) {
+      deduped.push(price);
+    } else if ((price.unit_amount ?? 0) > (deduped[idx].unit_amount ?? 0)) {
+      // Keep the higher-priced (current) product, discard the legacy one
+      deduped[idx] = price;
+    }
+  }
+  const filteredPrices = deduped.sort(
+    (a, b) =>
+      EXPECTED_TIERS.indexOf(a.metadata?.tier ?? "") -
+      EXPECTED_TIERS.indexOf(b.metadata?.tier ?? ""),
+  );
 
   return (
     <div className="size-full pt-8">

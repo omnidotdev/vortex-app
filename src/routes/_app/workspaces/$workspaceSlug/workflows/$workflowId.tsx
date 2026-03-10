@@ -1279,7 +1279,9 @@ function WorkflowEditorPage() {
           </Link>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h1 className="truncate font-semibold text-sm sm:text-base">{workflow.name}</h1>
+              <h1 className="truncate font-semibold text-sm sm:text-base">
+                {workflow.name}
+              </h1>
               <DialogRoot
                 open={showEditDialog}
                 onOpenChange={(e) => {
@@ -1699,7 +1701,7 @@ function WorkflowEditorPage() {
             </div>
 
             {/* Debug Console + Feedback + Discord - floating buttons */}
-            <div className="pointer-events-none absolute bottom-4 left-4 z-10 flex gap-2 [&>*]:pointer-events-auto max-sm:hidden">
+            <div className="pointer-events-none absolute bottom-4 left-4 z-10 flex gap-2 max-sm:hidden [&>*]:pointer-events-auto">
               <DebugPane />
               <Button
                 variant="outline"
