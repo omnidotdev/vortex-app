@@ -8,7 +8,7 @@ import {
   Loader2,
   XCircle,
 } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 
 import { workflowStatsOptions } from "@/lib/options/stats.options";
 import { cn } from "@/lib/utils";
@@ -41,14 +41,22 @@ function successRateColor(rate: number): string {
  * Compact stats panel for the workflow editor sidebar.
  */
 function WorkflowStats({ workflowId, workspaceSlug }: WorkflowStatsProps) {
-  const { since, until } = useMemo(() => {
+  const [timeRange, setTimeRange] = useState<{
+    since: string;
+    until: string;
+  } | null>(null);
+
+  useEffect(() => {
     const now = new Date();
     const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    return {
+    setTimeRange({
       since: sevenDaysAgo.toISOString(),
       until: now.toISOString(),
-    };
+    });
   }, []);
+
+  const since = timeRange?.since ?? "";
+  const until = timeRange?.until ?? "";
 
   const {
     data: stats,

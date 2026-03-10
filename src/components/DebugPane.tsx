@@ -1,5 +1,5 @@
 import { Bug, ChevronDown, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,8 +34,8 @@ function DebugPane() {
 
   const clearLogs = () => setLogs([]);
 
-  // Function to add to global window object for debugging
-  if (typeof window !== "undefined") {
+  // Expose debug logger on window for external callers
+  useEffect(() => {
     (window as any).logToDebugPane = (
       type: "trigger" | "action",
       message: string,
@@ -53,7 +53,11 @@ function DebugPane() {
         ...prev,
       ]);
     };
-  }
+
+    return () => {
+      delete (window as any).logToDebugPane;
+    };
+  }, []);
 
   return (
     <SheetRoot open={isOpen} onOpenChange={(e) => setIsOpen(e.open)}>

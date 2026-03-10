@@ -37,7 +37,8 @@ function formatDuration(
   const start = toDate(startedAt);
   if (!start) return "-";
 
-  const end = toDate(completedAt) || new Date();
+  const end = toDate(completedAt);
+  if (!end) return "running...";
   const durationMs = end.getTime() - start.getTime();
 
   if (durationMs < 1000) return `${durationMs}ms`;
