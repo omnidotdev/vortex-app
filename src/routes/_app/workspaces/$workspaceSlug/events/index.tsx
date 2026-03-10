@@ -83,6 +83,7 @@ function EventSchemasPage() {
           <Link
             to="/workspaces/$workspaceSlug/events/sandbox"
             params={{ workspaceSlug }}
+            search={{ type: "" }}
           >
             Open Sandbox
           </Link>
