@@ -209,6 +209,7 @@ function ApiKeysSection({
       const result = await authClient.apiKey.list();
       if (result.error) {
         toast.error("Failed to load API keys");
+        setKeys([]);
         return;
       }
       // Filter to keys belonging to this organization via metadata
@@ -222,6 +223,9 @@ function ApiKeysSection({
         }
       });
       setKeys(orgKeys);
+    } catch {
+      // API key management may not be available (e.g. Gatekeeper plugin not enabled)
+      setKeys([]);
     } finally {
       setIsLoading(false);
     }
