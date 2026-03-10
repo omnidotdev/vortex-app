@@ -1267,18 +1267,19 @@ function WorkflowEditorPage() {
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <header className="flex h-14 shrink-0 items-center justify-between border-b px-2 md:px-4">
-        <div className="flex min-w-0 items-center gap-2 md:gap-4">
+      <header className="flex h-14 shrink-0 items-center justify-between gap-2 border-b px-2 md:px-4">
+        <div className="flex min-w-0 flex-1 items-center gap-2 md:gap-4">
           <Link
             to="/workspaces/$workspaceSlug/workflows"
             params={{ workspaceSlug }}
             className="shrink-0 text-muted-foreground hover:text-foreground"
           >
-            &larr; Back
+            &larr;
+            <span className="hidden sm:inline"> Back</span>
           </Link>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h1 className="truncate font-semibold">{workflow.name}</h1>
+              <h1 className="truncate font-semibold text-sm sm:text-base">{workflow.name}</h1>
               <DialogRoot
                 open={showEditDialog}
                 onOpenChange={(e) => {
@@ -1688,7 +1689,7 @@ function WorkflowEditorPage() {
             )}
 
             {/* Floating Add Node Button */}
-            <div className="absolute right-4 bottom-4 z-10">
+            <div className="absolute right-4 bottom-4 z-20">
               <AddNodeButton
                 organizationId={organizationId}
                 onAddNode={handleAddNode}
@@ -1698,7 +1699,7 @@ function WorkflowEditorPage() {
             </div>
 
             {/* Debug Console + Feedback + Discord - floating buttons */}
-            <div className="pointer-events-none absolute bottom-4 left-4 z-10 flex gap-2 [&>*]:pointer-events-auto">
+            <div className="pointer-events-none absolute bottom-4 left-4 z-10 flex gap-2 [&>*]:pointer-events-auto max-sm:hidden">
               <DebugPane />
               <Button
                 variant="outline"

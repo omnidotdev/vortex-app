@@ -49,7 +49,8 @@ const FREE_PRICE: Price = {
 const STARTER_PRODUCT = {
   id: "starter-product",
   name: "Starter",
-  description: "\uD83C\uDF2A\uFE0F Workflow automation for the decentralized web",
+  description:
+    "\uD83C\uDF2A\uFE0F Workflow automation for the decentralized web",
   marketing_features: [
     { name: "25 workflows" },
     { name: "10,000 runs/month" },
@@ -80,7 +81,8 @@ const STARTER_PRICE_YEARLY: Price = {
 const PRO_PRODUCT = {
   id: "pro-product",
   name: "Pro",
-  description: "\uD83C\uDF2A\uFE0F Advanced workflow automation with full platform access",
+  description:
+    "\uD83C\uDF2A\uFE0F Advanced workflow automation with full platform access",
   marketing_features: [
     { name: "Unlimited workflows" },
     { name: "50,000 runs/month" },
@@ -113,7 +115,8 @@ const PRO_PRICE_YEARLY: Price = {
 const TEAM_PRODUCT = {
   id: "team-product",
   name: "Team",
-  description: "\uD83C\uDF2A\uFE0F Workflow automation at scale for organizations",
+  description:
+    "\uD83C\uDF2A\uFE0F Workflow automation at scale for organizations",
   marketing_features: [
     { name: "Unlimited workflows" },
     { name: "500,000 runs/month" },
@@ -307,17 +310,14 @@ function SaaSPricing() {
 
   // Compute actual yearly discount from the lowest paid tier's monthly vs yearly price
   const computeYearlyDiscount = (): number => {
-    const allPrices =
-      prices.length > 0 ? prices : FALLBACK_PAID_PRICES;
+    const allPrices = prices.length > 0 ? prices : FALLBACK_PAID_PRICES;
     const monthlyStarter = allPrices.find(
       (p: Price) =>
-        p.metadata?.tier === "starter" &&
-        p.recurring?.interval === "month",
+        p.metadata?.tier === "starter" && p.recurring?.interval === "month",
     );
     const yearlyStarter = allPrices.find(
       (p: Price) =>
-        p.metadata?.tier === "starter" &&
-        p.recurring?.interval === "year",
+        p.metadata?.tier === "starter" && p.recurring?.interval === "year",
     );
     if (!monthlyStarter?.unit_amount || !yearlyStarter?.unit_amount) return 25;
     const fullYearly = monthlyStarter.unit_amount * 12;
@@ -344,7 +344,9 @@ function SaaSPricing() {
   const filteredPrices = activePrices
     .filter((price: Price) => price.recurring?.interval === tabs.value)
     .reduce<Price[]>((acc, price) => {
-      const existing = acc.find((p) => p.metadata?.tier === price.metadata?.tier);
+      const existing = acc.find(
+        (p) => p.metadata?.tier === price.metadata?.tier,
+      );
       if (!existing) return [...acc, price];
       // Keep the higher-priced (current) product, discard the legacy one
       if ((price.unit_amount ?? 0) > (existing.unit_amount ?? 0)) {
