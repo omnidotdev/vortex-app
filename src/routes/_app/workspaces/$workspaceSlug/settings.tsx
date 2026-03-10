@@ -1,5 +1,14 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
-import { Copy, Eye, EyeOff, Key, Loader2, Plus, Trash2 } from "lucide-react";
+import {
+  CheckCircle2,
+  Copy,
+  Eye,
+  EyeOff,
+  Key,
+  Loader2,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -18,6 +27,17 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { isSelfHosted } from "@/lib/config/env.config";
+import {
+  FREE_TIER_FEATURES,
+  SELF_HOSTED_FEATURES,
+} from "@/lib/constants/tiers";
+import {
+  getBillingPortalUrl,
+  getSubscription,
+} from "@/server/functions/subscriptions";
+
+import type { Subscription } from "@/lib/providers/billing";
 
 /** Shape returned by the Gatekeeper API key list endpoint */
 interface ListedApiKey {
@@ -37,7 +57,20 @@ export const Route = createFileRoute(
 )({
   loader: async ({ context: { organizationId } }) => {
     if (!organizationId) throw notFound();
-    return { organizationId };
+
+    let subscription: Subscription | null = null;
+
+    if (!isSelfHosted) {
+      try {
+        subscription = await getSubscription({
+          data: { organizationId },
+        });
+      } catch {
+        // Fall back to null (shows free tier)
+      }
+    }
+
+    return { organizationId, subscription };
   },
   component: WorkspaceSettingsPage,
 });
@@ -388,11 +421,137 @@ function ApiKeysSection({
 }
 
 /**
+ * Plan section with dynamic subscription display.
+ */
+function PlanSection({
+  subscription,
+  organizationId,
+}: {
+  subscription: Subscription | null;
+  organizationId: string;
+}) {
+  const [isRedirecting, setIsRedirecting] = useState(false);
+
+  if (isSelfHosted) {
+    return (
+      <section>
+        <h2 className="font-semibold text-lg">Plan</h2>
+        <div className="mt-4 rounded-lg border p-4">
+          <p className="font-medium">Self-Hosted</p>
+          <p className="mt-1 text-muted-foreground text-sm">
+            All features included with your self-hosted deployment
+          </p>
+          <ul className="mt-3 grid gap-1.5 sm:grid-cols-2">
+            {SELF_HOSTED_FEATURES.map((feature) => (
+              <li key={feature} className="flex items-center gap-2 text-sm">
+                <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-primary" />
+                {feature}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    );
+  }
+
+  const product = subscription?.product;
+
+  const handleManageBilling = async () => {
+    setIsRedirecting(true);
+    try {
+      const url = await getBillingPortalUrl({
+        data: {
+          organizationId,
+          returnUrl: window.location.href,
+        },
+      });
+      window.location.href = url;
+    } catch {
+      toast.error("Failed to open billing portal");
+      setIsRedirecting(false);
+    }
+  };
+
+  if (product) {
+    const features =
+      product.marketing_features?.map((f: { name: string }) => f.name) ?? [];
+
+    return (
+      <section>
+        <h2 className="font-semibold text-lg">Plan</h2>
+        <div className="mt-4 rounded-lg border p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium">{product.name} Plan</p>
+              {features.length > 0 && (
+                <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
+                  {features.map((feature: string) => (
+                    <li
+                      key={feature}
+                      className="flex items-center gap-2 text-sm"
+                    >
+                      <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-primary" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {subscription.cancelAt && (
+                <p className="mt-2 text-destructive text-sm">
+                  Cancels on{" "}
+                  {new Date(subscription.cancelAt * 1000).toLocaleDateString()}
+                </p>
+              )}
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleManageBilling}
+              disabled={isRedirecting}
+            >
+              {isRedirecting && (
+                <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+              )}
+              Manage Billing
+            </Button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Free tier / no subscription
+  return (
+    <section>
+      <h2 className="font-semibold text-lg">Plan</h2>
+      <div className="mt-4 rounded-lg border p-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="font-medium">Free Plan</p>
+            <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
+              {FREE_TIER_FEATURES.map((feature) => (
+                <li key={feature} className="flex items-center gap-2 text-sm">
+                  <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-primary" />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <Button size="sm" asChild>
+            <Link to="/pricing">Upgrade</Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/**
  * Workspace settings page.
  */
 function WorkspaceSettingsPage() {
   const { workspaceSlug } = Route.useParams();
-  const { organizationId } = Route.useLoaderData();
+  const { organizationId, subscription } = Route.useLoaderData();
 
   return (
     <div className="p-8">
@@ -417,20 +576,10 @@ function WorkspaceSettingsPage() {
         </section>
 
         {/* Plan */}
-        <section>
-          <h2 className="font-semibold text-lg">Plan</h2>
-          <div className="mt-4 flex items-center justify-between rounded-lg border p-4">
-            <div>
-              <p className="font-medium">Free Plan</p>
-              <p className="text-muted-foreground text-sm">
-                5 workflows, 1,000 runs/month
-              </p>
-            </div>
-            <Button size="sm" asChild>
-              <Link to="/pricing">Upgrade</Link>
-            </Button>
-          </div>
-        </section>
+        <PlanSection
+          subscription={subscription}
+          organizationId={organizationId}
+        />
 
         {/* API Keys */}
         <ApiKeysSection

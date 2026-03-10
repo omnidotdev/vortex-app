@@ -18,32 +18,11 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { isSelfHosted } from "@/lib/config/env.config";
+import { FREE_PRICE, SELF_HOSTED_FEATURES } from "@/lib/constants/tiers";
 import pricesOptions from "@/lib/options/prices.options";
 import { getSubscription } from "@/server/functions/subscriptions";
 
 import type { Price, Subscription } from "@/lib/providers/billing";
-
-// Free tier placeholder for display
-const FREE_PRICE: Price = {
-  id: "free",
-  active: true,
-  currency: "usd",
-  unit_amount: 0,
-  recurring: null,
-  metadata: { tier: "free" },
-  product: {
-    id: "free-product",
-    name: "Free",
-    description: "For individuals exploring automation",
-    marketing_features: [
-      { name: "5 workflows" },
-      { name: "1,000 runs/month" },
-      { name: "All integrations" },
-      { name: "1 user" },
-      { name: "Community support" },
-    ],
-  },
-};
 
 // Starter tier placeholder for display
 const STARTER_PRODUCT = {
@@ -202,16 +181,7 @@ const faqItems = [
   },
 ];
 
-const selfHostedFeatures = [
-  "Unlimited workflows",
-  "Unlimited runs",
-  "Unlimited integrations",
-  "Unlimited users",
-  "SSO/SAML",
-  "Audit logs",
-  "Full data control",
-  "Custom plugins",
-];
+const selfHostedFeatures = SELF_HOSTED_FEATURES;
 
 /** Map legacy tier names to current values */
 const TIER_ALIASES: Record<string, string> = {
