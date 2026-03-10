@@ -908,6 +908,41 @@ function WorkflowEditorPage() {
 
         setNodes((nds) => [...nds, newNode]);
 
+        // Auto-connect dropped node to selected or last node
+        if (nodeType !== "triggerNode") {
+          const sourceNode =
+            selectedNode ??
+            nodesRef.current[nodesRef.current.length - 1] ??
+            null;
+
+          if (sourceNode) {
+            const sourceHasOutgoing = edgesRef.current.some(
+              (e) => e.source === sourceNode.id,
+            );
+            const isMultiOutput =
+              sourceNode.type === "conditionNode" ||
+              sourceNode.type === "switchNode";
+
+            if (!sourceHasOutgoing && !isMultiOutput) {
+              const autoEdge: Edge = {
+                id: `edge_${Date.now()}`,
+                source: sourceNode.id,
+                target: nodeId,
+                type: "smart",
+                markerEnd: { type: MarkerType.ArrowClosed },
+                style: { stroke: "#2563eb", strokeWidth: 2 },
+              };
+              setEdges((eds) => [...eds, autoEdge]);
+
+              logToDebugPane("action", "Auto-connected nodes", null, {
+                nodeType: "Connection",
+                nodeName: `${sourceNode.data.label} → ${label}`,
+                expectedOutcome: `${sourceNode.data.label} will trigger ${label}`,
+              });
+            }
+          }
+        }
+
         logToDebugPane("action", "Node added", newNode.data, {
           nodeType: nodeType,
           nodeName: label,
@@ -920,6 +955,8 @@ function WorkflowEditorPage() {
     [
       reactFlowInstance,
       setNodes,
+      setEdges,
+      selectedNode,
       logToDebugPane,
       handleDeleteNode,
       handleConfigureIntegration,
@@ -1221,6 +1258,44 @@ function WorkflowEditorPage() {
       };
       setNodes((nds) => [...nds, newNode]);
 
+      // Auto-connect to the selected node (or the last node if none selected)
+      // Skip if the new node is a trigger (triggers are sources, not targets)
+      if (type !== "triggerNode") {
+        const sourceNode =
+          selectedNode ??
+          nodesRef.current[nodesRef.current.length - 1] ??
+          null;
+
+        if (sourceNode) {
+          // Only auto-connect if the source doesn't already have an outgoing edge
+          // (condition/switch nodes have multiple handles, so skip auto-connect for those)
+          const sourceHasOutgoing = edgesRef.current.some(
+            (e) => e.source === sourceNode.id,
+          );
+          const isMultiOutput =
+            sourceNode.type === "conditionNode" ||
+            sourceNode.type === "switchNode";
+
+          if (!sourceHasOutgoing && !isMultiOutput) {
+            const autoEdge: Edge = {
+              id: `edge_${Date.now()}`,
+              source: sourceNode.id,
+              target: nodeId,
+              type: "smart",
+              markerEnd: { type: MarkerType.ArrowClosed },
+              style: { stroke: "#2563eb", strokeWidth: 2 },
+            };
+            setEdges((eds) => [...eds, autoEdge]);
+
+            logToDebugPane("action", "Auto-connected nodes", null, {
+              nodeType: "Connection",
+              nodeName: `${sourceNode.data.label} → ${label}`,
+              expectedOutcome: `${sourceNode.data.label} will trigger ${label}`,
+            });
+          }
+        }
+      }
+
       // Select the new node and open the sidebar
       setSelectedNode(newNode);
       setShowRightSidebar(true);
@@ -1256,6 +1331,8 @@ function WorkflowEditorPage() {
     },
     [
       setNodes,
+      setEdges,
+      selectedNode,
       logToDebugPane,
       handleDeleteNode,
       handleConfigureIntegration,

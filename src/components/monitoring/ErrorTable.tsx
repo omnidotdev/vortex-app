@@ -101,7 +101,10 @@ function ErrorTable({ since }: ErrorTableProps) {
                 <td className="px-4 py-3">
                   <Badge variant="secondary">{err.occurrences}</Badge>
                 </td>
-                <td className="px-4 py-3 text-muted-foreground text-sm">
+                <td
+                  className="px-4 py-3 text-muted-foreground text-sm"
+                  suppressHydrationWarning
+                >
                   {formatRelativeTime(err.last_seen)}
                 </td>
               </tr>

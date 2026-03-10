@@ -214,7 +214,10 @@ function PublicLayout() {
               </div>
 
               {/* Copyright */}
-              <p className="text-muted-foreground text-sm">
+              <p
+                className="text-muted-foreground text-sm"
+                suppressHydrationWarning
+              >
                 &copy; {new Date().getFullYear()}{" "}
                 <a
                   href={app.organization.website}

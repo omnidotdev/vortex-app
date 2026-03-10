@@ -1,4 +1,4 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { Copy, Eye, EyeOff, Key, Loader2, Plus, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -419,13 +419,16 @@ function WorkspaceSettingsPage() {
         {/* Plan */}
         <section>
           <h2 className="font-semibold text-lg">Plan</h2>
-          <div className="mt-4 rounded-lg border p-4">
+          <div className="mt-4 flex items-center justify-between rounded-lg border p-4">
             <div>
               <p className="font-medium">Free Plan</p>
               <p className="text-muted-foreground text-sm">
                 5 workflows, 1,000 runs/month
               </p>
             </div>
+            <Button size="sm" asChild>
+              <Link to="/pricing">Upgrade</Link>
+            </Button>
           </div>
         </section>
 
