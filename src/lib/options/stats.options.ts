@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 
 import { API_BASE_URL } from "@/lib/config/env.config";
-import { getCurrentAuthHeaders } from "@/lib/graphql/graphqlClientFactory";
+import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
 
 import type {
   ErrorsStats,
@@ -24,7 +24,7 @@ const orgStatsOptions = (params: { since: string; until: string }) =>
 
       const response = await fetch(
         `${API_BASE_URL}/api/v1/stats/organization?${searchParams.toString()}`,
-        { headers: getCurrentAuthHeaders() },
+        { headers: await getAuthHeaders() },
       );
 
       if (!response.ok) throw new Error("Failed to fetch organization stats");
@@ -52,7 +52,7 @@ const timelineStatsOptions = (params: {
 
       const response = await fetch(
         `${API_BASE_URL}/api/v1/stats/timeline?${searchParams.toString()}`,
-        { headers: getCurrentAuthHeaders() },
+        { headers: await getAuthHeaders() },
       );
 
       if (!response.ok) throw new Error("Failed to fetch timeline stats");
@@ -73,7 +73,7 @@ const errorsStatsOptions = (params: { since: string; limit?: number }) =>
 
       const response = await fetch(
         `${API_BASE_URL}/api/v1/stats/errors?${searchParams.toString()}`,
-        { headers: getCurrentAuthHeaders() },
+        { headers: await getAuthHeaders() },
       );
 
       if (!response.ok) throw new Error("Failed to fetch error stats");
@@ -105,7 +105,7 @@ const workflowStatsOptions = (params: {
 
       const response = await fetch(
         `${API_BASE_URL}/api/v1/stats/workflows/${params.workflowId}?${searchParams.toString()}`,
-        { headers: getCurrentAuthHeaders() },
+        { headers: await getAuthHeaders() },
       );
 
       if (!response.ok) throw new Error("Failed to fetch workflow stats");

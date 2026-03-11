@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 import MemberRow from "@/components/settings/MemberRow";
 import { API_BASE_URL } from "@/lib/config/env.config";
-import { getCurrentAuthHeaders } from "@/lib/graphql/graphqlClientFactory";
+import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
 import { membersOptions } from "@/lib/options/members.options";
 
 export const Route = createFileRoute(
@@ -35,7 +35,7 @@ async function updateMemberRole(
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        ...getCurrentAuthHeaders(),
+        ...(await getAuthHeaders()),
       },
       body: JSON.stringify({ role }),
     },
@@ -60,7 +60,7 @@ async function removeMember(
     `${API_BASE_URL}/api/v1/organizations/${organizationId}/members/${userId}`,
     {
       method: "DELETE",
-      headers: getCurrentAuthHeaders(),
+      headers: await getAuthHeaders(),
     },
   );
 

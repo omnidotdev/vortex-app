@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { API_BASE_URL } from "@/lib/config/env.config";
-import { getCurrentAuthHeaders } from "@/lib/graphql/graphqlClientFactory";
+import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
 import { dlqEventsOptions, dlqStatsOptions } from "@/lib/options/dlq.options";
 
 import type { DlqEvent, DlqFilters } from "@/lib/types/dlq";
@@ -32,7 +32,7 @@ export const Route = createFileRoute("/_app/workspaces/$workspaceSlug/dlq/")({
 async function replayEvent(id: string): Promise<void> {
   const response = await fetch(`${API_BASE_URL}/api/v1/dlq/${id}/replay`, {
     method: "POST",
-    headers: getCurrentAuthHeaders(),
+    headers: await getAuthHeaders(),
   });
 
   if (!response.ok) {
@@ -49,7 +49,7 @@ async function replayEvent(id: string): Promise<void> {
 async function discardEvent(id: string): Promise<void> {
   const response = await fetch(`${API_BASE_URL}/api/v1/dlq/${id}/discard`, {
     method: "POST",
-    headers: getCurrentAuthHeaders(),
+    headers: await getAuthHeaders(),
   });
 
   if (!response.ok) {
@@ -70,7 +70,7 @@ async function bulkReplay(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...getCurrentAuthHeaders(),
+      ...(await getAuthHeaders()),
     },
     body: JSON.stringify({
       errorCode: filters.errorCode || undefined,
@@ -93,7 +93,7 @@ async function bulkDiscard(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...getCurrentAuthHeaders(),
+      ...(await getAuthHeaders()),
     },
     body: JSON.stringify({
       errorCode: filters.errorCode || undefined,

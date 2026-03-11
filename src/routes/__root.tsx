@@ -7,11 +7,10 @@ import {
   createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Toaster } from "sonner";
 
 import { isDevEnv } from "@/lib/config/env.config";
-import { setAccessToken } from "@/lib/graphql/graphqlClientFactory";
 import { fetchMaintenanceMode } from "@/lib/providers";
 import appCss from "@/lib/styles/globals.css?url";
 import createMetaTags from "@/lib/util/createMetaTags";
@@ -24,26 +23,6 @@ import type { ReactNode } from "react";
 import type { AuthSession } from "@/lib/auth/getAuth";
 import type { Theme } from "@/providers/ThemeProvider";
 
-/** Parse exp claim from a JWT without verifying signature */
-function getTokenExpMs(token: string): number | null {
-  try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    return (payload.exp as number) * 1000;
-  } catch {
-    return null;
-  }
-}
-
-/** Fetch a fresh access token from the server session */
-async function refreshAccessToken(): Promise<string | null> {
-  try {
-    const { session } = await fetchSession();
-    return session?.accessToken ?? null;
-  } catch {
-    return null;
-  }
-}
-
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   session: AuthSession | null;
@@ -52,12 +31,6 @@ export const Route = createRootRouteWithContext<{
   beforeLoad: async () => {
     const { session } = await fetchSession();
     const { isMaintenanceMode } = await fetchMaintenanceMode();
-
-    // Set access token for GraphQL client during SSR
-    // Note: This only works server-side. Client-side token is set in RootComponent useEffect
-    if (session?.accessToken) {
-      setAccessToken(session.accessToken);
-    }
 
     return { session, isMaintenanceMode };
   },
@@ -136,40 +109,7 @@ function MaintenancePage() {
 
 function RootComponent() {
   const theme = Route.useLoaderData();
-  const { isMaintenanceMode, session } = Route.useRouteContext();
-
-  const [currentToken, setCurrentToken] = useState(session?.accessToken);
-
-  // Set access token on client-side after hydration
-  useEffect(() => {
-    const token = currentToken ?? session?.accessToken;
-    if (token) {
-      setAccessToken(token);
-    }
-  }, [currentToken, session?.accessToken]);
-
-  // Proactively refresh the token before it expires
-  useEffect(() => {
-    const token = currentToken ?? session?.accessToken;
-    if (!token) return;
-
-    const expMs = getTokenExpMs(token);
-    if (!expMs) return;
-
-    // Refresh 60s before expiry
-    const refreshAt = expMs - Date.now() - 60_000;
-    if (refreshAt <= 0) {
-      // Already expired or about to — refresh immediately
-      refreshAccessToken().then((t) => setCurrentToken(t ?? undefined));
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      refreshAccessToken().then((t) => setCurrentToken(t ?? undefined));
-    }, refreshAt);
-
-    return () => clearTimeout(timer);
-  }, [currentToken, session?.accessToken]);
+  const { isMaintenanceMode } = Route.useRouteContext();
 
   if (isMaintenanceMode) {
     return (

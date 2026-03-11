@@ -5,36 +5,35 @@ import {
   API_INTERNAL_GRAPHQL_URL,
 } from "@/lib/config/env.config";
 
-/** Use internal URL for server-side requests to bypass reverse proxy */
-const graphqlUrl =
-  typeof window === "undefined" ? API_INTERNAL_GRAPHQL_URL : API_GRAPHQL_URL;
+let clientSideClient: GraphQLClient | null = null;
+let serverSideClient: GraphQLClient | null = null;
 
-let client: GraphQLClient | null = null;
-let accessToken: string | null = null;
-
-const getAuthHeaders = (): Record<string, string> => {
-  if (!accessToken) return {};
-  return { Authorization: `Bearer ${accessToken}` };
-};
-
+/**
+ * Get the GraphQL client instance.
+ *
+ * Uses the internal API URL for server-side requests (Docker container-to-container)
+ * and the public API URL for client-side requests (browser).
+ *
+ * Note: Auth headers are NOT set on the client directly.
+ * Instead, `graphqlFetch` fetches a fresh access token via server function
+ * and passes it in the request headers for each request.
+ */
 export const getGraphQLClient = (): GraphQLClient => {
-  if (!client) {
-    client = new GraphQLClient(graphqlUrl!, {
+  const isServer = typeof window === "undefined";
+
+  if (isServer) {
+    if (!serverSideClient) {
+      serverSideClient = new GraphQLClient(API_INTERNAL_GRAPHQL_URL!, {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    return serverSideClient;
+  }
+
+  if (!clientSideClient) {
+    clientSideClient = new GraphQLClient(API_GRAPHQL_URL!, {
       headers: { "Content-Type": "application/json" },
     });
   }
-  return client;
+  return clientSideClient;
 };
-
-export const setAccessToken = (token: string | null | undefined): void => {
-  accessToken = token ?? null;
-  if (client) {
-    client.setHeaders({
-      "Content-Type": "application/json",
-      ...getAuthHeaders(),
-    });
-  }
-};
-
-export const getCurrentAuthHeaders = (): Record<string, string> =>
-  getAuthHeaders();

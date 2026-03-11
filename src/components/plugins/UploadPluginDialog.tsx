@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { API_BASE_URL } from "@/lib/config/env.config";
-import { getCurrentAuthHeaders } from "@/lib/graphql/graphqlClientFactory";
+import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
 import pluginsOptions from "@/lib/options/plugins.options";
 
 const MANIFEST_PLACEHOLDER = JSON.stringify(
@@ -133,7 +133,7 @@ function UploadPluginDialog({
       }
       formData.append("manifest", manifest.trim() || "{}");
 
-      const authHeaders = getCurrentAuthHeaders();
+      const authHeaders = await getAuthHeaders();
       const response = await fetch(`${API_BASE_URL}/api/v1/plugins/upload`, {
         method: "POST",
         headers: authHeaders,

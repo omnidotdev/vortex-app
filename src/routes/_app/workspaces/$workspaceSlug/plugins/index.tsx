@@ -9,7 +9,7 @@ import UploadPluginDialog from "@/components/plugins/UploadPluginDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { API_BASE_URL } from "@/lib/config/env.config";
-import { getCurrentAuthHeaders } from "@/lib/graphql/graphqlClientFactory";
+import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
 import pluginsOptions from "@/lib/options/plugins.options";
 
 import type { Plugin } from "@/components/plugins/PluginCard";
@@ -53,7 +53,7 @@ function PluginsPage() {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            ...getCurrentAuthHeaders(),
+            ...(await getAuthHeaders()),
           },
           body: JSON.stringify({ isEnabled: enabled }),
         },

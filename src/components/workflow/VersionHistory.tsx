@@ -28,7 +28,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import VersionDiff from "@/components/workflow/VersionDiff";
 import { useWorkflowQuery } from "@/generated/graphql";
 import { API_BASE_URL } from "@/lib/config/env.config";
-import { getCurrentAuthHeaders } from "@/lib/graphql/graphqlClientFactory";
+import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
 import { cn } from "@/lib/utils";
 
@@ -75,7 +75,7 @@ async function fetchVersions(
 ): Promise<VersionsResponse> {
   const res = await fetch(
     `${API_BASE_URL}/api/v1/workflows/${workflowId}/versions?limit=${limit}&offset=${offset}`,
-    { headers: getCurrentAuthHeaders() },
+    { headers: await getAuthHeaders() },
   );
 
   if (!res.ok) {
@@ -97,7 +97,7 @@ async function revertToVersion(
     {
       method: "POST",
       headers: {
-        ...getCurrentAuthHeaders(),
+        ...(await getAuthHeaders()),
         "Content-Type": "application/json",
       },
     },
@@ -118,7 +118,7 @@ async function fetchVersionDetail(
 ): Promise<VersionDetailResponse> {
   const res = await fetch(
     `${API_BASE_URL}/api/v1/workflows/${workflowId}/versions/${version}`,
-    { headers: getCurrentAuthHeaders() },
+    { headers: await getAuthHeaders() },
   );
 
   if (!res.ok) {
