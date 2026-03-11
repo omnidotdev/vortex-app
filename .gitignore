@@ -12,6 +12,7 @@ dist
 
 # tests
 coverage
+.playwright-mcp/
 
 # editor
 .vscode
