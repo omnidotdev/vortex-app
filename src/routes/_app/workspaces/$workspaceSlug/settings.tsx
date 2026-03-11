@@ -1,4 +1,9 @@
-import { Link, createFileRoute, notFound, useRouteContext } from "@tanstack/react-router";
+import {
+  Link,
+  createFileRoute,
+  notFound,
+  useRouteContext,
+} from "@tanstack/react-router";
 import {
   CheckCircle2,
   Copy,
