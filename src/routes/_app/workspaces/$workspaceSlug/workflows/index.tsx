@@ -133,7 +133,7 @@ function WorkflowsPage() {
             <thead>
               <tr className="border-b text-left text-muted-foreground text-sm">
                 <th className="w-48 pb-3 font-medium">Name</th>
-                <th className="pb-3 font-medium">Description</th>
+                <th className="hidden pb-3 font-medium sm:table-cell">Description</th>
                 <th className="w-24 pb-3 text-right font-medium">Status</th>
                 <th className="w-40 pb-3 text-right font-medium">Last Run</th>
                 <th className="w-24 pb-3" />
@@ -153,7 +153,7 @@ function WorkflowsPage() {
                     </Link>
                   </td>
 
-                  <td className="truncate py-4 pr-4 text-muted-foreground">
+                  <td className="hidden truncate py-4 pr-4 text-muted-foreground sm:table-cell">
                     {workflow.description}
                   </td>
 
