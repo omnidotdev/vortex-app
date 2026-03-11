@@ -22,7 +22,7 @@ const knipConfig: KnipConfig = {
   },
   // used for proper management of Thornberry components, see https://knip.dev/reference/configuration#ignoreexportsusedinfile
   ignoreExportsUsedInFile: true,
-  ignore: ["src/generated/**", "src/routeTree.gen.ts"],
+  ignore: ["src/generated/**"],
   ignoreDependencies: [
     // used by GraphQL Code Generator scripts
     "dotenv",
