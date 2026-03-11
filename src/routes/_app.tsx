@@ -69,9 +69,6 @@ export const Route = createFileRoute("/_app")({
 
     return { organizationId: orgFromClaim.id, organization: orgFromClaim };
   },
-  loader: async ({ context }) => ({
-    organizationId: context.organizationId,
-  }),
   notFoundComponent: () => (
     <div className="flex min-h-screen items-center justify-center">
       <div className="text-center">
