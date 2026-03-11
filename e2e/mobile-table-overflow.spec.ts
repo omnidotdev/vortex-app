@@ -1,4 +1,4 @@
-import { test, expect } from "./fixtures";
+import { expect, test } from "./fixtures";
 
 /**
  * Bug #2: Workflow table overflow on mobile.
@@ -20,7 +20,10 @@ test.describe("workflow table mobile overflow", () => {
 
     // Check if the page body has horizontal overflow
     const hasOverflow = await page.evaluate(() => {
-      return document.documentElement.scrollWidth > document.documentElement.clientWidth;
+      return (
+        document.documentElement.scrollWidth >
+        document.documentElement.clientWidth
+      );
     });
 
     // The page should not have horizontal scrolling at mobile width

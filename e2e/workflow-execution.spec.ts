@@ -1,4 +1,4 @@
-import { test, expect } from "./fixtures";
+import { expect, test } from "./fixtures";
 
 /**
  * Bug #6/7: Workflow runs stuck in Pending.
@@ -75,9 +75,7 @@ test.describe("workflow execution lifecycle", () => {
 
         // Refresh or re-read the status
         const statusText = await page
-          .locator(
-            "text=/pending|running|queued|completed|failed|success/i",
-          )
+          .locator("text=/pending|running|queued|completed|failed|success/i")
           .first()
           .textContent()
           .catch(() => "pending");

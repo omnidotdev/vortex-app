@@ -22,7 +22,8 @@ async function resolveWorkspaceSlug(page: Page): Promise<string> {
   // Extract slug from /workspaces/<slug> or /workspaces/<slug>/...
   const match = href.match(/\/workspaces\/([^/]+)/);
 
-  if (!match?.[1]) throw new Error(`Could not parse workspace slug from ${href}`);
+  if (!match?.[1])
+    throw new Error(`Could not parse workspace slug from ${href}`);
 
   return match[1];
 }

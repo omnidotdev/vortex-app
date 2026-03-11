@@ -1,4 +1,4 @@
-import { test, expect } from "./fixtures";
+import { expect, test } from "./fixtures";
 
 /**
  * Bug #1: Mobile hamburger menu broken.
@@ -28,7 +28,11 @@ test.describe("mobile hamburger menu", () => {
     // Fall back to checking for visible nav links if Ark UI doesn't use standard dialog role
     const navDrawerVisible = drawer
       .or(page.getByRole("dialog"))
-      .or(page.locator('[data-state="open"]').filter({ hasText: /dashboard|workflows/i }));
+      .or(
+        page
+          .locator('[data-state="open"]')
+          .filter({ hasText: /dashboard|workflows/i }),
+      );
 
     await expect(navDrawerVisible.first()).toBeVisible({ timeout: 5_000 });
 
