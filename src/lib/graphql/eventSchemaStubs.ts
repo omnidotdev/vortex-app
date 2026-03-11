@@ -27,6 +27,8 @@ export type EventSchemaNode = {
   compatibilityMode: string;
   previousVersionId: string | null;
   migrationTransform: Record<string, unknown> | null;
+  organizationId: string;
+  visibility: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -61,6 +63,8 @@ const EventSchemasDocument = `
         compatibilityMode
         previousVersionId
         migrationTransform
+        organizationId
+        visibility
         createdAt
         updatedAt
       }

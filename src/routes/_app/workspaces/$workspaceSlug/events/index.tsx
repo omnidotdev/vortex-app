@@ -32,6 +32,7 @@ function EventSchemasPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sourceFilter, setSourceFilter] = useState<string>("all");
   const [enforcementFilter, setEnforcementFilter] = useState<string>("all");
+  const [visibilityFilter, setVisibilityFilter] = useState<string>("all");
 
   const { data: schemas } = useSuspenseQuery({
     ...eventSchemasOptions({}),
@@ -60,6 +61,8 @@ function EventSchemasPage() {
         enforcementFilter !== "all" &&
         schema.enforcement !== enforcementFilter
       )
+        return false;
+      if (visibilityFilter !== "all" && schema.visibility !== visibilityFilter)
         return false;
       return true;
     },
@@ -122,6 +125,16 @@ function EventSchemasPage() {
             <SelectItem value="none">None</SelectItem>
           </SelectContent>
         </Select>
+        <Select value={visibilityFilter} onValueChange={setVisibilityFilter}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="All visibility" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All visibility</SelectItem>
+            <SelectItem value="public">Public</SelectItem>
+            <SelectItem value="private">Private</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {filteredSchemas.length === 0 ? (
@@ -145,6 +158,7 @@ function EventSchemasPage() {
                     <th className="w-24 pb-3 font-medium">Version</th>
                     <th className="w-24 pb-3 font-medium">Enforcement</th>
                     <th className="w-32 pb-3 font-medium">Compatibility</th>
+                    <th className="w-24 pb-3 font-medium">Visibility</th>
                     <th className="w-40 pb-3 text-right font-medium">
                       Updated
                     </th>
@@ -182,6 +196,17 @@ function EventSchemasPage() {
                       </td>
                       <td className="py-4 text-muted-foreground text-sm">
                         {schema.compatibilityMode}
+                      </td>
+                      <td className="py-4">
+                        <Badge
+                          variant={
+                            schema.visibility === "public"
+                              ? "secondary"
+                              : "outline"
+                          }
+                        >
+                          {schema.visibility}
+                        </Badge>
                       </td>
                       <td className="py-4 text-right text-muted-foreground text-sm">
                         {new Date(schema.updatedAt).toLocaleDateString()}
