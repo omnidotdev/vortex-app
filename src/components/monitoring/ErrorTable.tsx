@@ -77,7 +77,7 @@ function ErrorTable({ since }: ErrorTableProps) {
 
             {data.errors.map((err) => (
               <tr
-                key={`${err.workflow_id}-${err.error}`}
+                key={`${err.workflowId}-${err.error}`}
                 className="border-b transition-colors hover:bg-muted/50"
               >
                 <td
@@ -91,11 +91,11 @@ function ErrorTable({ since }: ErrorTableProps) {
                     to="/workspaces/$workspaceSlug/workflows/$workflowId"
                     params={{
                       workspaceSlug,
-                      workflowId: err.workflow_id,
+                      workflowId: err.workflowId,
                     }}
                     className="text-primary underline-offset-4 hover:underline"
                   >
-                    {err.workflow_name}
+                    {err.workflowName}
                   </Link>
                 </td>
                 <td className="px-4 py-3">
@@ -105,7 +105,7 @@ function ErrorTable({ since }: ErrorTableProps) {
                   className="px-4 py-3 text-muted-foreground text-sm"
                   suppressHydrationWarning
                 >
-                  {formatRelativeTime(err.last_seen)}
+                  {formatRelativeTime(err.lastSeen)}
                 </td>
               </tr>
             ))}

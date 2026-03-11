@@ -35,10 +35,10 @@ type TimelineStats = {
  */
 type StatsError = {
   error: string;
-  workflow_name: string;
-  workflow_id: string;
+  workflowName: string;
+  workflowId: string;
   occurrences: number;
-  last_seen: string;
+  lastSeen: string;
 };
 
 /**
