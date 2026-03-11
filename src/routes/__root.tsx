@@ -132,7 +132,7 @@ function RootDocument({
 }: Readonly<{ children: ReactNode; theme: Theme }>) {
   return (
     <html lang="en" className={theme} suppressHydrationWarning>
-      <head>
+      <head suppressHydrationWarning>
         <HeadContent />
       </head>
       <body className="font-sans antialiased" suppressHydrationWarning>

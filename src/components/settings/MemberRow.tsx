@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 import type { Member } from "@/lib/types/members";
 
@@ -98,15 +97,11 @@ function MemberRow({
             </div>
           )}
           <div className="min-w-0">
-            <p
-              className={cn(
-                "truncate font-medium text-sm",
-                isCurrentUser && "flex items-center gap-1.5",
-              )}
-            >
-              {member.name}
+            <p className="flex items-center gap-1.5 font-medium text-sm">
+              <span className="truncate">{member.name}</span>
+              <RoleBadge role={member.role} />
               {isCurrentUser && (
-                <span className="font-normal text-muted-foreground text-xs">
+                <span className="shrink-0 font-normal text-muted-foreground text-xs">
                   (you)
                 </span>
               )}
@@ -116,11 +111,6 @@ function MemberRow({
             </p>
           </div>
         </div>
-      </td>
-
-      {/* Role */}
-      <td className="py-3">
-        <RoleBadge role={member.role} />
       </td>
 
       {/* Joined */}

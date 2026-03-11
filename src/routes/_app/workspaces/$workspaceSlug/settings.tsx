@@ -1,4 +1,4 @@
-import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound, useRouteContext } from "@tanstack/react-router";
 import {
   CheckCircle2,
   Copy,
@@ -12,6 +12,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DialogBackdrop,
@@ -37,6 +38,7 @@ import {
   getSubscription,
 } from "@/server/functions/subscriptions";
 
+import type { OrganizationClaim } from "@/lib/auth/getAuth";
 import type { Subscription } from "@/lib/providers/billing";
 
 /** Shape returned by the Gatekeeper API key list endpoint */
@@ -547,15 +549,57 @@ function PlanSection({
 }
 
 /**
+ * Derive the highest role from an organization claim's roles array.
+ */
+function deriveDisplayRole(organization?: OrganizationClaim): string | null {
+  if (!organization?.roles?.length) return null;
+
+  const roles = organization.roles;
+  if (roles.includes("owner")) return "owner";
+  if (roles.includes("admin")) return "admin";
+  if (roles.includes("member")) return "member";
+
+  return roles[0] ?? null;
+}
+
+/**
+ * Role badge with color matching the MemberRow convention.
+ */
+function UserRoleBadge({ role }: { role: string }) {
+  if (role === "owner") {
+    return (
+      <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
+        Owner
+      </Badge>
+    );
+  }
+
+  if (role === "admin") {
+    return (
+      <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+        Admin
+      </Badge>
+    );
+  }
+
+  return <Badge variant="secondary">Member</Badge>;
+}
+
+/**
  * Workspace settings page.
  */
 function WorkspaceSettingsPage() {
   const { workspaceSlug } = Route.useParams();
   const { organizationId, subscription } = Route.useLoaderData();
+  const { organization } = useRouteContext({ from: "/_app" });
+  const displayRole = deriveDisplayRole(organization as OrganizationClaim);
 
   return (
     <div className="p-8">
-      <h1 className="font-bold text-2xl">Workspace Settings</h1>
+      <div className="flex items-center gap-3">
+        <h1 className="font-bold text-2xl">Workspace Settings</h1>
+        {displayRole && <UserRoleBadge role={displayRole} />}
+      </div>
 
       <div className="mt-8 max-w-2xl space-y-8">
         {/* General */}

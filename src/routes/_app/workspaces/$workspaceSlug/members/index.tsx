@@ -130,8 +130,7 @@ function MembersPage() {
           <table className="w-full table-fixed">
             <thead>
               <tr className="border-b text-left text-muted-foreground text-sm">
-                <th className="w-48 pb-3 font-medium">Member</th>
-                <th className="w-32 pb-3 font-medium">Role</th>
+                <th className="w-64 pb-3 font-medium">Member</th>
                 <th className="w-32 pb-3 font-medium">Joined</th>
                 <th className="w-24 pb-3 font-medium" />
               </tr>
