@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { API_BASE_URL } from "@/lib/config/env.config";
+import { API_BASE_URL, API_INTERNAL_URL } from "@/lib/config/env.config";
 import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
 
 import type { MembersResponse } from "@/lib/types/members";
@@ -13,8 +13,11 @@ const membersOptions = (organizationId: string) =>
   queryOptions<MembersResponse>({
     queryKey: ["members", organizationId],
     queryFn: async () => {
+      const baseUrl =
+        typeof window === "undefined" ? API_INTERNAL_URL : API_BASE_URL;
+
       const response = await fetch(
-        `${API_BASE_URL}/api/v1/organizations/${organizationId}/members`,
+        `${baseUrl}/api/v1/organizations/${organizationId}/members`,
         { headers: await getAuthHeaders() },
       );
 

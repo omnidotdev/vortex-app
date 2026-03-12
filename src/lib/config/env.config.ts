@@ -25,7 +25,7 @@ export const {
 
 // Internal API URL for server-to-server communication (Docker service name)
 // Falls back to API_BASE_URL for non-Docker environments
-const API_INTERNAL_URL =
+export const API_INTERNAL_URL =
   typeof window === "undefined"
     ? env.API_INTERNAL_URL || API_BASE_URL
     : API_BASE_URL;
