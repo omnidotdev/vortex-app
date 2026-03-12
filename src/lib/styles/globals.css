@@ -66,11 +66,11 @@
   --glow-color-strong: oklch(0.6 0.18 295 / 0.25);
   --glow-sm: 0 0 8px var(--glow-color), 0 0 2px var(--glow-color);
   --glow-md:
-    0 0 12px var(--glow-color), 0 0 4px var(--glow-color-strong), 0 2px 8px
-    oklch(0 0 0 / 0.08);
+    0 0 12px var(--glow-color), 0 0 4px var(--glow-color-strong),
+    0 2px 8px oklch(0 0 0 / 0.08);
   --glow-lg:
-    0 0 20px var(--glow-color), 0 0 8px var(--glow-color-strong), 0 4px 12px
-    oklch(0 0 0 / 0.1);
+    0 0 20px var(--glow-color), 0 0 8px var(--glow-color-strong),
+    0 4px 12px oklch(0 0 0 / 0.1);
   --glow-pulse:
     0 0 16px oklch(0.6 0.2 295 / 0.3), 0 0 6px oklch(0.6 0.2 295 / 0.2);
 
@@ -125,11 +125,11 @@
   --glow-color-strong: oklch(0.65 0.18 295 / 0.35);
   --glow-sm: 0 0 10px var(--glow-color), 0 0 3px var(--glow-color);
   --glow-md:
-    0 0 16px var(--glow-color), 0 0 6px var(--glow-color-strong), 0 2px 8px
-    oklch(0 0 0 / 0.3);
+    0 0 16px var(--glow-color), 0 0 6px var(--glow-color-strong),
+    0 2px 8px oklch(0 0 0 / 0.3);
   --glow-lg:
-    0 0 24px var(--glow-color), 0 0 10px var(--glow-color-strong), 0 4px 16px
-    oklch(0 0 0 / 0.4);
+    0 0 24px var(--glow-color), 0 0 10px var(--glow-color-strong),
+    0 4px 16px oklch(0 0 0 / 0.4);
   --glow-pulse:
     0 0 20px oklch(0.68 0.2 295 / 0.4), 0 0 8px oklch(0.68 0.2 295 / 0.25);
 

@@ -22,9 +22,7 @@ test.describe("landing page", () => {
     await expect(
       page.getByRole("button", { name: /get started free/i }),
     ).toBeVisible();
-    await expect(
-      page.getByText("View on GitHub").first(),
-    ).toBeVisible();
+    await expect(page.getByText("View on GitHub").first()).toBeVisible();
 
     // Stats badges
     await expect(page.getByText("100%")).toBeVisible();
@@ -59,13 +57,9 @@ test.describe("landing page", () => {
     await page.goto("https://vortex.omni.dev/");
     await page.waitForLoadState("networkidle");
 
-    await expect(
-      page.getByText("Data pipeline orchestration"),
-    ).toBeVisible();
+    await expect(page.getByText("Data pipeline orchestration")).toBeVisible();
     await expect(page.getByText("CI/CD automation")).toBeVisible();
-    await expect(
-      page.getByText("Business process automation"),
-    ).toBeVisible();
+    await expect(page.getByText("Business process automation")).toBeVisible();
   });
 
   test("footer should have correct links", async ({ page }) => {

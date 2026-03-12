@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { expect, test as setup } from "@playwright/test";
+import { test as setup } from "@playwright/test";
 
 const AUTH_FILE = path.join(import.meta.dirname, ".auth/session.json");
 
@@ -26,7 +26,8 @@ setup("authenticate", async ({ page }) => {
     await page.waitForLoadState("networkidle");
 
     // "Sign In" on the landing page is a link in the header
-    const signIn = page.getByRole("link", { name: "Sign In" })
+    const signIn = page
+      .getByRole("link", { name: "Sign In" })
       .or(page.getByRole("button", { name: "Sign In" }));
 
     await signIn.first().click();

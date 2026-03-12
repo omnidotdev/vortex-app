@@ -3,7 +3,8 @@
  */
 const app = {
   name: "Vortex",
-  description: "Workflow automation, simplified",
+  description:
+    "A powerful workflow builder and manager designed specifically for automating disparate workflows in the decentralized web, combining visual simplicity with robust API capabilities and pluggable execution backends.",
   organization: {
     name: "Omni",
     website: "https://omni.dev",

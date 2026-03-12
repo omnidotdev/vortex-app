@@ -13,19 +13,31 @@ test.describe("billing / Aether integration", () => {
     const monthlyPanel = page.getByRole("tabpanel", { name: /monthly/i });
 
     await expect(
-      monthlyPanel.locator("div").filter({ hasText: /^Free$/ }).first(),
+      monthlyPanel
+        .locator("div")
+        .filter({ hasText: /^Free$/ })
+        .first(),
     ).toBeVisible();
     await expect(
-      monthlyPanel.locator("div").filter({ hasText: /^Starter$/ }).first(),
+      monthlyPanel
+        .locator("div")
+        .filter({ hasText: /^Starter$/ })
+        .first(),
     ).toBeVisible();
     await expect(
       monthlyPanel.locator("div").filter({ hasText: /^Pro$/ }).first(),
     ).toBeVisible();
     await expect(
-      monthlyPanel.locator("div").filter({ hasText: /^Team$/ }).first(),
+      monthlyPanel
+        .locator("div")
+        .filter({ hasText: /^Team$/ })
+        .first(),
     ).toBeVisible();
     await expect(
-      monthlyPanel.locator("div").filter({ hasText: /^Enterprise$/ }).first(),
+      monthlyPanel
+        .locator("div")
+        .filter({ hasText: /^Enterprise$/ })
+        .first(),
     ).toBeVisible();
 
     // Verify prices
@@ -34,7 +46,10 @@ test.describe("billing / Aether integration", () => {
     await expect(page.getByText("$39").first()).toBeVisible();
     await expect(page.getByText("$99").first()).toBeVisible();
     await expect(
-      monthlyPanel.locator("div").filter({ hasText: /^Custom$/ }).first(),
+      monthlyPanel
+        .locator("div")
+        .filter({ hasText: /^Custom$/ })
+        .first(),
     ).toBeVisible();
   });
 
@@ -57,9 +72,7 @@ test.describe("billing / Aether integration", () => {
     await page.waitForLoadState("networkidle");
 
     // Click a paid plan button
-    await page
-      .getByRole("button", { name: /continue with starter/i })
-      .click();
+    await page.getByRole("button", { name: /continue with starter/i }).click();
 
     // Should show workspace picker menu
     await expect(
@@ -72,9 +85,7 @@ test.describe("billing / Aether integration", () => {
     await page.waitForLoadState("networkidle");
 
     // Click Starter plan
-    await page
-      .getByRole("button", { name: /continue with starter/i })
-      .click();
+    await page.getByRole("button", { name: /continue with starter/i }).click();
 
     // Select workspace from the menu
     const upgradeItem = page

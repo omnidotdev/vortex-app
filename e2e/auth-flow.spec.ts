@@ -69,8 +69,7 @@ test.describe("auth and authorization", () => {
     const url = page.url();
     const isOnIdentity = url.includes("identity.omni.dev");
     const isOnLanding =
-      url === "https://vortex.omni.dev/" ||
-      url === "https://vortex.omni.dev";
+      url === "https://vortex.omni.dev/" || url === "https://vortex.omni.dev";
     const hasSignIn = await page
       .getByRole("button", { name: /sign in/i })
       .or(page.getByRole("link", { name: /sign in/i }))
