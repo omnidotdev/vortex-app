@@ -55,7 +55,9 @@ test.describe("workflow table mobile overflow", () => {
 
       if (box) {
         // Button should not extend past the viewport width
-        expect(box.x + box.width).toBeLessThanOrEqual(375);
+        const viewport = page.viewportSize();
+        const viewportWidth = viewport?.width ?? 375;
+        expect(box.x + box.width).toBeLessThanOrEqual(viewportWidth);
         // Button should not be zero-width (clipped)
         expect(box.width).toBeGreaterThan(0);
         expect(box.height).toBeGreaterThan(0);
