@@ -5,5 +5,14 @@ query UserByIdentityProviderId($identityProviderId: UUID!) {
     name
     avatarUrl
     createdAt
+    userOrganizations {
+      nodes {
+        organizationId
+        slug
+        name
+        type
+        role
+      }
+    }
   }
 }

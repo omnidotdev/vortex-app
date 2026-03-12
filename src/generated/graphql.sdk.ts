@@ -8001,7 +8001,7 @@ export type UserByIdentityProviderIdQueryVariables = Exact<{
 }>;
 
 
-export type UserByIdentityProviderIdQuery = { __typename?: 'Query', userByIdentityProviderId?: { __typename?: 'User', rowId: string, email: string, name: string, avatarUrl?: string | null, createdAt?: Date | null } | null };
+export type UserByIdentityProviderIdQuery = { __typename?: 'Query', userByIdentityProviderId?: { __typename?: 'User', rowId: string, email: string, name: string, avatarUrl?: string | null, createdAt?: Date | null, userOrganizations: { __typename?: 'UserOrganizationConnection', nodes: Array<{ __typename?: 'UserOrganization', organizationId: string, slug: string, name?: string | null, type: OrganizationType, role: MemberRole }> } } | null };
 
 export type WorkflowQueryVariables = Exact<{
   rowId: Scalars['UUID']['input'];
@@ -8248,6 +8248,15 @@ export const UserByIdentityProviderIdDocument = gql`
     name
     avatarUrl
     createdAt
+    userOrganizations {
+      nodes {
+        organizationId
+        slug
+        name
+        type
+        role
+      }
+    }
   }
 }
     `;

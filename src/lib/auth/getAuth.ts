@@ -1,7 +1,4 @@
-import {
-  ensureFreshAccessToken,
-  extractOrgClaims,
-} from "@omnidotdev/providers";
+import { ensureFreshAccessToken } from "@omnidotdev/providers";
 import { setCookie } from "@tanstack/react-start/server";
 import { GraphQLClient } from "graphql-request";
 
@@ -15,12 +12,12 @@ import type { OrganizationClaim } from "@omnidotdev/providers";
 export type { OrganizationClaim } from "@omnidotdev/providers";
 
 /**
- * Fetch rowId from GraphQL API by identity provider ID.
+ * Fetch user data (rowId + organizations) from GraphQL API by identity provider ID.
  */
-async function fetchRowIdFromApi(
+async function fetchUserDataFromApi(
   accessToken: string,
   identityProviderId: string,
-): Promise<string | null> {
+): Promise<{ rowId: string; organizations: OrganizationClaim[] } | null> {
   try {
     const graphqlClient = new GraphQLClient(API_INTERNAL_GRAPHQL_URL!, {
       headers: { Authorization: `Bearer ${accessToken}` },
@@ -30,9 +27,23 @@ async function fetchRowIdFromApi(
       identityProviderId,
     });
 
-    return userByIdentityProviderId?.rowId ?? null;
+    if (!userByIdentityProviderId?.rowId) return null;
+
+    const organizations: OrganizationClaim[] =
+      userByIdentityProviderId.userOrganizations?.nodes
+        ?.filter(Boolean)
+        .map((org) => ({
+          id: org.organizationId,
+          slug: org.slug,
+          name: org.name ?? org.slug,
+          type: org.type,
+          roles: [org.role],
+          teams: [],
+        })) ?? [];
+
+    return { rowId: userByIdentityProviderId.rowId, organizations };
   } catch (error) {
-    console.error("[getAuth] Failed to fetch rowId:", error);
+    console.error("[getAuth] Failed to fetch user data:", error);
     return null;
   }
 }
@@ -83,28 +94,29 @@ export async function getAuth(request: Request) {
       });
       accessToken = tokenResult?.accessToken;
 
-      // Extract claims from ID token (verified via OIDC discovery + JWKS)
-      if (tokenResult?.idToken) {
+      // Extract identityProviderId from ID token (needed for user lookup)
+      if (tokenResult?.idToken && !identityProviderId) {
         try {
           const payload = await oidc.verifyIdToken(tokenResult.idToken);
-
-          if (!identityProviderId) {
-            identityProviderId = payload.sub ?? null;
-          }
-
-          if (!hasCachedData) {
-            organizations = extractOrgClaims(payload);
-          }
+          identityProviderId = payload.sub ?? null;
         } catch (jwtError) {
           console.error("[getAuth] JWT verification failed:", jwtError);
         }
       }
 
-      // Handle rowId cache miss — fetch from API and cache
-      if (!rowId && accessToken && identityProviderId) {
-        rowId = await fetchRowIdFromApi(accessToken, identityProviderId);
+      // Fetch user data (rowId + orgs) from API on cache miss
+      if ((!rowId || !hasCachedData) && accessToken && identityProviderId) {
+        const userData = await fetchUserDataFromApi(
+          accessToken,
+          identityProviderId,
+        );
 
-        if (rowId) {
+        if (userData) {
+          rowId = userData.rowId;
+          if (!hasCachedData) {
+            organizations = userData.organizations;
+          }
+
           const encrypted = await authCache.encrypt({
             rowId,
             identityProviderId,

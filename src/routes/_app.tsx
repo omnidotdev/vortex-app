@@ -141,7 +141,7 @@ function MobileHeader() {
           <SheetContent side="right" className="w-64 p-0">
             <SheetContext>
               {({ setOpen }) => (
-                <div className="flex h-full flex-col">
+                <div className="flex h-full flex-col overflow-y-auto">
                   {/* Header */}
                   <div className="flex items-center justify-between border-b px-4 py-4">
                     <Link
