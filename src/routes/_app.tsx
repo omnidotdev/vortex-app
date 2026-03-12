@@ -101,7 +101,7 @@ function AuthenticatedLayout() {
           {!isWorkflowEditor && <AppSidebar />}
 
           {/* Main content */}
-          <main className="flex-1 overflow-auto">
+          <main className="min-w-0 flex-1 overflow-auto">
             <Outlet />
           </main>
         </div>

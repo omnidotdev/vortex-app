@@ -98,8 +98,8 @@ function WorkflowsPage() {
   });
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-8">
+      <div className="flex items-center justify-between gap-2">
         <h1 className="font-bold text-2xl">Workflows</h1>
         <Button asChild>
           <Link
@@ -128,17 +128,21 @@ function WorkflowsPage() {
           </Button>
         </div>
       ) : (
-        <div className="mt-8">
-          <table className="w-full table-fixed">
+        <div className="mt-8 overflow-x-auto">
+          <table className="w-full min-w-0 table-fixed">
             <thead>
               <tr className="border-b text-left text-muted-foreground text-sm">
-                <th className="w-48 pb-3 font-medium">Name</th>
+                <th className="pb-3 font-medium">Name</th>
                 <th className="hidden pb-3 font-medium sm:table-cell">
                   Description
                 </th>
-                <th className="w-24 pb-3 text-right font-medium">Status</th>
-                <th className="w-40 pb-3 text-right font-medium">Last Run</th>
-                <th className="w-24 pb-3" />
+                <th className="w-20 pb-3 text-right font-medium sm:w-24">
+                  Status
+                </th>
+                <th className="hidden pb-3 text-right font-medium sm:table-cell sm:w-40">
+                  Last Run
+                </th>
+                <th className="w-20 pb-3 sm:w-24" />
               </tr>
             </thead>
 
@@ -151,7 +155,9 @@ function WorkflowsPage() {
                       params={{ workspaceSlug, workflowId: workflow.rowId }}
                       className="font-medium hover:underline"
                     >
-                      {workflow.name}
+                      <span className="line-clamp-1 break-all">
+                        {workflow.name}
+                      </span>
                     </Link>
                   </td>
 
@@ -170,7 +176,7 @@ function WorkflowsPage() {
                       {workflow.isActive ? "Active" : "Inactive"}
                     </span>
                   </td>
-                  <td className="py-4 text-right text-muted-foreground text-sm">
+                  <td className="hidden py-4 text-right text-muted-foreground text-sm sm:table-cell">
                     {workflow.workflowRuns.nodes[0]?.createdAt
                       ? new Date(
                           workflow.workflowRuns.nodes[0].createdAt,

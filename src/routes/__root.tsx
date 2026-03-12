@@ -7,7 +7,7 @@ import {
   createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 
 import { isDevEnv } from "@/lib/config/env.config";
@@ -126,6 +126,34 @@ function RootComponent() {
   );
 }
 
+/**
+ * Toaster wrapper that avoids hydration mismatch. Sonner resolves
+ * `theme="system"` via `window.matchMedia` during `useState` init,
+ * producing a different value on server (always "light") vs client
+ * (depends on OS preference). Deferring to a `useEffect` keeps the
+ * server and initial client render in sync.
+ */
+function ThemedToaster({ theme }: { theme: Theme }) {
+  const [resolved, setResolved] = useState<"light" | "dark">("light");
+
+  useEffect(() => {
+    if (theme !== "system") {
+      setResolved(theme);
+      return;
+    }
+
+    const mql = window.matchMedia("(prefers-color-scheme: dark)");
+    setResolved(mql.matches ? "dark" : "light");
+
+    const handler = (e: MediaQueryListEvent) =>
+      setResolved(e.matches ? "dark" : "light");
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, [theme]);
+
+  return <Toaster theme={resolved} position="top-center" richColors />;
+}
+
 function RootDocument({
   children,
   theme,
@@ -138,7 +166,7 @@ function RootDocument({
       <body className="font-sans antialiased" suppressHydrationWarning>
         <ThemeProvider theme={theme}>
           {children}
-          <Toaster position="top-center" richColors />
+          <ThemedToaster theme={theme} />
         </ThemeProvider>
 
         {/* dev tools (only included in development) */}
