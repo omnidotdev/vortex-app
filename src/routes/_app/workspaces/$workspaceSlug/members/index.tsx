@@ -13,9 +13,7 @@ import {
 export const Route = createFileRoute(
   "/_app/workspaces/$workspaceSlug/members/",
 )({
-  loader: async ({
-    context: { queryClient, organizationId, session },
-  }) => {
+  loader: async ({ context: { queryClient, organizationId, session } }) => {
     if (!organizationId) throw notFound();
 
     const accessToken = session?.accessToken;
@@ -62,9 +60,7 @@ function MembersPage() {
       });
       toast.success("Role updated");
     } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "Failed to update role",
-      );
+      toast.error(err instanceof Error ? err.message : "Failed to update role");
     }
   };
 
