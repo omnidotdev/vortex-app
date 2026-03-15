@@ -16,20 +16,20 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-import type { Member } from "@/lib/types/members";
+import type { GatekeeperMember } from "@omnidotdev/providers";
 
 type MemberRowProps = {
-  member: Member;
+  member: GatekeeperMember;
   currentUserId: string | undefined;
   isOwner: boolean;
-  onRoleChange: (userId: string, role: string) => Promise<void>;
-  onRemove: (userId: string) => Promise<void>;
+  onRoleChange: (memberId: string, role: string) => Promise<void>;
+  onRemove: (memberId: string) => Promise<void>;
 };
 
 /**
- * Render role-specific badge with appropriate color.
+ * Render role-specific badge with appropriate color
  */
-function RoleBadge({ role }: { role: Member["role"] }) {
+function RoleBadge({ role }: { role: GatekeeperMember["role"] }) {
   if (role === "owner") {
     return (
       <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
@@ -50,7 +50,7 @@ function RoleBadge({ role }: { role: Member["role"] }) {
 }
 
 /**
- * Individual member row with avatar, name, email, role badge, and actions.
+ * Individual member row with avatar, name, email, role badge, and actions
  */
 function MemberRow({
   member,
@@ -65,7 +65,7 @@ function MemberRow({
   const handleRoleChange = async (role: string) => {
     setBusy("role");
     try {
-      await onRoleChange(member.userId, role);
+      await onRoleChange(member.id, role);
     } finally {
       setBusy(null);
     }
@@ -74,7 +74,7 @@ function MemberRow({
   const handleRemove = async () => {
     setBusy("remove");
     try {
-      await onRemove(member.userId);
+      await onRemove(member.id);
     } finally {
       setBusy(null);
     }
@@ -85,20 +85,20 @@ function MemberRow({
       {/* Member info */}
       <td className="py-3">
         <div className="flex items-center gap-3">
-          {member.avatarUrl ? (
+          {member.user.image ? (
             <img
-              src={member.avatarUrl}
-              alt={member.name}
+              src={member.user.image}
+              alt={member.user.name}
               className="h-8 w-8 rounded-full"
             />
           ) : (
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 font-medium text-sm">
-              {member.name.charAt(0).toUpperCase()}
+              {member.user.name.charAt(0).toUpperCase()}
             </div>
           )}
           <div className="min-w-0">
             <p className="flex items-center gap-1.5 font-medium text-sm">
-              <span className="truncate">{member.name}</span>
+              <span className="truncate">{member.user.name}</span>
               <RoleBadge role={member.role} />
               {isCurrentUser && (
                 <span className="shrink-0 font-normal text-muted-foreground text-xs">
@@ -107,7 +107,7 @@ function MemberRow({
               )}
             </p>
             <p className="truncate text-muted-foreground text-xs">
-              {member.email}
+              {member.user.email}
             </p>
           </div>
         </div>
@@ -115,7 +115,7 @@ function MemberRow({
 
       {/* Joined */}
       <td className="py-3 text-muted-foreground text-sm">
-        {new Date(member.joinedAt).toLocaleDateString()}
+        {new Date(member.createdAt).toLocaleDateString()}
       </td>
 
       {/* Actions */}
@@ -134,7 +134,7 @@ function MemberRow({
                   variant="ghost"
                   size="sm"
                   disabled={busy !== null}
-                  aria-label={`Remove ${member.name}`}
+                  aria-label={`Remove ${member.user.name}`}
                 >
                   {busy === "remove" ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -147,7 +147,7 @@ function MemberRow({
                 <AlertDialogHeader>
                   <AlertDialogTitle>Remove member</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Are you sure you want to remove {member.name} from this
+                    Are you sure you want to remove {member.user.name} from this
                     workspace? This action cannot be undone.
                   </AlertDialogDescription>
                 </AlertDialogHeader>

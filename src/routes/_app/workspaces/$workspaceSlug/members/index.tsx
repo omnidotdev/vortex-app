@@ -4,103 +4,78 @@ import { Users } from "lucide-react";
 import { toast } from "sonner";
 
 import MemberRow from "@/components/settings/MemberRow";
-import { API_BASE_URL } from "@/lib/config/env.config";
-import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
 import { membersOptions } from "@/lib/options/members.options";
+import {
+  removeOrganizationMember,
+  updateOrganizationMemberRole,
+} from "@/server/functions/organizations";
 
 export const Route = createFileRoute(
   "/_app/workspaces/$workspaceSlug/members/",
 )({
-  loader: async ({ context: { queryClient, organizationId } }) => {
+  loader: async ({
+    context: { queryClient, organizationId, session },
+  }) => {
     if (!organizationId) throw notFound();
-    await queryClient.ensureQueryData(membersOptions(organizationId));
-    return { organizationId };
+
+    const accessToken = session?.accessToken;
+
+    if (!accessToken) throw notFound();
+
+    await queryClient.ensureQueryData(
+      membersOptions(organizationId, accessToken),
+    );
+
+    return { organizationId, accessToken };
   },
   component: MembersPage,
 });
 
-// -- helpers ---------------------------------------------------------------
-
-/**
- * Update a member's role.
- */
-async function updateMemberRole(
-  organizationId: string,
-  userId: string,
-  role: string,
-): Promise<void> {
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/organizations/${organizationId}/members/${userId}/role`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        ...(await getAuthHeaders()),
-      },
-      body: JSON.stringify({ role }),
-    },
-  );
-
-  if (!response.ok) {
-    const body = (await response.json().catch(() => null)) as {
-      error?: string;
-    } | null;
-    throw new Error(body?.error ?? "Failed to update role");
-  }
-}
-
-/**
- * Remove a member from the workspace.
- */
-async function removeMember(
-  organizationId: string,
-  userId: string,
-): Promise<void> {
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/organizations/${organizationId}/members/${userId}`,
-    {
-      method: "DELETE",
-      headers: await getAuthHeaders(),
-    },
-  );
-
-  if (!response.ok) {
-    const body = (await response.json().catch(() => null)) as {
-      error?: string;
-    } | null;
-    throw new Error(body?.error ?? "Failed to remove member");
-  }
-}
-
 // -- page ------------------------------------------------------------------
 
 function MembersPage() {
-  const { organizationId } = Route.useLoaderData();
+  const { organizationId, accessToken } = Route.useLoaderData();
   const context = Route.useRouteContext();
   const currentUserId = context.session?.user?.rowId ?? undefined;
   const queryClient = useQueryClient();
 
-  const { data } = useSuspenseQuery(membersOptions(organizationId));
-  const members = data.members;
+  const { data } = useSuspenseQuery(
+    membersOptions(organizationId, accessToken),
+  );
+  const members = data?.data ?? [];
 
   // Determine if the current user is the workspace owner
   const currentMember = members.find((m) => m.userId === currentUserId);
   const isOwner = currentMember?.role === "owner";
 
-  const handleRoleChange = async (userId: string, role: string) => {
+  const handleRoleChange = async (memberId: string, role: string) => {
     try {
-      await updateMemberRole(organizationId, userId, role);
-      queryClient.invalidateQueries({ queryKey: ["members"] });
+      await updateOrganizationMemberRole({
+        data: {
+          organizationId,
+          memberId,
+          role: role as "admin" | "member",
+        },
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["organizationMembers", organizationId],
+      });
       toast.success("Role updated");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to update role");
+      toast.error(
+        err instanceof Error ? err.message : "Failed to update role",
+      );
     }
   };
 
-  const handleRemove = async (userId: string) => {
+  const handleRemove = async (memberId: string) => {
     try {
-      await removeMember(organizationId, userId);
-      queryClient.invalidateQueries({ queryKey: ["members"] });
+      await removeOrganizationMember({
+        data: { organizationId, memberId },
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["organizationMembers", organizationId],
+      });
       toast.success("Member removed");
     } catch (err) {
       toast.error(
@@ -138,7 +113,7 @@ function MembersPage() {
             <tbody>
               {members.map((member) => (
                 <MemberRow
-                  key={member.userId}
+                  key={member.id}
                   member={member}
                   currentUserId={currentUserId}
                   isOwner={isOwner}

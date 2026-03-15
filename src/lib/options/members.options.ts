@@ -1,30 +1,16 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import { API_BASE_URL, API_INTERNAL_URL } from "@/lib/config/env.config";
-import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
-
-import type { MembersResponse } from "@/lib/types/members";
+import { listOrganizationMembers } from "@/server/functions/organizations";
 
 /**
- * Query options for fetching workspace members.
- * @param organizationId - Organization to fetch members for
+ * Query options for fetching workspace members from Gatekeeper
  */
-const membersOptions = (organizationId: string) =>
-  queryOptions<MembersResponse>({
-    queryKey: ["members", organizationId],
-    queryFn: async () => {
-      const baseUrl =
-        typeof window === "undefined" ? API_INTERNAL_URL : API_BASE_URL;
-
-      const response = await fetch(
-        `${baseUrl}/api/v1/organizations/${organizationId}/members`,
-        { headers: await getAuthHeaders() },
-      );
-
-      if (!response.ok) throw new Error("Failed to fetch members");
-
-      return response.json();
-    },
+const membersOptions = (organizationId: string, accessToken: string) =>
+  queryOptions({
+    queryKey: ["organizationMembers", organizationId],
+    queryFn: () =>
+      listOrganizationMembers({ data: { organizationId, accessToken } }),
+    enabled: !!organizationId && !!accessToken,
   });
 
 export { membersOptions };
