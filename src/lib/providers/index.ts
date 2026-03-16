@@ -1,4 +1,4 @@
-import { createFlagProvider } from "@omnidotdev/providers";
+import { createFlagProvider } from "@omnidotdev/providers/flags";
 import { createServerFn } from "@tanstack/react-start";
 
 import { FLAGS_API_HOST, FLAGS_CLIENT_KEY } from "@/lib/config/env.config";

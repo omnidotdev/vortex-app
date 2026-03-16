@@ -16,7 +16,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-import type { GatekeeperMember } from "@omnidotdev/providers";
+import type { GatekeeperMember } from "@omnidotdev/providers/auth";
 
 type MemberRowProps = {
   member: GatekeeperMember;
