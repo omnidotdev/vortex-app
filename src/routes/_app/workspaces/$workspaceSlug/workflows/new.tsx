@@ -15,6 +15,7 @@ import {
   useCreateWorkflowMutation,
   useWorkflowsQuery,
 } from "@/generated/graphql";
+import extractErrorMessage from "@/lib/graphql/extractErrorMessage";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
 import { cn } from "@/lib/utils";
 
@@ -601,16 +602,12 @@ function NewWorkflowPage() {
           params: { workspaceSlug, workflowId },
         });
       } else {
-        navigate({
-          to: "/workspaces/$workspaceSlug/workflows",
-          params: { workspaceSlug },
-        });
+        setError("Failed to create workflow. You may have reached your plan limit.");
+        setCreatingTemplateId(null);
       }
     },
     onError: (err) => {
-      setError(
-        err instanceof Error ? err.message : "Failed to create workflow",
-      );
+      setError(extractErrorMessage(err, "Failed to create workflow"));
       setCreatingTemplateId(null);
     },
   });

@@ -50,7 +50,7 @@ export function getRouter() {
     routeTree,
     context: { queryClient, session: null, isMaintenanceMode: false },
     defaultPreload: "intent",
-    defaultPreloadStaleTime: 0,
+    defaultPreloadStaleTime: 30_000,
     // Scroll restoration on navigation
     scrollRestoration: true,
     defaultNotFoundComponent: () => (

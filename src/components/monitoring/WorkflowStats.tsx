@@ -11,6 +11,7 @@ import {
 import { useEffect, useState } from "react";
 
 import { workflowStatsOptions } from "@/lib/options/stats.options";
+import computeSuccessRate from "@/lib/util/computeSuccessRate";
 import { cn } from "@/lib/utils";
 
 type WorkflowStatsProps = {
@@ -81,8 +82,8 @@ function WorkflowStats({ workflowId, workspaceSlug }: WorkflowStatsProps) {
     );
   }
 
-  const successRate =
-    stats.total > 0 ? (stats.succeeded / stats.total) * 100 : 0;
+  const hasResolved = stats.succeeded + stats.failed > 0;
+  const successRate = computeSuccessRate(stats.succeeded, stats.failed);
 
   return (
     <div className="space-y-4 p-4">
@@ -123,10 +124,10 @@ function WorkflowStats({ workflowId, workspaceSlug }: WorkflowStatsProps) {
           <p
             className={cn(
               "font-bold text-xl",
-              stats.total > 0 ? successRateColor(successRate) : "",
+              hasResolved ? successRateColor(successRate) : "",
             )}
           >
-            {stats.total > 0 ? `${successRate.toFixed(1)}%` : "\u2014"}
+            {hasResolved ? `${successRate.toFixed(1)}%` : "\u2014"}
           </p>
         </div>
       </div>

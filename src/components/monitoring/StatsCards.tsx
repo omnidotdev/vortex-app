@@ -2,6 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { Activity, CheckCircle2, GitBranch, XCircle } from "lucide-react";
 
 import { orgStatsOptions } from "@/lib/options/stats.options";
+import computeSuccessRate from "@/lib/util/computeSuccessRate";
 import { cn } from "@/lib/utils";
 
 import type { DateRange } from "./types";
@@ -28,8 +29,7 @@ function successRateColor(rate: number): string {
 function StatsCards({ since, until }: DateRange) {
   const { data: stats } = useSuspenseQuery(orgStatsOptions({ since, until }));
 
-  const successRate =
-    stats.total > 0 ? (stats.succeeded / stats.total) * 100 : 0;
+  const successRate = computeSuccessRate(stats.succeeded, stats.failed);
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

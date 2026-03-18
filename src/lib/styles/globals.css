@@ -231,6 +231,10 @@
     bottom: 60px !important;
   }
   .react-flow__controls-button {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
     background-color: var(--card) !important;
     border: none !important;
     border-bottom: 1px solid var(--border) !important;

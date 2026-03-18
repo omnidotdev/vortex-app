@@ -165,6 +165,7 @@ import extractErrorMessage from "@/lib/graphql/extractErrorMessage";
 import workflowOptions from "@/lib/options/workflow.options";
 import { NodeTypes } from "@/lib/schema";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
+import dslToReactFlow, { isDslFormat } from "@/lib/workflow/dslToReactFlow";
 import {
   ensureStepNames,
   generateUniqueStepName,
@@ -379,11 +380,20 @@ function WorkflowEditorPage() {
 
   if (!workflow) throw notFound();
 
-  const definition =
-    (workflow.definition as { nodes?: Node[]; edges?: Edge[] }) || {};
+  // Support both ReactFlow format (nodes + edges) and DSL format (steps + edges)
+  const rawDefinition =
+    (workflow.definition as Record<string, unknown>) || {};
+  const { nodes: parsedNodes, edges: parsedEdges } = isDslFormat(rawDefinition)
+    ? dslToReactFlow(
+        rawDefinition as unknown as Parameters<typeof dslToReactFlow>[0],
+      )
+    : {
+        nodes: ((rawDefinition as { nodes?: Node[] }).nodes || []) as Node[],
+        edges: ((rawDefinition as { edges?: Edge[] }).edges || []) as Edge[],
+      };
   // Ensure all nodes have step names (for backwards compatibility with old workflows)
-  const initialNodes = ensureStepNames(definition.nodes || []);
-  const initialEdges = definition.edges || [];
+  const initialNodes = ensureStepNames(parsedNodes);
+  const initialEdges = parsedEdges;
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);

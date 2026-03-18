@@ -23,13 +23,25 @@ import type { ReactNode } from "react";
 import type { AuthSession } from "@/lib/auth/getAuth";
 import type { Theme } from "@/providers/ThemeProvider";
 
+let cachedSession: AuthSession | null = null;
+
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   session: AuthSession | null;
   isMaintenanceMode: boolean;
 }>()({
   beforeLoad: async () => {
-    const { session } = await fetchSession();
+    let session: AuthSession | null = null;
+
+    try {
+      ({ session } = await fetchSession());
+    } catch {
+      // Use cached session on transient failure to avoid false unauthenticated state
+      session = cachedSession;
+    }
+
+    if (session) cachedSession = session;
+
     const { isMaintenanceMode } = await fetchMaintenanceMode();
 
     return { session, isMaintenanceMode };

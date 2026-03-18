@@ -1325,17 +1325,19 @@ export const BaseNode = memo(
         style={{ width: NODE_WIDTH, minHeight: NODE_MIN_HEIGHT }}
         onClick={onClick}
       >
-        {/* Delete button */}
+        {/* Delete button — 44x44 touch target with visually compact icon */}
         <Button
           variant="ghost"
           size="icon"
-          className="absolute -top-2 -right-2 h-6 w-6 rounded-full border bg-background opacity-0 shadow-md transition-opacity group-hover:opacity-100"
+          className="absolute -top-5 -right-5 h-11 min-h-11 w-11 min-w-11 rounded-full opacity-0 transition-opacity group-hover:opacity-100"
           onClick={(e) => {
             e.stopPropagation();
             onDelete?.();
           }}
         >
-          <Trash2 className="h-3 w-3 text-destructive" />
+          <span className="flex h-6 w-6 items-center justify-center rounded-full border bg-background shadow-md">
+            <Trash2 className="h-3 w-3 text-destructive" />
+          </span>
         </Button>
 
         {/* Header */}

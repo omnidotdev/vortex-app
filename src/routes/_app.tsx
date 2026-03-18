@@ -3,6 +3,7 @@ import {
   Outlet,
   createFileRoute,
   notFound,
+  redirect,
   useMatches,
   useParams,
 } from "@tanstack/react-router";
@@ -50,8 +51,7 @@ export const Route = createFileRoute("/_app")({
     // If session doesn't exist or rowId is missing, sign out to clear stale session
     // The user may exist in the identity provider but not in the database
     if (!session?.user?.rowId) {
-      const { signOutAndRedirect } = await import("@/server/functions/auth");
-      await signOutAndRedirect();
+      throw redirect({ to: "/" });
     }
 
     const { workspaceSlug } = params as { workspaceSlug?: string };
