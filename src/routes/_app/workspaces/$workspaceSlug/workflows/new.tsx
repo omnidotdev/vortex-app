@@ -602,7 +602,9 @@ function NewWorkflowPage() {
           params: { workspaceSlug, workflowId },
         });
       } else {
-        setError("Failed to create workflow. You may have reached your plan limit.");
+        setError(
+          "Failed to create workflow. You may have reached your plan limit.",
+        );
         setCreatingTemplateId(null);
       }
     },

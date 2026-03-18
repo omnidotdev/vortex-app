@@ -381,8 +381,7 @@ function WorkflowEditorPage() {
   if (!workflow) throw notFound();
 
   // Support both ReactFlow format (nodes + edges) and DSL format (steps + edges)
-  const rawDefinition =
-    (workflow.definition as Record<string, unknown>) || {};
+  const rawDefinition = (workflow.definition as Record<string, unknown>) || {};
   const { nodes: parsedNodes, edges: parsedEdges } = isDslFormat(rawDefinition)
     ? dslToReactFlow(
         rawDefinition as unknown as Parameters<typeof dslToReactFlow>[0],
