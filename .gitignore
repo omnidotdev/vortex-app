@@ -12,6 +12,7 @@ dist
 
 # tests
 coverage
+test-results
 .playwright-mcp/
 
 # editor
