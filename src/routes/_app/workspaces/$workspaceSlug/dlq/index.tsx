@@ -433,8 +433,9 @@ function DlqDashboard() {
       )}
 
       {/* Table */}
-      <div className="mt-6 overflow-x-auto rounded-lg border">
-        <table className="w-full text-left">
+      <div className="-mx-8 mt-6 px-8 sm:mx-0 sm:px-0">
+        <div className="overflow-x-auto rounded-lg border">
+          <table className="w-full min-w-[700px] text-left">
           <thead>
             <tr className="border-b bg-muted/50">
               <th className="px-4 py-3 font-medium text-sm">Event Type</th>
@@ -473,6 +474,7 @@ function DlqDashboard() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Pagination */}

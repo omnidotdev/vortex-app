@@ -69,7 +69,7 @@ function WorkspaceDashboard() {
         <Link
           to="/workspaces/$workspaceSlug/workflows"
           params={{ workspaceSlug }}
-          className="group relative rounded-lg border p-6 transition-colors hover:border-foreground/20 hover:bg-muted/50"
+          className="group relative overflow-hidden rounded-lg border p-6 transition-colors hover:border-foreground/20 hover:bg-muted/50"
         >
           <div className="relative">
             <div className="flex items-center gap-2 text-muted-foreground text-sm">
@@ -81,7 +81,7 @@ function WorkspaceDashboard() {
 
           {/* Stacked workflow icons */}
           {workflows.length > 0 && (
-            <div className="absolute right-0 bottom-0 flex items-end gap-1 p-4">
+            <div className="absolute right-0 bottom-0 hidden items-end gap-1 p-4 sm:flex">
               {workflows.slice(0, 8).map((workflow, i) => (
                 <Link
                   key={workflow.rowId}
@@ -133,7 +133,7 @@ function WorkspaceDashboard() {
         <Link
           to="/workspaces/$workspaceSlug/integrations"
           params={{ workspaceSlug }}
-          className="group relative rounded-lg border p-6 transition-colors hover:border-foreground/20 hover:bg-muted/50"
+          className="group relative overflow-hidden rounded-lg border p-6 transition-colors hover:border-foreground/20 hover:bg-muted/50"
         >
           <div className="relative">
             <div className="flex items-center gap-2 text-muted-foreground text-sm">
@@ -145,7 +145,7 @@ function WorkspaceDashboard() {
 
           {/* Stacked integration icons */}
           {integrations.length > 0 && (
-            <div className="absolute right-0 bottom-0 flex items-end gap-1 p-4">
+            <div className="absolute right-0 bottom-0 hidden items-end gap-1 p-4 sm:flex">
               {integrations.slice(0, 8).map((integration, i) => {
                 const definition = definitionsByType.get(integration.type);
                 return (

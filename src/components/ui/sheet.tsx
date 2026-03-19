@@ -110,12 +110,12 @@ const SheetTitle = ({
 );
 
 export {
-  SheetRoot,
-  SheetTrigger,
   SheetBackdrop,
-  SheetPositioner,
-  SheetContent,
   SheetCloseTrigger,
-  SheetTitle,
+  SheetContent,
   SheetContext,
+  SheetPositioner,
+  SheetRoot,
+  SheetTitle,
+  SheetTrigger,
 };

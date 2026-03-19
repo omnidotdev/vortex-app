@@ -1453,6 +1453,5 @@ const getIntegrationActions = (integrationId: string): IntegrationAction[] => {
   return integrationActions[integrationId] || defaultActions;
 };
 
-export { getIntegrationActions };
-
 export type { IntegrationAction };
+export { getIntegrationActions };

@@ -52,4 +52,4 @@ const TabsContent = ({
   />
 );
 
-export { TabsProvider, TabsRoot, TabsList, TabsTrigger, TabsContent };
+export { TabsContent, TabsList, TabsProvider, TabsRoot, TabsTrigger };

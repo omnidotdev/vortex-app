@@ -125,14 +125,14 @@ const DialogCloseTrigger = ({
 };
 
 export {
-  DialogRoot,
-  DialogTrigger,
   DialogBackdrop,
-  DialogPositioner,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-  DialogDescription,
   DialogCloseTrigger,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogPositioner,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
 };

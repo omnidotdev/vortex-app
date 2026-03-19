@@ -5,6 +5,7 @@ import {
   createFileRoute,
   notFound,
   useNavigate,
+  useRouter,
 } from "@tanstack/react-router";
 import {
   Activity,
@@ -12,6 +13,7 @@ import {
   Clock,
   Copy,
   Download,
+  Ellipsis,
   Grid3X3,
   History,
   Loader2,
@@ -142,6 +144,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  MenuContent,
+  MenuItem,
+  MenuItemText,
+  MenuPositioner,
+  MenuRoot,
+  MenuSeparator,
+  MenuTrigger,
+} from "@/components/ui/menu";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -179,14 +190,85 @@ export const Route = createFileRoute(
   loader: async ({ params, context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
 
-    await queryClient.ensureQueryData(
+    const data = await queryClient.ensureQueryData(
       workflowOptions({ rowId: params.workflowId }),
     );
+
+    // Throw notFound when the workflow doesn't exist
+    if (!data?.workflow) throw notFound();
 
     return { organizationId };
   },
   component: WorkflowEditorPage,
+  notFoundComponent: WorkflowNotFound,
+  errorComponent: WorkflowError,
 });
+
+/**
+ * Branded 404 page for non-existent workflows.
+ */
+function WorkflowNotFound() {
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-8">
+      <div className="text-center">
+        <div className="mb-6 text-6xl">{"\uD83C\uDF2A\uFE0F"}</div>
+        <h1 className="font-bold text-2xl text-foreground">
+          Workflow Not Found
+        </h1>
+        <p className="mt-2 max-w-md text-muted-foreground">
+          The workflow you're looking for doesn't exist or has been deleted.
+        </p>
+        <div className="mt-6">
+          <a
+            href="/workspaces"
+            className="rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
+          >
+            Go to workspaces
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Error boundary for the workflow editor route.
+ * Show the branded 404 for not-found errors, re-throw others.
+ */
+function WorkflowError({ error }: { error: unknown }) {
+  // GraphQL / network errors when a workflow doesn't exist
+  const router = useRouter();
+
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-8">
+      <div className="text-center">
+        <div className="mb-6 text-6xl">{"\uD83C\uDF2A\uFE0F"}</div>
+        <h1 className="font-bold text-2xl text-foreground">
+          Workflow Not Found
+        </h1>
+        <p className="mt-2 max-w-md text-muted-foreground">
+          This workflow could not be loaded. It may not exist or you may not have
+          access.
+        </p>
+        <div className="mt-6 flex items-center justify-center gap-3">
+          <a
+            href="/workspaces"
+            className="rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
+          >
+            Go to workspaces
+          </a>
+          <button
+            type="button"
+            onClick={() => router.invalidate()}
+            className="rounded-lg border px-4 py-2 font-medium text-sm transition-colors hover:bg-muted"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // Define custom node types - must be outside component to avoid re-creation
 const nodeTypes = {
@@ -404,6 +486,7 @@ function WorkflowEditorPage() {
   >("idle");
   const hasUnsavedChanges = useRef(false);
   const isInitialMount = useRef(true);
+  const isEditorReady = useRef(false);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
   const [showRunsPanel, setShowRunsPanel] = useState(false);
   const [showVersionHistory, setShowVersionHistory] = useState(false);
@@ -631,6 +714,11 @@ function WorkflowEditorPage() {
       isInitialMount.current = false;
       return;
     }
+
+    // Skip until editor is fully initialized (prevents className-only
+    // changes from execution status highlighting triggering a save
+    // before nodes/edges are fully loaded from the definition)
+    if (!isEditorReady.current) return;
 
     hasUnsavedChanges.current = true;
 
@@ -1522,9 +1610,11 @@ function WorkflowEditorPage() {
             <History className="h-4 w-4 lg:mr-1" />
             <span className="hidden lg:inline">Runs</span>
           </Button>
+          {/* Versions, Monitoring, Import, Export — visible at md+ */}
           <Button
             variant={showVersionHistory ? "default" : "outline"}
             size="sm"
+            className="hidden md:flex"
             onClick={() => {
               setShowVersionHistory(!showVersionHistory);
               setShowRunsPanel(false);
@@ -1539,6 +1629,7 @@ function WorkflowEditorPage() {
           <Button
             variant={showMonitoring ? "default" : "outline"}
             size="sm"
+            className="hidden md:flex"
             onClick={() => {
               setShowMonitoring(!showMonitoring);
               setShowRunsPanel(false);
@@ -1553,6 +1644,7 @@ function WorkflowEditorPage() {
           <Button
             variant="outline"
             size="sm"
+            className="hidden md:flex"
             onClick={() => setShowImportDialog(true)}
             title="Import workflow (Ctrl+I)"
           >
@@ -1562,12 +1654,82 @@ function WorkflowEditorPage() {
           <Button
             variant="outline"
             size="sm"
+            className="hidden md:flex"
             onClick={() => setShowExportDialog(true)}
             title="Export workflow (Ctrl+Shift+E)"
           >
             <Download className="h-4 w-4 lg:mr-1" />
             <span className="hidden lg:inline">Export</span>
           </Button>
+
+          {/* Collapsed menu for small screens */}
+          <MenuRoot>
+            <MenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="md:hidden"
+                aria-label="More actions"
+              >
+                <Ellipsis className="h-4 w-4" />
+              </Button>
+            </MenuTrigger>
+            <MenuPositioner>
+              <MenuContent>
+                <MenuItem
+                  value="versions"
+                  onClick={() => {
+                    setShowVersionHistory(!showVersionHistory);
+                    setShowRunsPanel(false);
+                    setShowMonitoring(false);
+                    setShowRightSidebar(true);
+                    if (!showVersionHistory) setSelectedNode(null);
+                  }}
+                >
+                  <Clock className="h-4 w-4" />
+                  <MenuItemText>Versions</MenuItemText>
+                </MenuItem>
+                <MenuItem
+                  value="monitoring"
+                  onClick={() => {
+                    setShowMonitoring(!showMonitoring);
+                    setShowRunsPanel(false);
+                    setShowVersionHistory(false);
+                    setShowRightSidebar(true);
+                    if (!showMonitoring) setSelectedNode(null);
+                  }}
+                >
+                  <Activity className="h-4 w-4" />
+                  <MenuItemText>Monitoring</MenuItemText>
+                </MenuItem>
+                <MenuSeparator />
+                <MenuItem
+                  value="import"
+                  onClick={() => setShowImportDialog(true)}
+                >
+                  <Upload className="h-4 w-4" />
+                  <MenuItemText>Import</MenuItemText>
+                </MenuItem>
+                <MenuItem
+                  value="export"
+                  onClick={() => setShowExportDialog(true)}
+                >
+                  <Download className="h-4 w-4" />
+                  <MenuItemText>Export</MenuItemText>
+                </MenuItem>
+                <MenuSeparator />
+                <MenuItem
+                  value="snap"
+                  onClick={() => setSnapToGrid(!snapToGrid)}
+                >
+                  <Grid3X3 className="h-4 w-4" />
+                  <MenuItemText>
+                    Snap to Grid {snapToGrid ? "(On)" : "(Off)"}
+                  </MenuItemText>
+                </MenuItem>
+              </MenuContent>
+            </MenuPositioner>
+          </MenuRoot>
 
           {/* Autosave status indicator */}
           <div className="hidden items-center gap-1.5 text-muted-foreground text-xs sm:flex">
@@ -1668,7 +1830,14 @@ function WorkflowEditorPage() {
               onNodesChange={onNodesChange}
               onEdgesChange={onEdgesChange}
               onConnect={onConnect}
-              onInit={setReactFlowInstance}
+              onInit={(instance) => {
+                setReactFlowInstance(instance);
+                // Mark editor as ready after a tick so initial node/edge
+                // state is settled before autosave can trigger
+                requestAnimationFrame(() => {
+                  isEditorReady.current = true;
+                });
+              }}
               onNodeDragStart={onNodeDragStart}
               onNodeDragStop={onNodeDragStop}
               onDragOver={onDragOver}

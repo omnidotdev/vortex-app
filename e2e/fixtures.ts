@@ -126,4 +126,4 @@ const test = base.extend<Fixtures>({
   },
 });
 
-export { test, expect };
+export { expect, test };
