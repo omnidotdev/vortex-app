@@ -8,7 +8,12 @@ const makeClientError = (
   errors: { message: string; extensions?: Record<string, unknown> }[],
 ) =>
   new ClientError(
-    { errors, status, headers: {} as Headers, body: "{}" } as unknown as ConstructorParameters<typeof ClientError>[0],
+    {
+      errors,
+      status,
+      headers: {} as Headers,
+      body: "{}",
+    } as unknown as ConstructorParameters<typeof ClientError>[0],
     { query: "query { test }" },
   );
 
@@ -19,7 +24,10 @@ const makeClientError = (
 describe("graphqlFetch error handling", () => {
   it("should detect UNAUTHENTICATED extension code", () => {
     const error = makeClientError(200, [
-      { message: "Authentication required", extensions: { code: "UNAUTHENTICATED" } },
+      {
+        message: "Authentication required",
+        extensions: { code: "UNAUTHENTICATED" },
+      },
     ]);
 
     const isUnauthenticated = error.response.errors?.some(
