@@ -250,6 +250,18 @@
     fill: var(--foreground) !important;
   }
 
+  /* Reposition controls on mobile to avoid overlapping workflow nodes */
+  @media (max-width: 640px) {
+    .react-flow__controls {
+      bottom: auto !important;
+      top: 12px !important;
+      left: 12px !important;
+      z-index: 5;
+      background-color: var(--card);
+      backdrop-filter: blur(8px);
+    }
+  }
+
   /* ReactFlow background pattern theming */
   .react-flow__background pattern circle,
   .react-flow__background pattern line {

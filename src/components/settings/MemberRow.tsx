@@ -1,5 +1,5 @@
 import { Loader2, UserMinus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import RoleSelector from "@/components/settings/RoleSelector";
 import {
@@ -17,6 +17,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 import type { GatekeeperMember } from "@omnidotdev/providers/auth";
+
+/**
+ * Format a date string only on the client to avoid hydration mismatch
+ * from locale differences between server and browser
+ */
+function useFormattedDate(dateString: string) {
+  const [formatted, setFormatted] = useState<string>("");
+
+  useEffect(() => {
+    setFormatted(new Date(dateString).toLocaleDateString());
+  }, [dateString]);
+
+  return formatted;
+}
 
 type MemberRowProps = {
   member: GatekeeperMember;
@@ -61,6 +75,7 @@ function MemberRow({
 }: MemberRowProps) {
   const [busy, setBusy] = useState<"role" | "remove" | null>(null);
   const isCurrentUser = member.userId === currentUserId;
+  const joinedDate = useFormattedDate(member.createdAt);
 
   const handleRoleChange = async (role: string) => {
     setBusy("role");
@@ -114,11 +129,8 @@ function MemberRow({
       </td>
 
       {/* Joined */}
-      <td
-        className="hidden py-3 text-muted-foreground text-sm sm:table-cell"
-        suppressHydrationWarning
-      >
-        {new Date(member.createdAt).toLocaleDateString()}
+      <td className="hidden py-3 text-muted-foreground text-sm sm:table-cell">
+        {joinedDate}
       </td>
 
       {/* Actions */}
