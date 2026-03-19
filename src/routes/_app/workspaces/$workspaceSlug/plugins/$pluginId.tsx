@@ -235,7 +235,7 @@ function PluginDetailPage() {
             </div>
             <div>
               <p className="text-muted-foreground text-xs">Last Executed</p>
-              <p className="font-semibold text-sm">
+              <p className="font-semibold text-sm" suppressHydrationWarning>
                 {plugin.usage.lastExecutedAt
                   ? new Date(plugin.usage.lastExecutedAt).toLocaleDateString()
                   : "Never"}
@@ -254,7 +254,7 @@ function PluginDetailPage() {
             </div>
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Installed</dt>
-              <dd className="font-medium">
+              <dd className="font-medium" suppressHydrationWarning>
                 {new Date(plugin.createdAt).toLocaleDateString()}
               </dd>
             </div>

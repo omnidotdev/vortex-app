@@ -128,8 +128,8 @@ function ApiKeyItem({
           )}
         </div>
         <div className="mt-1 flex gap-4 text-muted-foreground text-xs">
-          <span>Created: {createdAt}</span>
-          <span>Last used: {lastUsed}</span>
+          <span suppressHydrationWarning>Created: {createdAt}</span>
+          <span suppressHydrationWarning>Last used: {lastUsed}</span>
         </div>
       </div>
       <Button
@@ -504,7 +504,10 @@ function PlanSection({
                 </ul>
               )}
               {subscription.cancelAt && (
-                <p className="mt-2 text-destructive text-sm">
+                <p
+                  className="mt-2 text-destructive text-sm"
+                  suppressHydrationWarning
+                >
                   Cancels on{" "}
                   {new Date(subscription.cancelAt * 1000).toLocaleDateString()}
                 </p>

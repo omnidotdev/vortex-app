@@ -1,5 +1,5 @@
 import { Check, Copy } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,17 +25,19 @@ export const TriggerNodeConfig = ({
   const triggerType = (data.triggerType as string) || "manual";
   const config = (data.config as Record<string, unknown>) || {};
   const [copied, setCopied] = useState(false);
+  // Defer to client to avoid hydration mismatch (window.location is unavailable during SSR)
+  const [webhookUrl, setWebhookUrl] = useState("");
 
-  // Build full webhook URL
-  const getWebhookUrl = () => {
-    if (typeof window === "undefined") return "";
-    const baseUrl = window.location.origin;
-    return `${baseUrl}/api/webhooks/workflow/${workflowId}/${webhookSecret}`;
-  };
+  useEffect(() => {
+    if (workflowId && webhookSecret) {
+      setWebhookUrl(
+        `${window.location.origin}/api/webhooks/workflow/${workflowId}/${webhookSecret}`,
+      );
+    }
+  }, [workflowId, webhookSecret]);
 
   const copyToClipboard = async () => {
-    const url = getWebhookUrl();
-    await navigator.clipboard.writeText(url);
+    await navigator.clipboard.writeText(webhookUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -90,7 +92,7 @@ export const TriggerNodeConfig = ({
             <>
               <div className="flex gap-2">
                 <div className="flex-1 rounded-md bg-muted p-3">
-                  <code className="break-all text-xs">{getWebhookUrl()}</code>
+                  <code className="break-all text-xs">{webhookUrl}</code>
                 </div>
                 <Button
                   variant="outline"

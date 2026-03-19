@@ -184,7 +184,10 @@ function EventSchemaDetailPage() {
                 </td>
                 <td className="py-3 text-sm">{version.compatibilityMode}</td>
                 <td className="py-3 text-sm">{version.enforcement}</td>
-                <td className="py-3 text-muted-foreground text-sm">
+                <td
+                  className="py-3 text-muted-foreground text-sm"
+                  suppressHydrationWarning
+                >
                   {new Date(version.createdAt).toLocaleDateString()}
                 </td>
                 <td className="py-3 text-right">

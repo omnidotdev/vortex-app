@@ -96,14 +96,19 @@ function WorkflowStats({ workflowId, workspaceSlug }: WorkflowStatsProps) {
             <Activity className="h-3 w-3" />
             Total
           </div>
-          <p className="font-bold text-xl">{stats.total.toLocaleString()}</p>
+          <p className="font-bold text-xl" suppressHydrationWarning>
+            {stats.total.toLocaleString()}
+          </p>
         </div>
         <div className="rounded-lg border p-3">
           <div className="flex items-center gap-1 text-muted-foreground text-xs">
             <CheckCircle2 className="h-3 w-3" />
             Succeeded
           </div>
-          <p className="font-bold text-green-500 text-xl">
+          <p
+            className="font-bold text-green-500 text-xl"
+            suppressHydrationWarning
+          >
             {stats.succeeded.toLocaleString()}
           </p>
         </div>
@@ -112,7 +117,10 @@ function WorkflowStats({ workflowId, workspaceSlug }: WorkflowStatsProps) {
             <XCircle className="h-3 w-3" />
             Failed
           </div>
-          <p className="font-bold text-red-500 text-xl">
+          <p
+            className="font-bold text-red-500 text-xl"
+            suppressHydrationWarning
+          >
             {stats.failed.toLocaleString()}
           </p>
         </div>
@@ -161,7 +169,7 @@ function WorkflowStats({ workflowId, workspaceSlug }: WorkflowStatsProps) {
             <AlertCircle className="h-3 w-3" />
             Cancelled
           </div>
-          <p className="font-semibold text-sm">
+          <p className="font-semibold text-sm" suppressHydrationWarning>
             {stats.cancelled.toLocaleString()}
           </p>
         </div>

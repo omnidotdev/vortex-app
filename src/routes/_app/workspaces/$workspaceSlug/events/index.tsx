@@ -208,7 +208,10 @@ function EventSchemasPage() {
                           {schema.visibility}
                         </Badge>
                       </td>
-                      <td className="py-4 text-right text-muted-foreground text-sm">
+                      <td
+                        className="py-4 text-right text-muted-foreground text-sm"
+                        suppressHydrationWarning
+                      >
                         {new Date(schema.updatedAt).toLocaleDateString()}
                       </td>
                       <td className="py-4 text-right">

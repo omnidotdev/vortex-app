@@ -176,7 +176,10 @@ function WorkflowsPage() {
                       {workflow.isActive ? "Active" : "Inactive"}
                     </span>
                   </td>
-                  <td className="hidden py-4 text-right text-muted-foreground text-sm sm:table-cell">
+                  <td
+                    className="hidden py-4 text-right text-muted-foreground text-sm sm:table-cell"
+                    suppressHydrationWarning
+                  >
                     {workflow.workflowRuns.nodes[0]?.createdAt
                       ? new Date(
                           workflow.workflowRuns.nodes[0].createdAt,

@@ -1,33 +1,48 @@
-const env = { ...import.meta.env, ...process.env };
+// Client-accessible env vars from Vite (VITE_ prefix, available on both server and client)
+const viteEnv = import.meta.env;
+
+// Server-only env vars from Node.js process (only available during SSR)
+const serverEnv = typeof window === "undefined" ? process.env : {};
 
 /**
  * Environment variables.
+ *
+ * VITE_-prefixed vars are read from `import.meta.env` so they are identical on
+ * server and client (Vite injects them at build time). Non-VITE vars are read
+ * from `process.env` and are only available during SSR.
  */
-export const {
-  // core
-  VITE_BASE_URL: BASE_URL,
-  VITE_API_BASE_URL: API_BASE_URL,
-  VITE_AUTH_BASE_URL: AUTH_BASE_URL,
-  // auth (server-side secrets)
-  AUTH_CLIENT_ID,
-  AUTH_CLIENT_SECRET,
-  // feature flags
-  VITE_FLAGS_API_HOST: FLAGS_API_HOST,
-  VITE_FLAGS_CLIENT_KEY: FLAGS_CLIENT_KEY,
-  // self-hosted mode
-  SELF_HOSTED,
-  VITE_SELF_HOSTED,
-  // billing
-  /** @knipignore - used by billing provider */
-  VITE_BILLING_BASE_URL: BILLING_BASE_URL,
-  VITE_CONSOLE_URL: CONSOLE_URL,
-} = env;
+
+// core (client-safe)
+export const BASE_URL = viteEnv.VITE_BASE_URL as string | undefined;
+export const API_BASE_URL = viteEnv.VITE_API_BASE_URL as string | undefined;
+export const AUTH_BASE_URL = viteEnv.VITE_AUTH_BASE_URL as string | undefined;
+
+// auth (server-side secrets)
+export const AUTH_CLIENT_ID = serverEnv.AUTH_CLIENT_ID as string | undefined;
+export const AUTH_CLIENT_SECRET = serverEnv.AUTH_CLIENT_SECRET as
+  | string
+  | undefined;
+
+// feature flags (client-safe)
+export const FLAGS_API_HOST = viteEnv.VITE_FLAGS_API_HOST as string | undefined;
+export const FLAGS_CLIENT_KEY = viteEnv.VITE_FLAGS_CLIENT_KEY as
+  | string
+  | undefined;
+
+// self-hosted mode (use VITE_ prefix so value is consistent across SSR and client)
+export const VITE_SELF_HOSTED = viteEnv.VITE_SELF_HOSTED as string | undefined;
+
+// billing (client-safe)
+export const BILLING_BASE_URL = viteEnv.VITE_BILLING_BASE_URL as
+  | string
+  | undefined;
+export const CONSOLE_URL = viteEnv.VITE_CONSOLE_URL as string | undefined;
 
 // Internal API URL for server-to-server communication (Docker service name)
 // Falls back to API_BASE_URL for non-Docker environments
 export const API_INTERNAL_URL =
   typeof window === "undefined"
-    ? env.API_INTERNAL_URL || API_BASE_URL
+    ? (serverEnv.API_INTERNAL_URL as string | undefined) || API_BASE_URL
     : API_BASE_URL;
 
 export const API_GRAPHQL_URL = `${API_BASE_URL}/graphql`;
@@ -41,8 +56,7 @@ export const isDevEnv = import.meta.env.DEV;
 /**
  * Whether the app is running in self-hosted mode.
  */
-export const isSelfHosted =
-  SELF_HOSTED === "true" || VITE_SELF_HOSTED === "true";
+export const isSelfHosted = VITE_SELF_HOSTED === "true";
 
 /**
  * Assert that a required environment variable is set

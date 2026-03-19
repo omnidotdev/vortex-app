@@ -117,9 +117,9 @@ function DlqStatsBar() {
   if (isLoading) {
     return (
       <div className="grid gap-4 sm:grid-cols-3">
-        {/* biome-ignore lint/suspicious/noArrayIndexKey: static skeleton, never reorders */}
         {Array.from({ length: 3 }).map((_, i) => (
           <div
+            // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton, never reorders
             key={`skeleton-${i}`}
             className="h-24 animate-pulse rounded-lg border bg-muted/30"
           />
@@ -226,7 +226,10 @@ function DlqRow({
         {event.error}
       </td>
       <td className="px-4 py-3 text-center text-sm">{event.attempts}</td>
-      <td className="px-4 py-3 text-muted-foreground text-sm">
+      <td
+        className="px-4 py-3 text-muted-foreground text-sm"
+        suppressHydrationWarning
+      >
         {new Date(event.createdAt).toLocaleString()}
       </td>
       <td className="px-4 py-3">

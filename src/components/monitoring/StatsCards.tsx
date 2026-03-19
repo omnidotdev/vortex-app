@@ -39,7 +39,9 @@ function StatsCards({ since, until }: DateRange) {
           <Activity className="h-4 w-4" />
           <span>Total Executions</span>
         </div>
-        <p className="mt-2 font-bold text-3xl">{formatNumber(stats.total)}</p>
+        <p className="mt-2 font-bold text-3xl" suppressHydrationWarning>
+          {formatNumber(stats.total)}
+        </p>
       </div>
 
       {/* Success Rate */}
@@ -64,7 +66,9 @@ function StatsCards({ since, until }: DateRange) {
           <XCircle className="h-4 w-4" />
           <span>Failed</span>
         </div>
-        <p className="mt-2 font-bold text-3xl">{formatNumber(stats.failed)}</p>
+        <p className="mt-2 font-bold text-3xl" suppressHydrationWarning>
+          {formatNumber(stats.failed)}
+        </p>
       </div>
 
       {/* Active Workflows */}
@@ -73,7 +77,7 @@ function StatsCards({ since, until }: DateRange) {
           <GitBranch className="h-4 w-4" />
           <span>Active Workflows</span>
         </div>
-        <p className="mt-2 font-bold text-3xl">
+        <p className="mt-2 font-bold text-3xl" suppressHydrationWarning>
           {formatNumber(stats.activeWorkflows)}
         </p>
       </div>
