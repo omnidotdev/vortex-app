@@ -117,6 +117,7 @@ function DlqStatsBar() {
   if (isLoading) {
     return (
       <div className="grid gap-4 sm:grid-cols-3">
+        {/* biome-ignore lint/suspicious/noArrayIndexKey: static skeleton, never reorders */}
         {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={`skeleton-${i}`}
@@ -436,44 +437,44 @@ function DlqDashboard() {
       <div className="-mx-8 mt-6 px-8 sm:mx-0 sm:px-0">
         <div className="overflow-x-auto rounded-lg border">
           <table className="w-full min-w-[700px] text-left">
-          <thead>
-            <tr className="border-b bg-muted/50">
-              <th className="px-4 py-3 font-medium text-sm">Event Type</th>
-              <th className="px-4 py-3 font-medium text-sm">Error Code</th>
-              <th className="px-4 py-3 font-medium text-sm">Error Message</th>
-              <th className="px-4 py-3 text-center font-medium text-sm">
-                Attempts
-              </th>
-              <th className="px-4 py-3 font-medium text-sm">Created</th>
-              <th className="px-4 py-3 font-medium text-sm">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {isLoading && (
-              <tr>
-                <td colSpan={6} className="py-12 text-center">
-                  <Loader2 className="mx-auto h-6 w-6 animate-spin text-muted-foreground" />
-                </td>
+            <thead>
+              <tr className="border-b bg-muted/50">
+                <th className="px-4 py-3 font-medium text-sm">Event Type</th>
+                <th className="px-4 py-3 font-medium text-sm">Error Code</th>
+                <th className="px-4 py-3 font-medium text-sm">Error Message</th>
+                <th className="px-4 py-3 text-center font-medium text-sm">
+                  Attempts
+                </th>
+                <th className="px-4 py-3 font-medium text-sm">Created</th>
+                <th className="px-4 py-3 font-medium text-sm">Actions</th>
               </tr>
-            )}
+            </thead>
+            <tbody>
+              {isLoading && (
+                <tr>
+                  <td colSpan={6} className="py-12 text-center">
+                    <Loader2 className="mx-auto h-6 w-6 animate-spin text-muted-foreground" />
+                  </td>
+                </tr>
+              )}
 
-            {!isLoading && events.length === 0 && (
-              <tr>
-                <td
-                  colSpan={6}
-                  className="py-12 text-center text-muted-foreground"
-                >
-                  <Archive className="mx-auto mb-2 h-8 w-8" />
-                  <p>No dead-letter events found</p>
-                </td>
-              </tr>
-            )}
+              {!isLoading && events.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="py-12 text-center text-muted-foreground"
+                  >
+                    <Archive className="mx-auto mb-2 h-8 w-8" />
+                    <p>No dead-letter events found</p>
+                  </td>
+                </tr>
+              )}
 
-            {events.map((event) => (
-              <DlqRow key={event.id} event={event} onMutate={invalidateAll} />
-            ))}
-          </tbody>
-        </table>
+              {events.map((event) => (
+                <DlqRow key={event.id} event={event} onMutate={invalidateAll} />
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 

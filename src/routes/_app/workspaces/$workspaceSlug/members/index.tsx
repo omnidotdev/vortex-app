@@ -98,11 +98,13 @@ function MembersPage() {
             <p>No members found</p>
           </div>
         ) : (
-          <table className="w-full table-fixed">
+          <table className="w-full">
             <thead>
               <tr className="border-b text-left text-muted-foreground text-sm">
-                <th className="w-64 pb-3 font-medium">Member</th>
-                <th className="w-32 pb-3 font-medium">Joined</th>
+                <th className="pb-3 font-medium">Member</th>
+                <th className="hidden pb-3 font-medium sm:table-cell">
+                  Joined
+                </th>
                 <th className="w-24 pb-3 font-medium" />
               </tr>
             </thead>

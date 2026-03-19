@@ -114,7 +114,7 @@ function MemberRow({
       </td>
 
       {/* Joined */}
-      <td className="py-3 text-muted-foreground text-sm">
+      <td className="hidden py-3 text-muted-foreground text-sm sm:table-cell">
         {new Date(member.createdAt).toLocaleDateString()}
       </td>
 

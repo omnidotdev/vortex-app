@@ -235,7 +235,7 @@ function WorkflowNotFound() {
  * Error boundary for the workflow editor route.
  * Show the branded 404 for not-found errors, re-throw others.
  */
-function WorkflowError({ error }: { error: unknown }) {
+function WorkflowError({ error: _error }: { error: unknown }) {
   // GraphQL / network errors when a workflow doesn't exist
   const router = useRouter();
 
@@ -247,8 +247,8 @@ function WorkflowError({ error }: { error: unknown }) {
           Workflow Not Found
         </h1>
         <p className="mt-2 max-w-md text-muted-foreground">
-          This workflow could not be loaded. It may not exist or you may not have
-          access.
+          This workflow could not be loaded. It may not exist or you may not
+          have access.
         </p>
         <div className="mt-6 flex items-center justify-center gap-3">
           <a
