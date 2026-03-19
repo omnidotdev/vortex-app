@@ -44,13 +44,17 @@ export const graphqlFetch =
         },
       });
     } catch (error) {
-      // Redirect to re-auth on 401 (expired/invalid token)
-      if (
-        error instanceof ClientError &&
-        error.response.status === 401 &&
-        typeof window !== "undefined"
-      ) {
-        window.location.href = "/";
+      // Redirect to re-auth on 401 or UNAUTHENTICATED GraphQL error
+      if (error instanceof ClientError && typeof window !== "undefined") {
+        const isHttp401 = error.response.status === 401;
+        const isUnauthenticated = error.response.errors?.some(
+          (e) => e.extensions?.code === "UNAUTHENTICATED",
+        );
+
+        if (isHttp401 || isUnauthenticated) {
+          window.location.href = "/";
+          return new Promise(() => {}) as Promise<TData>;
+        }
       }
 
       throw error;
