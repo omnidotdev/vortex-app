@@ -238,7 +238,7 @@ export function ConnectIntegrationDialog({
                             <img
                               src={definition.iconUrl}
                               alt=""
-                              className="h-8 w-8 rounded bg-muted p-1"
+                              className="h-8 w-8 rounded bg-white p-1 dark:bg-slate-700"
                             />
                           ) : (
                             <div className="flex h-8 w-8 items-center justify-center rounded bg-muted font-medium text-muted-foreground text-sm">

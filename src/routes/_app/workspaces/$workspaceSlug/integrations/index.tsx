@@ -180,7 +180,7 @@ function IntegrationsPage() {
                       <img
                         src={definition.iconUrl}
                         alt={definition.name}
-                        className="h-10 w-10 rounded-lg bg-muted p-1.5"
+                        className="h-10 w-10 rounded-lg bg-white p-1.5 dark:bg-slate-700"
                       />
                     ) : (
                       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
@@ -274,7 +274,7 @@ function IntegrationsPage() {
                       <img
                         src={definition.iconUrl}
                         alt={definition.name}
-                        className="h-10 w-10 rounded-lg bg-muted p-1.5"
+                        className="h-10 w-10 rounded-lg bg-white p-1.5 dark:bg-slate-700"
                       />
                     ) : (
                       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
@@ -347,7 +347,7 @@ function IntegrationsPage() {
                           <img
                             src={def.iconUrl}
                             alt={def.name}
-                            className="h-8 w-8 rounded bg-muted p-1"
+                            className="h-8 w-8 rounded bg-white p-1 dark:bg-slate-700"
                           />
                         ) : (
                           <div className="flex h-8 w-8 items-center justify-center rounded bg-muted">

@@ -228,7 +228,7 @@ function IntegrationDetailPage() {
             <img
               src={definition.iconUrl}
               alt={definition.name}
-              className="h-12 w-12 rounded-lg bg-muted p-2"
+              className="h-12 w-12 rounded-lg bg-white p-2 dark:bg-slate-700"
             />
           ) : (
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-muted">

@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { AlertTriangle, Gauge } from "lucide-react";
+import { useMemo } from "react";
 
 import UsageCounter from "@/components/UsageCounter";
 import { orgStatsOptions } from "@/lib/options/stats.options";
@@ -11,6 +12,17 @@ import { orgStatsOptions } from "@/lib/options/stats.options";
 function getMonthStart(): string {
   const now = new Date();
   return new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+}
+
+/**
+ * Round a date to the nearest hour to produce a stable query key.
+ * Prevents every render from generating a unique "until" timestamp
+ * which would bypass the query cache and cause duplicate requests.
+ */
+function getStableNow(): string {
+  const now = new Date();
+  now.setMinutes(0, 0, 0);
+  return now.toISOString();
 }
 
 type MonthlyRunsCardProps = {
@@ -25,8 +37,10 @@ function MonthlyRunsCard({
   runsPerMonthLimit,
   workspaceSlug,
 }: MonthlyRunsCardProps) {
-  const monthStart = getMonthStart();
-  const now = new Date().toISOString();
+  const { monthStart, now } = useMemo(
+    () => ({ monthStart: getMonthStart(), now: getStableNow() }),
+    [],
+  );
 
   const { data: stats } = useSuspenseQuery(
     orgStatsOptions({ since: monthStart, until: now }),

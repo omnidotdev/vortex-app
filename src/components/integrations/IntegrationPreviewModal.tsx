@@ -82,7 +82,7 @@ function IntegrationPreviewModal({
                 <img
                   src={integration.iconUrl}
                   alt=""
-                  className="h-10 w-10 shrink-0 rounded-lg bg-muted p-1"
+                  className="h-10 w-10 shrink-0 rounded-lg bg-white p-1 dark:bg-slate-700"
                   onError={(e) => {
                     e.currentTarget.style.display = "none";
                   }}

@@ -1521,7 +1521,7 @@ export function NodePicker({
                         onClick={() => handleSelectIntegration(def)}
                         className="flex flex-1 cursor-pointer items-start gap-3 text-left"
                       >
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-muted">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white dark:bg-slate-700">
                           {def.iconUrl ? (
                             <img
                               src={def.iconUrl}

@@ -5,7 +5,7 @@ import {
   useRouteContext,
 } from "@tanstack/react-router";
 import { Clock, Loader2, UserPlus, Users, X } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import InviteMemberDialog from "@/components/settings/InviteMemberDialog";
@@ -69,7 +69,7 @@ function MembersPage() {
   const isOwner = currentMember?.role === "owner";
 
   // Load pending invitations when admin visits page
-  const loadInvitations = async () => {
+  const loadInvitations = useCallback(async () => {
     try {
       const result = await listOrganizationInvitations({
         data: { organizationId },
@@ -79,11 +79,13 @@ function MembersPage() {
     } catch {
       // Silently fail; invitations are supplemental
     }
-  };
+  }, [organizationId]);
 
-  if (isAdmin && !invitationsLoaded) {
-    loadInvitations();
-  }
+  useEffect(() => {
+    if (isAdmin && !invitationsLoaded) {
+      loadInvitations();
+    }
+  }, [isAdmin, invitationsLoaded, loadInvitations]);
 
   const handleInvite = async (email: string, role: "admin" | "member") => {
     await inviteOrganizationMember({

@@ -193,8 +193,8 @@ function WorkspaceDashboard() {
                     <div
                       className={`flex h-8 w-8 items-center justify-center overflow-hidden rounded-md border transition-all duration-300 hover:scale-110 ${
                         integration.isEnabled
-                          ? "border-blue-500/30 bg-blue-500/10 hover:border-blue-500/50 hover:bg-blue-500/20"
-                          : "border-muted bg-muted/50 hover:border-muted-foreground/50 hover:bg-muted"
+                          ? "border-blue-500/30 bg-blue-500/10 hover:border-blue-500/50 hover:bg-blue-500/20 dark:bg-slate-700"
+                          : "border-muted bg-white hover:border-muted-foreground/50 hover:bg-muted dark:bg-slate-700 dark:hover:bg-slate-600"
                       }`}
                     >
                       {definition?.iconUrl ? (

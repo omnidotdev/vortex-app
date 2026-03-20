@@ -1,7 +1,6 @@
 import { AsyncDebouncer } from "@tanstack/pacer";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
-  Link,
   createFileRoute,
   notFound,
   useNavigate,
@@ -1445,14 +1444,22 @@ function WorkflowEditorPage() {
       {/* Header */}
       <header className="flex h-14 shrink-0 items-center justify-between gap-2 border-b px-2 md:px-4">
         <div className="flex min-w-0 flex-1 items-center gap-2 md:gap-4">
-          <Link
-            to="/workspaces/$workspaceSlug/workflows"
-            params={{ workspaceSlug }}
+          <button
+            type="button"
+            onClick={() => {
+              // Cancel any pending autosave before navigating away
+              debouncedSave.cancel();
+
+              navigate({
+                to: "/workspaces/$workspaceSlug/workflows",
+                params: { workspaceSlug },
+              });
+            }}
             className="inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center text-muted-foreground hover:text-foreground"
           >
             &larr;
             <span className="hidden sm:inline"> Back</span>
-          </Link>
+          </button>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <h1 className="truncate font-semibold text-sm sm:text-base md:max-w-[300px] lg:max-w-none">
