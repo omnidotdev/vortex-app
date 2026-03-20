@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useParams } from "@tanstack/react-router";
 import {
   ArrowDownUp,
   Bot,
@@ -1186,6 +1187,9 @@ export function NodePicker({
   onSelectNode,
   searchInputRef: externalRef,
 }: NodePickerProps) {
+  const { workspaceSlug } = useParams({ strict: false }) as {
+    workspaceSlug: string;
+  };
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<CategoryKey>("all");
   const [showOnlyConnected, setShowOnlyConnected] = useState(false);
@@ -1327,7 +1331,7 @@ export function NodePicker({
 
   const handleConnectFromPreview = () => {
     if (!previewIntegration) return;
-    window.location.href = `/workspaces/${window.location.pathname.split("/")[2]}/integrations?connect=${previewIntegration.rowId}`;
+    window.location.href = `/workspaces/${workspaceSlug}/integrations?connect=${previewIntegration.rowId}`;
   };
 
   const handleAddActionFromPreview = (action: IntegrationAction) => {

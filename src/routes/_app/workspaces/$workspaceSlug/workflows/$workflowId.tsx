@@ -1464,7 +1464,7 @@ function WorkflowEditorPage() {
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <h1
-                className="truncate font-semibold text-sm sm:text-base md:max-w-[400px] lg:max-w-none"
+                className="max-w-[120px] truncate font-semibold text-sm sm:max-w-[200px] sm:text-base md:max-w-[400px] lg:max-w-none"
                 title={workflow.name}
               >
                 {workflow.name}

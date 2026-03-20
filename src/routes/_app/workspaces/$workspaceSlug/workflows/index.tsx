@@ -181,7 +181,9 @@ function WorkflowsPage() {
                 <th className="hidden pb-3 text-right font-medium sm:table-cell sm:w-40">
                   Last Run
                 </th>
-                <th className="w-20 pb-3 sm:w-24" />
+                <th className="w-20 pb-3 sm:w-24">
+                  <span className="sr-only">Actions</span>
+                </th>
               </tr>
             </thead>
 
