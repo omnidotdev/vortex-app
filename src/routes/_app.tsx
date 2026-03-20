@@ -35,6 +35,7 @@ import app from "@/lib/config/app.config";
 import { CONSOLE_URL } from "@/lib/config/env.config";
 import { EventsProvider } from "@/providers/EventsProvider";
 import SidebarProvider from "@/providers/SidebarProvider";
+import { signOutLocal } from "@/server/functions/auth";
 import { getSidebarState } from "@/server/functions/sidebar";
 
 // Noop provider for client-side (main @omnidotdev/providers entry requires Node.js)
@@ -50,9 +51,14 @@ const eventsProvider = {
 export const Route = createFileRoute("/_app")({
   loader: () => getSidebarState(),
   beforeLoad: async ({ params, context: { session } }) => {
-    // If session doesn't exist or rowId is missing, sign out to clear stale session
-    // The user may exist in the identity provider but not in the database
+    // If session doesn't exist or rowId is missing, clear the stale session
+    // and redirect to landing. The user may exist in the identity provider
+    // but not yet be provisioned in the Vortex database.
     if (!session?.user?.rowId) {
+      if (session?.user) {
+        await signOutLocal();
+      }
+
       throw redirect({ to: "/" });
     }
 

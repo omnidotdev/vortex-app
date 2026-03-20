@@ -21,7 +21,9 @@ import type { ReactNode } from "react";
 
 export const Route = createFileRoute("/_public/")({
   beforeLoad: ({ context: { session } }) => {
-    if (session?.user) throw redirect({ to: "/workspaces" });
+    // Only redirect if user is fully provisioned (has rowId in Vortex DB)
+    // to avoid redirect loop with _app guard which requires rowId
+    if (session?.user?.rowId) throw redirect({ to: "/workspaces" });
   },
   component: LandingPage,
 });
