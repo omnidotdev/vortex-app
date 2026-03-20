@@ -1,14 +1,28 @@
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, notFound } from "@tanstack/react-router";
-import { Users } from "lucide-react";
+import {
+  createFileRoute,
+  notFound,
+  useRouteContext,
+} from "@tanstack/react-router";
+import { Clock, Loader2, UserPlus, Users, X } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
+import InviteMemberDialog from "@/components/settings/InviteMemberDialog";
 import MemberRow from "@/components/settings/MemberRow";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { canPerformDestructiveAction } from "@/lib/auth/roles";
 import { membersOptions } from "@/lib/options/members.options";
 import {
+  cancelOrganizationInvitation,
+  inviteOrganizationMember,
+  listOrganizationInvitations,
   removeOrganizationMember,
   updateOrganizationMemberRole,
 } from "@/server/functions/organizations";
+
+import type { GatekeeperInvitation } from "@omnidotdev/providers/auth";
 
 export const Route = createFileRoute(
   "/_app/workspaces/$workspaceSlug/members/",
@@ -33,9 +47,17 @@ export const Route = createFileRoute(
 
 function MembersPage() {
   const { organizationId, accessToken } = Route.useLoaderData();
+  const { organization } = useRouteContext({ from: "/_app" });
   const context = Route.useRouteContext();
   const currentUserId = context.session?.user?.rowId ?? undefined;
   const queryClient = useQueryClient();
+
+  const isAdmin = canPerformDestructiveAction(organization);
+
+  const [showInviteDialog, setShowInviteDialog] = useState(false);
+  const [invitations, setInvitations] = useState<GatekeeperInvitation[]>([]);
+  const [invitationsLoaded, setInvitationsLoaded] = useState(false);
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
 
   const { data } = useSuspenseQuery(
     membersOptions(organizationId, accessToken),
@@ -45,6 +67,53 @@ function MembersPage() {
   // Determine if the current user is the workspace owner
   const currentMember = members.find((m) => m.userId === currentUserId);
   const isOwner = currentMember?.role === "owner";
+
+  // Load pending invitations when admin visits page
+  const loadInvitations = async () => {
+    try {
+      const result = await listOrganizationInvitations({
+        data: { organizationId },
+      });
+      setInvitations(Array.isArray(result) ? result : []);
+      setInvitationsLoaded(true);
+    } catch {
+      // Silently fail; invitations are supplemental
+    }
+  };
+
+  if (isAdmin && !invitationsLoaded) {
+    loadInvitations();
+  }
+
+  const handleInvite = async (email: string, role: "admin" | "member") => {
+    await inviteOrganizationMember({
+      data: { organizationId, email, role },
+    });
+
+    toast.success("Invitation sent", {
+      description: `Invited ${email} as ${role}`,
+    });
+
+    // Refresh invitations list
+    loadInvitations();
+  };
+
+  const handleCancelInvitation = async (invitationId: string) => {
+    setCancellingId(invitationId);
+
+    try {
+      await cancelOrganizationInvitation({ data: { invitationId } });
+
+      setInvitations((prev) => prev.filter((inv) => inv.id !== invitationId));
+      toast.success("Invitation cancelled");
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Failed to cancel invitation",
+      );
+    } finally {
+      setCancellingId(null);
+    }
+  };
 
   const handleRoleChange = async (memberId: string, role: string) => {
     try {
@@ -80,6 +149,10 @@ function MembersPage() {
     }
   };
 
+  const pendingInvitations = invitations.filter(
+    (inv) => inv.status === "pending",
+  );
+
   return (
     <div className="p-8">
       <div className="flex items-center justify-between">
@@ -89,7 +162,57 @@ function MembersPage() {
             Manage your workspace team
           </p>
         </div>
+
+        {isAdmin && (
+          <Button onClick={() => setShowInviteDialog(true)}>
+            <UserPlus className="mr-2 h-4 w-4" />
+            Invite Member
+          </Button>
+        )}
       </div>
+
+      {/* Pending invitations */}
+      {isAdmin && pendingInvitations.length > 0 && (
+        <div className="mt-6">
+          <h2 className="mb-3 font-medium text-muted-foreground text-sm">
+            Pending Invitations
+          </h2>
+          <div className="space-y-2">
+            {pendingInvitations.map((inv) => (
+              <div
+                key={inv.id}
+                className="flex items-center justify-between rounded-lg border p-3"
+              >
+                <div className="flex items-center gap-3">
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm">{inv.email}</p>
+                    <p className="text-muted-foreground text-xs">
+                      Invited as{" "}
+                      <Badge variant="secondary" className="text-xs">
+                        {inv.role}
+                      </Badge>
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  disabled={cancellingId === inv.id}
+                  onClick={() => handleCancelInvitation(inv.id)}
+                  aria-label={`Cancel invitation for ${inv.email}`}
+                >
+                  {cancellingId === inv.id ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <X className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="mt-8">
         {members.length === 0 ? (
@@ -123,6 +246,13 @@ function MembersPage() {
           </table>
         )}
       </div>
+
+      {showInviteDialog && (
+        <InviteMemberDialog
+          onSubmit={handleInvite}
+          onClose={() => setShowInviteDialog(false)}
+        />
+      )}
     </div>
   );
 }
