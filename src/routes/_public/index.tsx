@@ -99,7 +99,7 @@ function LandingPage() {
             {/* Badge */}
             <div className="mb-8 flex justify-center">
               <Badge className="gap-2 border-primary/20 bg-primary/10 px-4 py-2 text-primary">
-                <span>{app.description}</span>
+                <span>Workflow automation for the decentralized web</span>
               </Badge>
             </div>
 
