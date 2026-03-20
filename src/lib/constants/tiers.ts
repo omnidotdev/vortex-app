@@ -28,6 +28,13 @@ export const PRO_LIMITS: PlanLimits = {
   plugins: true,
 };
 
+/** Limits for the team tier */
+export const TEAM_LIMITS: PlanLimits = {
+  workflows: null,
+  runsPerMonth: 500_000,
+  plugins: true,
+};
+
 /** Limits for self-hosted deployments (unlimited) */
 export const SELF_HOSTED_LIMITS: PlanLimits = {
   workflows: null,
@@ -45,6 +52,7 @@ export function getLimitsForPlan(
   if (!productName) return FREE_LIMITS;
 
   const name = productName.toLowerCase();
+  if (name.includes("team")) return TEAM_LIMITS;
   if (name.includes("pro")) return PRO_LIMITS;
   if (name.includes("starter")) return STARTER_LIMITS;
 

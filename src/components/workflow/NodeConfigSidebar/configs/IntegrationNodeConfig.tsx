@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
 import { AlertCircle, ExternalLink, Loader2, Plug } from "lucide-react";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,6 +41,12 @@ export const IntegrationNodeConfig = ({
     | undefined;
   const requiresConnection = data.requiresConnection as boolean | undefined;
   const needsAttention = data.needsAttention as boolean | undefined;
+
+  // Defer to client to avoid hydration mismatch (window.location is unavailable during SSR)
+  const [returnTo, setReturnTo] = useState("");
+  useEffect(() => {
+    setReturnTo(encodeURIComponent(window.location.pathname));
+  }, []);
   const operation = (data.operation as string) || "";
   const inputs = (data.inputs as Record<string, unknown>) || {};
 
@@ -121,7 +127,7 @@ export const IntegrationNodeConfig = ({
               className={cn(needsAttention && "animate-attention-pulse")}
             >
               <a
-                href={`/workspaces/${workspaceSlug}/integrations?connect=${integrationDefinitionId}&returnTo=${encodeURIComponent(window.location.pathname)}`}
+                href={`/workspaces/${workspaceSlug}/integrations?connect=${integrationDefinitionId}&returnTo=${returnTo}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >

@@ -44,15 +44,20 @@ export const graphqlFetch =
         },
       });
     } catch (error) {
-      // Sign out on 401 or UNAUTHENTICATED to clear stale session
-      if (error instanceof ClientError && typeof window !== "undefined") {
+      // Only sign out on genuine 401/UNAUTHENTICATED from the server.
+      // Network errors (aborted requests, timeouts) must not trigger sign-out
+      // as they commonly occur during normal page transitions.
+      if (
+        error instanceof ClientError &&
+        typeof window !== "undefined" &&
+        error.response
+      ) {
         const isHttp401 = error.response.status === 401;
         const isUnauthenticated = error.response.errors?.some(
           (e) => e.extensions?.code === "UNAUTHENTICATED",
         );
 
         if (isHttp401 || isUnauthenticated) {
-          // Clear the local session via Better Auth endpoint, then redirect
           await fetch("/api/auth/sign-out", { method: "POST" });
           window.location.href = "/";
           return new Promise(() => {}) as Promise<TData>;

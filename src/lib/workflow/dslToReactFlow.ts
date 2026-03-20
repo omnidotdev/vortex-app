@@ -377,7 +377,20 @@ function synthesizeSwitchEdges(step: SwitchStep): Edge[] {
   return edges;
 }
 
-// Synthesize branch edges from condition and switch steps
+// Synthesize edges from a step's generic `next` field
+function synthesizeNextEdges(step: Step): Edge[] {
+  if (!step.next) return [];
+
+  const targets = Array.isArray(step.next) ? step.next : [step.next];
+
+  return targets.map((target, i) => ({
+    id: `${step.id}-next-${target}${targets.length > 1 ? `-${i}` : ""}`,
+    source: step.id,
+    target,
+  }));
+}
+
+// Synthesize branch edges from condition, switch, and generic next fields
 function synthesizeBranchEdges(steps: Step[]): Edge[] {
   const edges: Edge[] = [];
 
@@ -387,6 +400,9 @@ function synthesizeBranchEdges(steps: Step[]): Edge[] {
     } else if (step.type === "switch") {
       edges.push(...synthesizeSwitchEdges(step));
     }
+
+    // All step types can have a generic `next` field
+    edges.push(...synthesizeNextEdges(step));
   }
 
   return edges;
