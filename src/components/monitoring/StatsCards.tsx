@@ -16,8 +16,11 @@ function formatNumber(n: number): string {
 
 /**
  * Determine the color class for the success rate.
+ * @param rate - Success rate percentage (0-100).
+ * @param hasResolved - Whether any runs have resolved (succeeded or failed).
  */
-function successRateColor(rate: number): string {
+function successRateColor(rate: number, hasResolved: boolean): string {
+  if (!hasResolved) return "text-muted-foreground";
   if (rate >= 95) return "text-green-500";
   if (rate >= 80) return "text-yellow-500";
   return "text-red-500";
@@ -29,6 +32,7 @@ function successRateColor(rate: number): string {
 function StatsCards({ since, until }: DateRange) {
   const { data: stats } = useSuspenseQuery(orgStatsOptions({ since, until }));
 
+  const hasResolved = stats.succeeded + stats.failed > 0;
   const successRate = computeSuccessRate(stats.succeeded, stats.failed);
 
   return (
@@ -53,10 +57,10 @@ function StatsCards({ since, until }: DateRange) {
         <p
           className={cn(
             "mt-2 font-bold text-3xl",
-            successRateColor(successRate),
+            successRateColor(successRate, hasResolved),
           )}
         >
-          {successRate.toFixed(1)}%
+          {hasResolved ? `${successRate.toFixed(1)}%` : "\u2014"}
         </p>
       </div>
 

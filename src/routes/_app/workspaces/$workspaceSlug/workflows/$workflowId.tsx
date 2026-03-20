@@ -1443,7 +1443,7 @@ function WorkflowEditorPage() {
     <div className="flex h-full flex-col">
       {/* Header */}
       <header className="flex h-14 shrink-0 items-center justify-between gap-2 border-b px-2 md:px-4">
-        <div className="flex min-w-0 flex-1 items-center gap-2 md:gap-4">
+        <div className="flex min-w-0 flex-1 items-center gap-1 sm:gap-2 md:gap-4">
           <button
             type="button"
             onClick={() => {
@@ -1462,7 +1462,10 @@ function WorkflowEditorPage() {
           </button>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <h1 className="truncate font-semibold text-sm sm:text-base md:max-w-[300px] lg:max-w-none">
+              <h1
+                className="truncate font-semibold text-sm sm:text-base md:max-w-[400px] lg:max-w-none"
+                title={workflow.name}
+              >
                 {workflow.name}
               </h1>
               <DialogRoot
@@ -1578,7 +1581,7 @@ function WorkflowEditorPage() {
             )}
           </div>
         </div>
-        <div className="flex shrink-0 items-center gap-1 md:gap-2">
+        <div className="flex shrink-0 items-center gap-0.5 sm:gap-1 md:gap-2">
           {error && (
             <span className="hidden text-red-500 text-sm md:inline">
               {error}

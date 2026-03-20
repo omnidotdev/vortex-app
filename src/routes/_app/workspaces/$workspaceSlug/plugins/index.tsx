@@ -101,7 +101,7 @@ function PluginsPage() {
 
   return (
     <div className="p-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-bold text-2xl">Plugins</h1>
           <p className="mt-1 text-muted-foreground">

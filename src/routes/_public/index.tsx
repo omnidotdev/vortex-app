@@ -1,8 +1,9 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { Link, createFileRoute, redirect } from "@tanstack/react-router";
 import {
   ArrowRight,
   CheckCircle2,
   GitBranch,
+  PlayCircle,
   PlugZap,
   RefreshCw,
   Timer,
@@ -126,6 +127,18 @@ function LandingPage() {
               >
                 Get Started Free
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Button>
+
+              <Button
+                variant="outline"
+                size="lg"
+                className="h-12 gap-2 px-8"
+                asChild
+              >
+                <Link to="/demo">
+                  <PlayCircle className="h-4 w-4" />
+                  Try the Demo
+                </Link>
               </Button>
 
               <a

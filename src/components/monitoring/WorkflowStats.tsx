@@ -31,8 +31,11 @@ function formatDuration(ms: number | null): string {
 
 /**
  * Determine the color class for the success rate.
+ * @param rate - Success rate percentage (0-100).
+ * @param hasResolved - Whether any runs have resolved (succeeded or failed).
  */
-function successRateColor(rate: number): string {
+function successRateColor(rate: number, hasResolved: boolean): string {
+  if (!hasResolved) return "text-muted-foreground";
   if (rate >= 95) return "text-green-500";
   if (rate >= 80) return "text-yellow-500";
   return "text-red-500";
@@ -132,7 +135,7 @@ function WorkflowStats({ workflowId, workspaceSlug }: WorkflowStatsProps) {
           <p
             className={cn(
               "font-bold text-xl",
-              hasResolved ? successRateColor(successRate) : "",
+              successRateColor(successRate, hasResolved),
             )}
           >
             {hasResolved ? `${successRate.toFixed(1)}%` : "\u2014"}

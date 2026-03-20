@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as DemoRouteImport } from './routes/demo'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
@@ -36,6 +37,11 @@ import { Route as AppWorkspacesWorkspaceSlugEventsSandboxRouteImport } from './r
 import { Route as AppWorkspacesWorkspaceSlugEventsDiffRouteImport } from './routes/_app/workspaces/$workspaceSlug/events/diff'
 import { Route as AppWorkspacesWorkspaceSlugEventsSchemaNameRouteImport } from './routes/_app/workspaces/$workspaceSlug/events/$schemaName'
 
+const DemoRoute = DemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
   getParentRoute: () => rootRouteImport,
@@ -183,6 +189,7 @@ const AppWorkspacesWorkspaceSlugEventsSchemaNameRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
+  '/demo': typeof DemoRoute
   '/pricing': typeof PublicPricingRoute
   '/api/_health': typeof ApiHealthRoute
   '/oauth/callback': typeof PublicOauthCallbackRoute
@@ -209,6 +216,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
+  '/demo': typeof DemoRoute
   '/pricing': typeof PublicPricingRoute
   '/api/_health': typeof ApiHealthRoute
   '/oauth/callback': typeof PublicOauthCallbackRoute
@@ -237,6 +245,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
+  '/demo': typeof DemoRoute
   '/_public/pricing': typeof PublicPricingRoute
   '/api/_health': typeof ApiHealthRoute
   '/_public/': typeof PublicIndexRoute
@@ -266,6 +275,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/demo'
     | '/pricing'
     | '/api/_health'
     | '/oauth/callback'
@@ -292,6 +302,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/demo'
     | '/pricing'
     | '/api/_health'
     | '/oauth/callback'
@@ -319,6 +330,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_app'
     | '/_public'
+    | '/demo'
     | '/_public/pricing'
     | '/api/_health'
     | '/_public/'
@@ -348,6 +360,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   PublicRoute: typeof PublicRouteWithChildren
+  DemoRoute: typeof DemoRoute
   ApiHealthRoute: typeof ApiHealthRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiRunsRunIdStreamRoute: typeof ApiRunsRunIdStreamRoute
@@ -355,6 +368,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/demo': {
+      id: '/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof DemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_public': {
       id: '/_public'
       path: ''
@@ -617,6 +637,7 @@ const PublicRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
+  DemoRoute: DemoRoute,
   ApiHealthRoute: ApiHealthRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiRunsRunIdStreamRoute: ApiRunsRunIdStreamRoute,
@@ -624,12 +645,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}

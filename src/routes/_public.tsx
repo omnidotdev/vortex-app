@@ -49,6 +49,9 @@ function PublicLayout() {
             <div className="flex h-16 items-center justify-between">
               <Link to="/" className="flex items-center gap-2 hover:opacity-80">
                 <img src="/logo.png" alt="Vortex" className="h-7 w-7" />
+                <span className="font-semibold text-foreground text-lg">
+                  Vortex
+                </span>
                 <Badge className="hidden border-primary/20 bg-primary/10 text-primary text-xs sm:inline-flex">
                   Early Access
                 </Badge>
