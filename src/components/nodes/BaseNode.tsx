@@ -1250,7 +1250,7 @@ interface NodeHandle {
 }
 
 /** Standard node dimensions for consistent sizing (must be even multiples of grid size 15px for center alignment) */
-export const NODE_WIDTH = 270;
+export const NODE_WIDTH = 300;
 export const NODE_MIN_HEIGHT = 120;
 
 /** Base node props */

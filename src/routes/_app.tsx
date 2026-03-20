@@ -35,6 +35,7 @@ import app from "@/lib/config/app.config";
 import { CONSOLE_URL } from "@/lib/config/env.config";
 import { EventsProvider } from "@/providers/EventsProvider";
 import SidebarProvider from "@/providers/SidebarProvider";
+import { getSidebarState } from "@/server/functions/sidebar";
 
 // Noop provider for client-side (main @omnidotdev/providers entry requires Node.js)
 const eventsProvider = {
@@ -47,6 +48,7 @@ const eventsProvider = {
 };
 
 export const Route = createFileRoute("/_app")({
+  loader: () => getSidebarState(),
   beforeLoad: async ({ params, context: { session } }) => {
     // If session doesn't exist or rowId is missing, sign out to clear stale session
     // The user may exist in the identity provider but not in the database
@@ -84,6 +86,8 @@ export const Route = createFileRoute("/_app")({
 });
 
 function AuthenticatedLayout() {
+  const { defaultOpen, sidebarWidth } = Route.useLoaderData();
+
   // Hide AppSidebar when in workflow editor (it has its own sidebar)
   const matches = useMatches();
   const isWorkflowEditor = matches.some((match) =>
@@ -92,7 +96,7 @@ function AuthenticatedLayout() {
 
   return (
     <EventsProvider provider={eventsProvider}>
-      <SidebarProvider>
+      <SidebarProvider defaultOpen={defaultOpen} defaultWidth={sidebarWidth}>
         <div className="flex h-dvh w-full flex-col lg:flex-row">
           {/* Mobile header - hidden in workflow editor and on lg+ */}
           {!isWorkflowEditor && <MobileHeader />}

@@ -3,16 +3,34 @@ import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { Cable, GitBranch } from "lucide-react";
 import { useMemo } from "react";
 
+import UsageCounter from "@/components/UsageCounter";
 import { Button } from "@/components/ui/button";
+import { isSelfHosted } from "@/lib/config/env.config";
+import { SELF_HOSTED_LIMITS, getLimitsForPlan } from "@/lib/constants/tiers";
 import {
   integrationDefinitionsOptions,
   integrationsOptions,
 } from "@/lib/options/integrations.options";
 import workflowsOptions from "@/lib/options/workflows.options";
+import { getSubscription } from "@/server/functions/subscriptions";
+
+import type { Subscription } from "@/lib/providers/billing";
 
 export const Route = createFileRoute("/_app/workspaces/$workspaceSlug/")({
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
+
+    let subscription: Subscription | null = null;
+
+    if (!isSelfHosted) {
+      try {
+        subscription = await getSubscription({
+          data: { organizationId },
+        });
+      } catch {
+        // Fall back to null (shows free tier)
+      }
+    }
 
     await Promise.all([
       queryClient.ensureQueryData(workflowsOptions({ organizationId })),
@@ -20,7 +38,7 @@ export const Route = createFileRoute("/_app/workspaces/$workspaceSlug/")({
       queryClient.ensureQueryData(integrationDefinitionsOptions({})),
     ]);
 
-    return { organizationId };
+    return { organizationId, subscription };
   },
   component: WorkspaceDashboard,
 });
@@ -30,7 +48,11 @@ export const Route = createFileRoute("/_app/workspaces/$workspaceSlug/")({
  */
 function WorkspaceDashboard() {
   const { workspaceSlug } = Route.useParams();
-  const { organizationId } = Route.useLoaderData();
+  const { organizationId, subscription } = Route.useLoaderData();
+
+  const limits = isSelfHosted
+    ? SELF_HOSTED_LIMITS
+    : getLimitsForPlan(subscription?.product?.name);
 
   const { data: workflows } = useSuspenseQuery({
     ...workflowsOptions({ organizationId }),
@@ -76,7 +98,7 @@ function WorkspaceDashboard() {
               <GitBranch className="h-4 w-4" />
               <span>Workflows</span>
             </div>
-            <p className="mt-2 font-bold text-3xl">{workflows.length}</p>
+            <UsageCounter current={workflows.length} limit={limits.workflows} />
           </div>
 
           {/* Stacked workflow icons */}

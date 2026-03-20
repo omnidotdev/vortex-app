@@ -79,8 +79,8 @@ function EventSchemasPage() {
   }, new Map<string, typeof filteredSchemas>());
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-8">
+      <div className="flex items-center justify-between gap-4">
         <h1 className="font-bold text-2xl">Event Catalog</h1>
         <Button asChild>
           <Link
@@ -94,15 +94,15 @@ function EventSchemasPage() {
       </div>
 
       {/* Filters */}
-      <div className="mt-6 flex items-center gap-4">
+      <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
         <Input
           placeholder="Search by name..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="max-w-xs"
+          className="w-full sm:max-w-xs"
         />
         <Select value={sourceFilter} onValueChange={setSourceFilter}>
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder="All sources" />
           </SelectTrigger>
           <SelectContent>
@@ -115,7 +115,7 @@ function EventSchemasPage() {
           </SelectContent>
         </Select>
         <Select value={enforcementFilter} onValueChange={setEnforcementFilter}>
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder="All enforcement" />
           </SelectTrigger>
           <SelectContent>
@@ -126,7 +126,7 @@ function EventSchemasPage() {
           </SelectContent>
         </Select>
         <Select value={visibilityFilter} onValueChange={setVisibilityFilter}>
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder="All visibility" />
           </SelectTrigger>
           <SelectContent>
@@ -151,84 +151,92 @@ function EventSchemasPage() {
               <h2 className="mb-3 font-semibold text-lg text-muted-foreground">
                 {source}
               </h2>
-              <table className="w-full table-fixed">
-                <thead>
-                  <tr className="border-b text-left text-muted-foreground text-sm">
-                    <th className="w-64 pb-3 font-medium">Name</th>
-                    <th className="w-24 pb-3 font-medium">Version</th>
-                    <th className="w-24 pb-3 font-medium">Enforcement</th>
-                    <th className="w-32 pb-3 font-medium">Compatibility</th>
-                    <th className="w-24 pb-3 font-medium">Visibility</th>
-                    <th className="w-40 pb-3 text-right font-medium">
-                      Updated
-                    </th>
-                    <th className="w-24 pb-3" />
-                  </tr>
-                </thead>
-                <tbody>
-                  {sourceSchemas.map((schema) => (
-                    <tr key={schema.rowId} className="border-b">
-                      <td className="py-4">
-                        <Link
-                          to="/workspaces/$workspaceSlug/events/$schemaName"
-                          params={{
-                            workspaceSlug,
-                            schemaName: schema.name,
-                          }}
-                          className="font-medium hover:underline"
-                        >
-                          {schema.name}
-                        </Link>
-                      </td>
-                      <td className="py-4">
-                        <Badge variant="outline">v{schema.version}</Badge>
-                      </td>
-                      <td className="py-4">
-                        <Badge
-                          variant={
-                            schema.enforcement === "strict"
-                              ? "destructive"
-                              : "outline"
-                          }
-                        >
-                          {schema.enforcement}
-                        </Badge>
-                      </td>
-                      <td className="py-4 text-muted-foreground text-sm">
-                        {schema.compatibilityMode}
-                      </td>
-                      <td className="py-4">
-                        <Badge
-                          variant={
-                            schema.visibility === "public"
-                              ? "secondary"
-                              : "outline"
-                          }
-                        >
-                          {schema.visibility}
-                        </Badge>
-                      </td>
-                      <td
-                        className="py-4 text-right text-muted-foreground text-sm"
-                        suppressHydrationWarning
-                      >
-                        {new Date(schema.updatedAt).toLocaleDateString()}
-                      </td>
-                      <td className="py-4 text-right">
-                        <Button variant="ghost" size="sm" asChild>
-                          <Link
-                            to="/workspaces/$workspaceSlug/events/sandbox"
-                            params={{ workspaceSlug }}
-                            search={{ type: schema.name }}
-                          >
-                            Test
-                          </Link>
-                        </Button>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full table-fixed">
+                  <thead>
+                    <tr className="border-b text-left text-muted-foreground text-sm">
+                      <th className="w-64 pb-3 font-medium">Name</th>
+                      <th className="w-24 pb-3 font-medium">Version</th>
+                      <th className="hidden w-24 pb-3 font-medium sm:table-cell">
+                        Enforcement
+                      </th>
+                      <th className="hidden w-32 pb-3 font-medium md:table-cell">
+                        Compatibility
+                      </th>
+                      <th className="hidden w-24 pb-3 font-medium sm:table-cell">
+                        Visibility
+                      </th>
+                      <th className="hidden w-40 pb-3 text-right font-medium md:table-cell">
+                        Updated
+                      </th>
+                      <th className="w-24 pb-3" />
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {sourceSchemas.map((schema) => (
+                      <tr key={schema.rowId} className="border-b">
+                        <td className="py-4">
+                          <Link
+                            to="/workspaces/$workspaceSlug/events/$schemaName"
+                            params={{
+                              workspaceSlug,
+                              schemaName: schema.name,
+                            }}
+                            className="font-medium hover:underline"
+                          >
+                            {schema.name}
+                          </Link>
+                        </td>
+                        <td className="py-4">
+                          <Badge variant="outline">v{schema.version}</Badge>
+                        </td>
+                        <td className="hidden py-4 sm:table-cell">
+                          <Badge
+                            variant={
+                              schema.enforcement === "strict"
+                                ? "destructive"
+                                : "outline"
+                            }
+                          >
+                            {schema.enforcement}
+                          </Badge>
+                        </td>
+                        <td className="hidden py-4 text-muted-foreground text-sm md:table-cell">
+                          {schema.compatibilityMode}
+                        </td>
+                        <td className="hidden py-4 sm:table-cell">
+                          <Badge
+                            variant={
+                              schema.visibility === "public"
+                                ? "secondary"
+                                : "outline"
+                            }
+                          >
+                            {schema.visibility}
+                          </Badge>
+                        </td>
+                        <td
+                          className="hidden py-4 text-right text-muted-foreground text-sm md:table-cell"
+                          suppressHydrationWarning
+                        >
+                          {new Date(schema.updatedAt).toLocaleDateString()}
+                        </td>
+                        <td className="py-4 text-right">
+                          <Button variant="ghost" size="sm" asChild>
+                            <Link
+                              to="/workspaces/$workspaceSlug/events/sandbox"
+                              params={{ workspaceSlug }}
+                              search={{ type: schema.name }}
+                            >
+                              Test
+                            </Link>
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           ))}
         </div>

@@ -1,40 +1,6 @@
-import { createIsomorphicFn } from "@tanstack/react-start";
-import { getCookie } from "@tanstack/react-start/server";
+import { createContext, useCallback, useState } from "react";
 
 import type { PropsWithChildren } from "react";
-
-// Simplified sidebar provider - will use Ark UI sidebar component
-const getSidebarCookies = createIsomorphicFn()
-  .server(() => {
-    const sidebarState = getCookie("sidebar:state");
-    const sidebarWidth = getCookie("sidebar:width");
-
-    let defaultOpen = true;
-
-    if (sidebarState) {
-      defaultOpen = sidebarState === "true";
-    }
-
-    return { defaultOpen, sidebarWidth };
-  })
-  .client(() => {
-    const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
-    const sidebarState = cookies
-      .find((cookie) => cookie.startsWith("sidebar:state="))
-      ?.split("=")[1];
-
-    const sidebarWidth = cookies
-      .find((cookie) => cookie.startsWith("sidebar:width="))
-      ?.split("=")[1];
-
-    let defaultOpen = true;
-
-    if (sidebarState) {
-      defaultOpen = sidebarState === "true";
-    }
-
-    return { defaultOpen, sidebarWidth };
-  });
 
 interface SidebarContextValue {
   isOpen: boolean;
@@ -44,12 +10,24 @@ interface SidebarContextValue {
   close: () => void;
 }
 
-import { createContext, useCallback, useState } from "react";
-
 const SidebarContext = createContext<SidebarContextValue | null>(null);
 
-const SidebarProvider = ({ children }: PropsWithChildren) => {
-  const { defaultOpen, sidebarWidth } = getSidebarCookies();
+interface SidebarProviderProps {
+  /** Initial open state, resolved on the server from cookies */
+  defaultOpen?: boolean;
+  /** Initial sidebar width, resolved on the server from cookies */
+  defaultWidth?: string;
+}
+
+/**
+ * Sidebar state provider. Accepts server-resolved defaults to avoid
+ * hydration mismatch from client-side cookie parsing.
+ */
+const SidebarProvider = ({
+  children,
+  defaultOpen = true,
+  defaultWidth,
+}: PropsWithChildren<SidebarProviderProps>) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   const toggle = useCallback(() => {
@@ -72,7 +50,7 @@ const SidebarProvider = ({ children }: PropsWithChildren) => {
 
   return (
     <SidebarContext
-      value={{ isOpen, width: sidebarWidth, toggle, open, close }}
+      value={{ isOpen, width: defaultWidth, toggle, open, close }}
     >
       {children}
     </SidebarContext>

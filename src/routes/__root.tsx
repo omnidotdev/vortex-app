@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 
 import { isDevEnv } from "@/lib/config/env.config";
+import useSessionRefresh from "@/lib/hooks/useSessionRefresh";
 import { fetchMaintenanceMode } from "@/lib/providers";
 import appCss from "@/lib/styles/globals.css?url";
 import createMetaTags from "@/lib/util/createMetaTags";
@@ -126,6 +127,10 @@ function MaintenancePage() {
 function RootComponent() {
   const theme = Route.useLoaderData();
   const { isMaintenanceMode } = Route.useRouteContext();
+
+  // Keep the OAuth access token fresh by periodically re-running the
+  // root `beforeLoad` which calls `ensureFreshAccessToken` server-side
+  useSessionRefresh();
 
   if (isMaintenanceMode) {
     return (

@@ -5,6 +5,7 @@ import {
   createFileRoute,
   notFound,
   useNavigate,
+  useRouteContext,
   useRouter,
 } from "@tanstack/react-router";
 import {
@@ -171,6 +172,7 @@ import {
   useWorkflowQuery,
   useWorkflowsQuery,
 } from "@/generated/graphql";
+import { canPerformDestructiveAction } from "@/lib/auth/roles";
 import app from "@/lib/config/app.config";
 import extractErrorMessage from "@/lib/graphql/extractErrorMessage";
 import workflowOptions from "@/lib/options/workflow.options";
@@ -451,6 +453,8 @@ function WorkflowEditorPage() {
   const { workspaceSlug, workflowId } = Route.useParams();
   const { organizationId } = Route.useLoaderData();
   const { session } = Route.useRouteContext();
+  const { organization } = useRouteContext({ from: "/_app" });
+  const isDestructiveAllowed = canPerformDestructiveAction(organization);
   const navigate = useNavigate();
 
   const accessToken = session?.accessToken;
@@ -1444,14 +1448,14 @@ function WorkflowEditorPage() {
           <Link
             to="/workspaces/$workspaceSlug/workflows"
             params={{ workspaceSlug }}
-            className="shrink-0 text-muted-foreground hover:text-foreground"
+            className="inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center text-muted-foreground hover:text-foreground"
           >
             &larr;
             <span className="hidden sm:inline"> Back</span>
           </Link>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <h1 className="truncate font-semibold text-sm sm:text-base">
+              <h1 className="truncate font-semibold text-sm sm:text-base md:max-w-[300px] lg:max-w-none">
                 {workflow.name}
               </h1>
               <DialogRoot
@@ -1464,7 +1468,7 @@ function WorkflowEditorPage() {
                 <DialogTrigger asChild>
                   <button
                     type="button"
-                    className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
+                    className="inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
                     onClick={() => {
                       setEditName(workflow.name);
                       setEditDescription(workflow.description || "");
@@ -1765,43 +1769,56 @@ function WorkflowEditorPage() {
             <span className="hidden lg:inline">Save</span>
           </Button>
 
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="destructive"
-                size="sm"
-                disabled={isDeleting}
-                className="hidden md:flex"
-              >
-                {isDeleting ? (
-                  <Loader2 className="mr-1 h-4 w-4 animate-spin" />
-                ) : (
-                  <Trash2 className="mr-1 h-4 w-4" />
-                )}
-                Delete
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Delete workflow?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This will permanently delete "{workflow.name}" and all its run
-                  history. This action cannot be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() =>
-                    deleteWorkflow({ input: { rowId: workflowId } })
-                  }
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          {isDestructiveAllowed ? (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  disabled={isDeleting}
+                  className="hidden md:flex"
                 >
+                  {isDeleting ? (
+                    <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="mr-1 h-4 w-4" />
+                  )}
                   Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete workflow?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will permanently delete "{workflow.name}" and all its
+                    run history. This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() =>
+                      deleteWorkflow({ input: { rowId: workflowId } })
+                    }
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          ) : (
+            <Button
+              variant="destructive"
+              size="sm"
+              disabled
+              className="hidden cursor-not-allowed opacity-50 md:flex"
+              title="Admin access required"
+            >
+              <Trash2 className="mr-1 h-4 w-4" />
+              Delete
+            </Button>
+          )}
         </div>
       </header>
 
@@ -2019,6 +2036,7 @@ function WorkflowEditorPage() {
                       setShowRightSidebar(false);
                     }
                   }}
+                  isDestructiveAllowed={isDestructiveAllowed}
                 />
               </aside>
             ) : showRunsPanel ? (

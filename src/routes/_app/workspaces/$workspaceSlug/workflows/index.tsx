@@ -1,8 +1,14 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import {
+  Link,
+  createFileRoute,
+  notFound,
+  useRouteContext,
+} from "@tanstack/react-router";
 import { Loader2, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 
+import UsageBanner from "@/components/UsageBanner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,8 +47,14 @@ import {
   useUpdateWorkflowMutation,
   useWorkflowsQuery,
 } from "@/generated/graphql";
+import { canPerformDestructiveAction } from "@/lib/auth/roles";
+import { isSelfHosted } from "@/lib/config/env.config";
+import { SELF_HOSTED_LIMITS, getLimitsForPlan } from "@/lib/constants/tiers";
 import workflowsOptions from "@/lib/options/workflows.options";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
+import { getSubscription } from "@/server/functions/subscriptions";
+
+import type { Subscription } from "@/lib/providers/billing";
 
 export const Route = createFileRoute(
   "/_app/workspaces/$workspaceSlug/workflows/",
@@ -50,9 +62,21 @@ export const Route = createFileRoute(
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
 
+    let subscription: Subscription | null = null;
+
+    if (!isSelfHosted) {
+      try {
+        subscription = await getSubscription({
+          data: { organizationId },
+        });
+      } catch {
+        // Fall back to null (shows free tier)
+      }
+    }
+
     await queryClient.ensureQueryData(workflowsOptions({ organizationId }));
 
-    return { organizationId };
+    return { organizationId, subscription };
   },
   component: WorkflowsPage,
 });
@@ -62,7 +86,9 @@ export const Route = createFileRoute(
  */
 function WorkflowsPage() {
   const { workspaceSlug } = Route.useParams();
-  const { organizationId } = Route.useLoaderData();
+  const { organizationId, subscription } = Route.useLoaderData();
+  const { organization } = useRouteContext({ from: "/_app" });
+  const isDestructiveAllowed = canPerformDestructiveAction(organization);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [editingWorkflow, setEditingWorkflow] = useState<{
     rowId: string;
@@ -70,6 +96,10 @@ function WorkflowsPage() {
     description: string;
     isActive: boolean;
   } | null>(null);
+
+  const limits = isSelfHosted
+    ? SELF_HOSTED_LIMITS
+    : getLimitsForPlan(subscription?.product?.name);
 
   const { data: workflows } = useSuspenseQuery({
     ...workflowsOptions({ organizationId }),
@@ -109,6 +139,15 @@ function WorkflowsPage() {
             Create Workflow
           </Link>
         </Button>
+      </div>
+
+      <div className="mt-4">
+        <UsageBanner
+          current={workflows.length}
+          limit={limits.workflows}
+          label="Workflows"
+          workspaceSlug={workspaceSlug}
+        />
       </div>
 
       {workflows.length === 0 ? (
@@ -203,47 +242,60 @@ function WorkflowsPage() {
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
-                            disabled={deletingId === workflow.rowId}
-                          >
-                            {deletingId === workflow.rowId ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : (
-                              <Trash2 className="h-4 w-4" />
-                            )}
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Delete workflow?
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              This will permanently delete "{workflow.name}" and
-                              all its run history. This action cannot be undone.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => {
-                                setDeletingId(workflow.rowId);
-                                deleteWorkflow({
-                                  input: { rowId: workflow.rowId },
-                                });
-                              }}
-                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      {isDestructiveAllowed ? (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                              disabled={deletingId === workflow.rowId}
                             >
-                              Delete
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                              {deletingId === workflow.rowId ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <Trash2 className="h-4 w-4" />
+                              )}
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Delete workflow?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This will permanently delete "{workflow.name}"
+                                and all its run history. This action cannot be
+                                undone.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => {
+                                  setDeletingId(workflow.rowId);
+                                  deleteWorkflow({
+                                    input: { rowId: workflow.rowId },
+                                  });
+                                }}
+                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              >
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      ) : (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 cursor-not-allowed p-0 opacity-50"
+                          disabled
+                          title="Admin access required"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   </td>
                 </tr>

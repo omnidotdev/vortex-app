@@ -4,9 +4,14 @@ import { Suspense, useEffect, useState } from "react";
 import DateRangePicker from "@/components/monitoring/DateRangePicker";
 import ErrorTable from "@/components/monitoring/ErrorTable";
 import ExecutionTimeline from "@/components/monitoring/ExecutionTimeline";
+import MonthlyRunsCard from "@/components/monitoring/MonthlyRunsCard";
 import StatsCards from "@/components/monitoring/StatsCards";
+import { isSelfHosted } from "@/lib/config/env.config";
+import { SELF_HOSTED_LIMITS, getLimitsForPlan } from "@/lib/constants/tiers";
+import { getSubscription } from "@/server/functions/subscriptions";
 
 import type { DateRange } from "@/components/monitoring/types";
+import type { Subscription } from "@/lib/providers/billing";
 
 /**
  * Default to a 7-day range. Only called client-side to avoid hydration mismatch.
@@ -23,7 +28,20 @@ export const Route = createFileRoute(
 )({
   loader: async ({ context: { organizationId } }) => {
     if (!organizationId) throw notFound();
-    return { organizationId };
+
+    let subscription: Subscription | null = null;
+
+    if (!isSelfHosted) {
+      try {
+        subscription = await getSubscription({
+          data: { organizationId },
+        });
+      } catch {
+        // Fall back to null (shows free tier)
+      }
+    }
+
+    return { organizationId, subscription };
   },
   component: MonitoringPage,
 });
@@ -64,6 +82,13 @@ function TableSkeleton() {
  * Monitoring dashboard page.
  */
 function MonitoringPage() {
+  const { subscription } = Route.useLoaderData();
+  const { workspaceSlug } = Route.useParams();
+
+  const limits = isSelfHosted
+    ? SELF_HOSTED_LIMITS
+    : getLimitsForPlan(subscription?.product?.name);
+
   const [preset, setPreset] = useState("7d");
   const [range, setRange] = useState<DateRange | null>(null);
 
@@ -80,7 +105,7 @@ function MonitoringPage() {
   return (
     <div className="p-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-bold text-2xl">Monitoring</h1>
           <p className="mt-1 text-muted-foreground">
@@ -96,6 +121,20 @@ function MonitoringPage() {
           <div className="mt-6">
             <Suspense fallback={<CardsSkeleton />}>
               <StatsCards since={range.since} until={range.until} />
+            </Suspense>
+          </div>
+
+          {/* Monthly runs usage */}
+          <div className="mt-6">
+            <Suspense
+              fallback={
+                <div className="h-24 animate-pulse rounded-lg border bg-muted/30" />
+              }
+            >
+              <MonthlyRunsCard
+                runsPerMonthLimit={limits.runsPerMonth}
+                workspaceSlug={workspaceSlug}
+              />
             </Suspense>
           </div>
 

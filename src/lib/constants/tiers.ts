@@ -1,5 +1,56 @@
 import type { Price } from "@/lib/providers/billing";
 
+/** Numeric plan limits by tier */
+export type PlanLimits = {
+  workflows: number | null;
+  runsPerMonth: number | null;
+  plugins: boolean;
+};
+
+/** Default limits for the free tier */
+export const FREE_LIMITS: PlanLimits = {
+  workflows: 5,
+  runsPerMonth: 1_000,
+  plugins: false,
+};
+
+/** Limits for the starter tier */
+export const STARTER_LIMITS: PlanLimits = {
+  workflows: 25,
+  runsPerMonth: 10_000,
+  plugins: false,
+};
+
+/** Limits for the pro tier */
+export const PRO_LIMITS: PlanLimits = {
+  workflows: null,
+  runsPerMonth: 50_000,
+  plugins: true,
+};
+
+/** Limits for self-hosted deployments (unlimited) */
+export const SELF_HOSTED_LIMITS: PlanLimits = {
+  workflows: null,
+  runsPerMonth: null,
+  plugins: true,
+};
+
+/**
+ * Derive plan limits from a subscription product name.
+ * Falls back to free tier when no subscription is active.
+ */
+export function getLimitsForPlan(
+  productName: string | null | undefined,
+): PlanLimits {
+  if (!productName) return FREE_LIMITS;
+
+  const name = productName.toLowerCase();
+  if (name.includes("pro")) return PRO_LIMITS;
+  if (name.includes("starter")) return STARTER_LIMITS;
+
+  return FREE_LIMITS;
+}
+
 /** Free tier placeholder price for display */
 export const FREE_PRICE: Price = {
   id: "free",

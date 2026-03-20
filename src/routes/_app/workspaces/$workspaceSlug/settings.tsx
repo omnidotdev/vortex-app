@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { canPerformDestructiveAction, deriveRole } from "@/lib/auth/roles";
 import { isSelfHosted } from "@/lib/config/env.config";
 import {
   FREE_TIER_FEATURES,
@@ -103,10 +104,12 @@ function ApiKeyItem({
   apiKey,
   onRevoke,
   isRevoking,
+  isDestructiveAllowed,
 }: {
   apiKey: ListedApiKey;
   onRevoke: (keyId: string) => void;
   isRevoking: boolean;
+  isDestructiveAllowed: boolean;
 }) {
   const createdAt = new Date(apiKey.createdAt).toLocaleDateString();
   const lastUsed = apiKey.lastRequest
@@ -135,10 +138,15 @@ function ApiKeyItem({
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => onRevoke(apiKey.id)}
-        disabled={isRevoking}
-        className="text-destructive hover:text-destructive"
+        onClick={() => isDestructiveAllowed && onRevoke(apiKey.id)}
+        disabled={isRevoking || !isDestructiveAllowed}
+        className={
+          isDestructiveAllowed
+            ? "text-destructive hover:text-destructive"
+            : "cursor-not-allowed text-destructive opacity-50"
+        }
         aria-label={`Revoke ${apiKey.name ?? "key"}`}
+        title={isDestructiveAllowed ? undefined : "Admin access required"}
       >
         {isRevoking ? (
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -238,9 +246,11 @@ function NewKeyDialog({
 function ApiKeysSection({
   organizationId,
   workspaceSlug,
+  isDestructiveAllowed,
 }: {
   organizationId: string;
   workspaceSlug: string;
+  isDestructiveAllowed: boolean;
 }) {
   const [keys, setKeys] = useState<ListedApiKey[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -395,9 +405,14 @@ function ApiKeysSection({
 
       <div className="mt-4">
         {isLoading ? (
-          <div className="flex items-center gap-2 text-muted-foreground text-sm">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            Loading keys...
+          <div className="space-y-2">
+            {Array.from({ length: 3 }, (_, i) => (
+              <div
+                // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton, never reorders
+                key={`skeleton-${i}`}
+                className="h-[72px] animate-pulse rounded-lg border bg-muted/30"
+              />
+            ))}
           </div>
         ) : keys === null || keys.length === 0 ? (
           <div className="rounded-lg border border-dashed p-6 text-center text-muted-foreground text-sm">
@@ -411,6 +426,7 @@ function ApiKeysSection({
                 apiKey={k}
                 onRevoke={handleRevoke}
                 isRevoking={revokingId === k.id}
+                isDestructiveAllowed={isDestructiveAllowed}
               />
             ))}
           </div>
@@ -557,20 +573,6 @@ function PlanSection({
 }
 
 /**
- * Derive the highest role from an organization claim's roles array.
- */
-function deriveDisplayRole(organization?: OrganizationClaim): string | null {
-  if (!organization?.roles?.length) return null;
-
-  const roles = organization.roles;
-  if (roles.includes("owner")) return "owner";
-  if (roles.includes("admin")) return "admin";
-  if (roles.includes("member")) return "member";
-
-  return roles[0] ?? null;
-}
-
-/**
  * Role badge with color matching the MemberRow convention.
  */
 function UserRoleBadge({ role }: { role: string }) {
@@ -600,7 +602,10 @@ function WorkspaceSettingsPage() {
   const { workspaceSlug } = Route.useParams();
   const { organizationId, subscription } = Route.useLoaderData();
   const { organization } = useRouteContext({ from: "/_app" });
-  const displayRole = deriveDisplayRole(organization as OrganizationClaim);
+  const displayRole = deriveRole(organization as OrganizationClaim);
+  const isDestructiveAllowed = canPerformDestructiveAction(
+    organization as OrganizationClaim,
+  );
 
   return (
     <div className="p-8">
@@ -637,6 +642,7 @@ function WorkspaceSettingsPage() {
         <ApiKeysSection
           organizationId={organizationId}
           workspaceSlug={workspaceSlug}
+          isDestructiveAllowed={isDestructiveAllowed}
         />
       </div>
     </div>

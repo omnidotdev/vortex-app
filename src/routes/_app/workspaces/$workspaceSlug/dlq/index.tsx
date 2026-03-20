@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import {
   AlertTriangle,
   Archive,
@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { canPerformDestructiveAction } from "@/lib/auth/roles";
 import { API_BASE_URL } from "@/lib/config/env.config";
 import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
 import { dlqEventsOptions, dlqStatsOptions } from "@/lib/options/dlq.options";
@@ -182,9 +183,11 @@ function DlqStatsBar() {
 function DlqRow({
   event,
   onMutate,
+  isDestructiveAllowed,
 }: {
   event: DlqEvent;
   onMutate: () => void;
+  isDestructiveAllowed: boolean;
 }) {
   const [busy, setBusy] = useState<"replay" | "discard" | null>(null);
 
@@ -238,8 +241,12 @@ function DlqRow({
             variant="ghost"
             size="sm"
             onClick={handleReplay}
-            disabled={busy !== null}
+            disabled={busy !== null || !isDestructiveAllowed}
             aria-label="Replay event"
+            title={isDestructiveAllowed ? undefined : "Admin access required"}
+            className={
+              isDestructiveAllowed ? undefined : "cursor-not-allowed opacity-50"
+            }
           >
             {busy === "replay" ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -251,8 +258,12 @@ function DlqRow({
             variant="ghost"
             size="sm"
             onClick={handleDiscard}
-            disabled={busy !== null}
+            disabled={busy !== null || !isDestructiveAllowed}
             aria-label="Discard event"
+            title={isDestructiveAllowed ? undefined : "Admin access required"}
+            className={
+              isDestructiveAllowed ? undefined : "cursor-not-allowed opacity-50"
+            }
           >
             {busy === "discard" ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -269,6 +280,8 @@ function DlqRow({
 // -- main page -------------------------------------------------------------
 
 function DlqDashboard() {
+  const { organization } = useRouteContext({ from: "/_app" });
+  const isDestructiveAllowed = canPerformDestructiveAction(organization);
   const queryClient = useQueryClient();
   const [filters, setFilters] = useState<DlqFilters>({
     page: 1,
@@ -411,7 +424,11 @@ function DlqDashboard() {
             variant="outline"
             size="sm"
             onClick={handleBulkReplay}
-            disabled={bulkBusy !== null}
+            disabled={bulkBusy !== null || !isDestructiveAllowed}
+            title={isDestructiveAllowed ? undefined : "Admin access required"}
+            className={
+              isDestructiveAllowed ? undefined : "cursor-not-allowed opacity-50"
+            }
           >
             {bulkBusy === "replay" ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -424,7 +441,11 @@ function DlqDashboard() {
             variant="outline"
             size="sm"
             onClick={handleBulkDiscard}
-            disabled={bulkBusy !== null}
+            disabled={bulkBusy !== null || !isDestructiveAllowed}
+            title={isDestructiveAllowed ? undefined : "Admin access required"}
+            className={
+              isDestructiveAllowed ? undefined : "cursor-not-allowed opacity-50"
+            }
           >
             {bulkBusy === "discard" ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -474,7 +495,12 @@ function DlqDashboard() {
               )}
 
               {events.map((event) => (
-                <DlqRow key={event.id} event={event} onMutate={invalidateAll} />
+                <DlqRow
+                  key={event.id}
+                  event={event}
+                  onMutate={invalidateAll}
+                  isDestructiveAllowed={isDestructiveAllowed}
+                />
               ))}
             </tbody>
           </table>

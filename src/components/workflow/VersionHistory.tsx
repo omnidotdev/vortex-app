@@ -61,6 +61,7 @@ type VersionHistoryProps = {
   workflowId: string;
   currentDefinition: Record<string, unknown>;
   onClose: () => void;
+  isDestructiveAllowed?: boolean;
 };
 
 const PAGE_SIZE = 20;
@@ -132,6 +133,7 @@ function VersionHistory({
   workflowId,
   currentDefinition,
   onClose,
+  isDestructiveAllowed = true,
 }: VersionHistoryProps) {
   const queryClient = useQueryClient();
   const [loadedCount, setLoadedCount] = useState(PAGE_SIZE);
@@ -310,8 +312,20 @@ function VersionHistory({
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
-                      onClick={() => setRestoreTarget(entry)}
+                      className={
+                        isDestructiveAllowed
+                          ? "shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
+                          : "shrink-0 cursor-not-allowed opacity-50"
+                      }
+                      onClick={() =>
+                        isDestructiveAllowed && setRestoreTarget(entry)
+                      }
+                      disabled={!isDestructiveAllowed}
+                      title={
+                        isDestructiveAllowed
+                          ? undefined
+                          : "Admin access required"
+                      }
                     >
                       <RotateCcw className="mr-1 h-3.5 w-3.5" />
                       Restore

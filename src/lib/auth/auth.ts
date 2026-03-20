@@ -4,6 +4,7 @@ import { customSession, genericOAuth } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 
 import { authCache } from "@/lib/auth/authCache";
+import { createSecondaryStorage } from "@/lib/cache/client";
 import {
   AUTH_BASE_URL,
   AUTH_CLIENT_ID,
@@ -24,6 +25,10 @@ const auth = betterAuth({
   secret: AUTH_SECRET,
   // Trust the app's own origin for auth requests
   trustedOrigins: BASE_URL ? [BASE_URL] : [],
+  // Persist sessions in Valkey so they survive pod restarts.
+  // Without this, the in-memory adapter loses all sessions on restart,
+  // causing silent session expiry after ~5 minutes.
+  secondaryStorage: createSecondaryStorage(),
   advanced: {
     // use custom cookie prefix to avoid collision with IDP cookies
     cookiePrefix: "vortex",

@@ -1,33 +1,55 @@
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, notFound } from "@tanstack/react-router";
-import { Package, Search, Upload } from "lucide-react";
+import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import { Lock, Package, Search, Upload } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 import PluginCard from "@/components/plugins/PluginCard";
 import UploadPluginDialog from "@/components/plugins/UploadPluginDialog";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { API_BASE_URL } from "@/lib/config/env.config";
+import { API_BASE_URL, isSelfHosted } from "@/lib/config/env.config";
+import { SELF_HOSTED_LIMITS, getLimitsForPlan } from "@/lib/constants/tiers";
 import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
 import pluginsOptions from "@/lib/options/plugins.options";
+import { getSubscription } from "@/server/functions/subscriptions";
 
 import type { Plugin } from "@/components/plugins/PluginCard";
+import type { Subscription } from "@/lib/providers/billing";
 
 export const Route = createFileRoute(
   "/_app/workspaces/$workspaceSlug/plugins/",
 )({
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
+
+    let subscription: Subscription | null = null;
+
+    if (!isSelfHosted) {
+      try {
+        subscription = await getSubscription({
+          data: { organizationId },
+        });
+      } catch {
+        // Fall back to null (shows free tier)
+      }
+    }
+
     await queryClient.ensureQueryData(pluginsOptions({ organizationId }));
-    return { organizationId };
+    return { organizationId, subscription };
   },
   component: PluginsPage,
 });
 
 function PluginsPage() {
-  const { organizationId } = Route.useLoaderData();
+  const { organizationId, subscription } = Route.useLoaderData();
   const { workspaceSlug } = Route.useParams();
+
+  const limits = isSelfHosted
+    ? SELF_HOSTED_LIMITS
+    : getLimitsForPlan(subscription?.product?.name);
+  const canUploadPlugins = limits.plugins;
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const queryClient = useQueryClient();
@@ -87,10 +109,22 @@ function PluginsPage() {
           </p>
         </div>
 
-        <Button onClick={() => setIsUploadOpen(true)}>
-          <Upload className="mr-2 h-4 w-4" />
-          Upload Plugin
-        </Button>
+        {canUploadPlugins ? (
+          <Button onClick={() => setIsUploadOpen(true)}>
+            <Upload className="mr-2 h-4 w-4" />
+            Upload Plugin
+          </Button>
+        ) : (
+          <div className="flex items-center gap-2">
+            <Badge variant="secondary" className="gap-1 text-muted-foreground">
+              <Lock className="h-3 w-3" />
+              Pro Feature
+            </Badge>
+            <Button asChild variant="outline" size="sm">
+              <Link to="/pricing">Upgrade</Link>
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Search */}
@@ -133,12 +167,26 @@ function PluginsPage() {
               ? "Try a different search term."
               : "Upload a WASM plugin to extend Vortex with custom steps."}
           </p>
-          {!searchQuery && (
-            <Button className="mt-4" onClick={() => setIsUploadOpen(true)}>
-              <Upload className="mr-2 h-4 w-4" />
-              Upload Plugin
-            </Button>
-          )}
+          {!searchQuery &&
+            (canUploadPlugins ? (
+              <Button className="mt-4" onClick={() => setIsUploadOpen(true)}>
+                <Upload className="mr-2 h-4 w-4" />
+                Upload Plugin
+              </Button>
+            ) : (
+              <div className="mt-4 flex items-center gap-2">
+                <Badge
+                  variant="secondary"
+                  className="gap-1 text-muted-foreground"
+                >
+                  <Lock className="h-3 w-3" />
+                  Pro Feature
+                </Badge>
+                <Button asChild variant="outline" size="sm">
+                  <Link to="/pricing">Upgrade</Link>
+                </Button>
+              </div>
+            ))}
         </div>
       )}
 
