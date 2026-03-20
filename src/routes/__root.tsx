@@ -7,6 +7,7 @@ import {
   createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { createServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 
@@ -23,7 +24,17 @@ import type { ReactNode } from "react";
 import type { AuthSession } from "@/lib/auth/getAuth";
 import type { Theme } from "@/providers/ThemeProvider";
 
-let cachedSession: AuthSession | null = null;
+/**
+ * Fetch session and maintenance mode flag in a single server function.
+ */
+const fetchSessionAndMaintenanceMode = createServerFn({
+  method: "GET",
+}).handler(async () => {
+  const { session } = await fetchSession();
+  const { isMaintenanceMode } = await fetchMaintenanceMode();
+
+  return { session, isMaintenanceMode };
+});
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -31,18 +42,11 @@ export const Route = createRootRouteWithContext<{
   isMaintenanceMode: boolean;
 }>()({
   beforeLoad: async () => {
-    let session: AuthSession | null = null;
+    const { session, isMaintenanceMode } =
+      await fetchSessionAndMaintenanceMode();
 
-    try {
-      ({ session } = await fetchSession());
-    } catch {
-      // Use cached session on transient failure to avoid false unauthenticated state
-      session = cachedSession;
-    }
-
-    if (session) cachedSession = session;
-
-    const { isMaintenanceMode } = await fetchMaintenanceMode();
+    // Skip auth when maintenance page is shown
+    if (isMaintenanceMode) return { session: null, isMaintenanceMode };
 
     return { session, isMaintenanceMode };
   },
