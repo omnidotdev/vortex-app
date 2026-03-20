@@ -29,10 +29,11 @@ export const NodeConfigSidebar = ({
   workflowId,
   webhookSecret,
 }: NodeConfigSidebarProps) => {
-  // Handle escape key to close
+  // Handle escape key to close sidebar without bubbling to parent handlers
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && selectedNode) {
+        e.stopPropagation();
         onClose();
       }
     };

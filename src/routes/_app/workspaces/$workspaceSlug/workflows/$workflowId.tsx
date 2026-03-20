@@ -1229,6 +1229,7 @@ function WorkflowEditorPage() {
         event.target instanceof HTMLTextAreaElement;
 
       if (event.key === "Escape") {
+        event.stopPropagation();
         setContextMenu(null);
         setShowAddNodeDialog(false);
         return;
@@ -1602,6 +1603,7 @@ function WorkflowEditorPage() {
             size="sm"
             onClick={handleExecute}
             disabled={isExecuting}
+            aria-label="Execute workflow"
           >
             {isExecuting ? (
               <Loader2 className="h-4 w-4 animate-spin lg:mr-1" />
@@ -1613,6 +1615,7 @@ function WorkflowEditorPage() {
           <Button
             variant={showRunsPanel ? "default" : "outline"}
             size="sm"
+            aria-label="View runs"
             onClick={() => {
               setShowRunsPanel(!showRunsPanel);
               setShowVersionHistory(false);
@@ -1629,6 +1632,7 @@ function WorkflowEditorPage() {
             variant={showVersionHistory ? "default" : "outline"}
             size="sm"
             className="hidden md:flex"
+            aria-label="Version history"
             onClick={() => {
               setShowVersionHistory(!showVersionHistory);
               setShowRunsPanel(false);
@@ -1644,6 +1648,7 @@ function WorkflowEditorPage() {
             variant={showMonitoring ? "default" : "outline"}
             size="sm"
             className="hidden md:flex"
+            aria-label="Monitoring"
             onClick={() => {
               setShowMonitoring(!showMonitoring);
               setShowRunsPanel(false);
