@@ -44,7 +44,7 @@ export const graphqlFetch =
         },
       });
     } catch (error) {
-      // Redirect to re-auth on 401 or UNAUTHENTICATED GraphQL error
+      // Sign out on 401 or UNAUTHENTICATED to clear stale session
       if (error instanceof ClientError && typeof window !== "undefined") {
         const isHttp401 = error.response.status === 401;
         const isUnauthenticated = error.response.errors?.some(
@@ -52,6 +52,8 @@ export const graphqlFetch =
         );
 
         if (isHttp401 || isUnauthenticated) {
+          // Clear the local session via Better Auth endpoint, then redirect
+          await fetch("/api/auth/sign-out", { method: "POST" });
           window.location.href = "/";
           return new Promise(() => {}) as Promise<TData>;
         }
