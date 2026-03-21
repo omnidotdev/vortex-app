@@ -1,43 +1,68 @@
-// On the server, merge process.env over import.meta.env so Railway runtime
-// env vars override Vite build-time values. On the client, use import.meta.env
-// only (Vite injects VITE_-prefixed vars at build time).
-const env =
-  typeof window === "undefined"
-    ? { ...import.meta.env, ...process.env }
-    : import.meta.env;
+// VITE_-prefixed vars MUST come from import.meta.env on both server and
+// client so the rendered HTML is identical (avoiding hydration mismatch).
+// Server-only vars (auth secrets, internal URLs) are read from process.env
+// directly and are never rendered into the HTML.
+const clientEnv = import.meta.env;
+const serverEnv =
+  typeof window === "undefined" ? process.env : ({} as Record<string, string>);
 
 /**
  * Environment variables.
  *
- * VITE_-prefixed vars are available on both server and client.
- * Non-VITE vars (auth secrets, internal URLs) are only available during SSR.
+ * VITE_-prefixed vars are available on both server and client via
+ * `import.meta.env` (Vite injects them at build time).
+ * Non-VITE vars (auth secrets, internal URLs) are only available during SSR
+ * via `process.env`.
  */
 
-// core (client-safe)
-export const BASE_URL = env.VITE_BASE_URL as string | undefined;
-export const API_BASE_URL = env.VITE_API_BASE_URL as string | undefined;
-export const AUTH_BASE_URL = env.VITE_AUTH_BASE_URL as string | undefined;
+// core (client-safe, rendered into HTML -- must use clientEnv)
+export const BASE_URL = clientEnv.VITE_BASE_URL as string | undefined;
+export const API_BASE_URL = clientEnv.VITE_API_BASE_URL as string | undefined;
+export const AUTH_BASE_URL = clientEnv.VITE_AUTH_BASE_URL as string | undefined;
 
-// auth (server-side secrets — only in process.env, never VITE_-prefixed)
-export const AUTH_CLIENT_ID = env.AUTH_CLIENT_ID as string | undefined;
-export const AUTH_CLIENT_SECRET = env.AUTH_CLIENT_SECRET as string | undefined;
+// auth (server-side secrets -- never rendered, safe to read from process.env)
+export const AUTH_CLIENT_ID = serverEnv.AUTH_CLIENT_ID as string | undefined;
+export const AUTH_CLIENT_SECRET = serverEnv.AUTH_CLIENT_SECRET as
+  | string
+  | undefined;
 
 // feature flags (client-safe)
-export const FLAGS_API_HOST = env.VITE_FLAGS_API_HOST as string | undefined;
-export const FLAGS_CLIENT_KEY = env.VITE_FLAGS_CLIENT_KEY as string | undefined;
+export const FLAGS_API_HOST = clientEnv.VITE_FLAGS_API_HOST as
+  | string
+  | undefined;
+export const FLAGS_CLIENT_KEY = clientEnv.VITE_FLAGS_CLIENT_KEY as
+  | string
+  | undefined;
 
 // self-hosted mode (use VITE_ prefix so value is consistent across SSR and client)
-export const VITE_SELF_HOSTED = env.VITE_SELF_HOSTED as string | undefined;
+export const VITE_SELF_HOSTED = clientEnv.VITE_SELF_HOSTED as
+  | string
+  | undefined;
 
-// billing (client-safe)
-export const BILLING_BASE_URL = env.VITE_BILLING_BASE_URL as string | undefined;
-export const CONSOLE_URL = env.VITE_CONSOLE_URL as string | undefined;
+// billing (client-safe, rendered into HTML -- must use clientEnv)
+export const BILLING_BASE_URL = clientEnv.VITE_BILLING_BASE_URL as
+  | string
+  | undefined;
+export const CONSOLE_URL = clientEnv.VITE_CONSOLE_URL as string | undefined;
+
+// Server-side runtime overrides for VITE_-prefixed vars. These allow Railway
+// (or any runtime) to override the build-time values for server-to-server
+// communication without affecting client-rendered HTML.
+export const SERVER_BASE_URL =
+  typeof window === "undefined"
+    ? (serverEnv.VITE_BASE_URL as string | undefined) || BASE_URL
+    : BASE_URL;
+
+export const SERVER_AUTH_BASE_URL =
+  typeof window === "undefined"
+    ? (serverEnv.VITE_AUTH_BASE_URL as string | undefined) || AUTH_BASE_URL
+    : AUTH_BASE_URL;
 
 // Internal API URL for server-to-server communication (Docker service name)
 // Falls back to API_BASE_URL for non-Docker environments
 export const API_INTERNAL_URL =
   typeof window === "undefined"
-    ? (env.API_INTERNAL_URL as string | undefined) || API_BASE_URL
+    ? (serverEnv.API_INTERNAL_URL as string | undefined) || API_BASE_URL
     : API_BASE_URL;
 
 export const API_GRAPHQL_URL = `${API_BASE_URL}/graphql`;

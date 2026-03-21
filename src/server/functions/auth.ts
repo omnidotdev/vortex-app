@@ -6,9 +6,9 @@ import auth from "@/lib/auth/auth";
 import { authCache } from "@/lib/auth/authCache";
 import { getAuth } from "@/lib/auth/getAuth";
 import {
-  AUTH_BASE_URL,
   AUTH_CLIENT_ID,
-  BASE_URL,
+  SERVER_AUTH_BASE_URL,
+  SERVER_BASE_URL,
 } from "@/lib/config/env.config";
 
 /**
@@ -54,11 +54,11 @@ export const signOutAndRedirect = createServerFn({ method: "POST" }).handler(
  * Build the IDP end_session URL for federated logout
  */
 export function getIdpLogoutUrl(): string | null {
-  if (!AUTH_BASE_URL || !AUTH_CLIENT_ID || !BASE_URL) return null;
+  if (!SERVER_AUTH_BASE_URL || !AUTH_CLIENT_ID || !SERVER_BASE_URL) return null;
 
-  const endSessionUrl = new URL(`${AUTH_BASE_URL}/oauth2/endsession`);
+  const endSessionUrl = new URL(`${SERVER_AUTH_BASE_URL}/oauth2/endsession`);
   endSessionUrl.searchParams.set("client_id", AUTH_CLIENT_ID);
-  endSessionUrl.searchParams.set("post_logout_redirect_uri", BASE_URL);
+  endSessionUrl.searchParams.set("post_logout_redirect_uri", SERVER_BASE_URL);
 
   return endSessionUrl.toString();
 }

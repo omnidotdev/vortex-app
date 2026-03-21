@@ -48,7 +48,9 @@ export const Route = createFileRoute("/_app/workspaces/$workspaceSlug/")({
  */
 function WorkspaceDashboard() {
   const { workspaceSlug } = Route.useParams();
-  const { organizationId, subscription } = Route.useLoaderData();
+  const loaderData = Route.useLoaderData();
+  const organizationId = loaderData?.organizationId ?? "";
+  const subscription = loaderData?.subscription;
 
   const limits = isSelfHosted
     ? SELF_HOSTED_LIMITS
@@ -77,6 +79,15 @@ function WorkspaceDashboard() {
     }
     return map;
   }, [definitions]);
+
+  // Guard against undefined loader data during hydration race
+  if (!loaderData) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-8">

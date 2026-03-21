@@ -1,5 +1,5 @@
 import { getAuth } from "@/lib/auth/getAuth";
-import { AUTH_BASE_URL } from "@/lib/config/env.config";
+import { SERVER_AUTH_BASE_URL } from "@/lib/config/env.config";
 
 /**
  * Proxy a request to Gatekeeper's Better Auth API, forwarding
@@ -16,10 +16,10 @@ export async function proxyToGatekeeper(
 
   // Strip /api/auth prefix so /api/auth/api-key/create → /api-key/create
   const forwardPath = path.replace(/^\/api\/auth/, "");
-  const url = `${AUTH_BASE_URL}${forwardPath}`;
+  const url = `${SERVER_AUTH_BASE_URL}${forwardPath}`;
   const headers: Record<string, string> = {
     Authorization: `Bearer ${session.accessToken}`,
-    Origin: AUTH_BASE_URL!,
+    Origin: SERVER_AUTH_BASE_URL!,
   };
 
   const isPost = request.method === "POST";

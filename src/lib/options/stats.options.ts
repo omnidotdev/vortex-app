@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 
 import { API_BASE_URL } from "@/lib/config/env.config";
+import { StatsAccessError } from "@/lib/errors/statsAccess";
 import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
 
 import type {
@@ -66,6 +67,10 @@ async function fetchStats<T>(
   });
 
   if (!response.ok) {
+    if (response.status === 403) {
+      throw new StatsAccessError(path);
+    }
+
     throw new Error(`Stats fetch failed (${response.status}): ${path}`);
   }
 

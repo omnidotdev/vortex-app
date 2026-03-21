@@ -1,10 +1,12 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { AlertTriangle, Gauge } from "lucide-react";
+import { AlertCircle, AlertTriangle, Gauge, Loader2 } from "lucide-react";
 import { useMemo } from "react";
 
 import UsageCounter from "@/components/UsageCounter";
+import { StatsAccessError } from "@/lib/errors/statsAccess";
 import { orgStatsOptions } from "@/lib/options/stats.options";
+import StatsAccessDenied from "./StatsAccessDenied";
 
 /**
  * Compute the start-of-month ISO string for the current billing period.
@@ -42,9 +44,33 @@ function MonthlyRunsCard({
     [],
   );
 
-  const { data: stats } = useSuspenseQuery(
-    orgStatsOptions({ since: monthStart, until: now }),
-  );
+  const {
+    data: stats,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(orgStatsOptions({ since: monthStart, until: now }));
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center rounded-lg border py-12">
+        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (error instanceof StatsAccessError) {
+    return <StatsAccessDenied />;
+  }
+
+  if (isError || !stats) {
+    return (
+      <div className="flex flex-col items-center gap-2 rounded-lg border py-12 text-muted-foreground">
+        <AlertCircle className="h-5 w-5" />
+        <p className="text-sm">Failed to load usage data</p>
+      </div>
+    );
+  }
 
   const current = stats.total;
   const isAtLimit = runsPerMonthLimit !== null && current >= runsPerMonthLimit;

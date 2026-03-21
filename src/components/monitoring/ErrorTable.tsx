@@ -1,9 +1,11 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "@tanstack/react-router";
-import { AlertTriangle } from "lucide-react";
+import { AlertCircle, AlertTriangle, Loader2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { StatsAccessError } from "@/lib/errors/statsAccess";
 import { errorsStatsOptions } from "@/lib/options/stats.options";
+import StatsAccessDenied from "./StatsAccessDenied";
 
 /**
  * Format a timestamp as a relative time string (e.g. "2 hours ago").
@@ -44,7 +46,30 @@ function ErrorTable({ since }: ErrorTableProps) {
     workspaceSlug: string;
   };
 
-  const { data } = useSuspenseQuery(errorsStatsOptions({ since, limit: 10 }));
+  const { data, isLoading, isError, error } = useQuery(
+    errorsStatsOptions({ since, limit: 10 }),
+  );
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center rounded-lg border py-12">
+        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (error instanceof StatsAccessError) {
+    return <StatsAccessDenied />;
+  }
+
+  if (isError || !data) {
+    return (
+      <div className="flex flex-col items-center gap-2 rounded-lg border py-12 text-muted-foreground">
+        <AlertCircle className="h-5 w-5" />
+        <p className="text-sm">Failed to load errors</p>
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-lg border">

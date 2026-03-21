@@ -6,10 +6,10 @@ import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { authCache } from "@/lib/auth/authCache";
 import { createSecondaryStorage } from "@/lib/cache/client";
 import {
-  AUTH_BASE_URL,
   AUTH_CLIENT_ID,
   AUTH_CLIENT_SECRET,
-  BASE_URL,
+  SERVER_AUTH_BASE_URL,
+  SERVER_BASE_URL,
 } from "@/lib/config/env.config";
 
 import type { OrganizationClaim } from "@omnidotdev/providers/auth";
@@ -20,11 +20,11 @@ const { AUTH_SECRET } = process.env;
  * Auth server client.
  */
 const auth = betterAuth({
-  baseURL: BASE_URL,
+  baseURL: SERVER_BASE_URL,
   basePath: "/api/auth",
   secret: AUTH_SECRET,
   // Trust the app's own origin for auth requests
-  trustedOrigins: BASE_URL ? [BASE_URL] : [],
+  trustedOrigins: SERVER_BASE_URL ? [SERVER_BASE_URL] : [],
   // Persist sessions in Valkey so they survive pod restarts.
   // Without this, the in-memory adapter loses all sessions on restart,
   // causing silent session expiry after ~5 minutes.
@@ -61,7 +61,7 @@ const auth = betterAuth({
           providerId: "omni",
           clientId: AUTH_CLIENT_ID!,
           clientSecret: AUTH_CLIENT_SECRET,
-          discoveryUrl: `${AUTH_BASE_URL}/.well-known/openid-configuration`,
+          discoveryUrl: `${SERVER_AUTH_BASE_URL}/.well-known/openid-configuration`,
           scopes: ["openid", "profile", "email", "offline_access"],
           accessType: "offline",
           pkce: true,

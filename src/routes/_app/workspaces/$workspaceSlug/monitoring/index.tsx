@@ -1,5 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import DateRangePicker from "@/components/monitoring/DateRangePicker";
 import ErrorTable from "@/components/monitoring/ErrorTable";
@@ -52,12 +52,10 @@ export const Route = createFileRoute(
 function CardsSkeleton() {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {Array.from({ length: 4 }).map((_, i) => (
-        <div
-          key={`skeleton-${i}`}
-          className="h-24 animate-pulse rounded-lg border bg-muted/30"
-        />
-      ))}
+      <div className="h-24 animate-pulse rounded-lg border bg-muted/30" />
+      <div className="h-24 animate-pulse rounded-lg border bg-muted/30" />
+      <div className="h-24 animate-pulse rounded-lg border bg-muted/30" />
+      <div className="h-24 animate-pulse rounded-lg border bg-muted/30" />
     </div>
   );
 }
@@ -119,37 +117,25 @@ function MonitoringPage() {
         <>
           {/* Stats cards */}
           <div className="mt-6">
-            <Suspense fallback={<CardsSkeleton />}>
-              <StatsCards since={range.since} until={range.until} />
-            </Suspense>
+            <StatsCards since={range.since} until={range.until} />
           </div>
 
           {/* Monthly runs usage */}
           <div className="mt-6">
-            <Suspense
-              fallback={
-                <div className="h-24 animate-pulse rounded-lg border bg-muted/30" />
-              }
-            >
-              <MonthlyRunsCard
-                runsPerMonthLimit={limits.runsPerMonth}
-                workspaceSlug={workspaceSlug}
-              />
-            </Suspense>
+            <MonthlyRunsCard
+              runsPerMonthLimit={limits.runsPerMonth}
+              workspaceSlug={workspaceSlug}
+            />
           </div>
 
           {/* Timeline chart */}
           <div className="mt-6">
-            <Suspense fallback={<TimelineSkeleton />}>
-              <ExecutionTimeline since={range.since} until={range.until} />
-            </Suspense>
+            <ExecutionTimeline since={range.since} until={range.until} />
           </div>
 
           {/* Error table */}
           <div className="mt-6">
-            <Suspense fallback={<TableSkeleton />}>
-              <ErrorTable since={range.since} />
-            </Suspense>
+            <ErrorTable since={range.since} />
           </div>
         </>
       ) : (

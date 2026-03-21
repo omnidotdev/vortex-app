@@ -49,7 +49,7 @@ const eventsProvider = {
 };
 
 export const Route = createFileRoute("/_app")({
-  loader: () => getSidebarState(),
+  loader: async () => await getSidebarState(),
   beforeLoad: async ({ params, context: { session } }) => {
     // If session doesn't exist or rowId is missing, clear the stale session
     // and redirect to landing. The user may exist in the identity provider
@@ -92,13 +92,24 @@ export const Route = createFileRoute("/_app")({
 });
 
 function AuthenticatedLayout() {
-  const { defaultOpen, sidebarWidth } = Route.useLoaderData();
+  const loaderData = Route.useLoaderData();
 
   // Hide AppSidebar when in workflow editor (it has its own sidebar)
   const matches = useMatches();
   const isWorkflowEditor = matches.some((match) =>
     match.routeId.includes("/workflows/$workflowId"),
   );
+
+  // Guard against undefined loader data during hydration race
+  if (!loaderData) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
+    );
+  }
+
+  const { defaultOpen, sidebarWidth } = loaderData;
 
   return (
     <EventsProvider provider={eventsProvider}>

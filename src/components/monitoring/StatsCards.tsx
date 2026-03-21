@@ -1,9 +1,18 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Activity, CheckCircle2, GitBranch, XCircle } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import {
+  Activity,
+  AlertCircle,
+  CheckCircle2,
+  GitBranch,
+  Loader2,
+  XCircle,
+} from "lucide-react";
 
+import { StatsAccessError } from "@/lib/errors/statsAccess";
 import { orgStatsOptions } from "@/lib/options/stats.options";
 import computeSuccessRate from "@/lib/util/computeSuccessRate";
 import { cn } from "@/lib/utils";
+import StatsAccessDenied from "./StatsAccessDenied";
 
 import type { DateRange } from "./types";
 
@@ -30,7 +39,33 @@ function successRateColor(rate: number, hasResolved: boolean): string {
  * Stats summary cards row for the monitoring dashboard.
  */
 function StatsCards({ since, until }: DateRange) {
-  const { data: stats } = useSuspenseQuery(orgStatsOptions({ since, until }));
+  const {
+    data: stats,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(orgStatsOptions({ since, until }));
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center rounded-lg border py-12">
+        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (error instanceof StatsAccessError) {
+    return <StatsAccessDenied />;
+  }
+
+  if (isError || !stats) {
+    return (
+      <div className="flex flex-col items-center gap-2 rounded-lg border py-12 text-muted-foreground">
+        <AlertCircle className="h-5 w-5" />
+        <p className="text-sm">Failed to load stats</p>
+      </div>
+    );
+  }
 
   const hasResolved = stats.succeeded + stats.failed > 0;
   const successRate = computeSuccessRate(stats.succeeded, stats.failed);

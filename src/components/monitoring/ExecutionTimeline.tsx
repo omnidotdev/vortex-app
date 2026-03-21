@@ -1,4 +1,5 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { AlertCircle, Loader2 } from "lucide-react";
 import { useMemo } from "react";
 import {
   Area,
@@ -9,7 +10,9 @@ import {
   YAxis,
 } from "recharts";
 
+import { StatsAccessError } from "@/lib/errors/statsAccess";
 import { timelineStatsOptions } from "@/lib/options/stats.options";
+import StatsAccessDenied from "./StatsAccessDenied";
 
 import type { DateRange } from "./types";
 
@@ -45,18 +48,42 @@ function formatXAxis(timestamp: string, bucket: "day" | "hour"): string {
 function ExecutionTimeline({ since, until }: DateRange) {
   const bucket = getBucket(since, until);
 
-  const { data: timeline } = useSuspenseQuery(
-    timelineStatsOptions({ since, until, bucket }),
-  );
+  const {
+    data: timeline,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(timelineStatsOptions({ since, until, bucket }));
 
   const chartData = useMemo(
     () =>
-      timeline.data.map((point) => ({
+      timeline?.data.map((point) => ({
         ...point,
         label: formatXAxis(point.timestamp, bucket),
-      })),
-    [timeline.data, bucket],
+      })) ?? [],
+    [timeline?.data, bucket],
   );
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center rounded-lg border py-12">
+        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (error instanceof StatsAccessError) {
+    return <StatsAccessDenied />;
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center gap-2 rounded-lg border py-12 text-muted-foreground">
+        <AlertCircle className="h-5 w-5" />
+        <p className="text-sm">Failed to load timeline</p>
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-lg border p-4">
