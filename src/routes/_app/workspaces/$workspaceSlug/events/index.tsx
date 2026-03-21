@@ -152,10 +152,10 @@ function EventSchemasPage() {
                 {source}
               </h2>
               <div className="overflow-x-auto">
-                <table className="w-full table-fixed">
+                <table className="w-full">
                   <thead>
                     <tr className="border-b text-left text-muted-foreground text-sm">
-                      <th className="w-64 pb-3 font-medium">Name</th>
+                      <th className="min-w-0 pb-3 font-medium">Name</th>
                       <th className="w-24 pb-3 font-medium">Version</th>
                       <th className="hidden w-24 pb-3 font-medium sm:table-cell">
                         Enforcement
@@ -169,13 +169,13 @@ function EventSchemasPage() {
                       <th className="hidden w-40 pb-3 text-right font-medium md:table-cell">
                         Updated
                       </th>
-                      <th className="w-24 pb-3" />
+                      <th className="hidden w-24 pb-3 sm:table-cell" />
                     </tr>
                   </thead>
                   <tbody>
                     {sourceSchemas.map((schema) => (
                       <tr key={schema.rowId} className="border-b">
-                        <td className="py-4">
+                        <td className="max-w-0 truncate py-4">
                           <Link
                             to="/workspaces/$workspaceSlug/events/$schemaName"
                             params={{
@@ -221,7 +221,7 @@ function EventSchemasPage() {
                         >
                           {new Date(schema.updatedAt).toLocaleDateString()}
                         </td>
-                        <td className="py-4 text-right">
+                        <td className="hidden py-4 text-right sm:table-cell">
                           <Button variant="ghost" size="sm" asChild>
                             <Link
                               to="/workspaces/$workspaceSlug/events/sandbox"

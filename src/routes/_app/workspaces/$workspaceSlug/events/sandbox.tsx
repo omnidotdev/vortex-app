@@ -117,7 +117,33 @@ function EventSandboxPage() {
       setError(null);
     },
     onError: (err) => {
-      setError(err instanceof Error ? err.message : "Failed to publish event");
+      // Extract a user-friendly message from GraphQL errors without
+      // leaking raw query structure or internal stack traces
+      let message = "Failed to publish event";
+
+      if (err instanceof Error) {
+        // graphql-request ClientError embeds server errors in response.errors
+        const clientErr = err as Error & {
+          response?: {
+            errors?: Array<{ message?: string; extensions?: { code?: string } }>;
+          };
+        };
+
+        const gqlError = clientErr.response?.errors?.[0];
+        if (gqlError?.message) {
+          message = gqlError.message;
+        } else if (
+          err.message &&
+          !err.message.includes("{") &&
+          err.message.length < 200
+        ) {
+          // Use the raw message only if it looks like a clean string
+          // (not a serialized JSON blob or a stack trace)
+          message = err.message;
+        }
+      }
+
+      setError(message);
       setResult(null);
     },
   });
@@ -258,6 +284,11 @@ function EventSandboxPage() {
               Select an event type and send to see the response.
             </p>
           )}
+          <p className="mt-4 text-muted-foreground text-xs">
+            The sandbox requires a running workflow execution backend (Hatchet
+            or Temporal) to dispatch triggered workflows. Events are recorded
+            even if no backend is available.
+          </p>
         </div>
       </div>
     </div>

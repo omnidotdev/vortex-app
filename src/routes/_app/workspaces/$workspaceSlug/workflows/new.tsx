@@ -1,4 +1,9 @@
-import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  notFound,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router";
 import {
   Clock,
   FileText,
@@ -10,6 +15,16 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   useCreateWorkflowMutation,
@@ -580,6 +595,7 @@ type Tab = "scratch" | "template";
 function NewWorkflowPage() {
   const { workspaceSlug } = Route.useParams();
   const { organizationId } = Route.useLoaderData();
+  const router = useRouter();
   const navigate = useNavigate();
 
   const [tab, setTab] = useState<Tab>("template");
@@ -589,6 +605,9 @@ function NewWorkflowPage() {
   const [creatingTemplateId, setCreatingTemplateId] = useState<string | null>(
     null,
   );
+  const [confirmTemplate, setConfirmTemplate] = useState<
+    (typeof templates)[0] | null
+  >(null);
 
   const { mutate: createWorkflow, isPending } = useCreateWorkflowMutation({
     meta: {
@@ -597,9 +616,11 @@ function NewWorkflowPage() {
     onSuccess: (data) => {
       const workflowId = data.createWorkflow?.workflow?.rowId;
       if (workflowId) {
-        navigate({
+        // Use router.navigate (stable ref) to avoid stale closure from useNavigate
+        router.navigate({
           to: "/workspaces/$workspaceSlug/workflows/$workflowId",
           params: { workspaceSlug, workflowId },
+          replace: true,
         });
       } else {
         setError(
@@ -632,16 +653,23 @@ function NewWorkflowPage() {
   };
 
   const handleUseTemplate = (template: (typeof templates)[0]) => {
+    setConfirmTemplate(template);
+  };
+
+  const handleConfirmTemplate = () => {
+    if (!confirmTemplate) return;
+
     setError(null);
-    setCreatingTemplateId(template.id);
+    setCreatingTemplateId(confirmTemplate.id);
+    setConfirmTemplate(null);
 
     createWorkflow({
       input: {
         workflow: {
           organizationId,
-          name: template.name,
-          description: template.description,
-          definition: template.definition,
+          name: confirmTemplate.name,
+          description: confirmTemplate.description,
+          definition: confirmTemplate.definition,
           isActive: true,
         },
       },
@@ -791,6 +819,33 @@ function NewWorkflowPage() {
           </div>
         </form>
       )}
+
+      {/* Template confirmation dialog */}
+      <AlertDialog
+        open={!!confirmTemplate}
+        onOpenChange={(open) => {
+          if (!open) setConfirmTemplate(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Create from "{confirmTemplate?.name}"?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              This will create a new workflow using the{" "}
+              <strong>{confirmTemplate?.name}</strong> template. You can
+              customize it in the editor afterward.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmTemplate}>
+              Create Workflow
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

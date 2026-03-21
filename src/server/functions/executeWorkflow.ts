@@ -42,7 +42,12 @@ export const executeWorkflow = createServerFn({ method: "POST" })
     const result = await res.json();
 
     if (!res.ok) {
-      throw new Error(result.error ?? "Trigger failed");
+      const error = new Error(result.error ?? "Trigger failed");
+
+      // Attach HTTP status so the client can distinguish permission/limit
+      // errors from generic failures
+      (error as Error & { status: number }).status = res.status;
+      throw error;
     }
 
     return { success: true, ...result };

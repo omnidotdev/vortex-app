@@ -32,14 +32,16 @@ function statsRetryDelay(failureCount: number, _error: Error): number {
 
 /**
  * Determine whether a failed stats query should be retried.
- * Stop retrying after 3 attempts; never retry client errors other than 429.
+ * Never retry access-denied (403); stop after 3 attempts for others.
  */
 function statsRetry(failureCount: number, error: Error): boolean {
+  // Access denied — never retry, the UI handles this gracefully
+  if (error instanceof StatsAccessError) return false;
   if (failureCount >= 3) return false;
   // Rate-limited — retry with backoff
   if (error.message.includes("429")) return true;
   // Other client errors (4xx) — do not retry
-  if (error.message.includes("40")) return false;
+  if (error.message.match(/\(4\d{2}\)/)) return false;
   // Server errors or network failures — retry
   return true;
 }
@@ -52,6 +54,9 @@ const statsDefaults = {
   refetchOnWindowFocus: false as const,
   retry: statsRetry,
   retryDelay: statsRetryDelay,
+  // Prevent errors (especially expected 403s) from propagating to error
+  // boundaries — each component handles its own error state inline
+  throwOnError: false as const,
 };
 
 /**

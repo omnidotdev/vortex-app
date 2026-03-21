@@ -795,11 +795,48 @@ function WorkflowEditorPage() {
       logToDebugPane("action", "Workflow execution failed", {
         error: message,
       });
-      toast.error(`Execution failed: ${message}`);
+
+      // Detect permission/entitlement errors and show upgrade prompt
+      const httpStatus =
+        err && typeof err === "object" && "status" in err
+          ? (err as { status: number }).status
+          : undefined;
+      const isPermissionError =
+        httpStatus === 403 ||
+        message.toLowerCase().includes("forbidden") ||
+        message.toLowerCase().includes("insufficient permissions");
+      const isLimitError =
+        httpStatus === 429 ||
+        message.toLowerCase().includes("limit reached") ||
+        message.toLowerCase().includes("upgrade your plan");
+
+      if (isPermissionError || isLimitError) {
+        toast.error(
+          isLimitError
+            ? "Monthly run limit reached"
+            : "Upgrade required to execute workflows",
+          {
+            description: isLimitError
+              ? "You've used all your runs for this month. Upgrade your plan for more."
+              : "Your current plan doesn't include workflow execution. Upgrade to get started.",
+            action: {
+              label: "Upgrade",
+              onClick: () =>
+                navigate({
+                  to: "/workspaces/$workspaceSlug/settings",
+                  params: { workspaceSlug },
+                }),
+            },
+            duration: 8000,
+          },
+        );
+      } else {
+        toast.error(`Execution failed: ${message}`);
+      }
     } finally {
       setIsExecuting(false);
     }
-  }, [workflowId, workflow.name, logToDebugPane]);
+  }, [workflowId, workflow.name, logToDebugPane, navigate, workspaceSlug]);
 
   // Execute connected actions from a trigger node
   const executeConnectedActions = useCallback(
@@ -858,18 +895,24 @@ function WorkflowEditorPage() {
   );
 
   // Handle node deletion
+  // Use a ref for selectedNode to avoid re-creating this callback on every
+  // selection change, which would cascade into the node-enrichment effect and
+  // trigger unnecessary autosaves / query invalidations
+  const selectedNodeRef = useRef(selectedNode);
+  selectedNodeRef.current = selectedNode;
+
   const handleDeleteNode = useCallback(
     (nodeId: string) => {
       setNodes((nds) => nds.filter((n) => n.id !== nodeId));
       setEdges((eds) =>
         eds.filter((e) => e.source !== nodeId && e.target !== nodeId),
       );
-      if (selectedNode?.id === nodeId) {
+      if (selectedNodeRef.current?.id === nodeId) {
         setSelectedNode(null);
       }
       logToDebugPane("action", "Node deleted", { nodeId });
     },
-    [setNodes, setEdges, selectedNode, logToDebugPane],
+    [setNodes, setEdges, logToDebugPane],
   );
 
   // Handle integration configuration - navigate to integrations page to connect
@@ -1464,7 +1507,7 @@ function WorkflowEditorPage() {
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <h1
-                className="max-w-[120px] truncate font-semibold text-sm sm:max-w-[200px] sm:text-base md:max-w-[400px] lg:max-w-none"
+                className="max-w-[200px] truncate font-semibold text-sm sm:max-w-[200px] sm:text-base md:max-w-[400px] lg:max-w-none"
                 title={workflow.name}
               >
                 {workflow.name}
@@ -1582,7 +1625,11 @@ function WorkflowEditorPage() {
             )}
           </div>
         </div>
-        <div className="flex shrink-0 items-center gap-0.5 sm:gap-1 md:gap-2">
+        {/* Stop toolbar clicks from bubbling into ReactFlow pane handlers */}
+        <div
+          className="flex shrink-0 items-center gap-0.5 sm:gap-1 md:gap-2"
+          onClick={(e) => e.stopPropagation()}
+        >
           {error && (
             <span className="hidden text-red-500 text-sm md:inline">
               {error}
@@ -1604,6 +1651,7 @@ function WorkflowEditorPage() {
             onClick={handleExecute}
             disabled={isExecuting}
             aria-label="Execute workflow"
+            className="hidden sm:flex"
           >
             {isExecuting ? (
               <Loader2 className="h-4 w-4 animate-spin lg:mr-1" />
@@ -1616,6 +1664,7 @@ function WorkflowEditorPage() {
             variant={showRunsPanel ? "default" : "outline"}
             size="sm"
             aria-label="View runs"
+            className="hidden sm:flex"
             onClick={() => {
               setShowRunsPanel(!showRunsPanel);
               setShowVersionHistory(false);
@@ -1695,6 +1744,32 @@ function WorkflowEditorPage() {
             </MenuTrigger>
             <MenuPositioner>
               <MenuContent>
+                <MenuItem
+                  value="execute"
+                  onClick={handleExecute}
+                  disabled={isExecuting}
+                  className="sm:hidden"
+                >
+                  <PlayCircle className="h-4 w-4" />
+                  <MenuItemText>
+                    {isExecuting ? "Executing..." : "Execute"}
+                  </MenuItemText>
+                </MenuItem>
+                <MenuItem
+                  value="runs"
+                  onClick={() => {
+                    setShowRunsPanel(!showRunsPanel);
+                    setShowVersionHistory(false);
+                    setShowMonitoring(false);
+                    setShowRightSidebar(true);
+                    if (!showRunsPanel) setSelectedNode(null);
+                  }}
+                  className="sm:hidden"
+                >
+                  <History className="h-4 w-4" />
+                  <MenuItemText>Runs</MenuItemText>
+                </MenuItem>
+                <MenuSeparator className="sm:hidden" />
                 <MenuItem
                   value="versions"
                   onClick={() => {
@@ -1846,8 +1921,11 @@ function WorkflowEditorPage() {
             <Button
               variant="ghost"
               size="sm"
-              className="absolute top-2 right-2 z-10 hidden bg-background/80 backdrop-blur-sm md:flex"
-              onClick={() => setShowRightSidebar(!showRightSidebar)}
+              className="absolute top-2 right-2 z-50 hidden bg-background/80 backdrop-blur-sm md:flex"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowRightSidebar(!showRightSidebar);
+              }}
             >
               <PanelRightClose
                 className={`h-4 w-4 transition-transform ${showRightSidebar ? "" : "rotate-180"}`}
@@ -1912,6 +1990,7 @@ function WorkflowEditorPage() {
               <div
                 className="fade-in-0 zoom-in-95 fixed z-50 min-w-[160px] animate-in overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
                 style={{ left: contextMenu.x, top: contextMenu.y }}
+                onClick={(e) => e.stopPropagation()}
               >
                 {contextMenu.type === "node" && contextMenu.nodeId && (
                   <>
@@ -1976,7 +2055,10 @@ function WorkflowEditorPage() {
             )}
 
             {/* Floating Add Node Button */}
-            <div className="absolute right-4 bottom-4 z-20">
+            <div
+              className="absolute right-4 bottom-4 z-20"
+              onClick={(e) => e.stopPropagation()}
+            >
               <AddNodeButton
                 organizationId={organizationId}
                 onAddNode={handleAddNode}
@@ -2033,7 +2115,7 @@ function WorkflowEditorPage() {
             <Button
               variant="ghost"
               size="sm"
-              className="absolute top-2 right-2 z-10 md:hidden"
+              className="absolute top-2 right-2 z-50 md:hidden"
               onClick={() => setShowRightSidebar(false)}
             >
               <X className="h-4 w-4" />

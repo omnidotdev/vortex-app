@@ -625,7 +625,7 @@ function WorkspaceSettingsPage() {
             </div>
             <div>
               <label className="font-medium text-sm">Slug</label>
-              <p className="mt-1 font-mono text-muted-foreground text-sm">
+              <p className="mt-1 text-muted-foreground text-sm">
                 {workspaceSlug}
               </p>
             </div>

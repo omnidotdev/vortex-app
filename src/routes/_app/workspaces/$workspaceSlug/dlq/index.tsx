@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useRouteContext } from "@tanstack/react-router";
 import {
+  AlertCircle,
   AlertTriangle,
   Archive,
   Loader2,
@@ -113,7 +114,7 @@ async function bulkDiscard(
  * Stats bar showing aggregate DLQ metrics.
  */
 function DlqStatsBar() {
-  const { data: stats, isLoading } = useQuery(dlqStatsOptions());
+  const { data: stats, isLoading, isError } = useQuery(dlqStatsOptions());
 
   if (isLoading) {
     return (
@@ -129,7 +130,14 @@ function DlqStatsBar() {
     );
   }
 
-  if (!stats) return null;
+  if (isError || !stats) {
+    return (
+      <div className="flex flex-col items-center gap-2 rounded-lg border py-12 text-muted-foreground">
+        <AlertCircle className="h-5 w-5" />
+        <p className="text-sm">Failed to load DLQ stats</p>
+      </div>
+    );
+  }
 
   return (
     <div className="grid gap-4 sm:grid-cols-3">
@@ -301,6 +309,7 @@ function DlqDashboard() {
     data: eventsData,
     isLoading,
     isFetching,
+    isError: isEventsError,
   } = useQuery(dlqEventsOptions(activeFilters));
 
   const events = eventsData?.nodes ?? [];
@@ -482,7 +491,22 @@ function DlqDashboard() {
                 </tr>
               )}
 
-              {!isLoading && events.length === 0 && (
+              {!isLoading && isEventsError && (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="py-12 text-center text-muted-foreground"
+                  >
+                    <AlertCircle className="mx-auto mb-2 h-8 w-8" />
+                    <p>Failed to load dead-letter events</p>
+                    <p className="mt-1 text-xs">
+                      Check your connection and try refreshing
+                    </p>
+                  </td>
+                </tr>
+              )}
+
+              {!isLoading && !isEventsError && events.length === 0 && (
                 <tr>
                   <td
                     colSpan={6}
