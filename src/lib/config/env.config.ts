@@ -26,13 +26,13 @@ export const AUTH_CLIENT_SECRET = serverEnv.AUTH_CLIENT_SECRET as
   | string
   | undefined;
 
-// feature flags (client-safe)
-export const FLAGS_API_HOST = clientEnv.VITE_FLAGS_API_HOST as
-  | string
-  | undefined;
-export const FLAGS_CLIENT_KEY = clientEnv.VITE_FLAGS_CLIENT_KEY as
-  | string
-  | undefined;
+// feature flags (used server-side via createServerFn, needs runtime fallback)
+export const FLAGS_API_HOST =
+  (clientEnv.VITE_FLAGS_API_HOST as string | undefined) ||
+  (serverEnv.VITE_FLAGS_API_HOST as string | undefined);
+export const FLAGS_CLIENT_KEY =
+  (clientEnv.VITE_FLAGS_CLIENT_KEY as string | undefined) ||
+  (serverEnv.VITE_FLAGS_CLIENT_KEY as string | undefined);
 
 // self-hosted mode (use VITE_ prefix so value is consistent across SSR and client)
 export const VITE_SELF_HOSTED = clientEnv.VITE_SELF_HOSTED as
