@@ -27,6 +27,13 @@ const appGuardShouldReject = (session: Session) => !session?.user?.rowId;
 // Condition from _public/index.tsx beforeLoad: redirect to "/workspaces" when this is true
 const publicGuardShouldRedirect = (session: Session) => !!session?.user?.rowId;
 
+// Condition from _public/index.tsx beforeLoad: clear zombie session when this is true
+const publicGuardShouldClearSession = (session: Session) =>
+  !!session?.user && !session.user.rowId;
+
+// Condition from _public.tsx layout: show "Sign Out" when this is true
+const publicLayoutShowsSignOut = (session: Session) => !!session?.user?.rowId;
+
 describe("redirect guards", () => {
   it("should not create a redirect loop for IdP-only users (no rowId)", () => {
     // User authenticated in IdP but not provisioned in Vortex DB
@@ -104,5 +111,39 @@ describe("redirect guards", () => {
       expect(appGuardShouldReject(session)).toBe(true);
       expect(publicGuardShouldRedirect(session)).toBe(false);
     }
+  });
+
+  it("should clear zombie sessions (session exists but no rowId)", () => {
+    // User in IdP but not provisioned in Vortex DB
+    const zombieSession: Session = {
+      user: {
+        id: "better-auth-id",
+        email: "test@example.com",
+        rowId: null,
+      },
+    };
+
+    // Should clear session (prevent confusing "Sign Out" dead-end)
+    expect(publicGuardShouldClearSession(zombieSession)).toBe(true);
+
+    // Layout should NOT show "Sign Out" for zombie sessions
+    expect(publicLayoutShowsSignOut(zombieSession)).toBe(false);
+  });
+
+  it("should not clear session for unauthenticated users", () => {
+    expect(publicGuardShouldClearSession(null)).toBe(false);
+    expect(publicGuardShouldClearSession({ user: null })).toBe(false);
+  });
+
+  it("should not clear session for fully provisioned users", () => {
+    const session: Session = {
+      user: {
+        id: "better-auth-id",
+        rowId: "vortex-db-uuid",
+      },
+    };
+
+    expect(publicGuardShouldClearSession(session)).toBe(false);
+    expect(publicLayoutShowsSignOut(session)).toBe(true);
   });
 });

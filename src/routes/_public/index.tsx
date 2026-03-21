@@ -16,14 +16,22 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import authClient from "@/lib/auth/authClient";
 import app from "@/lib/config/app.config";
+import { signOutLocal } from "@/server/functions/auth";
 
 import type { ReactNode } from "react";
 
 export const Route = createFileRoute("/_public/")({
-  beforeLoad: ({ context: { session } }) => {
-    // Only redirect if user is fully provisioned (has rowId in Vortex DB)
-    // to avoid redirect loop with _app guard which requires rowId
+  beforeLoad: async ({ context: { session } }) => {
+    // Redirect fully provisioned users to the authenticated area
     if (session?.user?.rowId) throw redirect({ to: "/workspaces" });
+
+    // Clear zombie sessions: user exists in IDP but rowId is missing
+    // (not provisioned in Vortex DB, or getAuth failed to enrich session).
+    // Without this, the public layout shows "Sign Out" but the user can't
+    // reach /workspaces, creating a confusing dead-end state.
+    if (session?.user) {
+      await signOutLocal();
+    }
   },
   component: LandingPage,
 });
