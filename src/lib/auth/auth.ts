@@ -25,10 +25,11 @@ const auth = betterAuth({
   secret: AUTH_SECRET,
   // Trust the app's own origin for auth requests
   trustedOrigins: SERVER_BASE_URL ? [SERVER_BASE_URL] : [],
-  // Persist sessions in Valkey so they survive pod restarts.
-  // Without this, the in-memory adapter loses all sessions on restart,
-  // causing silent session expiry after ~5 minutes.
-  secondaryStorage: createSecondaryStorage(),
+  // TODO: re-enable secondaryStorage once getAccessToken is compatible
+  // secondaryStorage: createSecondaryStorage(),
+  emailAndPassword: {
+    enabled: false,
+  },
   advanced: {
     // use custom cookie prefix to avoid collision with IDP cookies
     cookiePrefix: "vortex",
