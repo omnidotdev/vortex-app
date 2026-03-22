@@ -27,14 +27,22 @@ export async function proxyToGatekeeper(
     headers["Content-Type"] = "application/json";
   }
 
-  const res = await fetch(url, {
-    method: request.method,
-    headers,
-    body: isPost ? await request.text() : undefined,
-  });
+  try {
+    const res = await fetch(url, {
+      method: request.method,
+      headers,
+      body: isPost ? await request.text() : undefined,
+    });
 
-  return new Response(res.body, {
-    status: res.status,
-    headers: { "Content-Type": "application/json" },
-  });
+    return new Response(res.body, {
+      status: res.status,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (err) {
+    console.error("[gatekeeperProxy] Failed to proxy request:", err);
+    return Response.json(
+      { error: "Failed to reach authentication service" },
+      { status: 502 },
+    );
+  }
 }

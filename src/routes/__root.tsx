@@ -31,8 +31,22 @@ import type { Theme } from "@/providers/ThemeProvider";
 const fetchSessionAndMaintenanceMode = createServerFn({
   method: "GET",
 }).handler(async () => {
-  const { session } = await fetchSession();
-  const { isMaintenanceMode } = await fetchMaintenanceMode();
+  let session = null;
+  let isMaintenanceMode = false;
+
+  try {
+    const result = await fetchSession();
+    session = result.session;
+  } catch (err) {
+    console.error("[root] Failed to fetch session:", err);
+  }
+
+  try {
+    const result = await fetchMaintenanceMode();
+    isMaintenanceMode = result.isMaintenanceMode;
+  } catch (err) {
+    console.error("[root] Failed to fetch maintenance mode:", err);
+  }
 
   return { session, isMaintenanceMode };
 });

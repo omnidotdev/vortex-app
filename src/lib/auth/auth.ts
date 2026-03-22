@@ -87,14 +87,18 @@ const auth = betterAuth({
       let identityProviderId: string | null = null;
       let organizations: OrganizationClaim[] = [];
 
-      const cachedValue = getCookie(authCache.cookieName);
-      if (cachedValue) {
-        const cached = await authCache.decrypt(cachedValue);
-        if (cached) {
-          rowId = cached.rowId;
-          identityProviderId = cached.identityProviderId;
-          organizations = cached.organizations;
+      try {
+        const cachedValue = getCookie(authCache.cookieName);
+        if (cachedValue) {
+          const cached = await authCache.decrypt(cachedValue);
+          if (cached) {
+            rowId = cached.rowId;
+            identityProviderId = cached.identityProviderId;
+            organizations = cached.organizations;
+          }
         }
+      } catch (err) {
+        console.error("[auth] Failed to read auth cache cookie:", err);
       }
 
       // If cache miss, getAuth() will sync with the API and populate the cache
