@@ -4,7 +4,6 @@ import { customSession, genericOAuth } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 
 import { authCache } from "@/lib/auth/authCache";
-import { createSecondaryStorage } from "@/lib/cache/client";
 import {
   AUTH_CLIENT_ID,
   AUTH_CLIENT_SECRET,
