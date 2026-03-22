@@ -123,7 +123,7 @@ function MonitoringPage() {
           {/* Monthly runs usage */}
           <div className="mt-6">
             <MonthlyRunsCard
-              runsPerMonthLimit={limits.runsPerMonth}
+              runsPerMonthLimit={limits.executionsPerMonth}
               workspaceSlug={workspaceSlug}
             />
           </div>

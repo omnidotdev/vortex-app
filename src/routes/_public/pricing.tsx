@@ -32,7 +32,7 @@ const STARTER_PRODUCT = {
     "\uD83C\uDF2A\uFE0F Workflow automation for the decentralized web",
   marketing_features: [
     { name: "25 workflows" },
-    { name: "10,000 runs/month" },
+    { name: "10,000 executions/month" },
     { name: "All integrations" },
     { name: "2 users" },
     { name: "Email support" },
@@ -64,7 +64,7 @@ const PRO_PRODUCT = {
     "\uD83C\uDF2A\uFE0F Advanced workflow automation with full platform access",
   marketing_features: [
     { name: "Unlimited workflows" },
-    { name: "50,000 runs/month" },
+    { name: "50,000 executions/month" },
     { name: "All integrations" },
     { name: "5 users" },
     { name: "Priority support" },
@@ -98,7 +98,7 @@ const TEAM_PRODUCT = {
     "\uD83C\uDF2A\uFE0F Workflow automation at scale for organizations",
   marketing_features: [
     { name: "Unlimited workflows" },
-    { name: "500,000 runs/month" },
+    { name: "500,000 executions/month" },
     { name: "All integrations" },
     { name: "25 users" },
     { name: "Priority support" },

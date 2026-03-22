@@ -3,42 +3,42 @@ import type { Price } from "@/lib/providers/billing";
 /** Numeric plan limits by tier */
 export type PlanLimits = {
   workflows: number | null;
-  runsPerMonth: number | null;
+  executionsPerMonth: number | null;
   plugins: boolean;
 };
 
 /** Default limits for the free tier */
 export const FREE_LIMITS: PlanLimits = {
   workflows: 5,
-  runsPerMonth: 1_000,
+  executionsPerMonth: 1_000,
   plugins: false,
 };
 
 /** Limits for the starter tier */
 export const STARTER_LIMITS: PlanLimits = {
   workflows: 25,
-  runsPerMonth: 10_000,
+  executionsPerMonth: 10_000,
   plugins: false,
 };
 
 /** Limits for the pro tier */
 export const PRO_LIMITS: PlanLimits = {
   workflows: null,
-  runsPerMonth: 50_000,
+  executionsPerMonth: 50_000,
   plugins: true,
 };
 
 /** Limits for the team tier */
 export const TEAM_LIMITS: PlanLimits = {
   workflows: null,
-  runsPerMonth: 500_000,
+  executionsPerMonth: 500_000,
   plugins: true,
 };
 
 /** Limits for self-hosted deployments (unlimited) */
 export const SELF_HOSTED_LIMITS: PlanLimits = {
   workflows: null,
-  runsPerMonth: null,
+  executionsPerMonth: null,
   plugins: true,
 };
 
@@ -73,7 +73,7 @@ export const FREE_PRICE: Price = {
     description: "For individuals exploring automation",
     marketing_features: [
       { name: "5 workflows" },
-      { name: "1,000 runs/month" },
+      { name: "1,000 executions/month" },
       { name: "All integrations" },
       { name: "1 user" },
       { name: "Community support" },
@@ -89,7 +89,7 @@ export const FREE_TIER_FEATURES = FREE_PRICE.product.marketing_features.map(
 /** Features available in self-hosted deployments */
 export const SELF_HOSTED_FEATURES = [
   "Unlimited workflows",
-  "Unlimited runs",
+  "Unlimited executions",
   "Unlimited integrations",
   "Unlimited users",
   "SSO/SAML",
