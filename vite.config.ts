@@ -24,7 +24,7 @@ const viteConfig = defineConfig(({ command }) => ({
     tanstackStart(),
     nitroV2Plugin({
       preset: "node-server",
-      externals: { inline: ["srvx", "react-dom"] },
+      externals: { inline: ["srvx", "react-dom", "better-auth"] },
     }),
   ],
 }));
