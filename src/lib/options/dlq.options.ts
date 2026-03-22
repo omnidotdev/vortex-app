@@ -45,9 +45,7 @@ const dlqEventsOptions = (filters: DlqFilters) =>
       if (filters.errorCode) params.set("errorCode", filters.errorCode);
       if (filters.eventType) params.set("eventType", filters.eventType);
 
-      return fetchDlq<DlqListResponse>(
-        `/api/v1/dlq?${params.toString()}`,
-      );
+      return fetchDlq<DlqListResponse>(`/api/v1/dlq?${params.toString()}`);
     },
     retry: dlqRetry,
   });

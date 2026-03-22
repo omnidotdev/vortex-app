@@ -1,5 +1,6 @@
-import { render, screen, cleanup } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "bun:test";
+
+import { cleanup, render, screen } from "@testing-library/react";
 
 /**
  * Test that the workspace slug display in settings does NOT use font-mono.
@@ -25,7 +26,10 @@ function renderGeneralSection() {
         </div>
         <div>
           <label className="font-medium text-sm">Slug</label>
-          <p data-testid="slug-value" className="mt-1 text-muted-foreground text-sm">
+          <p
+            data-testid="slug-value"
+            className="mt-1 text-muted-foreground text-sm"
+          >
             {WORKSPACE_SLUG}
           </p>
         </div>

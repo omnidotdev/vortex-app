@@ -32,3 +32,4 @@ certificates
 !.env.production
 !.env.test
 !.env.local.template
+playwright-report/

@@ -125,7 +125,10 @@ function EventSandboxPage() {
         // graphql-request ClientError embeds server errors in response.errors
         const clientErr = err as Error & {
           response?: {
-            errors?: Array<{ message?: string; extensions?: { code?: string } }>;
+            errors?: Array<{
+              message?: string;
+              extensions?: { code?: string };
+            }>;
           };
         };
 

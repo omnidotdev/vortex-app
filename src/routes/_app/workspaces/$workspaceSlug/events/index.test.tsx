@@ -1,5 +1,6 @@
-import { cleanup, render } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "bun:test";
+
+import { cleanup, render } from "@testing-library/react";
 
 /**
  * Test the responsive column CSS classes used in the event catalog table.
@@ -58,7 +59,9 @@ function renderEventTable() {
             </a>
           </td>
           <td className="py-4">v{mockSchema.version}</td>
-          <td className="hidden py-4 sm:table-cell">{mockSchema.enforcement}</td>
+          <td className="hidden py-4 sm:table-cell">
+            {mockSchema.enforcement}
+          </td>
           <td className="hidden py-4 text-muted-foreground text-sm md:table-cell">
             {mockSchema.compatibilityMode}
           </td>

@@ -74,9 +74,7 @@ test.describe("template creation shows confirmation dialog", () => {
     await expect(dialog.getByText(/API Data Fetcher/)).toBeVisible();
 
     // Dialog should have Cancel and Create actions
-    await expect(
-      dialog.getByRole("button", { name: /cancel/i }),
-    ).toBeVisible();
+    await expect(dialog.getByRole("button", { name: /cancel/i })).toBeVisible();
     await expect(
       dialog.getByRole("button", { name: /create workflow/i }),
     ).toBeVisible();
@@ -153,11 +151,11 @@ test.describe("execute workflow 403 shows upgrade toast", () => {
 
     // Wait for a toast to appear — should show upgrade prompt, not generic error
     const upgradeToast = page
-      .locator('[data-sonner-toast]')
+      .locator("[data-sonner-toast]")
       .filter({ hasText: /upgrade/i })
       .first();
     const genericErrorToast = page
-      .locator('[data-sonner-toast]')
+      .locator("[data-sonner-toast]")
       .filter({ hasText: /unknown error|something went wrong/i })
       .first();
 
@@ -212,9 +210,7 @@ test.describe("DLQ error state", () => {
 
     // The stats bar should show an error indicator when API fails
     const statsError = page.getByText("Failed to load DLQ stats");
-    const eventsError = page.getByText(
-      "Failed to load dead-letter events",
-    );
+    const eventsError = page.getByText("Failed to load dead-letter events");
 
     const hasStatsError = await statsError.isVisible().catch(() => false);
     const hasEventsError = await eventsError.isVisible().catch(() => false);
@@ -288,9 +284,7 @@ test.describe("monitoring handles 403 gracefully", () => {
     ).toBeVisible({ timeout: 10_000 });
 
     // When stats return 403, the StatsAccessDenied component should render
-    const accessDenied = page.getByText(
-      "Monitoring data is not available",
-    );
+    const accessDenied = page.getByText("Monitoring data is not available");
     const genericError = page.getByText("Failed to load stats");
 
     const hasAccessDenied = await accessDenied.isVisible().catch(() => false);
