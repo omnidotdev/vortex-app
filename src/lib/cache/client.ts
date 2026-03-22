@@ -1,5 +1,6 @@
 /**
  * Cache client for session persistence.
+ * @knipignore
  *
  * Connects to Valkey/Redis when `CACHE_URL` is set. Without it, Better Auth
  * falls back to its in-memory adapter, which is lost on every pod restart.
