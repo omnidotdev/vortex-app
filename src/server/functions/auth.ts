@@ -53,12 +53,15 @@ export const signOutAndRedirect = createServerFn({ method: "POST" }).handler(
 /**
  * Build the IDP end_session URL for federated logout
  */
-export function getIdpLogoutUrl(): string | null {
+export function getIdpLogoutUrl(idTokenHint?: string): string | null {
   if (!SERVER_AUTH_BASE_URL || !AUTH_CLIENT_ID || !SERVER_BASE_URL) return null;
 
   const endSessionUrl = new URL(`${SERVER_AUTH_BASE_URL}/oauth2/end-session`);
   endSessionUrl.searchParams.set("client_id", AUTH_CLIENT_ID);
   endSessionUrl.searchParams.set("post_logout_redirect_uri", SERVER_BASE_URL);
+  if (idTokenHint) {
+    endSessionUrl.searchParams.set("id_token_hint", idTokenHint);
+  }
 
   return endSessionUrl.toString();
 }
@@ -70,10 +73,23 @@ export function getIdpLogoutUrl(): string | null {
 export const signOutLocal = createServerFn({ method: "POST" }).handler(
   async () => {
     const request = getRequest();
+    const headers = request.headers;
 
-    await auth.api.signOut({ headers: request.headers });
+    // Grab the ID token before we destroy the local session
+    let idToken: string | undefined;
+    try {
+      const tokenResult = await auth.api.getAccessToken({
+        body: { providerId: "omni" },
+        headers,
+      });
+      idToken = tokenResult?.idToken;
+    } catch {
+      // Token may already be expired — proceed with logout anyway
+    }
+
+    await auth.api.signOut({ headers });
     clearRowIdCacheCookie();
 
-    return { idpLogoutUrl: getIdpLogoutUrl() };
+    return { idpLogoutUrl: getIdpLogoutUrl(idToken) };
   },
 );
