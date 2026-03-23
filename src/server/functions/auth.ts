@@ -56,7 +56,7 @@ export const signOutAndRedirect = createServerFn({ method: "POST" }).handler(
 export function getIdpLogoutUrl(): string | null {
   if (!SERVER_AUTH_BASE_URL || !AUTH_CLIENT_ID || !SERVER_BASE_URL) return null;
 
-  const endSessionUrl = new URL(`${SERVER_AUTH_BASE_URL}/oauth2/endsession`);
+  const endSessionUrl = new URL(`${SERVER_AUTH_BASE_URL}/oauth2/end-session`);
   endSessionUrl.searchParams.set("client_id", AUTH_CLIENT_ID);
   endSessionUrl.searchParams.set("post_logout_redirect_uri", SERVER_BASE_URL);
 
