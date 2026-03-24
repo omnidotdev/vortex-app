@@ -137,15 +137,7 @@ export async function getAuth(request: Request) {
     } catch (err) {
       console.error("[getAuth] Token fetch error:", err);
 
-      const isBATokenError =
-        err &&
-        typeof err === "object" &&
-        "body" in err &&
-        typeof (err as { body: { code?: string } }).body?.code === "string" &&
-        (err as { body: { code: string } }).body.code ===
-          "FAILED_TO_GET_ACCESS_TOKEN";
-
-      if (isInvalidGrant(err) || isBATokenError) {
+      if (isInvalidGrant(err)) {
         console.warn("[getAuth] Invalid refresh token, clearing session");
         try {
           await auth.api.signOut({ headers: request.headers });
