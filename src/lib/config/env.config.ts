@@ -58,6 +58,14 @@ export const SERVER_AUTH_BASE_URL =
     ? (serverEnv.VITE_AUTH_BASE_URL as string | undefined) || AUTH_BASE_URL
     : AUTH_BASE_URL;
 
+// Internal auth URL for server-to-server communication (Docker service name)
+// Falls back to SERVER_AUTH_BASE_URL for non-Docker environments
+export const AUTH_INTERNAL_URL =
+  typeof window === "undefined"
+    ? (serverEnv.AUTH_INTERNAL_URL as string | undefined) ||
+      SERVER_AUTH_BASE_URL
+    : AUTH_BASE_URL;
+
 // Internal API URL for server-to-server communication (Docker service name)
 // Falls back to API_BASE_URL for non-Docker environments
 export const API_INTERNAL_URL =
