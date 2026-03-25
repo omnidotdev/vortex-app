@@ -87,3 +87,7 @@ if (typeof window === "undefined") {
   assertEnv("VITE_API_BASE_URL", API_BASE_URL);
   assertEnv("VITE_BASE_URL", BASE_URL);
 }
+
+// Startup warnings for optional integrations
+if (!BILLING_BASE_URL) console.warn("BILLING_BASE_URL not set, billing disabled");
+if (!FLAGS_API_HOST) console.warn("FLAGS_API_HOST not set, feature flags disabled");

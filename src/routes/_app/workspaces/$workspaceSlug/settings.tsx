@@ -35,10 +35,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { canPerformDestructiveAction, deriveRole } from "@/lib/auth/roles";
 import { hasBilling } from "@/lib/config/env.config";
-import {
-  DEFAULT_FEATURES,
-  FREE_TIER_FEATURES,
-} from "@/lib/constants/tiers";
+import { DEFAULT_FEATURES, FREE_TIER_FEATURES } from "@/lib/constants/tiers";
 import {
   getBillingPortalUrl,
   getSubscription,
