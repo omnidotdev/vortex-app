@@ -43,7 +43,11 @@ export const signOutAndRedirect = createServerFn({ method: "POST" }).handler(
   async () => {
     const request = getRequest();
 
-    await auth.api.signOut({ headers: request.headers });
+    try {
+      await auth.api.signOut({ headers: request.headers });
+    } catch {
+      // Session may already be cleared by getAuth invalid_grant handler
+    }
     clearRowIdCacheCookie();
 
     throw redirect({ to: "/" });
