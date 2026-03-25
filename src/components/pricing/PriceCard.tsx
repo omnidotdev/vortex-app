@@ -30,7 +30,7 @@ import {
   MenuTrigger,
 } from "@/components/ui/menu";
 import signIn from "@/lib/auth/signIn";
-import { BASE_URL, isSelfHosted } from "@/lib/config/env.config";
+import { BASE_URL, hasBilling } from "@/lib/config/env.config";
 import useDialogStore, { DialogType } from "@/lib/hooks/store/useDialogStore";
 import capitalizeFirstLetter from "@/lib/util/capitalizeFirstLetter";
 import { cn } from "@/lib/utils";
@@ -140,8 +140,8 @@ export const PriceCard = ({ price, orgSubscriptions = {} }: Props) => {
 
     if (!session) {
       // Not logged in - sign in first, redirect back to pricing with tier
-      if (isSelfHosted) {
-        // Self-hosted uses OAuth, redirect to home which triggers auth flow
+      if (!hasBilling) {
+        // No billing configured, redirect to home which triggers auth flow
         navigate({ to: "/" });
       } else {
         signIn({
@@ -167,8 +167,8 @@ export const PriceCard = ({ price, orgSubscriptions = {} }: Props) => {
       return;
     }
 
-    // Self-hosted mode - no billing, just go to workspaces
-    if (isSelfHosted) {
+    // No billing configured, just go to workspaces
+    if (!hasBilling) {
       navigate({ to: "/workspaces" });
       return;
     }
@@ -187,7 +187,7 @@ export const PriceCard = ({ price, orgSubscriptions = {} }: Props) => {
     !!session &&
     !isFreeTier &&
     !isEnterpriseTier &&
-    !isSelfHosted &&
+    hasBilling &&
     !!session.organizations?.length;
 
   const getButtonContent = () => {

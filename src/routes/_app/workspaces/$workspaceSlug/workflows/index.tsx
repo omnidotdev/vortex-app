@@ -48,8 +48,8 @@ import {
   useWorkflowsQuery,
 } from "@/generated/graphql";
 import { canPerformDestructiveAction } from "@/lib/auth/roles";
-import { isSelfHosted } from "@/lib/config/env.config";
-import { SELF_HOSTED_LIMITS, getLimitsForPlan } from "@/lib/constants/tiers";
+import { hasBilling } from "@/lib/config/env.config";
+import { DEFAULT_LIMITS, getLimitsForPlan } from "@/lib/constants/tiers";
 import workflowsOptions from "@/lib/options/workflows.options";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
 import { getSubscription } from "@/server/functions/subscriptions";
@@ -64,7 +64,7 @@ export const Route = createFileRoute(
 
     let subscription: Subscription | null = null;
 
-    if (!isSelfHosted) {
+    if (hasBilling) {
       try {
         subscription = await getSubscription({
           data: { organizationId },
@@ -97,8 +97,8 @@ function WorkflowsPage() {
     isActive: boolean;
   } | null>(null);
 
-  const limits = isSelfHosted
-    ? SELF_HOSTED_LIMITS
+  const limits = !hasBilling
+    ? DEFAULT_LIMITS
     : getLimitsForPlan(subscription?.product?.name);
 
   const { data: workflows } = useSuspenseQuery({

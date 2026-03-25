@@ -5,8 +5,8 @@ import { useMemo } from "react";
 
 import UsageCounter from "@/components/UsageCounter";
 import { Button } from "@/components/ui/button";
-import { isSelfHosted } from "@/lib/config/env.config";
-import { SELF_HOSTED_LIMITS, getLimitsForPlan } from "@/lib/constants/tiers";
+import { hasBilling } from "@/lib/config/env.config";
+import { DEFAULT_LIMITS, getLimitsForPlan } from "@/lib/constants/tiers";
 import {
   integrationDefinitionsOptions,
   integrationsOptions,
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_app/workspaces/$workspaceSlug/")({
 
     let subscription: Subscription | null = null;
 
-    if (!isSelfHosted) {
+    if (hasBilling) {
       try {
         subscription = await getSubscription({
           data: { organizationId },
@@ -52,8 +52,8 @@ function WorkspaceDashboard() {
   const organizationId = loaderData?.organizationId ?? "";
   const subscription = loaderData?.subscription;
 
-  const limits = isSelfHosted
-    ? SELF_HOSTED_LIMITS
+  const limits = !hasBilling
+    ? DEFAULT_LIMITS
     : getLimitsForPlan(subscription?.product?.name);
 
   const { data: workflows } = useSuspenseQuery({

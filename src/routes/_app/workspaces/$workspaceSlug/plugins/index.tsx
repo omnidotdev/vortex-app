@@ -9,8 +9,8 @@ import UploadPluginDialog from "@/components/plugins/UploadPluginDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { API_BASE_URL, isSelfHosted } from "@/lib/config/env.config";
-import { SELF_HOSTED_LIMITS, getLimitsForPlan } from "@/lib/constants/tiers";
+import { API_BASE_URL, hasBilling } from "@/lib/config/env.config";
+import { DEFAULT_LIMITS, getLimitsForPlan } from "@/lib/constants/tiers";
 import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
 import pluginsOptions from "@/lib/options/plugins.options";
 import { getSubscription } from "@/server/functions/subscriptions";
@@ -26,7 +26,7 @@ export const Route = createFileRoute(
 
     let subscription: Subscription | null = null;
 
-    if (!isSelfHosted) {
+    if (hasBilling) {
       try {
         subscription = await getSubscription({
           data: { organizationId },
@@ -46,8 +46,8 @@ function PluginsPage() {
   const { organizationId, subscription } = Route.useLoaderData();
   const { workspaceSlug } = Route.useParams();
 
-  const limits = isSelfHosted
-    ? SELF_HOSTED_LIMITS
+  const limits = !hasBilling
+    ? DEFAULT_LIMITS
     : getLimitsForPlan(subscription?.product?.name);
   const canUploadPlugins = limits.plugins;
   const [isUploadOpen, setIsUploadOpen] = useState(false);

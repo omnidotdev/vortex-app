@@ -6,8 +6,8 @@ import ErrorTable from "@/components/monitoring/ErrorTable";
 import ExecutionTimeline from "@/components/monitoring/ExecutionTimeline";
 import MonthlyRunsCard from "@/components/monitoring/MonthlyRunsCard";
 import StatsCards from "@/components/monitoring/StatsCards";
-import { isSelfHosted } from "@/lib/config/env.config";
-import { SELF_HOSTED_LIMITS, getLimitsForPlan } from "@/lib/constants/tiers";
+import { hasBilling } from "@/lib/config/env.config";
+import { DEFAULT_LIMITS, getLimitsForPlan } from "@/lib/constants/tiers";
 import { getSubscription } from "@/server/functions/subscriptions";
 
 import type { DateRange } from "@/components/monitoring/types";
@@ -31,7 +31,7 @@ export const Route = createFileRoute(
 
     let subscription: Subscription | null = null;
 
-    if (!isSelfHosted) {
+    if (hasBilling) {
       try {
         subscription = await getSubscription({
           data: { organizationId },
@@ -83,8 +83,8 @@ function MonitoringPage() {
   const { subscription } = Route.useLoaderData();
   const { workspaceSlug } = Route.useParams();
 
-  const limits = isSelfHosted
-    ? SELF_HOSTED_LIMITS
+  const limits = !hasBilling
+    ? DEFAULT_LIMITS
     : getLimitsForPlan(subscription?.product?.name);
 
   const [preset, setPreset] = useState("7d");

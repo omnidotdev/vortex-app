@@ -35,8 +35,8 @@ export const TEAM_LIMITS: PlanLimits = {
   plugins: true,
 };
 
-/** Limits for self-hosted deployments (unlimited) */
-export const SELF_HOSTED_LIMITS: PlanLimits = {
+/** Default limits when billing is not configured (unlimited) */
+export const DEFAULT_LIMITS: PlanLimits = {
   workflows: null,
   executionsPerMonth: null,
   plugins: true,
@@ -86,8 +86,8 @@ export const FREE_TIER_FEATURES = FREE_PRICE.product.marketing_features.map(
   (f) => f.name,
 );
 
-/** Features available in self-hosted deployments */
-export const SELF_HOSTED_FEATURES = [
+/** Default features when billing is not configured */
+export const DEFAULT_FEATURES = [
   "Unlimited workflows",
   "Unlimited executions",
   "Unlimited integrations",

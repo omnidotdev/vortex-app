@@ -34,10 +34,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { canPerformDestructiveAction, deriveRole } from "@/lib/auth/roles";
-import { isSelfHosted } from "@/lib/config/env.config";
+import { hasBilling } from "@/lib/config/env.config";
 import {
+  DEFAULT_FEATURES,
   FREE_TIER_FEATURES,
-  SELF_HOSTED_FEATURES,
 } from "@/lib/constants/tiers";
 import {
   getBillingPortalUrl,
@@ -68,7 +68,7 @@ export const Route = createFileRoute(
 
     let subscription: Subscription | null = null;
 
-    if (!isSelfHosted) {
+    if (hasBilling) {
       try {
         subscription = await getSubscription({
           data: { organizationId },
@@ -455,17 +455,17 @@ function PlanSection({
 }) {
   const [isRedirecting, setIsRedirecting] = useState(false);
 
-  if (isSelfHosted) {
+  if (!hasBilling) {
     return (
       <section>
         <h2 className="font-semibold text-lg">Plan</h2>
         <div className="mt-4 rounded-lg border p-4">
-          <p className="font-medium">Self-Hosted</p>
+          <p className="font-medium">All Features</p>
           <p className="mt-1 text-muted-foreground text-sm">
-            All features included with your self-hosted deployment
+            All features included with your deployment
           </p>
           <ul className="mt-3 grid gap-1.5 sm:grid-cols-2">
-            {SELF_HOSTED_FEATURES.map((feature) => (
+            {DEFAULT_FEATURES.map((feature) => (
               <li key={feature} className="flex items-center gap-2 text-sm">
                 <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-primary" />
                 {feature}

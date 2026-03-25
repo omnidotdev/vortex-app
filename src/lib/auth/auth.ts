@@ -7,13 +7,11 @@ import { authCache } from "@/lib/auth/authCache";
 import {
   AUTH_CLIENT_ID,
   AUTH_CLIENT_SECRET,
-  AUTH_INTERNAL_URL,
   SERVER_AUTH_BASE_URL,
   SERVER_BASE_URL,
 } from "@/lib/config/env.config";
 
 import type { OrganizationClaim } from "@omnidotdev/providers/auth";
-import { createOmniOAuthConfig } from "@omnidotdev/providers/auth";
 
 const { AUTH_SECRET } = process.env;
 

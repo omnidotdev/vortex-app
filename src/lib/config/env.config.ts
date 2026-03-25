@@ -34,11 +34,6 @@ export const FLAGS_CLIENT_KEY =
   (clientEnv.VITE_FLAGS_CLIENT_KEY as string | undefined) ||
   (serverEnv.VITE_FLAGS_CLIENT_KEY as string | undefined);
 
-// self-hosted mode (use VITE_ prefix so value is consistent across SSR and client)
-export const VITE_SELF_HOSTED = clientEnv.VITE_SELF_HOSTED as
-  | string
-  | undefined;
-
 // billing (client-safe, rendered into HTML -- must use clientEnv)
 export const BILLING_BASE_URL = clientEnv.VITE_BILLING_BASE_URL as
   | string
@@ -58,14 +53,6 @@ export const SERVER_AUTH_BASE_URL =
     ? (serverEnv.VITE_AUTH_BASE_URL as string | undefined) || AUTH_BASE_URL
     : AUTH_BASE_URL;
 
-// Internal auth URL for server-to-server communication (Docker service name)
-// Falls back to SERVER_AUTH_BASE_URL for non-Docker environments
-export const AUTH_INTERNAL_URL =
-  typeof window === "undefined"
-    ? (serverEnv.AUTH_INTERNAL_URL as string | undefined) ||
-      SERVER_AUTH_BASE_URL
-    : AUTH_BASE_URL;
-
 // Internal API URL for server-to-server communication (Docker service name)
 // Falls back to API_BASE_URL for non-Docker environments
 export const API_INTERNAL_URL =
@@ -82,9 +69,11 @@ export const API_INTERNAL_GRAPHQL_URL = `${API_INTERNAL_URL}/graphql`;
 export const isDevEnv = import.meta.env.DEV;
 
 /**
- * Whether the app is running in self-hosted mode.
+ * Whether billing is available (Aether integration configured).
+ * Used to gate billing-dependent features; when false, the app
+ * falls back to default (unlimited) limits.
  */
-export const isSelfHosted = VITE_SELF_HOSTED === "true";
+export const hasBilling = !!BILLING_BASE_URL;
 
 /**
  * Assert that a required environment variable is set

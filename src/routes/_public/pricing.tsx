@@ -17,8 +17,8 @@ import {
   TabsProvider,
   TabsTrigger,
 } from "@/components/ui/tabs";
-import { isSelfHosted } from "@/lib/config/env.config";
-import { FREE_PRICE, SELF_HOSTED_FEATURES } from "@/lib/constants/tiers";
+import { hasBilling } from "@/lib/config/env.config";
+import { DEFAULT_FEATURES, FREE_PRICE } from "@/lib/constants/tiers";
 import pricesOptions from "@/lib/options/prices.options";
 import { getSubscription } from "@/server/functions/subscriptions";
 
@@ -181,7 +181,7 @@ const faqItems = [
   },
 ];
 
-const selfHostedFeatures = SELF_HOSTED_FEATURES;
+const defaultFeatures = DEFAULT_FEATURES;
 
 /** Map legacy tier names to current values */
 const TIER_ALIASES: Record<string, string> = {
@@ -199,8 +199,8 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/_public/pricing")({
   validateSearch: searchSchema,
   loader: async ({ context: { queryClient, session } }) => {
-    // Only fetch prices in SaaS mode
-    if (isSelfHosted) {
+    // Only fetch prices when billing is configured
+    if (!hasBilling) {
       return {
         prices: [] as Price[],
         orgSubscriptions: {} as Record<string, Subscription | null>,
@@ -237,14 +237,14 @@ export const Route = createFileRoute("/_public/pricing")({
   component: PricingPage,
 });
 
-function SelfHostedPricing() {
+function DefaultPricing() {
   return (
     <div className="px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl">
         <div className="text-center">
-          <h1 className="font-bold text-4xl sm:text-5xl">Self-Hosted</h1>
+          <h1 className="font-bold text-4xl sm:text-5xl">All Features</h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            All features included with your self-hosted deployment
+            All features included with your deployment
           </p>
         </div>
 
@@ -255,11 +255,11 @@ function SelfHostedPricing() {
               <span className="font-bold text-4xl">All Features</span>
             </div>
             <p className="mt-2 text-muted-foreground text-sm">
-              Everything unlocked for your self-hosted instance
+              Everything unlocked for your instance
             </p>
 
             <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-              {selfHostedFeatures.map((feature) => (
+              {defaultFeatures.map((feature) => (
                 <li key={feature} className="flex items-center gap-2 text-sm">
                   <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
                   {feature}
@@ -416,8 +416,8 @@ function SaaSPricing() {
 }
 
 function PricingPage() {
-  if (isSelfHosted) {
-    return <SelfHostedPricing />;
+  if (!hasBilling) {
+    return <DefaultPricing />;
   }
 
   return <SaaSPricing />;
