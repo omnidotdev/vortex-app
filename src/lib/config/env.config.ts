@@ -89,5 +89,7 @@ if (typeof window === "undefined") {
 }
 
 // Startup warnings for optional integrations
-if (!BILLING_BASE_URL) console.warn("BILLING_BASE_URL not set, billing disabled");
-if (!FLAGS_API_HOST) console.warn("FLAGS_API_HOST not set, feature flags disabled");
+if (!BILLING_BASE_URL)
+  console.warn("BILLING_BASE_URL not set, billing disabled");
+if (!FLAGS_API_HOST)
+  console.warn("FLAGS_API_HOST not set, feature flags disabled");
