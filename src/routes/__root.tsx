@@ -1,3 +1,4 @@
+import { useSessionRefresh } from "@omnidotdev/providers/react";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import {
@@ -12,7 +13,6 @@ import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 
 import { isDevEnv } from "@/lib/config/env.config";
-import useSessionRefresh from "@/lib/hooks/useSessionRefresh";
 import { fetchMaintenanceMode } from "@/lib/providers";
 import appCss from "@/lib/styles/globals.css?url";
 import createMetaTags from "@/lib/util/createMetaTags";
@@ -142,9 +142,9 @@ function RootComponent() {
   const theme = Route.useLoaderData();
   const { isMaintenanceMode } = Route.useRouteContext();
 
-  // Keep the OAuth access token fresh by periodically re-running the
-  // root `beforeLoad` which calls `ensureFreshAccessToken` server-side
-  useSessionRefresh();
+  // Keep the OAuth access token fresh by periodically calling
+  // `fetchSession` which runs `ensureFreshAccessToken` server-side
+  useSessionRefresh(fetchSession);
 
   if (isMaintenanceMode) {
     return (
