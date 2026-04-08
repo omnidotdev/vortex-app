@@ -25,12 +25,10 @@ setup("authenticate", async ({ page }) => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
-    // "Sign In" on the landing page is a link in the header
-    const signIn = page
-      .getByRole("link", { name: "Sign In" })
-      .or(page.getByRole("button", { name: "Sign In" }));
-
-    await signIn.first().click();
+    // Wait for the Sign In button to be visible and stable before clicking
+    const signIn = page.getByRole("button", { name: "Sign In" }).first();
+    await signIn.waitFor({ state: "visible", timeout: 10_000 });
+    await signIn.click();
 
     // Wait for redirect to HIDRA identity provider
     await page.waitForURL(/identity\.omni\.dev/, { timeout: 30_000 });
@@ -49,21 +47,20 @@ setup("authenticate", async ({ page }) => {
     // Submit login form
     await page.getByRole("button", { name: "Sign In", exact: true }).click();
 
-    // Wait for the OAuth callback to complete and redirect back to vortex.
-    // The callback URL is /api/auth/oauth2/callback/omni which processes the
-    // auth code, sets session cookies, and redirects to the app.
-    await page.waitForURL(/vortex\.omni\.dev/, { timeout: 30_000 });
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(2_000);
-
-    // After callback, navigate to workspaces to verify session is active.
-    // Retry a few times to handle slow session establishment.
+    // Wait for the full OAuth redirect chain to settle:
+    // HIDRA -> vortex callback -> /workspaces (the callback 302s to /workspaces).
+    // Don't use waitForURL with a partial match, since it resolves on the
+    // intermediate callback URL before cookies are fully set. Instead, wait
+    // for the final destination by checking for workspace content.
     let authenticated = false;
 
-    for (let attempt = 0; attempt < 3; attempt++) {
-      await page.goto("/workspaces");
-      await page.waitForLoadState("networkidle");
-      await page.waitForTimeout(2_000);
+    for (let attempt = 0; attempt < 6; attempt++) {
+      // Wait for redirects to settle
+      await page.waitForTimeout(3_000);
+
+      // Force a full page load to ensure server-side session check
+      await page.goto("/workspaces", { waitUntil: "networkidle" });
+      await page.waitForTimeout(1_000);
 
       const hasLinks = await page
         .locator('a[href^="/workspaces/"]')
@@ -75,18 +72,21 @@ setup("authenticate", async ({ page }) => {
         authenticated = true;
         break;
       }
-
-      // Session may not be ready yet, wait and retry
-      await page.waitForTimeout(3_000);
     }
 
     if (!authenticated) {
       const url = page.url();
       const title = await page.title();
+      const cookies = await page.context().cookies();
+      const vortexCookies = cookies
+        .filter((c) => c.name.includes("vortex"))
+        .map((c) => c.name)
+        .join(", ");
 
       throw new Error(
         `Auth setup failed: workspace links not visible after login.\n` +
-          `URL: ${url}\nTitle: ${title}`,
+          `URL: ${url}\nTitle: ${title}\n` +
+          `Vortex cookies: ${vortexCookies || "(none)"}`,
       );
     }
   }

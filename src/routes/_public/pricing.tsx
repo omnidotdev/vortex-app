@@ -207,7 +207,15 @@ export const Route = createFileRoute("/_public/pricing")({
       };
     }
 
-    const prices = await queryClient.ensureQueryData(pricesOptions());
+    let prices: Price[] = [];
+
+    try {
+      prices = await queryClient.ensureQueryData(pricesOptions());
+    } catch {
+      console.warn(
+        "[pricing] Failed to fetch prices, billing service may be unavailable",
+      );
+    }
 
     // Fetch subscriptions for all user organizations to determine current tiers
     const orgSubscriptions: Record<string, Subscription | null> = {};

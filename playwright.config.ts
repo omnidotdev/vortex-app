@@ -23,10 +23,13 @@ export default defineConfig({
   },
   projects: [
     // Auth setup (runs first, no storageState dependency)
+    // Uses Desktop Chrome viewport so the header Sign In button is visible
+    // (mobile viewports hide it behind a hamburger menu)
     {
       name: "setup",
       testMatch: /auth\.setup\.ts/,
       use: {
+        ...devices["Desktop Chrome"],
         storageState: undefined,
       },
     },
