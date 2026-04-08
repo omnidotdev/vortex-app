@@ -45,10 +45,22 @@ test.describe("API health", () => {
     const totalExecutions = page.locator("text=Total Executions").first();
     const errorBoundary = page.locator("text=Something went wrong").first();
 
+    const notAvailable = page
+      .locator("text=Monitoring data is not available")
+      .first();
+
     await totalExecutions
       .or(errorBoundary)
+      .or(notAvailable)
       .first()
       .waitFor({ state: "visible", timeout: 15_000 });
+
+    // Skip if monitoring is gated behind a paid plan
+    const isPlanGated = await notAvailable.isVisible().catch(() => false);
+    if (isPlanGated) {
+      test.skip(true, "Monitoring stats not available on free plan");
+      return;
+    }
 
     // Skip if the monitoring page hit an error boundary (production bug)
     const hasError = await errorBoundary.isVisible().catch(() => false);

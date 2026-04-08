@@ -125,7 +125,9 @@ test.describe("billing / Aether integration", () => {
 
     // Should show plan limits
     await expect(page.getByText(/5 workflows/i)).toBeVisible();
-    await expect(page.getByText(/1,000 runs\/month/i)).toBeVisible();
+    await expect(
+      page.getByText(/1,000 (runs|executions)\/month/i),
+    ).toBeVisible();
   });
 
   test("FAQ section should be expandable", async ({ page }) => {

@@ -18,13 +18,23 @@ test.describe("auth and authorization", () => {
       await page.waitForLoadState("networkidle");
     }
 
-    // Verify user info is displayed in the sidebar
-    const sidebar = page.getByRole("complementary");
+    // On mobile viewports, open the hamburger menu to reveal the sidebar
+    const menuButton = page.getByRole("button", { name: "Open menu" });
+    const isMobile = await menuButton.isVisible().catch(() => false);
+    if (isMobile) {
+      await menuButton.click();
+      await page.waitForTimeout(500);
+    }
+
+    // On mobile, the profile is inside the drawer dialog
+    const container = isMobile
+      ? page.getByRole("dialog")
+      : page.getByRole("complementary");
 
     await expect(
-      sidebar.getByText("Claude Test", { exact: true }).first(),
+      container.getByText("Claude Test", { exact: true }).first(),
     ).toBeVisible({ timeout: 15_000 });
-    await expect(sidebar.getByText("claude@omni.dev")).toBeVisible();
+    await expect(container.getByText("claude@omni.dev")).toBeVisible();
   });
 
   test("sign out should redirect to landing page", async ({ page }) => {
@@ -37,16 +47,25 @@ test.describe("auth and authorization", () => {
       route.fulfill({ status: 200, body: "{}" }),
     );
 
+    // On mobile, open the menu first
+    const menuButton = page.getByRole("button", { name: "Open menu" });
+    const isMobile = await menuButton.isVisible().catch(() => false);
+    if (isMobile) {
+      await menuButton.click();
+      await page.waitForTimeout(500);
+    }
+
     // Click sign out
     await page.getByRole("button", { name: /sign out/i }).click();
 
     // Should redirect to landing page
     await page.waitForURL(/vortex\.omni\.dev\/?$/, { timeout: 15_000 });
 
-    // Sign In button should be visible
+    // Verify we're on the landing page (Sign In may be behind hamburger on mobile)
     await expect(
       page
-        .getByRole("button", { name: /sign in/i })
+        .getByRole("heading", { name: /automate anything/i })
+        .or(page.getByRole("button", { name: /sign in/i }))
         .or(page.getByRole("link", { name: /sign in/i }))
         .first(),
     ).toBeVisible();
@@ -104,6 +123,16 @@ test.describe("auth and authorization", () => {
 
     await page.goto("https://vortex.omni.dev/");
     await page.waitForLoadState("networkidle");
+
+    // On mobile, open hamburger menu to reveal Sign In
+    const menuButton = page.getByRole("button", {
+      name: /toggle menu|open menu/i,
+    });
+    const isMobile = await menuButton.isVisible().catch(() => false);
+    if (isMobile) {
+      await menuButton.click();
+      await page.waitForTimeout(500);
+    }
 
     // Click sign in (could be button or link in the header)
     const signIn = page
