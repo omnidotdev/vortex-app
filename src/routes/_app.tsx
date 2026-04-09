@@ -162,9 +162,9 @@ function MobileHeader() {
           <SheetContent side="right" className="w-64 p-0">
             <SheetContext>
               {({ setOpen }) => (
-                <div className="flex h-full flex-col overflow-y-auto">
+                <div className="flex h-full flex-col">
                   {/* Header */}
-                  <div className="flex items-center justify-between border-b px-4 py-4">
+                  <div className="flex shrink-0 items-center justify-between border-b px-4 py-4">
                     <Link
                       to="/workspaces"
                       className="flex min-w-0 items-center gap-2 hover:opacity-80"
@@ -183,7 +183,7 @@ function MobileHeader() {
                   </div>
 
                   {/* Navigation */}
-                  <nav className="flex-1 space-y-1 p-4">
+                  <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto p-4">
                     <Link
                       to="/workspaces"
                       className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
@@ -291,7 +291,7 @@ function MobileHeader() {
                   </nav>
 
                   {/* Omni Links */}
-                  <div className="space-y-1 border-t p-4">
+                  <div className="shrink-0 space-y-1 border-t p-4">
                     <Link
                       to="/pricing"
                       className="flex items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent hover:text-foreground"
@@ -330,7 +330,7 @@ function MobileHeader() {
                   </div>
 
                   {/* User */}
-                  <div className="border-t p-4">
+                  <div className="shrink-0 border-t p-4">
                     <div className="flex items-center gap-3">
                       {session?.user?.image ? (
                         <img
