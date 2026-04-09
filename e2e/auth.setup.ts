@@ -15,7 +15,7 @@ setup("authenticate", async ({ page }) => {
 
   // Check if already authenticated by looking for workspace content
   const hasWorkspaces = await page
-    .locator('a[href^="/workspaces/"]')
+    .locator('a[href*="/workspaces/"]')
     .first()
     .isVisible()
     .catch(() => false);
@@ -63,7 +63,7 @@ setup("authenticate", async ({ page }) => {
       await page.waitForTimeout(1_000);
 
       const hasLinks = await page
-        .locator('a[href^="/workspaces/"]')
+        .locator('a[href*="/workspaces/"]')
         .first()
         .isVisible()
         .catch(() => false);
