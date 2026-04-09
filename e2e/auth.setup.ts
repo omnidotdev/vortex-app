@@ -15,7 +15,7 @@ setup("authenticate", async ({ page }) => {
 
   // Check if already authenticated by looking for workspace content
   const hasWorkspaces = await page
-    .locator('a[href*="/workspaces/"]')
+    .getByRole("link", { name: /personal|workspace/i })
     .first()
     .isVisible()
     .catch(() => false);
@@ -44,8 +44,9 @@ setup("authenticate", async ({ page }) => {
     await passwordInput.clear();
     await passwordInput.fill("Kx9$mVz!4wQpL2nR");
 
-    // Submit login form
+    // Submit login form and wait for the callback redirect
     await page.getByRole("button", { name: "Sign In", exact: true }).click();
+    await page.waitForTimeout(10_000);
 
     // Wait for the full OAuth redirect chain to settle:
     // HIDRA -> vortex callback -> /workspaces (the callback 302s to /workspaces).
@@ -59,11 +60,17 @@ setup("authenticate", async ({ page }) => {
       await page.waitForTimeout(3_000);
 
       // Force a full page load to ensure server-side session check
-      await page.goto("/workspaces", { waitUntil: "networkidle" });
+      try {
+        await page.goto("/workspaces", { waitUntil: "networkidle" });
+      } catch {
+        // Navigation may abort if a redirect is still in progress
+        await page.waitForTimeout(2_000);
+        continue;
+      }
       await page.waitForTimeout(1_000);
 
       const hasLinks = await page
-        .locator('a[href*="/workspaces/"]')
+        .getByRole("link", { name: /personal|workspace/i })
         .first()
         .isVisible()
         .catch(() => false);
