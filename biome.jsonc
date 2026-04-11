@@ -6,7 +6,6 @@
     "useIgnoreFile": true
   },
   "files": {
-    "ignoreUnknown": false,
     "includes": [
       "**",
       "!!**/generated",
@@ -24,13 +23,11 @@
     }
   },
   "formatter": {
-    "enabled": true,
     "indentStyle": "space",
     "lineWidth": 80,
     "indentWidth": 2
   },
   "linter": {
-    "enabled": true,
     "rules": {
       "recommended": true,
       "a11y": {
@@ -53,8 +50,8 @@
           "level": "error",
           "fix": "safe",
           "options": {
-            "attributes": ["className"],
-            "functions": ["cn, cva, tv"]
+            "attributes": ["class", "className"],
+            "functions": ["cn", "clsx", "classnames", "cva", "tv"]
           }
         }
       },
@@ -76,7 +73,7 @@
         "noConsole": {
           "level": "error",
           "options": {
-            "allow": ["error", "warn"]
+            "allow": ["error", "warn", "info"]
           }
         }
       }
