@@ -25,9 +25,7 @@ test.describe("pricing page", () => {
     }
   });
 
-  test("should toggle between monthly and yearly pricing", async ({
-    page,
-  }) => {
+  test("should toggle between monthly and yearly pricing", async ({ page }) => {
     await page.goto("/pricing");
     await page.waitForLoadState("networkidle");
 
@@ -125,9 +123,7 @@ test.describe("mobile responsiveness", () => {
     await menuBtn.click();
 
     // Sign out should be visible (previously a known bug)
-    await expect(
-      page.getByRole("button", { name: /sign out/i }),
-    ).toBeVisible();
+    await expect(page.getByRole("button", { name: /sign out/i })).toBeVisible();
 
     // Close menu
     await page.getByRole("button", { name: /close/i }).click();
@@ -150,9 +146,9 @@ test.describe("mobile responsiveness", () => {
       await page.waitForLoadState("networkidle");
 
       // Zoom controls should be visible
-      await expect(
-        page.getByRole("button", { name: /zoom in/i }),
-      ).toBeVisible({ timeout: 10_000 });
+      await expect(page.getByRole("button", { name: /zoom in/i })).toBeVisible({
+        timeout: 10_000,
+      });
 
       // Add Node FAB should be visible
       await expect(
@@ -187,10 +183,7 @@ test.describe("API health", () => {
 });
 
 test.describe("integrations page", () => {
-  test("should load integrations catalog", async ({
-    page,
-    navigateToPage,
-  }) => {
+  test("should load integrations catalog", async ({ page, navigateToPage }) => {
     await navigateToPage("/integrations");
 
     await expect(
@@ -214,9 +207,9 @@ test.describe("demo page", () => {
     await page.waitForLoadState("networkidle");
 
     // Demo should show the workflow editor
-    await expect(
-      page.getByRole("button", { name: /zoom in/i }),
-    ).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByRole("button", { name: /zoom in/i })).toBeVisible({
+      timeout: 15_000,
+    });
 
     // Should show sign-up CTA
     await expect(page.getByText(/sign up free/i).first()).toBeVisible();
