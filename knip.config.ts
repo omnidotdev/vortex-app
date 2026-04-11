@@ -24,6 +24,9 @@ const knipConfig: KnipConfig = {
   ignoreExportsUsedInFile: true,
   ignore: ["src/generated/**"],
   ignoreDependencies: [
+    // Changeset tooling (invoked via npx/bunx, not imported)
+    "@changesets/changelog-github",
+    "@changesets/cli",
     // used by GraphQL Code Generator scripts
     "dotenv",
     // Future use dependencies

@@ -33,3 +33,4 @@ certificates
 !.env.test
 !.env.local.template
 playwright-report/
+e2e/.auth/

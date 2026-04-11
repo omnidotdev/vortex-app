@@ -64,7 +64,7 @@ test.describe("Warden / Aether integration", () => {
   }) => {
     // Hit the Vortex API health endpoint directly
     const response = await page.request.get(
-      "https://vortex-api.omni.dev/health",
+      "https://api.vortex.omni.dev/health",
     );
 
     expect(response.ok()).toBe(true);

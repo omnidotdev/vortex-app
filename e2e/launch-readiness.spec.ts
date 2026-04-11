@@ -158,6 +158,70 @@ test.describe("mobile responsiveness", () => {
   });
 });
 
+test.describe("identity provider dependency", () => {
+  test("identity.omni.dev should be reachable", async ({ request }) => {
+    const response = await request.get("https://identity.omni.dev", {
+      timeout: 10_000,
+    });
+    expect(
+      response.status(),
+      "HIDRA identity provider must be healthy for auth to work",
+    ).toBeLessThan(500);
+  });
+
+  test("sign in button should redirect to identity provider", async ({
+    page,
+  }) => {
+    const response = await page.goto("/");
+    expect(
+      response?.status(),
+      "Landing page should load successfully",
+    ).toBeLessThan(500);
+    await page.waitForLoadState("networkidle");
+
+    // Sign In can be rendered as a button or a link
+    const signIn =
+      page.getByRole("link", { name: /sign in/i }).first() ??
+      page.getByRole("button", { name: /sign in/i }).first();
+    await expect(signIn).toBeVisible({ timeout: 10_000 });
+    await signIn.click();
+
+    // Should redirect to identity.omni.dev within 15 seconds
+    await page.waitForURL(/identity\.omni\.dev/, { timeout: 15_000 });
+  });
+});
+
+test.describe("API auth enforcement", () => {
+  test("authz endpoints should require service key", async ({ request }) => {
+    for (const path of ["/api/v1/authz/tuples", "/api/v1/authz/drift"]) {
+      const response = await request.get(`https://api.vortex.omni.dev${path}`);
+      expect(
+        response.status(),
+        `${path} should return 401 without service key`,
+      ).toBe(401);
+    }
+  });
+
+  test("authz reconcile should reject unauthorized POST", async ({
+    request,
+  }) => {
+    const response = await request.post(
+      "https://api.vortex.omni.dev/api/v1/authz/reconcile",
+    );
+    expect(response.status()).toBe(401);
+  });
+
+  test("graphql should require authentication", async ({ request }) => {
+    const response = await request.post("https://api.vortex.omni.dev/graphql", {
+      headers: { "Content-Type": "application/json" },
+      data: JSON.stringify({ query: "{ __typename }" }),
+    });
+
+    const body = await response.json();
+    expect(body.errors?.[0]?.extensions?.code).toBe("UNAUTHENTICATED");
+  });
+});
+
 test.describe("API health", () => {
   test("health endpoint should return OK", async ({ page }) => {
     const response = await page.goto("https://api.vortex.omni.dev/health");
