@@ -22,7 +22,7 @@ import { getTheme } from "@/server/functions/theme";
 
 import type { QueryClient } from "@tanstack/react-query";
 import type { ReactNode } from "react";
-import type { AuthSession } from "@/lib/auth/getAuth";
+import type { GetAuthSession } from "@/lib/auth/getAuth";
 import type { Theme } from "@/providers/ThemeProvider";
 
 /**
@@ -53,7 +53,7 @@ const fetchSessionAndMaintenanceMode = createServerFn({
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
-  session: AuthSession | null;
+  session: GetAuthSession | null;
   isMaintenanceMode: boolean;
 }>()({
   beforeLoad: async () => {
