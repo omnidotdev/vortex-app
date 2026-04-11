@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🌪️ Vortex App
+# Vortex App
 
 Visual workflow editor for Vortex
 
@@ -25,28 +25,43 @@ Vortex App is the web frontend for [Vortex](https://github.com/omnidotdev/vortex
 
 First, `cp .env.local.template .env.local` and fill in the values.
 
-Install dependencies:
+### Building and Running
+
+Run `tilt up`, or:
 
 ```sh
-bun install
+bun i
 ```
-
-Run the dev server:
 
 ```sh
-bun run dev
+bun dev
 ```
-
-The app will be available at `http://localhost:3000`.
 
 ## Testing
 
-End-to-end tests run against production using Playwright:
+### Unit Tests
 
 ```sh
-bun test:e2e          # Run all e2e tests
-bun test:e2e:ui       # Interactive UI mode
-bun test:e2e:headed   # Watch tests run in a browser
+bun test
+
+# or in watch mode
+bun test:watch
+
+# or test with coverage reporting
+bun test:coverage
+```
+
+### E2E Tests
+
+```sh
+# first, ensure Playwright browsers are installed
+bunx playwright install
+
+# run E2E tests
+bun test:e2e
+
+# or run with UI
+bun test:e2e:ui
 ```
 
 ## License
