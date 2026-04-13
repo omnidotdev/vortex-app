@@ -1,0 +1,58 @@
+import { Slot } from "@radix-ui/react-slot";
+import { cva } from "class-variance-authority";
+import * as React from "react";
+
+import { cn } from "@/lib/utils";
+
+import type { VariantProps } from "class-variance-authority";
+
+const buttonVariants = cva(
+  "inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-lg font-medium text-sm ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "btn-gem text-primary-foreground",
+        destructive: "btn-gem-destructive text-destructive-foreground",
+        outline:
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-foreground underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-11 min-h-11 px-3",
+        lg: "h-11 px-8",
+        icon: "h-11 min-h-11 w-11 min-w-11",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  },
+);
+
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+  };
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, type, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        // Prevent accidental form submission by defaulting to "button"
+        {...(!asChild && { type: type ?? "button" })}
+        {...props}
+      />
+    );
+  },
+);
+Button.displayName = "Button";
+
+export { Button, buttonVariants };
