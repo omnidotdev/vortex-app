@@ -1,0 +1,32 @@
+mutation CreateIntegration($input: CreateIntegrationInput!) {
+  createIntegration(input: $input) {
+    integration {
+      rowId
+      name
+      type
+      isEnabled
+      createdAt
+    }
+  }
+}
+
+mutation UpdateIntegration($input: UpdateIntegrationInput!) {
+  updateIntegration(input: $input) {
+    integration {
+      rowId
+      name
+      type
+      isEnabled
+      updatedAt
+    }
+  }
+}
+
+mutation DeleteIntegration($input: DeleteIntegrationInput!) {
+  deleteIntegration(input: $input) {
+    integration {
+      rowId
+      name
+    }
+  }
+}

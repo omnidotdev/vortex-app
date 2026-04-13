@@ -1,0 +1,41 @@
+node_modules
+
+# TypeScript
+tsconfig.tsbuildinfo
+
+# TanStack
+.tanstack
+.nitro
+.output
+.vite
+dist
+
+# tests
+coverage
+test-results
+.playwright-mcp/
+playwright/.cache
+
+# service worker
+public/sw*
+public/swe-worker*
+
+# editor
+.vscode
+.zed
+.rules
+
+# TLS/HTTPS
+certificates
+
+# environment
+*.env*
+
+# below are safe to commit
+!.env
+!.env.development
+!.env.production
+!.env.test
+!.env.local.template
+playwright-report/
+e2e/.auth/
