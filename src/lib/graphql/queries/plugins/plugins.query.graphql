@@ -1,0 +1,20 @@
+query Plugins($organizationId: String!, $limit: Int) {
+  plugins(
+    condition: { organizationId: $organizationId }
+    orderBy: NAME_ASC
+    first: $limit
+  ) {
+    nodes {
+      rowId
+      name
+      version
+      manifest
+      wasmUrl
+      isEnabled
+      isVerified
+      createdAt
+      updatedAt
+    }
+    totalCount
+  }
+}

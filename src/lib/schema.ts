@@ -1,0 +1,174 @@
+import { z } from "zod";
+
+// Node Types
+export const NodeTypes = {
+  TRIGGER: "triggerNode",
+  ACTION: "actionNode",
+  CONDITION: "conditionNode",
+  SWITCH: "switchNode",
+  DELAY: "delayNode",
+  LOOP: "loopNode",
+  GATE: "gateNode",
+  PARALLEL: "parallelNode",
+  PLUGIN: "pluginNode",
+  MCP: "mcpNode",
+  SUBWORKFLOW: "subworkflowNode",
+  TRY_CATCH: "tryCatchNode",
+  RACE: "raceNode",
+  COMMENT: "commentNode",
+  STATE_GET: "stateGetNode",
+  STATE_SET: "stateSetNode",
+  STATE_WAIT: "stateWaitNode",
+  SAGA: "sagaNode",
+  COLLECT: "collectNode",
+} as const;
+
+// Base node schema
+const baseNodeSchema = z.object({
+  id: z.string(),
+  type: z.enum([
+    NodeTypes.TRIGGER,
+    NodeTypes.ACTION,
+    NodeTypes.CONDITION,
+    NodeTypes.SWITCH,
+    NodeTypes.DELAY,
+    NodeTypes.LOOP,
+  ]),
+  position: z.object({
+    x: z.number(),
+    y: z.number(),
+  }),
+});
+
+// Trigger node schema
+const triggerNodeSchema = baseNodeSchema.extend({
+  type: z.literal(NodeTypes.TRIGGER),
+  data: z.object({
+    label: z.string(),
+    description: z.string(),
+    icon: z.string(),
+    config: z.object({
+      event: z.string(),
+      conditions: z
+        .array(
+          z.object({
+            field: z.string(),
+            operator: z.enum(["equals", "contains", "startsWith", "endsWith"]),
+            value: z.string(),
+          }),
+        )
+        .optional(),
+    }),
+  }),
+});
+
+// Action node schema
+const actionNodeSchema = baseNodeSchema.extend({
+  type: z.literal(NodeTypes.ACTION),
+  data: z.object({
+    label: z.string(),
+    description: z.string(),
+    icon: z.string(),
+    config: z.object({
+      action: z.string(),
+      parameters: z.record(z.string(), z.unknown()),
+    }),
+  }),
+});
+
+// Condition node schema
+const conditionNodeSchema = baseNodeSchema.extend({
+  type: z.literal(NodeTypes.CONDITION),
+  data: z.object({
+    label: z.string(),
+    description: z.string(),
+    icon: z.string(),
+    config: z.object({
+      condition: z.string(),
+      operator: z.enum([
+        "equals",
+        "notEquals",
+        "contains",
+        "greaterThan",
+        "lessThan",
+      ]),
+      value: z.union([z.string(), z.number(), z.boolean()]),
+    }),
+  }),
+});
+
+// Switch node schema
+const switchNodeSchema = baseNodeSchema.extend({
+  type: z.literal(NodeTypes.SWITCH),
+  data: z.object({
+    label: z.string(),
+    description: z.string(),
+    icon: z.string(),
+    config: z.object({
+      field: z.string(),
+      cases: z.array(
+        z.object({
+          value: z.union([z.string(), z.number(), z.boolean()]),
+          label: z.string(),
+        }),
+      ),
+    }),
+  }),
+});
+
+// Delay node schema
+const delayNodeSchema = baseNodeSchema.extend({
+  type: z.literal(NodeTypes.DELAY),
+  data: z.object({
+    label: z.string(),
+    description: z.string(),
+    icon: z.string(),
+    config: z.object({
+      duration: z.number(),
+      unit: z.enum(["seconds", "minutes", "hours"]),
+    }),
+  }),
+});
+
+// Loop node schema
+const loopNodeSchema = baseNodeSchema.extend({
+  type: z.literal(NodeTypes.LOOP),
+  data: z.object({
+    label: z.string(),
+    description: z.string(),
+    icon: z.string(),
+    config: z.object({
+      type: z.enum(["count", "collection", "while"]),
+      count: z.number().optional(),
+      collection: z.string().optional(),
+      condition: z.string().optional(),
+    }),
+  }),
+});
+
+// Edge schema
+const edgeSchema = z.object({
+  id: z.string(),
+  source: z.string(),
+  target: z.string(),
+  label: z.string().optional(),
+  type: z.enum(["default", "success", "failure", "case"]).optional(),
+});
+
+// Workflow schema
+const workflowSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().optional(),
+  nodes: z.array(
+    z.union([
+      triggerNodeSchema,
+      actionNodeSchema,
+      conditionNodeSchema,
+      switchNodeSchema,
+      delayNodeSchema,
+      loopNodeSchema,
+    ]),
+  ),
+  edges: z.array(edgeSchema),
+});

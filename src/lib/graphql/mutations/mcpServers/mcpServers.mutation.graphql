@@ -1,0 +1,36 @@
+mutation CreateMcpServer($input: CreateMcpServerInput!) {
+  createMcpServer(input: $input) {
+    mcpServer {
+      rowId
+      name
+      type
+      command
+      args
+      isEnabled
+      createdAt
+    }
+  }
+}
+
+mutation UpdateMcpServer($input: UpdateMcpServerInput!) {
+  updateMcpServer(input: $input) {
+    mcpServer {
+      rowId
+      name
+      type
+      command
+      args
+      isEnabled
+      updatedAt
+    }
+  }
+}
+
+mutation DeleteMcpServer($input: DeleteMcpServerInput!) {
+  deleteMcpServer(input: $input) {
+    mcpServer {
+      rowId
+      name
+    }
+  }
+}
