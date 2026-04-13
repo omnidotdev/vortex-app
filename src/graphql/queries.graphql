@@ -1,0 +1,292 @@
+# User queries
+query GetCurrentUser {
+  currentUser {
+    id
+    email
+    name
+    avatar
+    isOnboarded
+    planType
+    theme
+    createdAt
+    updatedAt
+  }
+}
+
+query GetUsers {
+  users {
+    nodes {
+      id
+      email
+      name
+      avatar
+      planType
+      createdAt
+    }
+  }
+}
+
+# Workflow queries
+query GetWorkflows($userId: UUID!) {
+  workflows(condition: { userId: $userId }) {
+    nodes {
+      id
+      name
+      description
+      definition
+      isActive
+      userId
+      createdAt
+      updatedAt
+    }
+  }
+}
+
+query GetWorkflow($id: UUID!) {
+  workflow(id: $id) {
+    id
+    name
+    description
+    definition
+    isActive
+    userId
+    createdAt
+    updatedAt
+    user {
+      id
+      name
+      email
+    }
+  }
+}
+
+query GetWorkflowsByUser($userId: UUID!) {
+  user(id: $userId) {
+    id
+    name
+    workflows {
+      nodes {
+        id
+        name
+        description
+        isActive
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}
+
+# Integration queries
+query GetIntegrations($userId: UUID!) {
+  integrations(condition: { userId: $userId }) {
+    nodes {
+      id
+      type
+      name
+      isEnabled
+      config
+      userId
+      createdAt
+      updatedAt
+    }
+  }
+}
+
+query GetIntegration($id: UUID!) {
+  integration(id: $id) {
+    id
+    type
+    name
+    isEnabled
+    config
+    userId
+    createdAt
+    updatedAt
+    user {
+      id
+      name
+      email
+    }
+  }
+}
+
+query GetIntegrationsByType($userId: UUID!, $type: String!) {
+  integrations(condition: { userId: $userId, type: $type }) {
+    nodes {
+      id
+      type
+      name
+      isEnabled
+      config
+      createdAt
+      updatedAt
+    }
+  }
+}
+
+# Mutations for User
+mutation CreateUser($input: CreateUserInput!) {
+  createUser(input: $input) {
+    user {
+      id
+      email
+      name
+      avatar
+      isOnboarded
+      planType
+      theme
+      createdAt
+    }
+  }
+}
+
+mutation UpdateUser($input: UpdateUserInput!) {
+  updateUser(input: $input) {
+    user {
+      id
+      email
+      name
+      avatar
+      isOnboarded
+      planType
+      theme
+      updatedAt
+    }
+  }
+}
+
+mutation DeleteUser($input: DeleteUserInput!) {
+  deleteUser(input: $input) {
+    user {
+      id
+    }
+  }
+}
+
+# Mutations for Workflow
+mutation CreateWorkflow($input: CreateWorkflowInput!) {
+  createWorkflow(input: $input) {
+    workflow {
+      id
+      name
+      description
+      definition
+      isActive
+      userId
+      createdAt
+    }
+  }
+}
+
+mutation UpdateWorkflow($input: UpdateWorkflowInput!) {
+  updateWorkflow(input: $input) {
+    workflow {
+      id
+      name
+      description
+      definition
+      isActive
+      updatedAt
+    }
+  }
+}
+
+mutation DeleteWorkflow($input: DeleteWorkflowInput!) {
+  deleteWorkflow(input: $input) {
+    workflow {
+      id
+    }
+  }
+}
+
+# Mutations for Integration
+mutation CreateIntegration($input: CreateIntegrationInput!) {
+  createIntegration(input: $input) {
+    integration {
+      id
+      type
+      name
+      isEnabled
+      config
+      userId
+      createdAt
+    }
+  }
+}
+
+mutation UpdateIntegration($input: UpdateIntegrationInput!) {
+  updateIntegration(input: $input) {
+    integration {
+      id
+      type
+      name
+      isEnabled
+      config
+      updatedAt
+    }
+  }
+}
+
+mutation DeleteIntegration($input: DeleteIntegrationInput!) {
+  deleteIntegration(input: $input) {
+    integration {
+      id
+    }
+  }
+}
+
+# Complex queries with relationships
+query GetUserWithWorkflowsAndIntegrations($userId: UUID!) {
+  user(id: $userId) {
+    id
+    name
+    email
+    avatar
+    planType
+    workflows {
+      nodes {
+        id
+        name
+        description
+        isActive
+        createdAt
+      }
+    }
+    integrations {
+      nodes {
+        id
+        type
+        name
+        isEnabled
+        createdAt
+      }
+    }
+  }
+}
+
+query GetWorkflowsWithPagination($first: Int, $after: Cursor) {
+  workflows(first: $first, after: $after) {
+    edges {
+      node {
+        id
+        name
+        description
+        isActive
+        createdAt
+        user {
+          id
+          name
+        }
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    totalCount
+  }
+}
