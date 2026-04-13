@@ -1,0 +1,25 @@
+query Workflows($organizationId: String!, $limit: Int) {
+  workflows(
+    condition: { organizationId: $organizationId }
+    orderBy: NAME_ASC
+    first: $limit
+  ) {
+    nodes {
+      rowId
+      name
+      description
+      cronExpression
+      isActive
+      createdAt
+      updatedAt
+      workflowRuns(orderBy: CREATED_AT_DESC, first: 1) {
+        nodes {
+          rowId
+          status
+          createdAt
+        }
+      }
+    }
+    totalCount
+  }
+}
