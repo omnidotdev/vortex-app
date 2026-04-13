@@ -1,0 +1,30 @@
+query Integrations($organizationId: String!, $limit: Int) {
+  integrations(
+    condition: { organizationId: $organizationId }
+    orderBy: NAME_ASC
+    first: $limit
+  ) {
+    nodes {
+      rowId
+      name
+      type
+      isEnabled
+      mcpServerId
+      createdAt
+      updatedAt
+    }
+    totalCount
+  }
+}
+
+query Integration($id: UUID!) {
+  integration(rowId: $id) {
+    rowId
+    name
+    type
+    isEnabled
+    config
+    createdAt
+    updatedAt
+  }
+}

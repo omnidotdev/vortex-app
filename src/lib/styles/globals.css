@@ -1,0 +1,622 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-display: var(--display-family);
+  --font-text: var(--text-family);
+
+  /* Glow shadow utilities */
+  --shadow-glow-sm: var(--glow-sm);
+  --shadow-glow: var(--glow-md);
+  --shadow-glow-lg: var(--glow-lg);
+  --shadow-glow-pulse: var(--glow-pulse);
+
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-muted: var(--brand-muted);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  /* Amethyst brand */
+  --brand: oklch(0.55 0.15 295);
+  --brand-foreground: oklch(0.985 0 0);
+  --brand-muted: oklch(0.94 0.03 295);
+
+  /* Glow effects - amethyst ambient light */
+  --glow-color: oklch(0.6 0.18 295 / 0.15);
+  --glow-color-strong: oklch(0.6 0.18 295 / 0.25);
+  --glow-sm: 0 0 8px var(--glow-color), 0 0 2px var(--glow-color);
+  --glow-md:
+    0 0 12px var(--glow-color), 0 0 4px var(--glow-color-strong),
+    0 2px 8px oklch(0 0 0 / 0.08);
+  --glow-lg:
+    0 0 20px var(--glow-color), 0 0 8px var(--glow-color-strong),
+    0 4px 12px oklch(0 0 0 / 0.1);
+  --glow-pulse:
+    0 0 16px oklch(0.6 0.2 295 / 0.3), 0 0 6px oklch(0.6 0.2 295 / 0.2);
+
+  --background: oklch(0.995 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  /* Primary: amethyst with enough saturation to be visible */
+  --primary: oklch(0.52 0.14 295);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.965 0.008 295);
+  --secondary-foreground: oklch(0.25 0 0);
+  --muted: oklch(0.965 0 0);
+  --muted-foreground: oklch(0.45 0 0);
+  --accent: oklch(0.95 0.025 295);
+  --accent-foreground: oklch(0.35 0.1 295);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.91 0.008 295);
+  --input: oklch(0.91 0 0);
+  --ring: oklch(0.55 0.12 295);
+  --chart-1: oklch(0.55 0.14 295);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.52 0.14 295);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.95 0.02 295);
+  --sidebar-accent-foreground: oklch(0.35 0.1 295);
+  --sidebar-border: oklch(0.91 0.008 295);
+  --sidebar-ring: oklch(0.55 0.12 295);
+  --display-family: var(--font-sans);
+  --display-weight: 400;
+  --text-family: var(--font-sans);
+  --text-weight: 400;
+}
+
+.dark {
+  /* Amethyst brand */
+  --brand: oklch(0.7 0.14 295);
+  --brand-foreground: oklch(0.12 0 0);
+  --brand-muted: oklch(0.25 0.04 295);
+
+  /* Glow effects - amethyst ambient light (more visible on dark) */
+  --glow-color: oklch(0.65 0.18 295 / 0.2);
+  --glow-color-strong: oklch(0.65 0.18 295 / 0.35);
+  --glow-sm: 0 0 10px var(--glow-color), 0 0 3px var(--glow-color);
+  --glow-md:
+    0 0 16px var(--glow-color), 0 0 6px var(--glow-color-strong),
+    0 2px 8px oklch(0 0 0 / 0.3);
+  --glow-lg:
+    0 0 24px var(--glow-color), 0 0 10px var(--glow-color-strong),
+    0 4px 16px oklch(0 0 0 / 0.4);
+  --glow-pulse:
+    0 0 20px oklch(0.68 0.2 295 / 0.4), 0 0 8px oklch(0.68 0.2 295 / 0.25);
+
+  --background: oklch(0.13 0 0);
+  --foreground: oklch(0.95 0 0);
+  --card: oklch(0.16 0.005 295);
+  --card-foreground: oklch(0.95 0 0);
+  --popover: oklch(0.16 0.005 295);
+  --popover-foreground: oklch(0.95 0 0);
+  /* Primary: lighter amethyst for dark mode */
+  --primary: oklch(0.68 0.14 295);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.22 0.015 295);
+  --secondary-foreground: oklch(0.95 0 0);
+  --muted: oklch(0.22 0 0);
+  --muted-foreground: oklch(0.6 0 0);
+  --accent: oklch(0.25 0.035 295);
+  --accent-foreground: oklch(0.82 0.1 295);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.26 0.015 295);
+  --input: oklch(0.22 0.01 295);
+  --ring: oklch(0.65 0.12 295);
+  --chart-1: oklch(0.68 0.14 295);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.14 0.008 295);
+  --sidebar-foreground: oklch(0.95 0 0);
+  --sidebar-primary: oklch(0.68 0.14 295);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.25 0.035 295);
+  --sidebar-accent-foreground: oklch(0.82 0.08 295);
+  --sidebar-border: oklch(0.26 0.015 295);
+  --sidebar-ring: oklch(0.65 0.12 295);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply overscroll-y-none overflow-x-clip;
+  }
+  body {
+    @apply bg-background text-foreground overscroll-y-none overflow-x-clip;
+  }
+  .font-display {
+    font-weight: var(--display-weight);
+  }
+  .font-text {
+    font-weight: var(--text-weight);
+  }
+
+  /* Ensure SimpleIcons are visible on dark backgrounds */
+  .dark img[src*="cdn.simpleicons.org"] {
+    filter: brightness(0) invert(1);
+  }
+
+  /* Optimize node rendering for drag performance */
+  .react-flow__node {
+    will-change: transform;
+    contain: layout style;
+  }
+
+  /* ReactFlow handle positioning fixes */
+  .react-flow__handle {
+    /* Ensure handles are centered on their connection point */
+    transform: translate(-50%, -50%);
+  }
+  .react-flow__handle.react-flow__handle-top {
+    top: 0;
+    transform: translate(-50%, -50%);
+  }
+  .react-flow__handle.react-flow__handle-bottom {
+    bottom: 0;
+    top: auto;
+    transform: translate(-50%, 50%);
+  }
+  .react-flow__handle.react-flow__handle-left {
+    left: 0;
+    transform: translate(-50%, -50%);
+  }
+  .react-flow__handle.react-flow__handle-right {
+    right: 0;
+    left: auto;
+    transform: translate(50%, -50%);
+  }
+
+  /* ReactFlow Controls theming */
+  .react-flow__controls {
+    box-shadow:
+      0 1px 3px 0 rgb(0 0 0 / 0.1),
+      0 1px 2px -1px rgb(0 0 0 / 0.1);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    bottom: 60px !important;
+  }
+  .react-flow__controls-button {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    background-color: var(--card) !important;
+    border: none !important;
+    border-bottom: 1px solid var(--border) !important;
+    transition: background-color 0.15s ease;
+  }
+  .react-flow__controls-button:hover {
+    background-color: var(--muted) !important;
+  }
+  .react-flow__controls-button:last-child {
+    border-bottom: none !important;
+  }
+  .react-flow__controls-button svg {
+    fill: var(--foreground) !important;
+  }
+
+  /* Reposition controls on mobile to avoid overlapping workflow nodes */
+  @media (max-width: 640px) {
+    .react-flow__controls {
+      bottom: auto !important;
+      top: 12px !important;
+      left: 12px !important;
+      z-index: 5;
+      background-color: var(--card);
+      backdrop-filter: blur(8px);
+    }
+  }
+
+  /* ReactFlow background pattern theming */
+  .react-flow__background pattern circle,
+  .react-flow__background pattern line {
+    stroke: var(--border);
+  }
+
+  /* Modern edge styling */
+  .react-flow__edge-smart {
+    cursor: pointer;
+  }
+
+  .react-flow__edge-smart:hover .react-flow__edge-path {
+    stroke-width: 4px !important;
+  }
+
+  .react-flow__edge-smart:hover .react-flow__edge-connector {
+    r: 6px;
+    filter: drop-shadow(0 0 6px currentColor);
+  }
+
+  .react-flow__edge-connector {
+    transition:
+      r 0.15s ease,
+      filter 0.15s ease;
+  }
+
+  .react-flow__edge-path {
+    transition:
+      stroke-width 0.15s ease,
+      stroke 0.15s ease;
+  }
+
+  /* Connection line styling during drag */
+  .react-flow__connection-line {
+    stroke: #6366f1;
+    stroke-width: 3px;
+    stroke-dasharray: 8 4;
+    animation: dash 0.5s linear infinite;
+  }
+
+  @keyframes dash {
+    to {
+      stroke-dashoffset: -12;
+    }
+  }
+
+  /* Handle styling - larger and more visible */
+  .react-flow__handle {
+    width: 12px !important;
+    height: 12px !important;
+    border: 2px solid var(--background) !important;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
+  }
+}
+
+@layer utilities {
+  /* Override accordion animations for Ark UI (uses --height instead of --radix-accordion-content-height) */
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--height);
+    }
+    to {
+      height: 0;
+    }
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) var(--muted);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--muted);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 10px;
+    border: 2px solid var(--muted);
+    background-clip: content-box;
+  }
+
+  /* Glow animation for subtle pulsing effect */
+  @keyframes glow-pulse {
+    0%,
+    100% {
+      box-shadow: var(--glow-sm);
+    }
+    50% {
+      box-shadow: var(--glow-pulse);
+    }
+  }
+
+  .animate-glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  /* Attention pulse animation for nodes that need configuration */
+  @keyframes attention-pulse {
+    0%,
+    100% {
+      box-shadow:
+        0 0 0 0 oklch(0.8 0.18 85 / 0),
+        0 0 0 0 oklch(0.8 0.18 85 / 0);
+    }
+    50% {
+      box-shadow:
+        0 0 0 4px oklch(0.8 0.18 85 / 0.4),
+        0 0 20px 4px oklch(0.8 0.18 85 / 0.2);
+    }
+  }
+
+  .animate-attention-pulse {
+    animation: attention-pulse 1s ease-in-out 3;
+  }
+
+  /* Workflow execution status highlighting for nodes */
+  @keyframes execution-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 2px oklch(0.6 0.2 240 / 0.6);
+    }
+    50% {
+      box-shadow:
+        0 0 0 2px oklch(0.6 0.2 240 / 0.8),
+        0 0 12px 4px oklch(0.6 0.2 240 / 0.4);
+    }
+  }
+
+  .execution-status-running > div {
+    box-shadow:
+      0 0 0 2px oklch(0.6 0.2 240),
+      0 0 8px 2px oklch(0.6 0.2 240 / 0.4) !important;
+    animation: execution-pulse 1.5s ease-in-out infinite;
+  }
+
+  .execution-status-completed > div {
+    box-shadow: 0 0 0 2px oklch(0.65 0.2 145) !important;
+  }
+
+  .execution-status-failed > div {
+    box-shadow: 0 0 0 2px oklch(0.6 0.25 25) !important;
+  }
+
+  .execution-status-skipped > div {
+    opacity: 0.6;
+  }
+
+  .execution-status-pending > div {
+    box-shadow: 0 0 0 2px oklch(0.7 0.15 85 / 0.5) !important;
+  }
+
+  /* Static glow utilities */
+  .glow-sm {
+    box-shadow: var(--glow-sm);
+  }
+
+  .glow {
+    box-shadow: var(--glow-md);
+  }
+
+  .glow-lg {
+    box-shadow: var(--glow-lg);
+  }
+
+  /* Gemstone button effect - polished amethyst with inner highlights */
+  .btn-gem {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.58 0.15 295) 0%,
+      oklch(0.48 0.14 295) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 0 oklch(1 0 0 / 0.15),
+      inset 0 -1px 0 0 oklch(0 0 0 / 0.15),
+      0 1px 3px 0 oklch(0.4 0.15 295 / 0.3),
+      0 1px 2px -1px oklch(0 0 0 / 0.1);
+    border: 1px solid oklch(0.45 0.12 295 / 0.4);
+  }
+
+  .btn-gem:hover {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.62 0.16 295) 0%,
+      oklch(0.52 0.15 295) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 0 oklch(1 0 0 / 0.2),
+      inset 0 -1px 0 0 oklch(0 0 0 / 0.1),
+      0 1px 3px 0 oklch(0.4 0.15 295 / 0.3),
+      0 1px 2px -1px oklch(0 0 0 / 0.1),
+      var(--glow-sm);
+  }
+
+  .btn-gem:active {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.48 0.13 295) 0%,
+      oklch(0.44 0.12 295) 100%
+    );
+    box-shadow:
+      inset 0 1px 3px 0 oklch(0 0 0 / 0.2),
+      0 1px 2px 0 oklch(0 0 0 / 0.05);
+  }
+
+  /* Dark mode gemstone - brighter amethyst */
+  .dark .btn-gem {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.72 0.15 295) 0%,
+      oklch(0.62 0.14 295) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 0 oklch(1 0 0 / 0.2),
+      inset 0 -1px 0 0 oklch(0 0 0 / 0.15),
+      0 1px 3px 0 oklch(0.5 0.18 295 / 0.4),
+      0 1px 2px -1px oklch(0 0 0 / 0.2);
+    border: 1px solid oklch(0.55 0.12 295 / 0.3);
+    color: oklch(0.98 0 0);
+  }
+
+  .dark .btn-gem:hover {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.76 0.16 295) 0%,
+      oklch(0.66 0.15 295) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 0 oklch(1 0 0 / 0.25),
+      inset 0 -1px 0 0 oklch(0 0 0 / 0.1),
+      0 1px 3px 0 oklch(0.5 0.18 295 / 0.4),
+      0 1px 2px -1px oklch(0 0 0 / 0.2),
+      var(--glow-sm);
+  }
+
+  .dark .btn-gem:active {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.6 0.13 295) 0%,
+      oklch(0.55 0.12 295) 100%
+    );
+    box-shadow:
+      inset 0 1px 3px 0 oklch(0 0 0 / 0.25),
+      0 1px 2px 0 oklch(0 0 0 / 0.15);
+  }
+
+  /* Destructive gemstone button - polished ruby with inner highlights */
+  .btn-gem-destructive {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.58 0.2 25) 0%,
+      oklch(0.48 0.19 25) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 0 oklch(1 0 0 / 0.15),
+      inset 0 -1px 0 0 oklch(0 0 0 / 0.15),
+      0 1px 3px 0 oklch(0.4 0.2 25 / 0.3),
+      0 1px 2px -1px oklch(0 0 0 / 0.1);
+    border: 1px solid oklch(0.45 0.16 25 / 0.4);
+  }
+
+  .btn-gem-destructive:hover {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.62 0.22 25) 0%,
+      oklch(0.52 0.2 25) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 0 oklch(1 0 0 / 0.2),
+      inset 0 -1px 0 0 oklch(0 0 0 / 0.1),
+      0 1px 3px 0 oklch(0.4 0.2 25 / 0.3),
+      0 1px 2px -1px oklch(0 0 0 / 0.1),
+      0 0 8px oklch(0.6 0.22 25 / 0.15),
+      0 0 2px oklch(0.6 0.22 25 / 0.15);
+  }
+
+  .btn-gem-destructive:active {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.48 0.18 25) 0%,
+      oklch(0.44 0.17 25) 100%
+    );
+    box-shadow:
+      inset 0 1px 3px 0 oklch(0 0 0 / 0.2),
+      0 1px 2px 0 oklch(0 0 0 / 0.05);
+  }
+
+  /* Dark mode destructive gemstone - brighter ruby */
+  .dark .btn-gem-destructive {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.7 0.2 22) 0%,
+      oklch(0.6 0.19 22) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 0 oklch(1 0 0 / 0.2),
+      inset 0 -1px 0 0 oklch(0 0 0 / 0.15),
+      0 1px 3px 0 oklch(0.5 0.22 22 / 0.4),
+      0 1px 2px -1px oklch(0 0 0 / 0.2);
+    border: 1px solid oklch(0.55 0.16 22 / 0.3);
+    color: oklch(0.98 0 0);
+  }
+
+  .dark .btn-gem-destructive:hover {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.74 0.22 22) 0%,
+      oklch(0.64 0.2 22) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 0 oklch(1 0 0 / 0.25),
+      inset 0 -1px 0 0 oklch(0 0 0 / 0.1),
+      0 1px 3px 0 oklch(0.5 0.22 22 / 0.4),
+      0 1px 2px -1px oklch(0 0 0 / 0.2),
+      0 0 10px oklch(0.65 0.22 22 / 0.2),
+      0 0 3px oklch(0.65 0.22 22 / 0.2);
+  }
+
+  .dark .btn-gem-destructive:active {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.58 0.18 22) 0%,
+      oklch(0.53 0.17 22) 100%
+    );
+    box-shadow:
+      inset 0 1px 3px 0 oklch(0 0 0 / 0.25),
+      0 1px 2px 0 oklch(0 0 0 / 0.15);
+  }
+}
+
+/* TanStack Devtools - move trigger to bottom-left to avoid Add Node button */
+[class*="tsrd-main-close-btn"] {
+  right: auto !important;
+  left: 12px !important;
+}
