@@ -1,0 +1,7 @@
+mutation DeleteWorkflow($input: DeleteWorkflowInput!) {
+  deleteWorkflow(input: $input) {
+    workflow {
+      rowId
+    }
+  }
+}

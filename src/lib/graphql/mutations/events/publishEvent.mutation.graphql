@@ -1,0 +1,11 @@
+mutation PublishEvent($input: PublishEventInput!) {
+  publishEvent(input: $input) {
+    eventId
+    workflowsTriggered {
+      workflowId
+      workflowName
+      runId
+      status
+    }
+  }
+}
