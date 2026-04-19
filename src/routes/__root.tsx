@@ -168,16 +168,24 @@ function RootComponent() {
 }
 
 /**
- * Toaster wrapper that avoids hydration mismatch. Sonner resolves
- * `theme="system"` via `window.matchMedia` during `useState` init,
- * producing a different value on server (always "light") vs client
- * (depends on OS preference). Deferring to a `useEffect` keeps the
- * server and initial client render in sync.
+ * Toaster wrapper that avoids hydration mismatch. Sonner renders
+ * browser-dependent attributes (theme, dir, viewport styles) that
+ * differ between server and client. Deferring the entire Toaster to
+ * a post-hydration effect keeps server and client HTML identical.
+ * Toasts are only triggered by user interaction so nothing is lost.
  */
 function ThemedToaster({ theme }: { theme: Theme }) {
+  const [mounted, setMounted] = useState(false);
   const [resolved, setResolved] = useState<"light" | "dark">("light");
 
+  // Skip rendering on the server and during the first client render
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     if (theme !== "system") {
       setResolved(theme);
       return;
@@ -190,7 +198,9 @@ function ThemedToaster({ theme }: { theme: Theme }) {
       setResolved(e.matches ? "dark" : "light");
     mql.addEventListener("change", handler);
     return () => mql.removeEventListener("change", handler);
-  }, [theme]);
+  }, [theme, mounted]);
+
+  if (!mounted) return null;
 
   return <Toaster theme={resolved} position="top-center" richColors />;
 }

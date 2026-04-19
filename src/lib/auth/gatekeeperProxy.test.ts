@@ -144,11 +144,13 @@ describe("proxyToGatekeeper", () => {
   });
 
   describe("URL forwarding", () => {
-    test("strips /api/auth prefix from path", async () => {
+    test("forwards full path to Gatekeeper", async () => {
       const req = makeRequest("GET");
       await proxyToGatekeeper(req, "/api/auth/api-key/list");
 
-      expect(fetchCalls[0].url).toBe("https://auth.test.local/api-key/list");
+      expect(fetchCalls[0].url).toBe(
+        "https://auth.test.local/api/auth/api-key/list",
+      );
     });
   });
 

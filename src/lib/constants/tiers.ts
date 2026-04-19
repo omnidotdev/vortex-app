@@ -35,6 +35,10 @@ export const TEAM_LIMITS: PlanLimits = {
   plugins: true,
 };
 
+// TODO: overage pricing is not yet defined for any tier. When implemented,
+// add per-execution and per-workflow overage rates here and wire them into
+// the billing provider (future consideration)
+
 /** Default limits when billing is not configured (unlimited) */
 export const DEFAULT_LIMITS: PlanLimits = {
   workflows: null,

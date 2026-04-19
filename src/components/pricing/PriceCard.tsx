@@ -133,8 +133,7 @@ export const PriceCard = ({ price, orgSubscriptions = {} }: Props) => {
   const handleClick = () => {
     // Enterprise - contact sales
     if (isEnterpriseTier) {
-      window.location.href =
-        "mailto:sales@omni.dev?subject=Vortex%20Enterprise";
+      window.location.href = "https://omni.dev/contact";
       return;
     }
 
