@@ -146,7 +146,6 @@ function WorkflowsPage() {
           current={workflows.length}
           limit={limits.workflows}
           label="Workflows"
-          workspaceSlug={workspaceSlug}
         />
       </div>
 
@@ -233,6 +232,7 @@ function WorkflowsPage() {
                         variant="ghost"
                         size="sm"
                         className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
+                        aria-label="Edit workflow"
                         onClick={() =>
                           setEditingWorkflow({
                             rowId: workflow.rowId,
@@ -251,6 +251,7 @@ function WorkflowsPage() {
                               variant="ghost"
                               size="sm"
                               className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                              aria-label="Delete workflow"
                               disabled={deletingId === workflow.rowId}
                             >
                               {deletingId === workflow.rowId ? (
@@ -292,6 +293,7 @@ function WorkflowsPage() {
                           variant="ghost"
                           size="sm"
                           className="h-8 w-8 cursor-not-allowed p-0 opacity-50"
+                          aria-label="Delete workflow"
                           disabled
                           title="Admin access required"
                         >

@@ -93,7 +93,9 @@ function WorkspaceDashboard() {
     <div className="p-8">
       <h1 className="font-bold text-2xl">Dashboard</h1>
       <p className="mt-2 text-muted-foreground">
-        Welcome to workspace: {workspaceSlug}
+        Welcome to the{" "}
+        <span className="font-medium text-foreground">{workspaceSlug}</span>{" "}
+        workspace
       </p>
 
       {/* Quick stats */}

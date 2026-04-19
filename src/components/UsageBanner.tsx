@@ -5,19 +5,13 @@ type UsageBannerProps = {
   current: number;
   limit: number | null;
   label: string;
-  workspaceSlug: string;
 };
 
 /**
  * Show a warning banner when usage approaches or reaches a plan limit.
  * Renders nothing when usage is below 80% or when the limit is null (unlimited).
  */
-function UsageBanner({
-  current,
-  limit,
-  label,
-  workspaceSlug,
-}: UsageBannerProps) {
+function UsageBanner({ current, limit, label }: UsageBannerProps) {
   if (limit === null) return null;
 
   const ratio = current / limit;
@@ -41,8 +35,7 @@ function UsageBanner({
           <>
             {label} limit reached.{" "}
             <Link
-              to="/workspaces/$workspaceSlug/settings"
-              params={{ workspaceSlug }}
+              to="/pricing"
               className="font-medium underline underline-offset-2"
             >
               Upgrade to create more
@@ -53,8 +46,7 @@ function UsageBanner({
           <>
             You've used {current} of {limit} {label.toLowerCase()}.{" "}
             <Link
-              to="/workspaces/$workspaceSlug/settings"
-              params={{ workspaceSlug }}
+              to="/pricing"
               className="font-medium underline underline-offset-2"
             >
               Upgrade for more

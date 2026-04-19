@@ -34,37 +34,37 @@ const features: Feature[] = [
     title: "Visual Workflow Builder",
     description:
       "Design complex workflows with an intuitive drag-and-drop interface. No coding required to get started.",
-    icon: <Workflow className="h-6 w-6" />,
+    icon: <Workflow className="h-6 w-6" aria-hidden="true" />,
   },
   {
     title: "Powerful Integrations",
     description:
       "Connect your favorite tools and services. Trigger workflows from webhooks, schedules, or events.",
-    icon: <PlugZap className="h-6 w-6" />,
+    icon: <PlugZap className="h-6 w-6" aria-hidden="true" />,
   },
   {
     title: "Reliable Execution",
     description:
       "Built-in retries, error handling, and monitoring. Your workflows run reliably, every time.",
-    icon: <RefreshCw className="h-6 w-6" />,
+    icon: <RefreshCw className="h-6 w-6" aria-hidden="true" />,
   },
   {
     title: "Lightning Fast",
     description:
       "Execute thousands of workflows per second. Scale from prototype to production seamlessly.",
-    icon: <Zap className="h-6 w-6" />,
+    icon: <Zap className="h-6 w-6" aria-hidden="true" />,
   },
   {
     title: "Scheduled Tasks",
     description:
       "Run workflows on a schedule with cron expressions. Automate recurring tasks with precision.",
-    icon: <Timer className="h-6 w-6" />,
+    icon: <Timer className="h-6 w-6" aria-hidden="true" />,
   },
   {
     title: "Version Control",
     description:
       "Track changes to your workflows over time. Roll back to previous versions when needed.",
-    icon: <GitBranch className="h-6 w-6" />,
+    icon: <GitBranch className="h-6 w-6" aria-hidden="true" />,
   },
 ];
 
@@ -128,7 +128,10 @@ function LandingPage() {
                 >
                   <Link to="/workspaces">
                     Go to Dashboard
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight
+                      className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                      aria-hidden="true"
+                    />
                   </Link>
                 </Button>
               ) : (
@@ -138,7 +141,10 @@ function LandingPage() {
                   className="group h-12 gap-2 px-8 font-semibold text-base"
                 >
                   Get Started Free
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight
+                    className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                    aria-hidden="true"
+                  />
                 </Button>
               )}
 
@@ -149,7 +155,7 @@ function LandingPage() {
                 asChild
               >
                 <Link to="/demo">
-                  <PlayCircle className="h-4 w-4" />
+                  <PlayCircle className="h-4 w-4" aria-hidden="true" />
                   Try the Demo
                 </Link>
               </Button>
@@ -160,7 +166,7 @@ function LandingPage() {
                 rel="noopener noreferrer"
               >
                 <Button variant="outline" size="lg" className="h-12 gap-2 px-8">
-                  <GithubIcon size={18} />
+                  <GithubIcon size={18} aria-hidden="true" />
                   View on GitHub
                 </Button>
               </a>
@@ -257,7 +263,10 @@ function LandingPage() {
                 key={useCase}
                 className="flex items-center gap-3 rounded-lg border bg-card p-4"
               >
-                <CheckCircle2 className="h-5 w-5 shrink-0 text-primary" />
+                <CheckCircle2
+                  className="h-5 w-5 shrink-0 text-primary"
+                  aria-hidden="true"
+                />
                 <span className="text-foreground">{useCase}</span>
               </div>
             ))}
@@ -277,7 +286,10 @@ function LandingPage() {
               {/* Content */}
               <div className="max-w-xl text-center lg:text-left">
                 <Badge className="mb-4 border-primary/20 bg-primary/10 text-primary">
-                  <CheckCircle2 className="mr-1 h-3.5 w-3.5" />
+                  <CheckCircle2
+                    className="mr-1 h-3.5 w-3.5"
+                    aria-hidden="true"
+                  />
                   Open Source
                 </Badge>
                 <h2 className="mb-4 font-bold text-3xl text-foreground sm:text-4xl">
@@ -297,7 +309,7 @@ function LandingPage() {
                 rel="noopener noreferrer"
               >
                 <Button variant="outline" size="lg" className="h-12 gap-2 px-6">
-                  <GithubIcon size={20} />
+                  <GithubIcon size={20} aria-hidden="true" />
                   View on GitHub
                 </Button>
               </a>
@@ -334,7 +346,10 @@ function LandingPage() {
               >
                 <Link to="/workspaces">
                   Go to Dashboard
-                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight
+                    className="h-5 w-5 transition-transform group-hover:translate-x-1"
+                    aria-hidden="true"
+                  />
                 </Link>
               </Button>
             ) : (
@@ -344,7 +359,10 @@ function LandingPage() {
                 className="group h-14 gap-2 px-10 font-semibold text-lg"
               >
                 Get Started for Free
-                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                <ArrowRight
+                  className="h-5 w-5 transition-transform group-hover:translate-x-1"
+                  aria-hidden="true"
+                />
               </Button>
             )}
 

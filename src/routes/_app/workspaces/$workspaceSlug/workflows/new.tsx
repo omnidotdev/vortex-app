@@ -1,10 +1,13 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import {
+  Link,
   createFileRoute,
   notFound,
   useNavigate,
   useRouter,
 } from "@tanstack/react-router";
 import {
+  AlertTriangle,
   Clock,
   FileText,
   GitBranch,
@@ -30,17 +33,37 @@ import {
   useCreateWorkflowMutation,
   useWorkflowsQuery,
 } from "@/generated/graphql";
+import { hasBilling } from "@/lib/config/env.config";
+import { DEFAULT_LIMITS, getLimitsForPlan } from "@/lib/constants/tiers";
 import extractErrorMessage from "@/lib/graphql/extractErrorMessage";
+import workflowsOptions from "@/lib/options/workflows.options";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
 import { cn } from "@/lib/utils";
+import { getSubscription } from "@/server/functions/subscriptions";
+
+import type { Subscription } from "@/lib/providers/billing";
 
 export const Route = createFileRoute(
   "/_app/workspaces/$workspaceSlug/workflows/new",
 )({
-  loader: async ({ context: { organizationId } }) => {
+  loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
 
-    return { organizationId };
+    let subscription: Subscription | null = null;
+
+    if (hasBilling) {
+      try {
+        subscription = await getSubscription({
+          data: { organizationId },
+        });
+      } catch {
+        // Fall back to null (shows free tier)
+      }
+    }
+
+    await queryClient.ensureQueryData(workflowsOptions({ organizationId }));
+
+    return { organizationId, subscription };
   },
   component: NewWorkflowPage,
 });
@@ -594,9 +617,21 @@ type Tab = "scratch" | "template";
  */
 function NewWorkflowPage() {
   const { workspaceSlug } = Route.useParams();
-  const { organizationId } = Route.useLoaderData();
+  const { organizationId, subscription } = Route.useLoaderData();
   const router = useRouter();
   const navigate = useNavigate();
+
+  const limits = !hasBilling
+    ? DEFAULT_LIMITS
+    : getLimitsForPlan(subscription?.product?.name);
+
+  const { data: workflows } = useSuspenseQuery({
+    ...workflowsOptions({ organizationId }),
+    select: (data) => data?.workflows?.nodes ?? [],
+  });
+
+  const isAtLimit =
+    limits.workflows !== null && workflows.length >= limits.workflows;
 
   const [tab, setTab] = useState<Tab>("template");
   const [name, setName] = useState("");
@@ -685,6 +720,25 @@ function NewWorkflowPage() {
         </p>
       </div>
 
+      {isAtLimit && (
+        <div
+          className="mb-6 flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-800 text-sm dark:border-red-800 dark:bg-red-950/50 dark:text-red-200"
+          role="alert"
+        >
+          <AlertTriangle className="h-4 w-4 shrink-0" />
+          <p className="flex-1">
+            You have reached your workflow limit ({limits.workflows}).{" "}
+            <Link
+              to="/pricing"
+              className="font-medium underline underline-offset-2"
+            >
+              Upgrade your plan
+            </Link>{" "}
+            to create more.
+          </p>
+        </div>
+      )}
+
       {error && (
         <div className="mb-6 rounded-md border border-red-200 bg-red-50 p-4 text-red-700 text-sm dark:border-red-800 dark:bg-red-950 dark:text-red-400">
           {error}
@@ -733,7 +787,7 @@ function NewWorkflowPage() {
                 key={template.id}
                 type="button"
                 onClick={() => handleUseTemplate(template)}
-                disabled={isPending}
+                disabled={isPending || isAtLimit}
                 className={cn(
                   "flex cursor-pointer flex-col rounded-lg border bg-card p-5 text-left transition-all hover:border-primary/50 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50",
                   isCreating && "border-primary",
@@ -785,8 +839,8 @@ function NewWorkflowPage() {
 
           <div className="space-y-2">
             <label htmlFor="description" className="font-medium text-sm">
-              Description
-              <span className="ml-1 font-normal text-muted-foreground">
+              Description{" "}
+              <span className="font-normal text-muted-foreground">
                 (optional)
               </span>
             </label>
@@ -813,7 +867,10 @@ function NewWorkflowPage() {
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isPending || !name.trim()}>
+            <Button
+              type="submit"
+              disabled={isPending || isAtLimit || !name.trim()}
+            >
               {isPending ? "Creating..." : "Create Workflow"}
             </Button>
           </div>
