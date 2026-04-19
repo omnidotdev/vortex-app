@@ -26,9 +26,9 @@ function PublicLayout() {
   const { session } = Route.useRouteContext();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Only treat the user as "signed in" if fully provisioned (has rowId).
+  // Only treat the user as "signed in" if fully provisioned (has rowId)
   // A session without rowId is a zombie session that will be cleared on
-  // next navigation, don't show "Sign Out" for it.
+  // next navigation, don't show "Sign Out" for it
   const isAuthenticated = !!session?.user?.rowId;
 
   const handleSignIn = () => {

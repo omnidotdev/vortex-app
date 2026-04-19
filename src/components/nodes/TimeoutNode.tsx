@@ -57,12 +57,12 @@ export const TimeoutNode = memo(
       data.onNodeSelect?.({ id, data, type: "timeoutNode" });
     };
 
-    // Format duration for badge.
+    // Format duration for badge
     const durationBadge = data.durationMs
       ? formatDuration(data.durationMs)
       : "Timeout";
 
-    // Format onTimeout action for display.
+    // Format onTimeout action for display
     const onTimeoutDisplay = data.onTimeout
       ? data.onTimeout.charAt(0).toUpperCase() + data.onTimeout.slice(1)
       : "Not configured";

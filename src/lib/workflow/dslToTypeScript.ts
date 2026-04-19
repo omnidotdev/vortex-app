@@ -12,7 +12,7 @@ import type {
   WorkflowDefinition,
 } from "@/lib/workflow/types";
 
-// Mapping from step type to the property key holding step-specific data.
+// Mapping from step type to the property key holding step-specific data
 // Most step types use their type name directly, but some use camelCase variants
 const stepDataKeyMap: Record<string, string> = {
   webhookResponse: "webhookResponse",

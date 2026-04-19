@@ -76,10 +76,10 @@ describe("loader data guards", () => {
     });
 
     it("should not crash when destructuring undefined loader data", () => {
-      // This is the exact scenario that caused the production crash.
-      // Before the fix, the component did:
-      //   const { organizationId, subscription } = Route.useLoaderData();
-      // which throws TypeError when useLoaderData() returns undefined.
+      // This is the exact scenario that caused the production crash
+      // Before the fix, the component did
+      //   const { organizationId, subscription } = Route.useLoaderData()
+      // which throws TypeError when useLoaderData() returns undefined
 
       // Simulates useLoaderData() returning undefined at runtime
       const getLoaderData = (): DashboardLoaderData => undefined;

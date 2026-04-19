@@ -305,7 +305,7 @@ function SaaSPricing() {
   };
   const yearlyDiscount = computeYearlyDiscount();
 
-  // Use Aether prices only if they include the expected tiers (starter/pro/team);
+  // Use Aether prices only if they include the expected tiers (starter/pro/team)
   // otherwise fall back to hardcoded values to avoid showing stale Stripe data
   const EXPECTED_TIERS = ["starter", "pro", "team"];
   const hasExpectedTiers =

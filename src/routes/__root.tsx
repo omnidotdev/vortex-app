@@ -202,7 +202,14 @@ function ThemedToaster({ theme }: { theme: Theme }) {
 
   if (!mounted) return null;
 
-  return <Toaster theme={resolved} position="top-center" richColors />;
+  return (
+    <Toaster
+      theme={resolved}
+      position="bottom-right"
+      duration={3000}
+      richColors
+    />
+  );
 }
 
 function RootDocument({

@@ -1,7 +1,7 @@
 // VITE_-prefixed vars MUST come from import.meta.env on both server and
-// client so the rendered HTML is identical (avoiding hydration mismatch).
+// client so the rendered HTML is identical (avoiding hydration mismatch)
 // Server-only vars (auth secrets, internal URLs) are read from process.env
-// directly and are never rendered into the HTML.
+// directly and are never rendered into the HTML
 const clientEnv = import.meta.env;
 const serverEnv =
   typeof window === "undefined" ? process.env : ({} as Record<string, string>);
@@ -42,7 +42,7 @@ export const CONSOLE_URL = clientEnv.VITE_CONSOLE_URL as string | undefined;
 
 // Server-side runtime overrides for VITE_-prefixed vars. These allow Railway
 // (or any runtime) to override the build-time values for server-to-server
-// communication without affecting client-rendered HTML.
+// communication without affecting client-rendered HTML
 export const SERVER_BASE_URL =
   typeof window === "undefined"
     ? (serverEnv.VITE_BASE_URL as string | undefined) || BASE_URL

@@ -27,7 +27,7 @@ export const RetryNode = memo(
       data.onNodeSelect?.({ id, data, type: "retryNode" });
     };
 
-    // Format backoff strategy for display.
+    // Format backoff strategy for display
     const backoffDisplay = data.backoff
       ? data.backoff.charAt(0).toUpperCase() + data.backoff.slice(1)
       : "Not configured";

@@ -25,7 +25,7 @@ export const ErrorNode = memo(
       data.onNodeSelect?.({ id, data, type: "errorNode" });
     };
 
-    // Truncate message for display.
+    // Truncate message for display
     const truncatedMessage =
       data.message && data.message.length > 30
         ? `${data.message.slice(0, 30)}...`

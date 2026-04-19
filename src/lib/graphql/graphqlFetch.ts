@@ -44,9 +44,9 @@ export const graphqlFetch =
         },
       });
     } catch (error) {
-      // Only sign out on genuine 401/UNAUTHENTICATED from the server.
+      // Only sign out on genuine 401/UNAUTHENTICATED from the server
       // Network errors (aborted requests, timeouts) must not trigger sign-out
-      // as they commonly occur during normal page transitions.
+      // as they commonly occur during normal page transitions
       if (
         error instanceof ClientError &&
         typeof window !== "undefined" &&

@@ -119,7 +119,8 @@ function EventSandboxPage() {
     onError: (err) => {
       // Extract a user-friendly message from GraphQL errors without
       // leaking raw query structure or internal stack traces
-      let message = "Failed to publish event";
+      let message =
+        "Event publishing failed. Check that the event type and payload are valid.";
 
       if (err instanceof Error) {
         // graphql-request ClientError embeds server errors in response.errors
@@ -133,12 +134,13 @@ function EventSandboxPage() {
         };
 
         const gqlError = clientErr.response?.errors?.[0];
-        if (gqlError?.message) {
+        if (gqlError?.message && gqlError.message !== "Unexpected error.") {
           message = gqlError.message;
         } else if (
           err.message &&
           !err.message.includes("{") &&
-          err.message.length < 200
+          err.message.length < 200 &&
+          err.message !== "Unexpected error."
         ) {
           // Use the raw message only if it looks like a clean string
           // (not a serialized JSON blob or a stack trace)

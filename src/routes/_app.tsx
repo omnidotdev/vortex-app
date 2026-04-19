@@ -56,10 +56,10 @@ export const Route = createFileRoute("/_app")({
     }
 
     // If user exists but rowId is missing, the session may be freshly created
-    // (OAuth callback just completed) and getAuth hasn't enriched it yet.
+    // (OAuth callback just completed) and getAuth hasn't enriched it yet
     // Redirect to landing without signing out so the next navigation can
     // retry enrichment. The landing page handles zombie sessions after
-    // the initial grace period.
+    // the initial grace period
     if (!session.user.rowId) {
       throw redirect({ to: "/" });
     }
@@ -80,13 +80,31 @@ export const Route = createFileRoute("/_app")({
     return { organizationId: orgFromClaim.id, organization: orgFromClaim };
   },
   notFoundComponent: () => (
-    <div className="flex min-h-screen items-center justify-center">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-8">
       <div className="text-center">
-        <h1 className="font-bold text-2xl">Workspace Not Found</h1>
-        <p className="mt-2 text-muted-foreground">
+        <div className="mb-6 text-6xl">{"\uD83C\uDF2A\uFE0F"}</div>
+        <h1 className="font-bold text-2xl text-foreground">
+          Workspace Not Found
+        </h1>
+        <p className="mt-2 max-w-md text-muted-foreground">
           The workspace you're looking for doesn't exist or you don't have
           access.
         </p>
+        <div className="mt-6 flex items-center justify-center gap-3">
+          <button
+            type="button"
+            onClick={() => window.history.back()}
+            className="rounded-lg border border-border bg-card px-4 py-2 font-medium text-foreground text-sm transition-colors hover:bg-accent"
+          >
+            Go back
+          </button>
+          <a
+            href="/workspaces"
+            className="rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
+          >
+            Go to workspaces
+          </a>
+        </div>
       </div>
     </div>
   ),

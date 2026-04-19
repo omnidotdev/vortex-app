@@ -481,7 +481,7 @@ describe("round trip: ReactFlow -> DSL -> ReactFlow", () => {
 
   it("should preserve an LLM step", () => {
     // LLM nodes exist in dslToReactFlow stepTypeToNodeType map
-    // but not in reactFlowToDsl nodeTypeToStepType map.
+    // but not in reactFlowToDsl nodeTypeToStepType map
     // Test DSL -> ReactFlow direction for LLM
     const dsl: WorkflowDefinition = {
       version: "1.0",
