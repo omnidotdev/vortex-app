@@ -8,6 +8,15 @@ FROM base AS builder
 COPY package.json bun.lock .env.production ./
 RUN bun install --frozen-lockfile
 COPY . .
+
+ARG VITE_BASE_URL
+ARG VITE_API_BASE_URL
+ARG VITE_AUTH_BASE_URL
+ARG VITE_BILLING_BASE_URL
+ARG VITE_CONSOLE_URL
+ARG VITE_FLAGS_API_HOST
+ARG VITE_FLAGS_CLIENT_KEY
+
 RUN bun run build
 
 # TODO: Switch back to Bun runtime once module resolution is fixed
