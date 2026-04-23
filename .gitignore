@@ -28,6 +28,11 @@ public/swe-worker*
 # TLS/HTTPS
 certificates
 
+# tooling
+.claude
+AGENTS.md
+CLAUDE.md
+
 # environment
 *.env*
 
