@@ -1,0 +1,18 @@
+query UserByIdentityProviderId($identityProviderId: UUID!) {
+  userByIdentityProviderId(identityProviderId: $identityProviderId) {
+    rowId
+    email
+    name
+    avatarUrl
+    createdAt
+    userOrganizations {
+      nodes {
+        organizationId
+        slug
+        name
+        type
+        role
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+query EventSchemas(
+  $first: Int
+  $offset: Int
+  $orderBy: [EventSchemasOrderBy!]
+  $filter: EventSchemaFilter
+) {
+  eventSchemas(
+    first: $first
+    offset: $offset
+    orderBy: $orderBy
+    filter: $filter
+  ) {
+    nodes {
+      rowId
+      name
+      source
+      description
+      payloadSchema
+      enforcement
+      version
+      compatibilityMode
+      previousVersionId
+      migrationTransform
+      createdAt
+      updatedAt
+    }
+    totalCount
+  }
+}

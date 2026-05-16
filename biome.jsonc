@@ -1,0 +1,106 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.11/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!!**/generated",
+      "!!src/routeTree.gen.ts",
+      "!!src/temporal",
+      "!!public/sw.js",
+      "!!src/components/WorkflowApp.tsx",
+      "!!src/lib/db/workflow-store.ts",
+      "!!src/routes/api/execute-workflow.ts"
+    ]
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "lineWidth": 80,
+    "indentWidth": 2
+  },
+  "linter": {
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "useSemanticElements": "off",
+        "noStaticElementInteractions": "off",
+        "useKeyWithClickEvents": "off",
+        "useValidAnchor": "off",
+        "useFocusableInteractive": "off",
+        "useAriaPropsForRole": "off",
+        "noRedundantRoles": "off",
+        "useButtonType": "off",
+        "noLabelWithoutControl": "off",
+        "noSvgWithoutTitle": "off"
+      },
+      "correctness": {
+        "noUnusedImports": { "fix": "safe", "options": {}, "level": "error" }
+      },
+      "nursery": {
+        "useSortedClasses": {
+          "level": "error",
+          "fix": "safe",
+          "options": {
+            "attributes": ["class", "className"],
+            "functions": ["cn", "clsx", "classnames", "cva", "tv"]
+          }
+        }
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "useSingleVarDeclarator": "off",
+        "useImportType": {
+          "level": "error",
+          "options": { "style": "separatedType" }
+        }
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "warn",
+        "noNonNullAssertedOptionalChain": "off",
+        "useIterableCallbackReturn": "off",
+        "noConsole": {
+          "level": "error",
+          "options": {
+            "allow": ["error", "warn", "info"]
+          }
+        }
+      }
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "identifierOrder": "lexicographic",
+            "groups": [
+              { "type": false, "source": [":BUN:", ":NODE:"] },
+              ":BLANK_LINE:",
+              {
+                "type": false,
+                "source": [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:"]
+              },
+              ":BLANK_LINE:",
+              { "type": false, "source": ["**"] },
+              ":BLANK_LINE:",
+              { "type": true }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
