@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { Cable, GitBranch } from "lucide-react";
 import { useMemo } from "react";
@@ -6,39 +6,36 @@ import { useMemo } from "react";
 import UsageCounter from "@/components/UsageCounter";
 import { Button } from "@/components/ui/button";
 import { hasBilling } from "@/lib/config/env.config";
-import { DEFAULT_LIMITS, getLimitsForPlan } from "@/lib/constants/tiers";
+import {
+  DEFAULT_LIMITS,
+  getFallbackLimits,
+  limitsFromTierResponse,
+} from "@/lib/constants/tiers";
 import {
   integrationDefinitionsOptions,
   integrationsOptions,
 } from "@/lib/options/integrations.options";
+import { tierOptions } from "@/lib/options/stats.options";
 import workflowsOptions from "@/lib/options/workflows.options";
-import { getSubscription } from "@/server/functions/subscriptions";
-
-import type { Subscription } from "@/lib/providers/billing";
 
 export const Route = createFileRoute("/_app/workspaces/$workspaceSlug/")({
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
 
-    let subscription: Subscription | null = null;
-
-    if (hasBilling) {
-      try {
-        subscription = await getSubscription({
-          data: { organizationId },
-        });
-      } catch {
-        // Fall back to null (shows free tier)
-      }
-    }
-
-    await Promise.all([
+    const queries: Promise<unknown>[] = [
       queryClient.ensureQueryData(workflowsOptions({ organizationId })),
       queryClient.ensureQueryData(integrationsOptions({ organizationId })),
       queryClient.ensureQueryData(integrationDefinitionsOptions({})),
-    ]);
+    ];
+    if (hasBilling) {
+      // Prefetch tier limits; ignore failures so an Aether outage doesn't break the page
+      queries.push(
+        queryClient.ensureQueryData(tierOptions()).catch(() => undefined),
+      );
+    }
+    await Promise.all(queries);
 
-    return { organizationId, subscription };
+    return { organizationId };
   },
   component: WorkspaceDashboard,
 });
@@ -50,11 +47,16 @@ function WorkspaceDashboard() {
   const { workspaceSlug } = Route.useParams();
   const loaderData = Route.useLoaderData();
   const organizationId = loaderData?.organizationId ?? "";
-  const subscription = loaderData?.subscription;
 
+  const { data: tierData } = useQuery({
+    ...tierOptions(),
+    enabled: hasBilling,
+  });
   const limits = !hasBilling
     ? DEFAULT_LIMITS
-    : getLimitsForPlan(subscription?.product?.name);
+    : tierData
+      ? limitsFromTierResponse(tierData)
+      : getFallbackLimits("free");
 
   const { data: workflows } = useSuspenseQuery({
     ...workflowsOptions({ organizationId }),

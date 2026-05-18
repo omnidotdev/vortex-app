@@ -11,6 +11,7 @@ import {
   AccordionRoot,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   TabsContent,
   TabsList,
@@ -24,88 +25,7 @@ import { getSubscription } from "@/server/functions/subscriptions";
 
 import type { Price, Subscription } from "@/lib/providers/billing";
 
-// Pro tier placeholder for display
-const PRO_PRODUCT = {
-  id: "pro-product",
-  name: "Pro",
-  description:
-    "\uD83C\uDF2A\uFE0F Workflow automation with full platform access",
-  marketing_features: [
-    { name: "Unlimited workflows" },
-    { name: "50,000 executions/month" },
-    { name: "All integrations" },
-    { name: "Unlimited connected accounts" },
-    { name: "5 users" },
-    { name: "Custom plugins" },
-    { name: "Email support" },
-  ],
-};
-
-const PRO_PRICE_MONTHLY: Price = {
-  id: "pro-monthly",
-  active: true,
-  currency: "usd",
-  unit_amount: 2900,
-  recurring: { interval: "month", interval_count: 1 },
-  metadata: { tier: "pro" },
-  product: PRO_PRODUCT,
-};
-
-const PRO_PRICE_YEARLY: Price = {
-  ...PRO_PRICE_MONTHLY,
-  id: "pro-yearly",
-  // $29 * 12 = $348, 20% off = $278.40, rounded to $278
-  unit_amount: 27800,
-  recurring: { interval: "year", interval_count: 1 },
-};
-
-// Team tier placeholder for display
-const TEAM_PRODUCT = {
-  id: "team-product",
-  name: "Team",
-  description:
-    "\uD83C\uDF2A\uFE0F Workflow automation at scale for organizations",
-  marketing_features: [
-    { name: "Unlimited workflows" },
-    { name: "250,000 executions/month" },
-    { name: "All integrations" },
-    { name: "Unlimited connected accounts" },
-    { name: "20 users" },
-    { name: "SSO/SAML" },
-    { name: "Custom plugins" },
-    { name: "Audit logs" },
-    { name: "Priority support" },
-    { name: "SLA guarantee" },
-  ],
-};
-
-const TEAM_PRICE_MONTHLY: Price = {
-  id: "team-monthly",
-  active: true,
-  currency: "usd",
-  unit_amount: 7900,
-  recurring: { interval: "month", interval_count: 1 },
-  metadata: { tier: "team" },
-  product: TEAM_PRODUCT,
-};
-
-const TEAM_PRICE_YEARLY: Price = {
-  ...TEAM_PRICE_MONTHLY,
-  id: "team-yearly",
-  // $79 * 12 = $948, 20% off = $758.40, rounded to $758
-  unit_amount: 75800,
-  recurring: { interval: "year", interval_count: 1 },
-};
-
-/** Fallback paid tiers when billing products are not yet configured */
-const FALLBACK_PAID_PRICES: Price[] = [
-  PRO_PRICE_MONTHLY,
-  PRO_PRICE_YEARLY,
-  TEAM_PRICE_MONTHLY,
-  TEAM_PRICE_YEARLY,
-];
-
-// Enterprise tier placeholder for display
+// Enterprise tier placeholder for display (no price - contact sales)
 const ENTERPRISE_PRICE: Price = {
   id: "enterprise",
   active: true,
@@ -252,6 +172,31 @@ function DefaultPricing() {
   );
 }
 
+/**
+ * Render a "Contact us for pricing" CTA when Aether is unreachable and
+ * we have no live pricing data. Free and Enterprise tiers are still shown
+ * since they are not Stripe-priced.
+ */
+function ContactForPricingCard() {
+  return (
+    <div className="glow-lg flex min-w-[280px] max-w-sm flex-1 flex-col rounded-2xl border border-primary/50 bg-card p-8">
+      <h3 className="font-semibold text-xl">Pro and Team</h3>
+      <div className="mt-4">
+        <span className="font-bold text-3xl">Contact us</span>
+      </div>
+      <p className="mt-2 text-muted-foreground text-sm">
+        Live pricing is temporarily unavailable. Reach out and we will get back
+        to you with current plans
+      </p>
+      <div className="mt-6">
+        <Button asChild>
+          <a href="mailto:hello@omni.dev">Contact sales</a>
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 function SaaSPricing() {
   const { prices, orgSubscriptions } = Route.useLoaderData();
 
@@ -259,12 +204,11 @@ function SaaSPricing() {
 
   // Compute actual yearly discount from the lowest paid tier's monthly vs yearly price
   const computeYearlyDiscount = (): number => {
-    const allPrices = prices.length > 0 ? prices : FALLBACK_PAID_PRICES;
-    const monthlyPro = allPrices.find(
+    const monthlyPro = prices.find(
       (p: Price) =>
         p.metadata?.tier === "pro" && p.recurring?.interval === "month",
     );
-    const yearlyPro = allPrices.find(
+    const yearlyPro = prices.find(
       (p: Price) =>
         p.metadata?.tier === "pro" && p.recurring?.interval === "year",
     );
@@ -276,19 +220,12 @@ function SaaSPricing() {
   };
   const yearlyDiscount = computeYearlyDiscount();
 
-  // Use Aether prices only if they include the expected tiers (pro/team)
-  // otherwise fall back to hardcoded values to avoid showing stale Stripe data
+  // Source prices exclusively from Aether (omni-api planConfigs is the SSOT,
+  // synced to Stripe via Mosaic). Never invent fallback numbers
   const EXPECTED_TIERS = ["pro", "team"];
-  const hasExpectedTiers =
-    prices.length > 0 &&
-    EXPECTED_TIERS.every((tier) =>
-      prices.some((p: Price) => p.metadata?.tier === tier),
-    );
-  // Filter to expected tiers, then deduplicate by tier+interval (keep highest
-  // price to discard legacy/stale Stripe products with outdated pricing)
-  const activePrices: Price[] = hasExpectedTiers
-    ? prices.filter((p: Price) => EXPECTED_TIERS.includes(p.metadata?.tier))
-    : FALLBACK_PAID_PRICES;
+  const activePrices: Price[] = prices.filter((p: Price) =>
+    EXPECTED_TIERS.includes(p.metadata?.tier ?? ""),
+  );
 
   const deduped: Price[] = [];
   for (const price of activePrices.filter(
@@ -309,6 +246,7 @@ function SaaSPricing() {
       EXPECTED_TIERS.indexOf(a.metadata?.tier ?? "") -
       EXPECTED_TIERS.indexOf(b.metadata?.tier ?? ""),
   );
+  const showContactFallback = filteredPrices.length === 0;
 
   return (
     <div className="size-full pt-8">
@@ -349,13 +287,17 @@ function SaaSPricing() {
                   orgSubscriptions={orgSubscriptions}
                 />
 
-                {filteredPrices.map((price: Price) => (
-                  <PriceCard
-                    key={price.id}
-                    price={price}
-                    orgSubscriptions={orgSubscriptions}
-                  />
-                ))}
+                {showContactFallback ? (
+                  <ContactForPricingCard />
+                ) : (
+                  filteredPrices.map((price: Price) => (
+                    <PriceCard
+                      key={price.id}
+                      price={price}
+                      orgSubscriptions={orgSubscriptions}
+                    />
+                  ))
+                )}
 
                 <PriceCard
                   price={ENTERPRISE_PRICE}

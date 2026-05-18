@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import {
   Link,
   createFileRoute,
@@ -49,12 +49,14 @@ import {
 } from "@/generated/graphql";
 import { canPerformDestructiveAction } from "@/lib/auth/roles";
 import { hasBilling } from "@/lib/config/env.config";
-import { DEFAULT_LIMITS, getLimitsForPlan } from "@/lib/constants/tiers";
+import {
+  DEFAULT_LIMITS,
+  getFallbackLimits,
+  limitsFromTierResponse,
+} from "@/lib/constants/tiers";
+import { tierOptions } from "@/lib/options/stats.options";
 import workflowsOptions from "@/lib/options/workflows.options";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
-import { getSubscription } from "@/server/functions/subscriptions";
-
-import type { Subscription } from "@/lib/providers/billing";
 
 export const Route = createFileRoute(
   "/_app/workspaces/$workspaceSlug/workflows/",
@@ -62,21 +64,17 @@ export const Route = createFileRoute(
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
 
-    let subscription: Subscription | null = null;
-
+    const queries: Promise<unknown>[] = [
+      queryClient.ensureQueryData(workflowsOptions({ organizationId })),
+    ];
     if (hasBilling) {
-      try {
-        subscription = await getSubscription({
-          data: { organizationId },
-        });
-      } catch {
-        // Fall back to null (shows free tier)
-      }
+      queries.push(
+        queryClient.ensureQueryData(tierOptions()).catch(() => undefined),
+      );
     }
+    await Promise.all(queries);
 
-    await queryClient.ensureQueryData(workflowsOptions({ organizationId }));
-
-    return { organizationId, subscription };
+    return { organizationId };
   },
   component: WorkflowsPage,
 });
@@ -86,7 +84,7 @@ export const Route = createFileRoute(
  */
 function WorkflowsPage() {
   const { workspaceSlug } = Route.useParams();
-  const { organizationId, subscription } = Route.useLoaderData();
+  const { organizationId } = Route.useLoaderData();
   const { organization } = useRouteContext({ from: "/_app" });
   const isDestructiveAllowed = canPerformDestructiveAction(organization);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -97,9 +95,15 @@ function WorkflowsPage() {
     isActive: boolean;
   } | null>(null);
 
+  const { data: tierData } = useQuery({
+    ...tierOptions(),
+    enabled: hasBilling,
+  });
   const limits = !hasBilling
     ? DEFAULT_LIMITS
-    : getLimitsForPlan(subscription?.product?.name);
+    : tierData
+      ? limitsFromTierResponse(tierData)
+      : getFallbackLimits("free");
 
   const { data: workflows } = useSuspenseQuery({
     ...workflowsOptions({ organizationId }),

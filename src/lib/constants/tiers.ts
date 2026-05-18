@@ -1,5 +1,8 @@
 import type { Price } from "@/lib/providers/billing";
 
+/** Supported billing tiers */
+export type Tier = "free" | "pro" | "team" | "enterprise";
+
 /** Numeric plan limits by tier */
 export type PlanLimits = {
   workflows: number | null;
@@ -7,32 +10,37 @@ export type PlanLimits = {
   plugins: boolean;
 };
 
-/** Default limits for the free tier */
-export const FREE_LIMITS: PlanLimits = {
-  workflows: 5,
-  executionsPerMonth: 2_500,
-  plugins: false,
+/**
+ * Fallback limits per tier, mirroring omni-api `planConfigs.ts`.
+ *
+ * The SSOT is omni-api. These are last-resort defaults used only when the
+ * `/api/v1/stats/tier` endpoint is unreachable (Aether outage, network blip).
+ * Components should prefer fetching live limits from the API.
+ */
+const FALLBACK_BY_TIER: Record<Tier, PlanLimits> = {
+  free: {
+    workflows: 5,
+    executionsPerMonth: 2_500,
+    plugins: false,
+  },
+  pro: {
+    workflows: null,
+    executionsPerMonth: 50_000,
+    plugins: true,
+  },
+  team: {
+    workflows: null,
+    executionsPerMonth: 250_000,
+    plugins: true,
+  },
+  enterprise: {
+    workflows: null,
+    executionsPerMonth: null,
+    plugins: true,
+  },
 };
 
-/** Limits for the pro tier */
-export const PRO_LIMITS: PlanLimits = {
-  workflows: null,
-  executionsPerMonth: 50_000,
-  plugins: true,
-};
-
-/** Limits for the team tier */
-export const TEAM_LIMITS: PlanLimits = {
-  workflows: null,
-  executionsPerMonth: 250_000,
-  plugins: true,
-};
-
-// TODO: overage pricing is not yet defined for any tier. When implemented,
-// add per-execution and per-workflow overage rates here and wire them into
-// the billing provider (future consideration)
-
-/** Default limits when billing is not configured (unlimited) */
+/** Default limits when billing is not configured (self-hosted, unlimited) */
 export const DEFAULT_LIMITS: PlanLimits = {
   workflows: null,
   executionsPerMonth: null,
@@ -40,21 +48,58 @@ export const DEFAULT_LIMITS: PlanLimits = {
 };
 
 /**
- * Derive plan limits from a subscription product name.
- * Falls back to free tier when no subscription is active.
+ * Convert a raw entitlement value from the API to a `PlanLimits` field.
+ *
+ * The API returns -1 for unlimited; UI components represent unlimited as `null`
  */
-export function getLimitsForPlan(
-  productName: string | null | undefined,
-): PlanLimits {
-  if (!productName) return FREE_LIMITS;
+const normalizeLimit = (value: number | undefined | null): number | null => {
+  if (value === undefined || value === null) return null;
+  if (value === -1) return null;
+  return value;
+};
 
-  const name = productName.toLowerCase();
-  if (name.includes("team")) return TEAM_LIMITS;
-  if (name.includes("pro")) return PRO_LIMITS;
-  // Legacy: treat "starter" subscriptions as pro
-  if (name.includes("starter")) return PRO_LIMITS;
+/**
+ * Raw shape returned by `GET /api/v1/stats/tier`.
+ */
+export type TierResponse = {
+  tier: Tier;
+  limits: {
+    max_workflows: number;
+    max_executions_per_month: number;
+    max_integrations: number;
+    max_plugins: number;
+    max_users: number;
+    max_functions: number;
+    max_subscriptions: number;
+    max_mcp_servers: number;
+    max_routing_rules: number;
+    max_event_schemas: number;
+    sso_enabled: number;
+    audit_logs: number;
+    custom_plugins: number;
+  };
+};
 
-  return FREE_LIMITS;
+/**
+ * Convert an API tier response into the UI's `PlanLimits` shape.
+ */
+export function limitsFromTierResponse(response: TierResponse): PlanLimits {
+  return {
+    workflows: normalizeLimit(response.limits.max_workflows),
+    executionsPerMonth: normalizeLimit(response.limits.max_executions_per_month),
+    plugins:
+      response.limits.max_plugins === -1 || response.limits.max_plugins > 0,
+  };
+}
+
+/**
+ * Return fallback limits for a given tier.
+ *
+ * Only used when the `/api/v1/stats/tier` endpoint is unavailable. Prefer the
+ * live API response in all UI surfaces
+ */
+export function getFallbackLimits(tier: Tier): PlanLimits {
+  return FALLBACK_BY_TIER[tier];
 }
 
 /** Free tier placeholder price for display */

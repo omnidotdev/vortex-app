@@ -132,4 +132,47 @@ describe("fetchStats error handling", () => {
       expect(error).toBeInstanceOf(StatsAccessError);
     }
   });
+
+  it("should return tier and limits on successful tier response", async () => {
+    const mockData = {
+      tier: "pro" as const,
+      limits: {
+        max_workflows: -1,
+        max_executions_per_month: 50000,
+        max_integrations: -1,
+        max_plugins: -1,
+        max_users: 5,
+        max_functions: -1,
+        max_subscriptions: -1,
+        max_mcp_servers: -1,
+        max_routing_rules: -1,
+        max_event_schemas: -1,
+        sso_enabled: 0,
+        audit_logs: 0,
+        custom_plugins: 1,
+      },
+    };
+
+    stubFetch(200, mockData);
+
+    const { tierOptions } = await import("@/lib/options/stats.options");
+    const options = tierOptions();
+
+    const result = await options.queryFn!({} as never);
+    expect(result).toEqual(mockData);
+  });
+
+  it("should throw StatsAccessError for tier endpoint 403", async () => {
+    stubFetch(403, { error: "Access denied" });
+
+    const { tierOptions } = await import("@/lib/options/stats.options");
+    const options = tierOptions();
+
+    try {
+      await options.queryFn!({} as never);
+      expect.unreachable("Should have thrown");
+    } catch (error) {
+      expect(error).toBeInstanceOf(StatsAccessError);
+    }
+  });
 });

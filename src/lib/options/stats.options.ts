@@ -4,6 +4,7 @@ import { API_BASE_URL } from "@/lib/config/env.config";
 import { StatsAccessError } from "@/lib/errors/statsAccess";
 import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
 
+import type { TierResponse } from "@/lib/constants/tiers";
 import type {
   ErrorsStats,
   OrgStats,
@@ -156,9 +157,22 @@ const workflowStatsOptions = (params: {
     ...statsDefaults,
   });
 
+/**
+ * Query options for fetching the caller's current tier and operational limits.
+ *
+ * Sourced from omni-api `planConfigs.ts` via Aether entitlements
+ */
+const tierOptions = () =>
+  queryOptions<TierResponse>({
+    queryKey: ["stats", "tier"],
+    queryFn: () => fetchStats<TierResponse>("/api/v1/stats/tier", new URLSearchParams()),
+    ...statsDefaults,
+  });
+
 export {
   errorsStatsOptions,
   orgStatsOptions,
+  tierOptions,
   timelineStatsOptions,
   workflowStatsOptions,
 };

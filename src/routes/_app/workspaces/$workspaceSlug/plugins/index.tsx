@@ -1,4 +1,8 @@
-import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useQuery,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { Lock, Package, Search, Upload } from "lucide-react";
 import { useState } from "react";
@@ -10,13 +14,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { API_BASE_URL, hasBilling } from "@/lib/config/env.config";
-import { DEFAULT_LIMITS, getLimitsForPlan } from "@/lib/constants/tiers";
+import {
+  DEFAULT_LIMITS,
+  getFallbackLimits,
+  limitsFromTierResponse,
+} from "@/lib/constants/tiers";
 import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
 import pluginsOptions from "@/lib/options/plugins.options";
-import { getSubscription } from "@/server/functions/subscriptions";
+import { tierOptions } from "@/lib/options/stats.options";
 
 import type { Plugin } from "@/components/plugins/PluginCard";
-import type { Subscription } from "@/lib/providers/billing";
 
 export const Route = createFileRoute(
   "/_app/workspaces/$workspaceSlug/plugins/",
@@ -24,31 +31,34 @@ export const Route = createFileRoute(
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
 
-    let subscription: Subscription | null = null;
-
+    const queries: Promise<unknown>[] = [
+      queryClient.ensureQueryData(pluginsOptions({ organizationId })),
+    ];
     if (hasBilling) {
-      try {
-        subscription = await getSubscription({
-          data: { organizationId },
-        });
-      } catch {
-        // Fall back to null (shows free tier)
-      }
+      queries.push(
+        queryClient.ensureQueryData(tierOptions()).catch(() => undefined),
+      );
     }
+    await Promise.all(queries);
 
-    await queryClient.ensureQueryData(pluginsOptions({ organizationId }));
-    return { organizationId, subscription };
+    return { organizationId };
   },
   component: PluginsPage,
 });
 
 function PluginsPage() {
-  const { organizationId, subscription } = Route.useLoaderData();
+  const { organizationId } = Route.useLoaderData();
   const { workspaceSlug } = Route.useParams();
 
+  const { data: tierData } = useQuery({
+    ...tierOptions(),
+    enabled: hasBilling,
+  });
   const limits = !hasBilling
     ? DEFAULT_LIMITS
-    : getLimitsForPlan(subscription?.product?.name);
+    : tierData
+      ? limitsFromTierResponse(tierData)
+      : getFallbackLimits("free");
   const canUploadPlugins = limits.plugins;
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");

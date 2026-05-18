@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
@@ -7,11 +8,14 @@ import ExecutionTimeline from "@/components/monitoring/ExecutionTimeline";
 import MonthlyRunsCard from "@/components/monitoring/MonthlyRunsCard";
 import StatsCards from "@/components/monitoring/StatsCards";
 import { hasBilling } from "@/lib/config/env.config";
-import { DEFAULT_LIMITS, getLimitsForPlan } from "@/lib/constants/tiers";
-import { getSubscription } from "@/server/functions/subscriptions";
+import {
+  DEFAULT_LIMITS,
+  getFallbackLimits,
+  limitsFromTierResponse,
+} from "@/lib/constants/tiers";
+import { tierOptions } from "@/lib/options/stats.options";
 
 import type { DateRange } from "@/components/monitoring/types";
-import type { Subscription } from "@/lib/providers/billing";
 
 /**
  * Default to a 7-day range. Only called client-side to avoid hydration mismatch.
@@ -26,22 +30,17 @@ function getDefaultRange(): DateRange {
 export const Route = createFileRoute(
   "/_app/workspaces/$workspaceSlug/monitoring/",
 )({
-  loader: async ({ context: { organizationId } }) => {
+  loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
 
-    let subscription: Subscription | null = null;
-
     if (hasBilling) {
-      try {
-        subscription = await getSubscription({
-          data: { organizationId },
-        });
-      } catch {
-        // Fall back to null (shows free tier)
-      }
+      // Prefetch tier limits; ignore failures
+      await queryClient
+        .ensureQueryData(tierOptions())
+        .catch(() => undefined);
     }
 
-    return { organizationId, subscription };
+    return { organizationId };
   },
   component: MonitoringPage,
 });
@@ -80,12 +79,17 @@ function TableSkeleton() {
  * Monitoring dashboard page.
  */
 function MonitoringPage() {
-  const { subscription } = Route.useLoaderData();
   const { workspaceSlug } = Route.useParams();
 
+  const { data: tierData } = useQuery({
+    ...tierOptions(),
+    enabled: hasBilling,
+  });
   const limits = !hasBilling
     ? DEFAULT_LIMITS
-    : getLimitsForPlan(subscription?.product?.name);
+    : tierData
+      ? limitsFromTierResponse(tierData)
+      : getFallbackLimits("free");
 
   const [preset, setPreset] = useState("7d");
   const [range, setRange] = useState<DateRange | null>(null);
