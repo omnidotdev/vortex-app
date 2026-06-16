@@ -35,9 +35,7 @@ export const Route = createFileRoute(
 
     if (hasBilling) {
       // Prefetch tier limits; ignore failures
-      await queryClient
-        .ensureQueryData(tierOptions())
-        .catch(() => undefined);
+      await queryClient.ensureQueryData(tierOptions()).catch(() => undefined);
     }
 
     return { organizationId };

@@ -86,7 +86,9 @@ export type TierResponse = {
 export function limitsFromTierResponse(response: TierResponse): PlanLimits {
   return {
     workflows: normalizeLimit(response.limits.max_workflows),
-    executionsPerMonth: normalizeLimit(response.limits.max_executions_per_month),
+    executionsPerMonth: normalizeLimit(
+      response.limits.max_executions_per_month,
+    ),
     plugins:
       response.limits.max_plugins === -1 || response.limits.max_plugins > 0,
   };

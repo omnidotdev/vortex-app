@@ -165,7 +165,8 @@ const workflowStatsOptions = (params: {
 const tierOptions = () =>
   queryOptions<TierResponse>({
     queryKey: ["stats", "tier"],
-    queryFn: () => fetchStats<TierResponse>("/api/v1/stats/tier", new URLSearchParams()),
+    queryFn: () =>
+      fetchStats<TierResponse>("/api/v1/stats/tier", new URLSearchParams()),
     ...statsDefaults,
   });
 
