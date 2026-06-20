@@ -47,9 +47,17 @@ function WorkspacesPage() {
                   preload="intent"
                   className="relative flex h-32 flex-col items-center justify-center rounded-lg border p-4 hover:bg-accent"
                 >
-                  <div className="flex size-12 items-center justify-center rounded-full bg-primary/10 font-semibold text-lg uppercase">
-                    {org.name?.charAt(0)}
-                  </div>
+                  {org.logo ? (
+                    <img
+                      src={org.logo}
+                      alt={org.name ?? org.slug}
+                      className="size-12 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex size-12 items-center justify-center rounded-full bg-primary/10 font-semibold text-lg uppercase">
+                      {org.name?.charAt(0)}
+                    </div>
+                  )}
 
                   <h3 className="mt-3 truncate font-semibold">{org.name}</h3>
                   <p className="text-muted-foreground text-xs">{org.type}</p>
