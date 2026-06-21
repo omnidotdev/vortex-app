@@ -91,7 +91,7 @@ export function JsonEditor({
 
     const theme = EditorView.theme({
       "&": {
-        fontSize: "13px",
+        fontSize: "16px",
         minHeight: `${minHeight}px`,
         maxHeight: `${maxHeight}px`,
       },
