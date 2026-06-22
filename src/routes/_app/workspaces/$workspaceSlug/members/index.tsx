@@ -1,3 +1,4 @@
+import { ManageTeamLink } from "@omnidotdev/providers/react";
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import {
   createFileRoute,
@@ -8,15 +9,15 @@ import { Clock, Loader2, UserPlus, Users, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-import InviteMemberDialog from "@/components/settings/InviteMemberDialog";
 import MemberRow from "@/components/settings/MemberRow";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { canPerformDestructiveAction } from "@/lib/auth/roles";
+import { AUTH_BASE_URL } from "@/lib/config/env.config";
 import { membersOptions } from "@/lib/options/members.options";
+import { cn } from "@/lib/utils";
 import {
   cancelOrganizationInvitation,
-  inviteOrganizationMember,
   listOrganizationInvitations,
   removeOrganizationMember,
   updateOrganizationMemberRole,
@@ -45,6 +46,7 @@ export const Route = createFileRoute(
 
 function MembersPage() {
   const { organizationId, accessToken } = Route.useLoaderData();
+  const { workspaceSlug } = Route.useParams();
   const { organization } = useRouteContext({ from: "/_app" });
   const context = Route.useRouteContext();
   const currentUserId = context.session?.user?.rowId ?? undefined;
@@ -52,7 +54,6 @@ function MembersPage() {
 
   const isAdmin = canPerformDestructiveAction(organization);
 
-  const [showInviteDialog, setShowInviteDialog] = useState(false);
   const [invitations, setInvitations] = useState<GatekeeperInvitation[]>([]);
   const [invitationsLoaded, setInvitationsLoaded] = useState(false);
   const [cancellingId, setCancellingId] = useState<string | null>(null);
@@ -82,19 +83,6 @@ function MembersPage() {
       loadInvitations();
     }
   }, [isAdmin, invitationsLoaded, loadInvitations]);
-
-  const handleInvite = async (email: string, role: "admin" | "member") => {
-    await inviteOrganizationMember({
-      data: { organizationId, email, role },
-    });
-
-    toast.success("Invitation sent", {
-      description: `Invited ${email} as ${role}`,
-    });
-
-    // Refresh invitations list
-    loadInvitations();
-  };
 
   const handleCancelInvitation = async (invitationId: string) => {
     setCancellingId(invitationId);
@@ -161,11 +149,17 @@ function MembersPage() {
           </p>
         </div>
 
-        {isAdmin && (
-          <Button onClick={() => setShowInviteDialog(true)}>
-            <UserPlus className="mr-2 h-4 w-4" />
-            Invite Member
-          </Button>
+        {/* Team membership is managed centrally at Gatekeeper (the shared
+            IDP); invite/role/remove happen there, not re-implemented per app */}
+        {isAdmin && workspaceSlug && AUTH_BASE_URL && (
+          <ManageTeamLink
+            identityBaseUrl={AUTH_BASE_URL}
+            orgSlug={workspaceSlug}
+            className={cn(buttonVariants(), "gap-1.5")}
+          >
+            <UserPlus className="h-4 w-4" />
+            Manage team
+          </ManageTeamLink>
         )}
       </div>
 
@@ -244,13 +238,6 @@ function MembersPage() {
           </table>
         )}
       </div>
-
-      {showInviteDialog && (
-        <InviteMemberDialog
-          onSubmit={handleInvite}
-          onClose={() => setShowInviteDialog(false)}
-        />
-      )}
     </div>
   );
 }
