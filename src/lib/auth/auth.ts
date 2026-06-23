@@ -41,8 +41,8 @@ const auth = betterAuth({
     // enable cookie caching for stateless session validation
     cookieCache: {
       enabled: true,
-      // Match session expiration so OAuth tokens (stored in account_data cookie
-      // with the same maxAge) don't expire before the session itself
+      // match session expiration so the cached session does not expire before
+      // the session itself
       maxAge: 60 * 60 * 24 * 30,
       // use encrypted JWE for security
       strategy: "jwe",
@@ -51,8 +51,12 @@ const auth = betterAuth({
     },
   },
   account: {
-    // store OAuth tokens (access token, refresh token) in a signed cookie for stateless mode to enable automatic token refresh without a database
-    storeAccountCookie: true,
+    // store OAuth tokens (access, refresh, ID) in the database, not in a cookie.
+    // stashing all three in a signed cookie pushed multi-org users past the 16KB
+    // request-header limit (the ID token carries a ~2KB organization claim) and
+    // triggered HTTP 431 on every request. DB storage keeps cookies small; tokens
+    // are still retrieved transparently via auth.api.getAccessToken
+    storeAccountCookie: false,
   },
   plugins: [
     genericOAuth({
