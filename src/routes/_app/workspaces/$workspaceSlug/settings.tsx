@@ -413,7 +413,15 @@ function ApiKeysSection({
           </div>
         ) : keys === null || keys.length === 0 ? (
           <div className="rounded-lg border border-dashed p-6 text-center text-muted-foreground text-sm">
-            No API keys yet. Create one to authenticate with the Vortex API.
+            No API keys yet.{" "}
+            <Button
+              variant="link"
+              className="h-auto p-0 align-baseline text-sm"
+              onClick={() => setCreateOpen(true)}
+            >
+              Create one
+            </Button>{" "}
+            to authenticate with the Vortex API.
           </div>
         ) : (
           <div className="space-y-2">
