@@ -51,7 +51,16 @@ export const CasesEditor = ({ cases = [], onChange }: CasesEditorProps) => {
 
       {cases.length === 0 ? (
         <p className="text-muted-foreground text-sm">
-          No cases defined. Add a case to create switch branches.
+          No cases defined.{" "}
+          <Button
+            type="button"
+            variant="link"
+            className="h-auto p-0 align-baseline text-sm"
+            onClick={handleAddCase}
+          >
+            Add a case
+          </Button>{" "}
+          to create switch branches.
         </p>
       ) : (
         <div className="space-y-2">
