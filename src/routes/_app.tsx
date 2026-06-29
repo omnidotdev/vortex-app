@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 import { RiDiscordLine as DiscordIcon } from "react-icons/ri";
 
+import { LogoLockup } from "@omnidotdev/thornberry/logo-lockup";
+
 import { Button } from "@/components/ui/button";
 import {
   SheetBackdrop,
@@ -165,7 +167,10 @@ function MobileHeader() {
         to="/workspaces"
         className="flex items-center gap-2 hover:opacity-80"
       >
-        <img src="/logo.png" alt="Vortex" className="h-6 w-6" />
+        <LogoLockup
+          logo={<img src="/logo.png" alt="Vortex" className="h-6 w-6" />}
+          name="Vortex"
+        />
         <span className="rounded bg-primary/10 px-1.5 py-0.5 font-medium text-primary text-xs">
           Early Access
         </span>
@@ -190,10 +195,15 @@ function MobileHeader() {
                       className="flex min-w-0 items-center gap-2 hover:opacity-80"
                       onClick={() => setOpen(false)}
                     >
-                      <img
-                        src="/logo.png"
-                        alt="Vortex"
-                        className="h-6 w-6 shrink-0"
+                      <LogoLockup
+                        logo={
+                          <img
+                            src="/logo.png"
+                            alt="Vortex"
+                            className="h-6 w-6 shrink-0"
+                          />
+                        }
+                        name="Vortex"
                       />
                       <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 font-medium text-primary text-xs">
                         Early Access
@@ -421,7 +431,10 @@ function AppSidebar() {
             to="/workspaces"
             className="flex items-center gap-2 hover:opacity-80"
           >
-            <img src="/logo.png" alt="Vortex" className="h-6 w-6" />
+            <LogoLockup
+              logo={<img src="/logo.png" alt="Vortex" className="h-6 w-6" />}
+              name="Vortex"
+            />
             <span className="rounded bg-primary/10 px-1.5 py-0.5 font-medium text-primary text-xs">
               Early Access
             </span>
