@@ -1,3 +1,4 @@
+import { LogoLockup } from "@omnidotdev/thornberry/logo-lockup";
 import {
   Link,
   Outlet,
@@ -19,8 +20,6 @@ import {
   Users,
 } from "lucide-react";
 import { RiDiscordLine as DiscordIcon } from "react-icons/ri";
-
-import { LogoLockup } from "@omnidotdev/thornberry/logo-lockup";
 
 import { Button } from "@/components/ui/button";
 import {
