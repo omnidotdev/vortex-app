@@ -989,7 +989,7 @@ function WorkflowEditorPage() {
       navigate({
         to: "/workspaces/$workspaceSlug/integrations",
         params: { workspaceSlug },
-        search: { connect: integrationDefinitionId, return_to: returnTo },
+        search: { connect: integrationDefinitionId, returnTo },
       });
     },
     [navigate, workspaceSlug],

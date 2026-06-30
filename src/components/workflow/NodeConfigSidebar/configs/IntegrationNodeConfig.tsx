@@ -127,7 +127,7 @@ export const IntegrationNodeConfig = ({
               className={cn(needsAttention && "animate-attention-pulse")}
             >
               <a
-                href={`/workspaces/${workspaceSlug}/integrations?connect=${integrationDefinitionId}&return_to=${returnTo}`}
+                href={`/workspaces/${workspaceSlug}/integrations?connect=${integrationDefinitionId}&returnTo=${returnTo}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
