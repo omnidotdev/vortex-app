@@ -146,8 +146,8 @@ function EventSchemaDetailPage() {
                 params={{ workspaceSlug }}
                 search={{
                   name: latest.name,
-                  versionA: String(allVersions[1]?.version ?? latest.version),
-                  versionB: String(latest.version),
+                  version_a: String(allVersions[1]?.version ?? latest.version),
+                  version_b: String(latest.version),
                 }}
               >
                 Compare Versions
@@ -198,8 +198,8 @@ function EventSchemaDetailPage() {
                         params={{ workspaceSlug }}
                         search={{
                           name: latest.name,
-                          versionA: String(version.version),
-                          versionB: String(latest.version),
+                          version_a: String(version.version),
+                          version_b: String(latest.version),
                         }}
                       >
                         Compare

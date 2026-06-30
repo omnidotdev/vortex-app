@@ -30,7 +30,7 @@ type IntegrationDefinition = NonNullable<
 
 const searchSchema = z.object({
   connect: z.string().optional(),
-  returnTo: z.string().optional(),
+  return_to: z.string().optional(),
 });
 
 export const Route = createFileRoute(
@@ -74,7 +74,7 @@ const categoryLabels: Record<string, string> = {
 
 function IntegrationsPage() {
   const { workspaceSlug } = Route.useParams();
-  const { connect, returnTo } = Route.useSearch();
+  const { connect, return_to: returnTo } = Route.useSearch();
   const { organizationId } = Route.useLoaderData();
   const navigate = useNavigate();
   const [connectingDefinition, setConnectingDefinition] =

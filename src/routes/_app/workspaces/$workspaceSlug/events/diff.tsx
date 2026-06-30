@@ -18,8 +18,8 @@ export const Route = createFileRoute(
 )({
   validateSearch: (search: Record<string, unknown>) => ({
     name: (search.name as string) ?? "",
-    versionA: (search.versionA as string) ?? "",
-    versionB: (search.versionB as string) ?? "",
+    version_a: (search.version_a as string) ?? "",
+    version_b: (search.version_b as string) ?? "",
   }),
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
@@ -62,8 +62,8 @@ function EventSchemaDiffPage() {
   const { workspaceSlug } = Route.useParams();
   const {
     name: initialName,
-    versionA: initialVersionA,
-    versionB: initialVersionB,
+    version_a: initialVersionA,
+    version_b: initialVersionB,
   } = Route.useSearch();
 
   const { data: schemas } = useSuspenseQuery({

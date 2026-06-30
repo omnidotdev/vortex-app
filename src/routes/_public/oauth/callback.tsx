@@ -14,7 +14,7 @@ export const Route = createFileRoute("/_public/oauth/callback")({
   validateSearch: (search) => ({
     oauth: (search.oauth as string) || "",
     provider: (search.provider as string) || "",
-    integrationId: (search.integrationId as string) || "",
+    integration_id: (search.integration_id as string) || "",
     error: (search.error as string) || "",
     description: (search.description as string) || "",
   }),
