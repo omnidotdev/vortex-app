@@ -474,7 +474,7 @@ export const TriggerNodeConfig = ({
                     }}
                     className={`rounded-md border px-3 py-1.5 font-medium text-xs transition-colors ${
                       isSelected
-                        ? "border-primary bg-primary/10 text-primary"
+                        ? "border-primary bg-primary/10 text-primary dark:text-primary-300"
                         : "border-muted text-muted-foreground hover:bg-muted"
                     }`}
                   >

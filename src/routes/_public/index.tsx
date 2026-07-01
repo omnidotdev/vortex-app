@@ -99,7 +99,7 @@ function LandingPage() {
           <div className="mx-auto max-w-4xl text-center">
             {/* Badge */}
             <div className="mb-8 flex justify-center">
-              <Badge className="gap-2 border-primary/20 bg-primary/10 px-4 py-2 text-primary">
+              <Badge className="gap-2 border-primary/20 bg-primary/10 px-4 py-2 text-primary dark:text-primary-300">
                 <span>Workflow automation for the decentralized web</span>
               </Badge>
             </div>
@@ -209,7 +209,7 @@ function LandingPage() {
         <div className="mx-auto max-w-7xl">
           {/* Section Header */}
           <div className="mx-auto mb-16 max-w-2xl text-center">
-            <Badge className="mb-4 border-primary/20 bg-primary/10 text-primary">
+            <Badge className="mb-4 border-primary/20 bg-primary/10 text-primary dark:text-primary-300">
               Features
             </Badge>
             <h2 className="mb-4 font-bold text-3xl text-foreground sm:text-4xl">
@@ -227,7 +227,7 @@ function LandingPage() {
                 key={feature.title}
                 className="group hover:glow-sm relative overflow-hidden rounded-2xl border bg-card p-6 transition-all duration-300 hover:border-primary/30"
               >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary dark:text-primary-300">
                   {feature.icon}
                 </div>
                 <h3 className="mb-2 font-semibold text-foreground text-lg">
@@ -246,7 +246,7 @@ function LandingPage() {
       <section className="relative px-4 py-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto mb-16 max-w-2xl text-center">
-            <Badge className="mb-4 border-primary/20 bg-primary/10 text-primary">
+            <Badge className="mb-4 border-primary/20 bg-primary/10 text-primary dark:text-primary-300">
               Use Cases
             </Badge>
             <h2 className="mb-4 font-bold text-3xl text-foreground sm:text-4xl">
@@ -285,7 +285,7 @@ function LandingPage() {
             <div className="relative flex flex-col items-center gap-8 lg:flex-row lg:justify-between">
               {/* Content */}
               <div className="max-w-xl text-center lg:text-left">
-                <Badge className="mb-4 border-primary/20 bg-primary/10 text-primary">
+                <Badge className="mb-4 border-primary/20 bg-primary/10 text-primary dark:text-primary-300">
                   <CheckCircle2
                     className="mr-1 h-3.5 w-3.5"
                     aria-hidden="true"

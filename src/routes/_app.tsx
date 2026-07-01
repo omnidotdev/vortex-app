@@ -170,7 +170,7 @@ function MobileHeader() {
           logo={<img src="/logo.png" alt="Vortex" className="h-6 w-6" />}
           name="Vortex"
         />
-        <span className="rounded bg-primary/10 px-1.5 py-0.5 font-medium text-primary text-xs">
+        <span className="rounded bg-primary/10 px-1.5 py-0.5 font-medium text-primary text-xs dark:text-primary-300">
           Early Access
         </span>
       </Link>
@@ -204,7 +204,7 @@ function MobileHeader() {
                         }
                         name="Vortex"
                       />
-                      <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 font-medium text-primary text-xs">
+                      <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 font-medium text-primary text-xs dark:text-primary-300">
                         Early Access
                       </span>
                     </Link>
@@ -434,7 +434,7 @@ function AppSidebar() {
               logo={<img src="/logo.png" alt="Vortex" className="h-6 w-6" />}
               name="Vortex"
             />
-            <span className="rounded bg-primary/10 px-1.5 py-0.5 font-medium text-primary text-xs">
+            <span className="rounded bg-primary/10 px-1.5 py-0.5 font-medium text-primary text-xs dark:text-primary-300">
               Early Access
             </span>
           </Link>

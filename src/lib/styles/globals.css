@@ -24,6 +24,9 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  /* Lighter amethyst shades for accent text on dark backgrounds (AA contrast) */
+  --color-primary-300: oklch(0.78 0.1 295);
+  --color-primary-400: oklch(0.7 0.13 295);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -169,6 +172,9 @@
 }
 
 @layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
   * {
     @apply border-border outline-ring/50;
   }

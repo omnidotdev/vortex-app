@@ -57,7 +57,7 @@ function PublicLayout() {
                 <span className="font-semibold text-foreground text-lg">
                   Vortex
                 </span>
-                <Badge className="hidden border-primary/20 bg-primary/10 text-primary text-xs sm:inline-flex">
+                <Badge className="hidden border-primary/20 bg-primary/10 text-primary text-xs sm:inline-flex dark:text-primary-300">
                   Early Access
                 </Badge>
               </Link>
