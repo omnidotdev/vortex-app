@@ -1,10 +1,10 @@
 query EventSchemas(
   $first: Int
   $offset: Int
-  $orderBy: [EventSchemasOrderBy!]
+  $orderBy: [EventSchemaOrderBy!]
   $filter: EventSchemaFilter
 ) {
-  eventSchemas(
+  eventSchemas: eventSchemata(
     first: $first
     offset: $offset
     orderBy: $orderBy

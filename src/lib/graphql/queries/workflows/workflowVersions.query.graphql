@@ -10,7 +10,7 @@ query WorkflowVersions($workflowId: UUID!, $first: Int, $offset: Int) {
       version
       changeNote
       createdAt
-      userByCreatedBy {
+      userByCreatedBy: user {
         name
         avatarUrl
       }
