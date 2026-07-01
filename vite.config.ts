@@ -28,6 +28,16 @@ const viteConfig = defineConfig(({ command }) => ({
       externals: {
         inline: ["srvx", "react-dom", "better-auth", "@better-auth"],
       },
+      // Security and cache response headers applied to every production response
+      routeRules: {
+        "/**": {
+          headers: {
+            "Permissions-Policy": "geolocation=(), camera=(), microphone=()",
+            // Revalidate rather than serve stale; hashed assets 304 cheaply
+            "Cache-Control": "public, max-age=0, must-revalidate",
+          },
+        },
+      },
     }),
   ],
 }));

@@ -221,6 +221,34 @@ function PublicLayout() {
                 </a>
               </div>
 
+              {/* Legal Links */}
+              <div className="flex items-center gap-6">
+                <a
+                  href="https://omni.dev/legal/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground text-sm transition-colors hover:text-foreground"
+                >
+                  Privacy
+                </a>
+                <a
+                  href="https://omni.dev/legal/terms"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground text-sm transition-colors hover:text-foreground"
+                >
+                  Terms
+                </a>
+                <a
+                  href="https://omni.dev/legal/cookies"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground text-sm transition-colors hover:text-foreground"
+                >
+                  Cookies
+                </a>
+              </div>
+
               {/* Copyright */}
               <p
                 className="text-muted-foreground text-sm"

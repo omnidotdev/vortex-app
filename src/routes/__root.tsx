@@ -12,7 +12,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 
-import { isDevEnv } from "@/lib/config/env.config";
+import app from "@/lib/config/app.config";
+import { BASE_URL, isDevEnv } from "@/lib/config/env.config";
 import { fetchMaintenanceMode } from "@/lib/providers";
 import appCss from "@/lib/styles/globals.css?url";
 import createMetaTags from "@/lib/util/createMetaTags";
@@ -103,6 +104,19 @@ export const Route = createRootRouteWithContext<{
         href: "/apple-touch-icon.png",
       },
       { rel: "stylesheet", href: appCss },
+      { rel: "canonical", href: BASE_URL },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: app.name,
+          url: BASE_URL,
+          description: app.description,
+        }),
+      },
     ],
   }),
   errorComponent: ErrorComponent,
