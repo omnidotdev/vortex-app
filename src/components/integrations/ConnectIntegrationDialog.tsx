@@ -87,11 +87,10 @@ export function ConnectIntegrationDialog({
     AuthFieldSchema
   >;
 
-  // Type-safe access to new fields (may be undefined until types are regenerated)
-  const setupSteps = (definition as { setupSteps?: string[] }).setupSteps;
-  const docsUrl = (definition as { docsUrl?: string }).docsUrl;
-  const supportsOAuth = (definition as { supportsOauth?: boolean })
-    .supportsOauth;
+  // setupSteps is a JSON scalar holding a list of step strings
+  const setupSteps = definition.setupSteps as unknown as string[] | undefined;
+  const docsUrl = definition.docsUrl ?? undefined;
+  const supportsOAuth = definition.supportsOAuth;
 
   const isSubmitting = createIntegration.isPending;
 

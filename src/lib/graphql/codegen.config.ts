@@ -49,6 +49,19 @@ const graphqlCodegenConfig: CodegenConfig = {
     // https://stackoverflow.com/questions/74623455/how-to-ensure-enum-order-in-graphql
     sort: true,
   },
+  hooks: {
+    // NB: graphql-codegen v7 emits internal helper types (Exact, Incremental) above any
+    // prepended `add` content, which pushes `// @ts-nocheck` off the first line and stops it
+    // suppressing the generated artifact. Normalize the directive back to the very first line
+    beforeOneFileWrite: (_path: string, content: string) => {
+      const directive = "// @ts-nocheck";
+      const withoutDirective = content
+        .split("\n")
+        .filter((line) => line.trim() !== directive)
+        .join("\n");
+      return `${directive}\n${withoutDirective}`;
+    },
+  },
   generates: {
     // mocks for testing
     "src/generated/graphql.mock.ts": {
