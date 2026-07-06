@@ -14,7 +14,6 @@ import { Toaster } from "sonner";
 
 import app from "@/lib/config/app.config";
 import { BASE_URL, isDevEnv } from "@/lib/config/env.config";
-import { fetchMaintenanceMode } from "@/lib/providers";
 import appCss from "@/lib/styles/globals.css?url";
 import createMetaTags from "@/lib/util/createMetaTags";
 import ThemeProvider from "@/providers/ThemeProvider";
@@ -27,13 +26,12 @@ import type { GetAuthSession } from "@/lib/auth/getAuth";
 import type { Theme } from "@/providers/ThemeProvider";
 
 /**
- * Fetch session and maintenance mode flag in a single server function.
+ * Fetch the session in a server function.
  */
-const fetchSessionAndMaintenanceMode = createServerFn({
+const fetchRootSession = createServerFn({
   method: "GET",
 }).handler(async () => {
   let session = null;
-  let isMaintenanceMode = false;
 
   try {
     const result = await fetchSession();
@@ -48,29 +46,17 @@ const fetchSessionAndMaintenanceMode = createServerFn({
     console.error("[root] Failed to fetch session:", err);
   }
 
-  try {
-    const result = await fetchMaintenanceMode();
-    isMaintenanceMode = result.isMaintenanceMode;
-  } catch (err) {
-    console.error("[root] Failed to fetch maintenance mode:", err);
-  }
-
-  return { session, isMaintenanceMode };
+  return { session };
 });
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   session: GetAuthSession | null;
-  isMaintenanceMode: boolean;
 }>()({
   beforeLoad: async () => {
-    const { session, isMaintenanceMode } =
-      await fetchSessionAndMaintenanceMode();
+    const { session } = await fetchRootSession();
 
-    // Skip auth when maintenance page is shown
-    if (isMaintenanceMode) return { session: null, isMaintenanceMode };
-
-    return { session, isMaintenanceMode };
+    return { session };
   },
   loader: () => getTheme(),
   head: () => ({
@@ -161,35 +147,12 @@ function ErrorComponent({ error }: { error: Error }) {
   );
 }
 
-function MaintenancePage() {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-linear-to-br from-slate-900 to-slate-800 p-8 text-white">
-      <div className="text-center">
-        <div className="mb-6 text-9xl">🌪️</div>
-        <h1 className="mb-4 font-bold text-4xl">Caught in a Whirlwind</h1>
-        <p className="max-w-md text-lg text-slate-300">
-          We're spinning up some improvements. Vortex will be back shortly.
-        </p>
-      </div>
-    </div>
-  );
-}
-
 function RootComponent() {
   const theme = Route.useLoaderData();
-  const { isMaintenanceMode } = Route.useRouteContext();
 
   // Keep the OAuth access token fresh by periodically calling
   // `fetchSession` which runs `ensureFreshAccessToken` server-side
   useSessionRefresh(fetchSession);
-
-  if (isMaintenanceMode) {
-    return (
-      <RootDocument theme={theme}>
-        <MaintenancePage />
-      </RootDocument>
-    );
-  }
 
   return (
     <RootDocument theme={theme}>

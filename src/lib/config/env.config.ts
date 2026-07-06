@@ -26,14 +26,6 @@ export const AUTH_CLIENT_SECRET = serverEnv.AUTH_CLIENT_SECRET as
   | string
   | undefined;
 
-// feature flags (used server-side via createServerFn, needs runtime fallback)
-export const FLAGS_API_HOST =
-  (clientEnv.VITE_FLAGS_API_HOST as string | undefined) ||
-  (serverEnv.VITE_FLAGS_API_HOST as string | undefined);
-export const FLAGS_CLIENT_KEY =
-  (clientEnv.VITE_FLAGS_CLIENT_KEY as string | undefined) ||
-  (serverEnv.VITE_FLAGS_CLIENT_KEY as string | undefined);
-
 // billing (client-safe, rendered into HTML -- must use clientEnv)
 export const BILLING_BASE_URL = clientEnv.VITE_BILLING_BASE_URL as
   | string
@@ -113,6 +105,4 @@ if (typeof window === "undefined") {
 if (typeof window === "undefined") {
   if (!BILLING_BASE_URL)
     console.warn("BILLING_BASE_URL not set, billing disabled");
-  if (!FLAGS_API_HOST)
-    console.warn("FLAGS_API_HOST not set, feature flags disabled");
 }
