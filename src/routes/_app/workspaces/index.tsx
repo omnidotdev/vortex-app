@@ -1,6 +1,7 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { ExternalLinkIcon, InfoIcon, LayersIcon } from "lucide-react";
 
+import CreateWorkspaceButton from "@/components/workspaces/CreateWorkspaceButton";
 import { AUTH_BASE_URL, CONSOLE_URL } from "@/lib/config/env.config";
 
 import type { OrganizationClaim } from "@/lib/auth/getAuth";
@@ -31,6 +32,8 @@ function WorkspacesPage() {
               ? "Select a workspace"
               : "Create a workspace to get started"}
           </h1>
+
+          {!!organizations.length && <CreateWorkspaceButton />}
         </div>
       </div>
 
@@ -63,6 +66,12 @@ function WorkspacesPage() {
                   <p className="text-muted-foreground text-xs">{org.type}</p>
                 </Link>
               ))}
+            </div>
+          )}
+
+          {!organizations.length && (
+            <div className="mb-8 flex justify-center">
+              <CreateWorkspaceButton />
             </div>
           )}
 

@@ -36,7 +36,10 @@ import app from "@/lib/config/app.config";
 import { CONSOLE_URL } from "@/lib/config/env.config";
 import { EventsProvider } from "@/providers/EventsProvider";
 import SidebarProvider from "@/providers/SidebarProvider";
+import { getOrganizationBySlug } from "@/server/functions/organizations";
 import { getSidebarState } from "@/server/functions/sidebar";
+
+import type { OrganizationClaim } from "@/lib/auth/getAuth";
 
 // Noop provider for client-side (main @omnidotdev/providers entry requires Node.js)
 const eventsProvider = {
@@ -76,9 +79,31 @@ export const Route = createFileRoute("/_app")({
       (org) => org.slug === workspaceSlug,
     );
 
-    if (!orgFromClaim) throw notFound();
+    if (orgFromClaim) {
+      return { organizationId: orgFromClaim.id, organization: orgFromClaim };
+    }
 
-    return { organizationId: orgFromClaim.id, organization: orgFromClaim };
+    // A just-created workspace is not yet in the JWT claims (they only refresh
+    // on the next token exchange), so fall back to a live Gatekeeper lookup so
+    // the standalone create flow can land the user in the new workspace
+    // immediately. Skipped once the org is present in claims.
+    const fallbackOrg = await getOrganizationBySlug({
+      data: { slug: workspaceSlug },
+    });
+
+    if (!fallbackOrg) throw notFound();
+
+    const organization: OrganizationClaim = {
+      id: fallbackOrg.id,
+      name: fallbackOrg.name,
+      slug: fallbackOrg.slug,
+      logo: fallbackOrg.logo,
+      type: fallbackOrg.type,
+      roles: [],
+      teams: [],
+    };
+
+    return { organizationId: organization.id, organization };
   },
   notFoundComponent: () => (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-8">
