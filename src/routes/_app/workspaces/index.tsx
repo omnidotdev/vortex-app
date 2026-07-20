@@ -2,7 +2,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { ExternalLinkIcon, InfoIcon, LayersIcon } from "lucide-react";
 
 import CreateWorkspaceButton from "@/components/workspaces/CreateWorkspaceButton";
-import { AUTH_BASE_URL, CONSOLE_URL } from "@/lib/config/env.config";
+import { AUTH_BASE_URL } from "@/lib/config/env.config";
 
 import type { OrganizationClaim } from "@/lib/auth/getAuth";
 
@@ -19,6 +19,9 @@ function WorkspacesPage() {
 
   // Get user's organizations from JWT claims
   const organizations = session?.organizations ?? [];
+
+  // Org/workspace lifecycle lives on the Gatekeeper identity dashboard
+  const orgDashboardUrl = AUTH_BASE_URL ? `${AUTH_BASE_URL}/dashboard` : "";
 
   return (
     <div className="flex h-full flex-col">
@@ -83,15 +86,17 @@ function WorkspacesPage() {
                 Workspaces are currently managed via Omni Organizations.
               </p>
             </div>
-            <a
-              href={CONSOLE_URL || AUTH_BASE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-primary text-sm hover:underline"
-            >
-              Manage Organizations
-              <ExternalLinkIcon className="size-3" />
-            </a>
+            {orgDashboardUrl && (
+              <a
+                href={orgDashboardUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-primary text-sm hover:underline"
+              >
+                Manage Organizations
+                <ExternalLinkIcon className="size-3" />
+              </a>
+            )}
           </div>
         </div>
       </div>
