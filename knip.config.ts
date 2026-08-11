@@ -32,7 +32,6 @@ const knipConfig: KnipConfig = {
     "tailwindcss",
     "tw-animate-css",
     // Future use dependencies
-    "react-hotkeys-hook",
     "ts-pattern",
   ],
   tags: ["-knipignore"],

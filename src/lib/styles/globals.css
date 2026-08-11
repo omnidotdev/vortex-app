@@ -2,6 +2,9 @@
 @import "@omnidotdev/thornberry/base.css";
 @import "tw-animate-css";
 
+/* scan the Thornberry component library (a package) so its class strings emit */
+@source "../../../node_modules/@omnidotdev/thornberry/build";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

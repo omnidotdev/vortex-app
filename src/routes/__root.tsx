@@ -12,6 +12,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 
+import CommandPalette from "@/components/CommandPalette";
 import app from "@/lib/config/app.config";
 import { BASE_URL, isDevEnv } from "@/lib/config/env.config";
 import { fetchMaintenanceMode } from "@/lib/providers";
@@ -254,6 +255,7 @@ function RootDocument({
       </head>
       <body className="font-sans antialiased" suppressHydrationWarning>
         <ThemeProvider theme={theme}>
+          <CommandPalette />
           {children}
           <ThemedToaster theme={theme} />
         </ThemeProvider>
