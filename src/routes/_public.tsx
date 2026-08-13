@@ -1,3 +1,4 @@
+import { AppFooter } from "@omnidotdev/thornberry/app-footer";
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -162,112 +163,54 @@ function PublicLayout() {
         </main>
 
         {/* Footer */}
-        <footer className="relative mt-auto border-t bg-background/50 backdrop-blur-sm">
-          <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-              {/* Brand */}
-              <div className="flex items-center gap-2">
-                <img
-                  src="/logo.png"
-                  alt="Vortex"
-                  className="h-5 w-5 opacity-60"
-                />
-                <span className="text-muted-foreground text-sm">
-                  Made by{" "}
-                  <a
-                    href={app.organization.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-foreground transition-colors hover:text-primary"
-                  >
-                    {app.organization.name}
-                  </a>
-                </span>
-              </div>
-
-              {/* Social Links */}
-              <div className="flex items-center gap-6">
-                <a
-                  href={app.links.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <GithubIcon size={20} />
-                </a>
-                <a
-                  href={app.organization.x}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <XIcon size={20} />
-                </a>
-                <a
-                  href={app.organization.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <LinkedinIcon size={20} />
-                </a>
-                <a
-                  href={app.organization.discord}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <DiscordIcon size={20} />
-                </a>
-              </div>
-
-              {/* Legal Links */}
-              <div className="flex items-center gap-6">
-                <a
-                  href="https://omni.dev/legal/privacy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground text-sm transition-colors hover:text-foreground"
-                >
-                  Privacy
-                </a>
-                <a
-                  href="https://omni.dev/legal/terms"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground text-sm transition-colors hover:text-foreground"
-                >
-                  Terms
-                </a>
-                <a
-                  href="https://omni.dev/legal/cookies"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground text-sm transition-colors hover:text-foreground"
-                >
-                  Cookies
-                </a>
-              </div>
-
-              {/* Copyright */}
-              <p
-                className="text-muted-foreground text-sm"
-                suppressHydrationWarning
+        <AppFooter
+          appLogo={
+            <img src="/logo.png" alt="Vortex" className="size-4 opacity-60" />
+          }
+          appSymbol={app.icon}
+          docsUrl={app.links.docs}
+          orgUrl={app.organization.url}
+          socials={
+            <>
+              <a
+                href={app.links.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+                className="rounded px-2 py-1 transition-colors hover:text-foreground"
               >
-                &copy; {new Date().getFullYear()}{" "}
-                <a
-                  href={app.organization.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-foreground"
-                >
-                  {app.organization.name}
-                </a>
-                . All rights reserved.
-              </p>
-            </div>
-          </div>
-        </footer>
+                <GithubIcon size={20} />
+              </a>
+              <a
+                href={app.organization.x}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="X"
+                className="rounded px-2 py-1 transition-colors hover:text-foreground"
+              >
+                <XIcon size={20} />
+              </a>
+              <a
+                href={app.organization.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="rounded px-2 py-1 transition-colors hover:text-foreground"
+              >
+                <LinkedinIcon size={20} />
+              </a>
+              <a
+                href={app.organization.discord}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Discord"
+                className="rounded px-2 py-1 transition-colors hover:text-foreground"
+              >
+                <DiscordIcon size={20} />
+              </a>
+            </>
+          }
+        />
       </div>
     </div>
   );
