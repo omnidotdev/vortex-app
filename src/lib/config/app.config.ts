@@ -18,7 +18,7 @@ const app = {
     threads: "https://www.threads.com/@omnidotdev",
   },
   links: {
-    docs: "https://docs.omni.dev/grid/vortex",
+    docs: "https://docs.omni.dev/products/vortex",
     github: "https://github.com/omnidotdev/vortex",
     feedback: "https://backfeed.omni.dev/workspaces/omni/projects/vortex",
   },
