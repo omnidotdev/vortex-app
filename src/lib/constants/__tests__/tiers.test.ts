@@ -45,7 +45,7 @@ describe("limitsFromTierResponse", () => {
       buildResponse("pro", {
         max_workflows: -1,
         max_executions_per_month: 50_000,
-        max_plugins: -1,
+        custom_plugins: 1,
       }),
     );
     expect(limits.workflows).toBeNull();
@@ -53,20 +53,20 @@ describe("limitsFromTierResponse", () => {
     expect(limits.plugins).toBe(true);
   });
 
-  it("treats max_plugins > 0 as enabled", () => {
+  it("enables plugin upload when custom_plugins > 0", () => {
     const limits = limitsFromTierResponse(
       buildResponse("team", {
         max_workflows: -1,
         max_executions_per_month: 250_000,
-        max_plugins: 5,
+        custom_plugins: 1,
       }),
     );
     expect(limits.plugins).toBe(true);
   });
 
-  it("treats max_plugins === 0 as disabled", () => {
+  it("disables plugin upload when custom_plugins === 0 even if marketplace installs are allowed", () => {
     const limits = limitsFromTierResponse(
-      buildResponse("free", { max_plugins: 0 }),
+      buildResponse("free", { max_plugins: 2, custom_plugins: 0 }),
     );
     expect(limits.plugins).toBe(false);
   });
