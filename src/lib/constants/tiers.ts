@@ -89,8 +89,13 @@ export function limitsFromTierResponse(response: TierResponse): PlanLimits {
     executionsPerMonth: normalizeLimit(
       response.limits.max_executions_per_month,
     ),
+    // `plugins` gates custom plugin upload, which maps to the `custom_plugins`
+    // entitlement (0 = disabled, >= 1 = enabled), NOT `max_plugins` (the
+    // marketplace install count). Free tier can install marketplace plugins
+    // but cannot upload custom ones
     plugins:
-      response.limits.max_plugins === -1 || response.limits.max_plugins > 0,
+      response.limits.custom_plugins === -1 ||
+      response.limits.custom_plugins > 0,
   };
 }
 
