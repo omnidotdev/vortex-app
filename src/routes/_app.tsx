@@ -1,3 +1,4 @@
+import { accountUrl } from "@omnidotdev/providers/react";
 import { LogoLockup } from "@omnidotdev/thornberry/logo-lockup";
 import {
   Link,
@@ -33,7 +34,7 @@ import {
 } from "@/components/ui/sheet";
 import signOut from "@/lib/auth/signOut";
 import app from "@/lib/config/app.config";
-import { CONSOLE_URL } from "@/lib/config/env.config";
+import { ACCOUNT_URL } from "@/lib/config/env.config";
 import { EventsProvider } from "@/providers/EventsProvider";
 import SidebarProvider from "@/providers/SidebarProvider";
 import { getOrganizationBySlug } from "@/server/functions/organizations";
@@ -406,9 +407,9 @@ function MobileHeader() {
                         </p>
                       </div>
                     </div>
-                    {CONSOLE_URL && (
+                    {ACCOUNT_URL && (
                       <a
-                        href={CONSOLE_URL}
+                        href={accountUrl(ACCOUNT_URL)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="mt-3 flex w-full items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent hover:text-foreground"
@@ -625,9 +626,9 @@ function AppSidebar() {
               </p>
             </div>
           </div>
-          {CONSOLE_URL && (
+          {ACCOUNT_URL && (
             <a
-              href={CONSOLE_URL}
+              href={accountUrl(ACCOUNT_URL)}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-3 flex w-full items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent hover:text-foreground"

@@ -38,7 +38,9 @@ export const FLAGS_CLIENT_KEY =
 export const BILLING_BASE_URL = clientEnv.VITE_BILLING_BASE_URL as
   | string
   | undefined;
-export const CONSOLE_URL = clientEnv.VITE_CONSOLE_URL as string | undefined;
+// Canonical account-management host that products link out to for "manage
+// account" (moves to https://account.omni.dev later)
+export const ACCOUNT_URL = clientEnv.VITE_ACCOUNT_URL as string | undefined;
 
 // Server-side runtime overrides for VITE_-prefixed vars. These allow Railway
 // (or any runtime) to override the build-time values for server-to-server
