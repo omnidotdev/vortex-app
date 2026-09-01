@@ -85,8 +85,8 @@ function LandingPage() {
   const isAuthenticated = !!session?.user?.rowId;
 
   const handleSignIn = () => {
-    authClient.signIn.oauth2({
-      providerId: "omni",
+    authClient.signIn.social({
+      provider: "omni",
       callbackURL: "/workspaces",
     });
   };

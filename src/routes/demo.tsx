@@ -433,8 +433,8 @@ function DemoPage() {
     useState<ReactFlowInstance | null>(null);
 
   const handleSignIn = () => {
-    authClient.signIn.oauth2({
-      providerId: "omni",
+    authClient.signIn.social({
+      provider: "omni",
       callbackURL: "/workspaces",
     });
   };

@@ -72,11 +72,17 @@ const auth = betterAuth({
           accessType: "offline",
           pkce: true,
           prompt: "login",
+          // better-auth 1.7 tightened the mapped-user return type; the IDP's
+          // custom `email_verified`/`picture` claims arrive untyped, so coerce
           mapProfileToUser: (profile) => ({
             name: profile.name,
             email: profile.email,
-            emailVerified: profile.email_verified,
-            image: profile.picture,
+            emailVerified:
+              typeof profile.email_verified === "boolean"
+                ? profile.email_verified
+                : undefined,
+            image:
+              typeof profile.picture === "string" ? profile.picture : undefined,
           }),
         },
       ],
