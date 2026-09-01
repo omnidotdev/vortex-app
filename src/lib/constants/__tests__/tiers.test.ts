@@ -3,6 +3,7 @@ import { describe, expect, it } from "bun:test";
 import {
   getFallbackLimits,
   limitsFromTierResponse,
+  resolvePlanName,
 } from "@/lib/constants/tiers";
 
 import type { TierResponse } from "@/lib/constants/tiers";
@@ -69,6 +70,25 @@ describe("limitsFromTierResponse", () => {
       buildResponse("free", { max_plugins: 2, custom_plugins: 0 }),
     );
     expect(limits.plugins).toBe(false);
+  });
+});
+
+describe("resolvePlanName", () => {
+  it("prefers the live subscription product name", () => {
+    expect(resolvePlanName("Pro", "free")).toBe("Pro");
+  });
+
+  it("falls back to the entitlement tier when there is no subscription", () => {
+    // The failed/absent subscription case: a paid entitlement is present but no
+    // Stripe subscription. Must NOT collapse to the free plan
+    expect(resolvePlanName(null, "pro")).toBe("Pro");
+    expect(resolvePlanName(null, "team")).toBe("Team");
+    expect(resolvePlanName(null, "enterprise")).toBe("Enterprise");
+    expect(resolvePlanName(null, "free")).toBe("Free");
+  });
+
+  it("returns null only when there is genuinely neither", () => {
+    expect(resolvePlanName(null, null)).toBeNull();
   });
 });
 

@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import {
   Link,
   createFileRoute,
@@ -35,7 +36,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { canPerformDestructiveAction, deriveRole } from "@/lib/auth/roles";
 import { hasBilling } from "@/lib/config/env.config";
-import { DEFAULT_FEATURES, FREE_TIER_FEATURES } from "@/lib/constants/tiers";
+import {
+  DEFAULT_FEATURES,
+  FREE_TIER_FEATURES,
+  resolvePlanName,
+} from "@/lib/constants/tiers";
+import { tierOptions } from "@/lib/options/stats.options";
 import {
   getBillingPortalUrl,
   getSubscription,
@@ -60,7 +66,7 @@ interface ListedApiKey {
 export const Route = createFileRoute(
   "/_app/workspaces/$workspaceSlug/settings",
 )({
-  loader: async ({ context: { organizationId } }) => {
+  loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
 
     let subscription: Subscription | null = null;
@@ -71,8 +77,12 @@ export const Route = createFileRoute(
           data: { organizationId },
         });
       } catch {
-        // Fall back to null (shows free tier)
+        // Fall back to null (the entitlement tier drives the display)
       }
+
+      // Prefetch the entitlement tier so the plan falls back to the real tier
+      // when the subscription read returns null; ignore failures
+      await queryClient.ensureQueryData(tierOptions()).catch(() => undefined);
     }
 
     return { organizationId, subscription };
@@ -460,6 +470,14 @@ function PlanSection({
 }) {
   const [isRedirecting, setIsRedirecting] = useState(false);
 
+  // Entitlement tier from Aether, used as the fallback when there is no live
+  // Stripe subscription (a failed subscription read, or a comped/manually
+  // granted tier) so a paid workspace is never shown as free
+  const { data: tierData } = useQuery({
+    ...tierOptions(),
+    enabled: hasBilling,
+  });
+
   if (!hasBilling) {
     return (
       <section>
@@ -551,22 +569,31 @@ function PlanSection({
     );
   }
 
-  // Free tier / no subscription
+  // No live Stripe subscription. Fall back to the entitlement tier so a failed
+  // or absent subscription read never renders a paid workspace as free. The
+  // Upgrade CTA (not a billing-portal button, which cannot work without a
+  // subscription) stays for every tier here
+  const entitlementTier = tierData?.tier ?? null;
+  const planName = resolvePlanName(null, entitlementTier) ?? "Free";
+  const isFreeTier = !entitlementTier || entitlementTier === "free";
+
   return (
     <section>
       <h2 className="font-semibold text-lg">Plan</h2>
       <div className="mt-4 rounded-lg border p-4">
         <div className="flex items-center justify-between">
           <div>
-            <p className="font-medium">Free Plan</p>
-            <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
-              {FREE_TIER_FEATURES.map((feature) => (
-                <li key={feature} className="flex items-center gap-2 text-sm">
-                  <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-primary" />
-                  {feature}
-                </li>
-              ))}
-            </ul>
+            <p className="font-medium">{planName} Plan</p>
+            {isFreeTier && (
+              <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
+                {FREE_TIER_FEATURES.map((feature) => (
+                  <li key={feature} className="flex items-center gap-2 text-sm">
+                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-primary" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           <Button size="sm" asChild>
             <Link to="/pricing">Upgrade</Link>

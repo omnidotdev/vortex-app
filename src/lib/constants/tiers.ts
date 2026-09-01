@@ -1,3 +1,5 @@
+import capitalizeFirstLetter from "@/lib/util/capitalizeFirstLetter";
+
 import type { Price } from "@/lib/providers/billing";
 
 /** Supported billing tiers */
@@ -107,6 +109,23 @@ export function limitsFromTierResponse(response: TierResponse): PlanLimits {
  */
 export function getFallbackLimits(tier: Tier): PlanLimits {
   return FALLBACK_BY_TIER[tier];
+}
+
+/**
+ * The plan name to display on the billing surface. Prefers the live Stripe
+ * subscription's product name; falls back to the entitlement `tier` value
+ * (capitalized) so a failed or absent subscription read never renders a paid
+ * workspace as free. That covers both a failed subscription lookup and a
+ * comped/manually-granted tier that carries no Stripe subscription. Returns
+ * `null` only when there is genuinely neither.
+ */
+export function resolvePlanName(
+  subscriptionName: string | null,
+  entitlementTier: string | null,
+): string | null {
+  if (subscriptionName) return subscriptionName;
+  if (entitlementTier) return capitalizeFirstLetter(entitlementTier);
+  return null;
 }
 
 /** Free tier placeholder price for display */
