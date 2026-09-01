@@ -257,7 +257,7 @@ function MobileHeader() {
                           </p>
                         </div>
                         <Link
-                          to="/workspaces/$workspaceSlug"
+                          to="/@{$workspaceSlug}"
                           params={{ workspaceSlug }}
                           className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
                           activeOptions={{ exact: true }}
@@ -267,7 +267,7 @@ function MobileHeader() {
                           Dashboard
                         </Link>
                         <Link
-                          to="/workspaces/$workspaceSlug/workflows"
+                          to="/@{$workspaceSlug}/workflows"
                           params={{ workspaceSlug }}
                           className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
                           activeProps={{ className: "bg-accent" }}
@@ -276,7 +276,7 @@ function MobileHeader() {
                           Workflows
                         </Link>
                         <Link
-                          to="/workspaces/$workspaceSlug/integrations"
+                          to="/@{$workspaceSlug}/integrations"
                           params={{ workspaceSlug }}
                           className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
                           activeProps={{ className: "bg-accent" }}
@@ -285,7 +285,7 @@ function MobileHeader() {
                           Integrations
                         </Link>
                         <Link
-                          to="/workspaces/$workspaceSlug/events"
+                          to="/@{$workspaceSlug}/events"
                           params={{ workspaceSlug }}
                           className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
                           activeProps={{ className: "bg-accent" }}
@@ -294,7 +294,7 @@ function MobileHeader() {
                           Events
                         </Link>
                         <Link
-                          to="/workspaces/$workspaceSlug/plugins"
+                          to="/@{$workspaceSlug}/plugins"
                           params={{ workspaceSlug }}
                           className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
                           activeProps={{ className: "bg-accent" }}
@@ -303,7 +303,7 @@ function MobileHeader() {
                           Plugins
                         </Link>
                         <Link
-                          to="/workspaces/$workspaceSlug/dlq"
+                          to="/@{$workspaceSlug}/dlq"
                           params={{ workspaceSlug }}
                           className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent"
                           activeProps={{ className: "bg-accent" }}
@@ -313,7 +313,7 @@ function MobileHeader() {
                           Dead Letter Queue
                         </Link>
                         <Link
-                          to="/workspaces/$workspaceSlug/monitoring"
+                          to="/@{$workspaceSlug}/monitoring"
                           params={{ workspaceSlug }}
                           className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent"
                           activeProps={{ className: "bg-accent" }}
@@ -323,7 +323,7 @@ function MobileHeader() {
                           Monitoring
                         </Link>
                         <Link
-                          to="/workspaces/$workspaceSlug/members"
+                          to="/@{$workspaceSlug}/~/members"
                           params={{ workspaceSlug }}
                           className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent"
                           activeProps={{ className: "bg-accent" }}
@@ -333,7 +333,7 @@ function MobileHeader() {
                           Members
                         </Link>
                         <Link
-                          to="/workspaces/$workspaceSlug/settings"
+                          to="/@{$workspaceSlug}/~/settings"
                           params={{ workspaceSlug }}
                           className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
                           activeProps={{ className: "bg-accent" }}
@@ -485,7 +485,7 @@ function AppSidebar() {
                 </p>
               </div>
               <Link
-                to="/workspaces/$workspaceSlug"
+                to="/@{$workspaceSlug}"
                 params={{ workspaceSlug }}
                 className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
                 activeOptions={{ exact: true }}
@@ -494,7 +494,7 @@ function AppSidebar() {
                 Dashboard
               </Link>
               <Link
-                to="/workspaces/$workspaceSlug/workflows"
+                to="/@{$workspaceSlug}/workflows"
                 params={{ workspaceSlug }}
                 className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
                 activeProps={{ className: "bg-accent" }}
@@ -502,7 +502,7 @@ function AppSidebar() {
                 Workflows
               </Link>
               <Link
-                to="/workspaces/$workspaceSlug/integrations"
+                to="/@{$workspaceSlug}/integrations"
                 params={{ workspaceSlug }}
                 className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
                 activeProps={{ className: "bg-accent" }}
@@ -510,7 +510,7 @@ function AppSidebar() {
                 Integrations
               </Link>
               <Link
-                to="/workspaces/$workspaceSlug/events"
+                to="/@{$workspaceSlug}/events"
                 params={{ workspaceSlug }}
                 className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
                 activeProps={{ className: "bg-accent" }}
@@ -518,7 +518,7 @@ function AppSidebar() {
                 Events
               </Link>
               <Link
-                to="/workspaces/$workspaceSlug/plugins"
+                to="/@{$workspaceSlug}/plugins"
                 params={{ workspaceSlug }}
                 className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
                 activeProps={{ className: "bg-accent" }}
@@ -526,7 +526,7 @@ function AppSidebar() {
                 Plugins
               </Link>
               <Link
-                to="/workspaces/$workspaceSlug/dlq"
+                to="/@{$workspaceSlug}/dlq"
                 params={{ workspaceSlug }}
                 className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent"
                 activeProps={{ className: "bg-accent" }}
@@ -535,7 +535,7 @@ function AppSidebar() {
                 Dead Letter Queue
               </Link>
               <Link
-                to="/workspaces/$workspaceSlug/monitoring"
+                to="/@{$workspaceSlug}/monitoring"
                 params={{ workspaceSlug }}
                 className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent"
                 activeProps={{ className: "bg-accent" }}
@@ -544,7 +544,7 @@ function AppSidebar() {
                 Monitoring
               </Link>
               <Link
-                to="/workspaces/$workspaceSlug/members"
+                to="/@{$workspaceSlug}/~/members"
                 params={{ workspaceSlug }}
                 className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-accent"
                 activeProps={{ className: "bg-accent" }}
@@ -554,7 +554,7 @@ function AppSidebar() {
               </Link>
 
               <Link
-                to="/workspaces/$workspaceSlug/settings"
+                to="/@{$workspaceSlug}/~/settings"
                 params={{ workspaceSlug }}
                 className="block rounded-md px-3 py-2 text-sm hover:bg-accent"
                 activeProps={{ className: "bg-accent" }}

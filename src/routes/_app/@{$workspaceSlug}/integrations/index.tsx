@@ -33,9 +33,7 @@ const searchSchema = z.object({
   returnTo: z.string().optional(),
 });
 
-export const Route = createFileRoute(
-  "/_app/workspaces/$workspaceSlug/integrations/",
-)({
+export const Route = createFileRoute("/_app/@{$workspaceSlug}/integrations/")({
   validateSearch: searchSchema,
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
@@ -129,7 +127,7 @@ function IntegrationsPage() {
 
   const handleConfigure = (integration: { rowId: string }) => {
     navigate({
-      to: "/workspaces/$workspaceSlug/integrations/$integrationId",
+      to: "/@{$workspaceSlug}/integrations/$integrationId",
       params: { workspaceSlug, integrationId: integration.rowId },
     });
   };

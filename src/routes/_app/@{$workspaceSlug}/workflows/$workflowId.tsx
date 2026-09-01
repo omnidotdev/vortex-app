@@ -192,7 +192,7 @@ import {
 import { executeWorkflow } from "@/server/functions/executeWorkflow";
 
 export const Route = createFileRoute(
-  "/_app/workspaces/$workspaceSlug/workflows/$workflowId",
+  "/_app/@{$workspaceSlug}/workflows/$workflowId",
 )({
   loader: async ({ params, context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
@@ -622,7 +622,7 @@ function WorkflowEditorPage() {
       },
       onSuccess: () => {
         navigate({
-          to: "/workspaces/$workspaceSlug/workflows",
+          to: "/@{$workspaceSlug}/workflows",
           params: { workspaceSlug },
         });
       },
@@ -886,7 +886,7 @@ function WorkflowEditorPage() {
               label: "Upgrade",
               onClick: () =>
                 navigate({
-                  to: "/workspaces/$workspaceSlug/settings",
+                  to: "/@{$workspaceSlug}/~/settings",
                   params: { workspaceSlug },
                 }),
             },
@@ -987,7 +987,7 @@ function WorkflowEditorPage() {
     (integrationDefinitionId: string) => {
       const returnTo = encodeURIComponent(window.location.pathname);
       navigate({
-        to: "/workspaces/$workspaceSlug/integrations",
+        to: "/@{$workspaceSlug}/integrations",
         params: { workspaceSlug },
         search: { connect: integrationDefinitionId, returnTo },
       });
@@ -999,7 +999,7 @@ function WorkflowEditorPage() {
   const handleOpenIntegrationSettings = useCallback(
     (integrationInstanceId: string) => {
       navigate({
-        to: "/workspaces/$workspaceSlug/integrations/$integrationId",
+        to: "/@{$workspaceSlug}/integrations/$integrationId",
         params: { workspaceSlug, integrationId: integrationInstanceId },
       });
     },
@@ -1564,7 +1564,7 @@ function WorkflowEditorPage() {
               debouncedSave.cancel();
 
               navigate({
-                to: "/workspaces/$workspaceSlug/workflows",
+                to: "/@{$workspaceSlug}/workflows",
                 params: { workspaceSlug },
               });
             }}

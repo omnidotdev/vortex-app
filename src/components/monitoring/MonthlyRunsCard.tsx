@@ -90,7 +90,7 @@ function MonthlyRunsCard({
           <p>
             Monthly run limit reached.{" "}
             <Link
-              to="/workspaces/$workspaceSlug/settings"
+              to="/@{$workspaceSlug}/~/settings"
               params={{ workspaceSlug }}
               className="font-medium underline underline-offset-2"
             >
@@ -106,7 +106,7 @@ function MonthlyRunsCard({
           <p>
             Approaching monthly run limit.{" "}
             <Link
-              to="/workspaces/$workspaceSlug/settings"
+              to="/@{$workspaceSlug}/~/settings"
               params={{ workspaceSlug }}
               className="font-medium underline underline-offset-2"
             >

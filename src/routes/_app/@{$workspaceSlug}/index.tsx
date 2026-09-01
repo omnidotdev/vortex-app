@@ -18,7 +18,7 @@ import {
 import { tierOptions } from "@/lib/options/stats.options";
 import workflowsOptions from "@/lib/options/workflows.options";
 
-export const Route = createFileRoute("/_app/workspaces/$workspaceSlug/")({
+export const Route = createFileRoute("/_app/@{$workspaceSlug}/")({
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
 
@@ -104,7 +104,7 @@ function WorkspaceDashboard() {
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         {/* Workflows Card */}
         <Link
-          to="/workspaces/$workspaceSlug/workflows"
+          to="/@{$workspaceSlug}/workflows"
           params={{ workspaceSlug }}
           className="group relative overflow-hidden rounded-lg border p-6 transition-colors hover:border-foreground/20 hover:bg-muted/50"
         >
@@ -122,7 +122,7 @@ function WorkspaceDashboard() {
               {workflows.slice(0, 8).map((workflow, i) => (
                 <Link
                   key={workflow.rowId}
-                  to="/workspaces/$workspaceSlug/workflows/$workflowId"
+                  to="/@{$workspaceSlug}/workflows/$workflowId"
                   params={{ workspaceSlug, workflowId: workflow.rowId }}
                   className="group/item hover:!-translate-y-2 relative z-20 flex h-10 w-8 flex-col items-center justify-end transition-transform duration-300 group-hover:-translate-y-1"
                   style={{
@@ -152,7 +152,7 @@ function WorkspaceDashboard() {
               ))}
               {workflows.length > 8 && (
                 <Link
-                  to="/workspaces/$workspaceSlug/workflows"
+                  to="/@{$workspaceSlug}/workflows"
                   params={{ workspaceSlug }}
                   className="relative z-10 flex h-10 w-8 items-end justify-center pb-1 text-muted-foreground text-xs hover:text-foreground"
                 >
@@ -168,7 +168,7 @@ function WorkspaceDashboard() {
 
         {/* Integrations Card */}
         <Link
-          to="/workspaces/$workspaceSlug/integrations"
+          to="/@{$workspaceSlug}/integrations"
           params={{ workspaceSlug }}
           className="group relative overflow-hidden rounded-lg border p-6 transition-colors hover:border-foreground/20 hover:bg-muted/50"
         >
@@ -188,7 +188,7 @@ function WorkspaceDashboard() {
                 return (
                   <Link
                     key={integration.rowId}
-                    to="/workspaces/$workspaceSlug/integrations/$integrationId"
+                    to="/@{$workspaceSlug}/integrations/$integrationId"
                     params={{ workspaceSlug, integrationId: integration.rowId }}
                     className="group/item hover:!-translate-y-2 relative z-20 flex h-10 w-8 flex-col items-center justify-end transition-transform duration-300 group-hover:-translate-y-1"
                     style={{
@@ -227,7 +227,7 @@ function WorkspaceDashboard() {
               })}
               {integrations.length > 8 && (
                 <Link
-                  to="/workspaces/$workspaceSlug/integrations"
+                  to="/@{$workspaceSlug}/integrations"
                   params={{ workspaceSlug }}
                   className="relative z-10 flex h-10 w-8 items-end justify-center pb-1 text-muted-foreground text-xs hover:text-foreground"
                 >
@@ -247,16 +247,13 @@ function WorkspaceDashboard() {
         <h2 className="font-semibold text-lg">Quick Actions</h2>
         <div className="mt-4 flex gap-4">
           <Button asChild variant="outline">
-            <Link
-              to="/workspaces/$workspaceSlug/workflows"
-              params={{ workspaceSlug }}
-            >
+            <Link to="/@{$workspaceSlug}/workflows" params={{ workspaceSlug }}>
               View Workflows
             </Link>
           </Button>
           <Button asChild>
             <Link
-              to="/workspaces/$workspaceSlug/workflows/new"
+              to="/@{$workspaceSlug}/workflows/new"
               params={{ workspaceSlug }}
             >
               Create Workflow

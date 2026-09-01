@@ -43,7 +43,7 @@ import {
 } from "@/lib/options/integrations.options";
 
 export const Route = createFileRoute(
-  "/_app/workspaces/$workspaceSlug/integrations/$integrationId",
+  "/_app/@{$workspaceSlug}/integrations/$integrationId",
 )({
   loader: async ({ context: { queryClient, organizationId }, params }) => {
     if (!organizationId) throw notFound();
@@ -176,7 +176,7 @@ function IntegrationDetailPage() {
 
       toast.success("Integration disconnected");
       navigate({
-        to: "/workspaces/$workspaceSlug/integrations",
+        to: "/@{$workspaceSlug}/integrations",
         params: { workspaceSlug },
       });
     } catch (error) {
@@ -198,7 +198,7 @@ function IntegrationDetailPage() {
             This integration may have been deleted.
           </p>
           <Link
-            to="/workspaces/$workspaceSlug/integrations"
+            to="/@{$workspaceSlug}/integrations"
             params={{ workspaceSlug }}
             className="mt-4 inline-block text-primary underline"
           >
@@ -217,7 +217,7 @@ function IntegrationDetailPage() {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link
-          to="/workspaces/$workspaceSlug/integrations"
+          to="/@{$workspaceSlug}/integrations"
           params={{ workspaceSlug }}
           className="rounded-md p-2 hover:bg-accent"
         >

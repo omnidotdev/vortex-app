@@ -116,7 +116,7 @@ export const SubWorkflowConfig = ({
         {/* Link to open selected workflow */}
         {selectedWorkflow && workspaceSlug && (
           <a
-            href={`/workspaces/${workspaceSlug}/workflows/${workflowId}`}
+            href={`/@${workspaceSlug}/workflows/${workflowId}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-muted-foreground text-xs hover:text-foreground"

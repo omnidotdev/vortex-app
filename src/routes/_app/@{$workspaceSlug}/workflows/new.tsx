@@ -45,9 +45,7 @@ import workflowsOptions from "@/lib/options/workflows.options";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute(
-  "/_app/workspaces/$workspaceSlug/workflows/new",
-)({
+export const Route = createFileRoute("/_app/@{$workspaceSlug}/workflows/new")({
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
 
@@ -657,7 +655,7 @@ function NewWorkflowPage() {
       if (workflowId) {
         // Use router.navigate (stable ref) to avoid stale closure from useNavigate
         router.navigate({
-          to: "/workspaces/$workspaceSlug/workflows/$workflowId",
+          to: "/@{$workspaceSlug}/workflows/$workflowId",
           params: { workspaceSlug, workflowId },
           replace: true,
         });
@@ -864,7 +862,7 @@ function NewWorkflowPage() {
               variant="outline"
               onClick={() =>
                 navigate({
-                  to: "/workspaces/$workspaceSlug/workflows",
+                  to: "/@{$workspaceSlug}/workflows",
                   params: { workspaceSlug },
                 })
               }

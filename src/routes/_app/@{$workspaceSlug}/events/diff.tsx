@@ -13,9 +13,7 @@ import {
 } from "@/components/ui/select";
 import eventSchemasOptions from "@/lib/options/eventSchemas.options";
 
-export const Route = createFileRoute(
-  "/_app/workspaces/$workspaceSlug/events/diff",
-)({
+export const Route = createFileRoute("/_app/@{$workspaceSlug}/events/diff")({
   validateSearch: (search: Record<string, unknown>) => ({
     name: (search.name as string) ?? "",
     versionA: (search.versionA as string) ?? "",
@@ -132,10 +130,7 @@ function EventSchemaDiffPage() {
     <div className="p-8">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="sm" asChild>
-          <Link
-            to="/workspaces/$workspaceSlug/events"
-            params={{ workspaceSlug }}
-          >
+          <Link to="/@{$workspaceSlug}/events" params={{ workspaceSlug }}>
             &larr; Back
           </Link>
         </Button>

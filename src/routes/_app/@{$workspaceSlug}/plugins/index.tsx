@@ -25,9 +25,7 @@ import { tierOptions } from "@/lib/options/stats.options";
 
 import type { Plugin } from "@/components/plugins/PluginCard";
 
-export const Route = createFileRoute(
-  "/_app/workspaces/$workspaceSlug/plugins/",
-)({
+export const Route = createFileRoute("/_app/@{$workspaceSlug}/plugins/")({
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
 

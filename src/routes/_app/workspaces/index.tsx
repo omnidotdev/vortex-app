@@ -48,7 +48,7 @@ function WorkspacesPage() {
               {organizations.map((org: OrganizationClaim) => (
                 <Link
                   key={org.id}
-                  to="/workspaces/$workspaceSlug"
+                  to="/@{$workspaceSlug}"
                   params={{ workspaceSlug: org.slug }}
                   preload="intent"
                   className="relative flex h-32 flex-col items-center justify-center rounded-lg border p-4 hover:bg-accent"

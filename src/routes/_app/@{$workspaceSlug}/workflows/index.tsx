@@ -58,9 +58,7 @@ import { tierOptions } from "@/lib/options/stats.options";
 import workflowsOptions from "@/lib/options/workflows.options";
 import getQueryKeyPrefix from "@/lib/util/getQueryKeyPrefix";
 
-export const Route = createFileRoute(
-  "/_app/workspaces/$workspaceSlug/workflows/",
-)({
+export const Route = createFileRoute("/_app/@{$workspaceSlug}/workflows/")({
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
 
@@ -137,7 +135,7 @@ function WorkflowsPage() {
         <h1 className="font-bold text-2xl">Workflows</h1>
         <Button asChild>
           <Link
-            to="/workspaces/$workspaceSlug/workflows/new"
+            to="/@{$workspaceSlug}/workflows/new"
             params={{ workspaceSlug }}
           >
             Create Workflow
@@ -162,7 +160,7 @@ function WorkflowsPage() {
           </p>
           <Button asChild className="mt-4">
             <Link
-              to="/workspaces/$workspaceSlug/workflows/new"
+              to="/@{$workspaceSlug}/workflows/new"
               params={{ workspaceSlug }}
             >
               Create Workflow
@@ -195,7 +193,7 @@ function WorkflowsPage() {
                 <tr key={workflow.rowId} className="border-b">
                   <td className="py-4">
                     <Link
-                      to="/workspaces/$workspaceSlug/workflows/$workflowId"
+                      to="/@{$workspaceSlug}/workflows/$workflowId"
                       params={{ workspaceSlug, workflowId: workflow.rowId }}
                       className="font-medium hover:underline"
                     >

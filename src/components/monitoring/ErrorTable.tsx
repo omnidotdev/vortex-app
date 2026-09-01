@@ -113,7 +113,7 @@ function ErrorTable({ since }: ErrorTableProps) {
                 </td>
                 <td className="px-4 py-3 text-sm">
                   <Link
-                    to="/workspaces/$workspaceSlug/workflows/$workflowId"
+                    to="/@{$workspaceSlug}/workflows/$workflowId"
                     params={{
                       workspaceSlug,
                       workflowId: err.workflowId,

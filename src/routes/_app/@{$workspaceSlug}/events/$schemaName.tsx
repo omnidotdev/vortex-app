@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import eventSchemasOptions from "@/lib/options/eventSchemas.options";
 
 export const Route = createFileRoute(
-  "/_app/workspaces/$workspaceSlug/events/$schemaName",
+  "/_app/@{$workspaceSlug}/events/$schemaName",
 )({
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
@@ -91,10 +91,7 @@ function EventSchemaDetailPage() {
           Event schema "{schemaName}" not found.
         </p>
         <Button asChild className="mt-4">
-          <Link
-            to="/workspaces/$workspaceSlug/events"
-            params={{ workspaceSlug }}
-          >
+          <Link to="/@{$workspaceSlug}/events" params={{ workspaceSlug }}>
             Back to catalog
           </Link>
         </Button>
@@ -109,10 +106,7 @@ function EventSchemaDetailPage() {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="sm" asChild>
-          <Link
-            to="/workspaces/$workspaceSlug/events"
-            params={{ workspaceSlug }}
-          >
+          <Link to="/@{$workspaceSlug}/events" params={{ workspaceSlug }}>
             &larr; Back
           </Link>
         </Button>
@@ -132,7 +126,7 @@ function EventSchemaDetailPage() {
         <div className="flex gap-2">
           <Button asChild>
             <Link
-              to="/workspaces/$workspaceSlug/events/sandbox"
+              to="/@{$workspaceSlug}/events/sandbox"
               params={{ workspaceSlug }}
               search={{ type: latest.name }}
             >
@@ -142,7 +136,7 @@ function EventSchemaDetailPage() {
           {allVersions.length > 1 && (
             <Button variant="outline" asChild>
               <Link
-                to="/workspaces/$workspaceSlug/events/diff"
+                to="/@{$workspaceSlug}/events/diff"
                 params={{ workspaceSlug }}
                 search={{
                   name: latest.name,
@@ -194,7 +188,7 @@ function EventSchemaDetailPage() {
                   {allVersions.length > 1 && (
                     <Button variant="ghost" size="sm" asChild>
                       <Link
-                        to="/workspaces/$workspaceSlug/events/diff"
+                        to="/@{$workspaceSlug}/events/diff"
                         params={{ workspaceSlug }}
                         search={{
                           name: latest.name,

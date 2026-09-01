@@ -14,15 +14,13 @@ import {
 } from "@/components/ui/select";
 import eventSchemasOptions from "@/lib/options/eventSchemas.options";
 
-export const Route = createFileRoute("/_app/workspaces/$workspaceSlug/events/")(
-  {
-    loader: async ({ context: { queryClient, organizationId } }) => {
-      if (!organizationId) throw notFound();
-      await queryClient.ensureQueryData(eventSchemasOptions({}));
-    },
-    component: EventSchemasPage,
+export const Route = createFileRoute("/_app/@{$workspaceSlug}/events/")({
+  loader: async ({ context: { queryClient, organizationId } }) => {
+    if (!organizationId) throw notFound();
+    await queryClient.ensureQueryData(eventSchemasOptions({}));
   },
-);
+  component: EventSchemasPage,
+});
 
 /**
  * Event schemas browse page.
@@ -84,7 +82,7 @@ function EventSchemasPage() {
         <h1 className="font-bold text-2xl">Event Catalog</h1>
         <Button asChild>
           <Link
-            to="/workspaces/$workspaceSlug/events/sandbox"
+            to="/@{$workspaceSlug}/events/sandbox"
             params={{ workspaceSlug }}
             search={{ type: "" }}
           >
@@ -177,7 +175,7 @@ function EventSchemasPage() {
                       <tr key={schema.rowId} className="border-b">
                         <td className="max-w-0 truncate py-4">
                           <Link
-                            to="/workspaces/$workspaceSlug/events/$schemaName"
+                            to="/@{$workspaceSlug}/events/$schemaName"
                             params={{
                               workspaceSlug,
                               schemaName: schema.name,
@@ -224,7 +222,7 @@ function EventSchemasPage() {
                         <td className="hidden py-4 text-right sm:table-cell">
                           <Button variant="ghost" size="sm" asChild>
                             <Link
-                              to="/workspaces/$workspaceSlug/events/sandbox"
+                              to="/@{$workspaceSlug}/events/sandbox"
                               params={{ workspaceSlug }}
                               search={{ type: schema.name }}
                             >

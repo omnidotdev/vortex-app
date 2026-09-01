@@ -63,9 +63,7 @@ interface ListedApiKey {
   metadata: Record<string, unknown> | null;
 }
 
-export const Route = createFileRoute(
-  "/_app/workspaces/$workspaceSlug/settings",
-)({
+export const Route = createFileRoute("/_app/@{$workspaceSlug}/~/settings")({
   loader: async ({ context: { queryClient, organizationId } }) => {
     if (!organizationId) throw notFound();
 

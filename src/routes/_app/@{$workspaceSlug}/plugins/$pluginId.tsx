@@ -31,14 +31,14 @@ type PluginDetail = {
 };
 
 export const Route = createFileRoute(
-  "/_app/workspaces/$workspaceSlug/plugins/$pluginId",
+  "/_app/@{$workspaceSlug}/plugins/$pluginId",
 )({
   component: PluginDetailPage,
 });
 
 function PluginDetailPage() {
   const { workspaceSlug, pluginId } = useParams({
-    from: "/_app/workspaces/$workspaceSlug/plugins/$pluginId",
+    from: "/_app/@{$workspaceSlug}/plugins/$pluginId",
   });
 
   const [isToggling, setIsToggling] = useState(false);
@@ -123,7 +123,7 @@ function PluginDetailPage() {
       <div className="p-8">
         <p className="text-destructive">Failed to load plugin.</p>
         <Link
-          to="/workspaces/$workspaceSlug/plugins"
+          to="/@{$workspaceSlug}/plugins"
           params={{ workspaceSlug }}
           className="mt-2 text-sm hover:underline"
         >
@@ -138,7 +138,7 @@ function PluginDetailPage() {
       {/* Header */}
       <div className="mb-6">
         <Link
-          to="/workspaces/$workspaceSlug/plugins"
+          to="/@{$workspaceSlug}/plugins"
           params={{ workspaceSlug }}
           className="mb-4 flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground"
         >

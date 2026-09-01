@@ -1329,7 +1329,7 @@ export function NodePicker({
 
   const handleConnectFromPreview = () => {
     if (!previewIntegration) return;
-    window.location.href = `/workspaces/${workspaceSlug}/integrations?connect=${previewIntegration.rowId}`;
+    window.location.href = `/@${workspaceSlug}/integrations?connect=${previewIntegration.rowId}`;
   };
 
   const handleAddActionFromPreview = (action: IntegrationAction) => {

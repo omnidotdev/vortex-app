@@ -17,9 +17,7 @@ import eventSchemasOptions from "@/lib/options/eventSchemas.options";
 
 import type { PublishEventPayload } from "@/generated/graphql";
 
-export const Route = createFileRoute(
-  "/_app/workspaces/$workspaceSlug/events/sandbox",
-)({
+export const Route = createFileRoute("/_app/@{$workspaceSlug}/events/sandbox")({
   validateSearch: (search: Record<string, unknown>) => ({
     type: (search.type as string) ?? "",
   }),
@@ -177,10 +175,7 @@ function EventSandboxPage() {
     <div className="p-8">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="sm" asChild>
-          <Link
-            to="/workspaces/$workspaceSlug/events"
-            params={{ workspaceSlug }}
-          >
+          <Link to="/@{$workspaceSlug}/events" params={{ workspaceSlug }}>
             &larr; Back
           </Link>
         </Button>

@@ -180,7 +180,7 @@ function WorkflowStats({ workflowId, workspaceSlug }: WorkflowStatsProps) {
 
       {/* Link to full dashboard */}
       <Link
-        to="/workspaces/$workspaceSlug/monitoring"
+        to="/@{$workspaceSlug}/monitoring"
         params={{ workspaceSlug }}
         className="flex items-center gap-1 text-primary text-sm hover:underline"
       >

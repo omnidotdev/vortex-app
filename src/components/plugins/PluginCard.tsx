@@ -56,7 +56,7 @@ function PluginCard({
 
       <div className="mt-4 flex items-center justify-end gap-2">
         <Link
-          to="/workspaces/$workspaceSlug/plugins/$pluginId"
+          to="/@{$workspaceSlug}/plugins/$pluginId"
           params={{ workspaceSlug, pluginId: plugin.rowId }}
           className="text-muted-foreground text-xs hover:text-foreground"
         >

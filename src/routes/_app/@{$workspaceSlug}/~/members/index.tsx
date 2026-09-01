@@ -25,9 +25,7 @@ import {
 
 import type { GatekeeperInvitation } from "@omnidotdev/providers/auth";
 
-export const Route = createFileRoute(
-  "/_app/workspaces/$workspaceSlug/members/",
-)({
+export const Route = createFileRoute("/_app/@{$workspaceSlug}/~/members/")({
   loader: async ({ context: { queryClient, organizationId, session } }) => {
     if (!organizationId) throw notFound();
 

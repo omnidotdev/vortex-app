@@ -22,7 +22,7 @@ import { dlqEventsOptions, dlqStatsOptions } from "@/lib/options/dlq.options";
 
 import type { DlqEvent, DlqFilters } from "@/lib/types/dlq";
 
-export const Route = createFileRoute("/_app/workspaces/$workspaceSlug/dlq/")({
+export const Route = createFileRoute("/_app/@{$workspaceSlug}/dlq/")({
   component: DlqDashboard,
 });
 
