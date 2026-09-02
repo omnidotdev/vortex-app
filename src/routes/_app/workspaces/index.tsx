@@ -1,3 +1,4 @@
+import { gatekeeperDashboardUrl } from "@omnidotdev/providers/react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { ExternalLinkIcon, InfoIcon, LayersIcon } from "lucide-react";
 
@@ -21,7 +22,9 @@ function WorkspacesPage() {
   const organizations = session?.organizations ?? [];
 
   // Org/workspace lifecycle lives on the Gatekeeper identity dashboard
-  const orgDashboardUrl = AUTH_BASE_URL ? `${AUTH_BASE_URL}/dashboard` : "";
+  const orgDashboardUrl = AUTH_BASE_URL
+    ? gatekeeperDashboardUrl(AUTH_BASE_URL)
+    : "";
 
   return (
     <div className="flex h-full flex-col">

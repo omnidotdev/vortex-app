@@ -1,241 +1,42 @@
-import { ManageTeamLink } from "@omnidotdev/providers/react";
-import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import {
-  createFileRoute,
-  notFound,
-  useRouteContext,
-} from "@tanstack/react-router";
-import { Clock, Loader2, UserPlus, Users, X } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
-import { toast } from "sonner";
+import { gatekeeperOrgManageUrl } from "@omnidotdev/providers/react";
+import { createFileRoute } from "@tanstack/react-router";
+import { ExternalLink } from "lucide-react";
 
-import MemberRow from "@/components/settings/MemberRow";
-import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { canPerformDestructiveAction } from "@/lib/auth/roles";
+import { buttonVariants } from "@/components/ui/button";
 import { AUTH_BASE_URL } from "@/lib/config/env.config";
-import { membersOptions } from "@/lib/options/members.options";
-import { cn } from "@/lib/utils";
-import {
-  cancelOrganizationInvitation,
-  listOrganizationInvitations,
-  removeOrganizationMember,
-  updateOrganizationMemberRole,
-} from "@/server/functions/organizations";
-
-import type { GatekeeperInvitation } from "@omnidotdev/providers/auth";
 
 export const Route = createFileRoute("/_app/@{$workspaceSlug}/~/members/")({
-  loader: async ({ context: { queryClient, organizationId, session } }) => {
-    if (!organizationId) throw notFound();
-
-    const accessToken = session?.accessToken;
-
-    if (!accessToken) throw notFound();
-
-    await queryClient.ensureQueryData(membersOptions(organizationId));
-
-    return { organizationId, accessToken };
-  },
   component: MembersPage,
 });
 
-// -- page ------------------------------------------------------------------
-
 function MembersPage() {
-  const { organizationId, accessToken } = Route.useLoaderData();
   const { workspaceSlug } = Route.useParams();
-  const { organization } = useRouteContext({ from: "/_app" });
-  const context = Route.useRouteContext();
-  const currentUserId = context.session?.user?.rowId ?? undefined;
-  const queryClient = useQueryClient();
-
-  const isAdmin = canPerformDestructiveAction(organization);
-
-  const [invitations, setInvitations] = useState<GatekeeperInvitation[]>([]);
-  const [invitationsLoaded, setInvitationsLoaded] = useState(false);
-  const [cancellingId, setCancellingId] = useState<string | null>(null);
-
-  const { data } = useSuspenseQuery(membersOptions(organizationId));
-  const members = data?.data ?? [];
-
-  // Determine if the current user is the workspace owner
-  const currentMember = members.find((m) => m.userId === currentUserId);
-  const isOwner = currentMember?.role === "owner";
-
-  // Load pending invitations when admin visits page
-  const loadInvitations = useCallback(async () => {
-    try {
-      const result = await listOrganizationInvitations({
-        data: { organizationId },
-      });
-      setInvitations(Array.isArray(result) ? result : []);
-      setInvitationsLoaded(true);
-    } catch {
-      // Silently fail; invitations are supplemental
-    }
-  }, [organizationId]);
-
-  useEffect(() => {
-    if (isAdmin && !invitationsLoaded) {
-      loadInvitations();
-    }
-  }, [isAdmin, invitationsLoaded, loadInvitations]);
-
-  const handleCancelInvitation = async (invitationId: string) => {
-    setCancellingId(invitationId);
-
-    try {
-      await cancelOrganizationInvitation({ data: { invitationId } });
-
-      setInvitations((prev) => prev.filter((inv) => inv.id !== invitationId));
-      toast.success("Invitation cancelled");
-    } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "Failed to cancel invitation",
-      );
-    } finally {
-      setCancellingId(null);
-    }
-  };
-
-  const handleRoleChange = async (memberId: string, role: string) => {
-    try {
-      await updateOrganizationMemberRole({
-        data: {
-          organizationId,
-          memberId,
-          role: role as "admin" | "member",
-        },
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["organizationMembers", organizationId],
-      });
-      toast.success("Role updated");
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Failed to update role");
-    }
-  };
-
-  const handleRemove = async (memberId: string) => {
-    try {
-      await removeOrganizationMember({
-        data: { organizationId, memberId },
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["organizationMembers", organizationId],
-      });
-      toast.success("Member removed");
-    } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "Failed to remove member",
-      );
-    }
-  };
-
-  const pendingInvitations = invitations.filter(
-    (inv) => inv.status === "pending",
-  );
+  const manageUrl = AUTH_BASE_URL
+    ? gatekeeperOrgManageUrl(AUTH_BASE_URL, workspaceSlug)
+    : undefined;
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-bold text-2xl">Team Members</h1>
-          <p className="mt-1 text-muted-foreground">
-            Manage your workspace team
-          </p>
-        </div>
+    <div className="mx-auto flex w-full max-w-2xl flex-col items-start gap-6 p-6">
+      <div className="flex flex-col gap-2">
+        <h1 className="font-semibold text-2xl tracking-tight">Members</h1>
 
-        {/* Team membership is managed centrally at Gatekeeper (the shared
-            IDP); invite/role/remove happen there, not re-implemented per app */}
-        {isAdmin && workspaceSlug && AUTH_BASE_URL && (
-          <ManageTeamLink
-            identityBaseUrl={AUTH_BASE_URL}
-            orgSlug={workspaceSlug}
-            className={cn(buttonVariants(), "gap-1.5")}
-          >
-            <UserPlus className="h-4 w-4" />
-            Manage team
-          </ManageTeamLink>
-        )}
+        <p className="text-muted-foreground">
+          Team members and roles are managed in your Omni account, so they stay
+          consistent across every Omni product you use.
+        </p>
       </div>
 
-      {/* Pending invitations */}
-      {isAdmin && pendingInvitations.length > 0 && (
-        <div className="mt-6">
-          <h2 className="mb-3 font-medium text-muted-foreground text-sm">
-            Pending Invitations
-          </h2>
-          <div className="space-y-2">
-            {pendingInvitations.map((inv) => (
-              <div
-                key={inv.id}
-                className="flex items-center justify-between rounded-lg border p-3"
-              >
-                <div className="flex items-center gap-3">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm">{inv.email}</p>
-                    <p className="text-muted-foreground text-xs">
-                      Invited as{" "}
-                      <Badge variant="secondary" className="text-xs">
-                        {inv.role}
-                      </Badge>
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  disabled={cancellingId === inv.id}
-                  onClick={() => handleCancelInvitation(inv.id)}
-                  aria-label={`Cancel invitation for ${inv.email}`}
-                >
-                  {cancellingId === inv.id ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <X className="h-4 w-4 text-muted-foreground" />
-                  )}
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
+      {manageUrl && (
+        <a
+          href={manageUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={buttonVariants({ variant: "default" })}
+        >
+          Manage members in Omni
+          <ExternalLink className="size-4" />
+        </a>
       )}
-
-      <div className="mt-8">
-        {members.length === 0 ? (
-          <div className="py-12 text-center text-muted-foreground">
-            <Users className="mx-auto mb-2 h-8 w-8" />
-            <p>No members found</p>
-          </div>
-        ) : (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b text-left text-muted-foreground text-sm">
-                <th className="pb-3 font-medium">Member</th>
-                <th className="hidden pb-3 font-medium sm:table-cell">
-                  Joined
-                </th>
-                <th className="w-24 pb-3 font-medium" />
-              </tr>
-            </thead>
-            <tbody>
-              {members.map((member) => (
-                <MemberRow
-                  key={member.id}
-                  member={member}
-                  currentUserId={currentUserId}
-                  isOwner={isOwner}
-                  onRoleChange={handleRoleChange}
-                  onRemove={handleRemove}
-                />
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
     </div>
   );
 }
