@@ -35,11 +35,13 @@ const fetchSessionAndMaintenanceMode = createServerFn({
   method: "GET",
 }).handler(async () => {
   let session = null;
+  let authDegraded = false;
   let isMaintenanceMode = false;
 
   try {
     const result = await fetchSession();
     session = result.session;
+    authDegraded = result.authDegraded;
     if (session?.user && !session.user.rowId) {
       console.warn("[root] Session has user but no rowId", {
         email: session.user.email,
@@ -57,22 +59,24 @@ const fetchSessionAndMaintenanceMode = createServerFn({
     console.error("[root] Failed to fetch maintenance mode:", err);
   }
 
-  return { session, isMaintenanceMode };
+  return { session, authDegraded, isMaintenanceMode };
 });
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   session: GetAuthSession | null;
+  authDegraded: boolean;
   isMaintenanceMode: boolean;
 }>()({
   beforeLoad: async () => {
-    const { session, isMaintenanceMode } =
+    const { session, authDegraded, isMaintenanceMode } =
       await fetchSessionAndMaintenanceMode();
 
     // Skip auth when maintenance page is shown
-    if (isMaintenanceMode) return { session: null, isMaintenanceMode };
+    if (isMaintenanceMode)
+      return { session: null, authDegraded: false, isMaintenanceMode };
 
-    return { session, isMaintenanceMode };
+    return { session, authDegraded, isMaintenanceMode };
   },
   loader: () => getTheme(),
   head: () => ({
