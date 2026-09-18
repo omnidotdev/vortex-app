@@ -22,6 +22,12 @@ const app = {
     github: "https://github.com/omnidotdev/vortex",
     feedback: "https://backfeed.omni.dev/workspaces/omni/projects/vortex",
   },
+  // Legal links mirror the omni.dev catalog SSOT
+  legal: {
+    privacy: "https://omni.dev/legal/privacy",
+    terms: "https://omni.dev/legal/terms",
+    cookies: "https://omni.dev/legal/cookies",
+  },
 };
 
 export default app;

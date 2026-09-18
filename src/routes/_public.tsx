@@ -2,10 +2,7 @@ import { AppFooter } from "@omnidotdev/thornberry/app-footer";
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import {
-  LuGithub as GithubIcon,
-  LuLinkedin as LinkedinIcon,
-} from "react-icons/lu";
+import { LuLinkedin as LinkedinIcon } from "react-icons/lu";
 import { SiDiscord as DiscordIcon, SiX as XIcon } from "react-icons/si";
 
 import ThemeToggle from "@/components/ThemeToggle";
@@ -170,17 +167,10 @@ function PublicLayout() {
           appSymbol={app.icon}
           docsUrl={app.links.docs}
           orgUrl={app.organization.url}
+          legal={app.legal}
           socials={
             <>
-              <a
-                href={app.links.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                className="rounded px-2 py-1 transition-colors hover:text-foreground"
-              >
-                <GithubIcon size={20} />
-              </a>
+              {/* GitHub omitted while the repo is private, re-add when it goes public */}
               <a
                 href={app.organization.x}
                 target="_blank"
