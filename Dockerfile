@@ -9,14 +9,9 @@ COPY package.json bun.lock .env.production ./
 RUN bun install --frozen-lockfile
 COPY . .
 
-ARG VITE_BASE_URL
-ARG VITE_API_BASE_URL
-ARG VITE_AUTH_BASE_URL
-ARG VITE_BILLING_BASE_URL
-ARG VITE_CONSOLE_URL
-ARG VITE_FLAGS_API_HOST
-ARG VITE_FLAGS_CLIENT_KEY
-
+# Client-side VITE_ vars are baked from .env.production at build time (Vite reads
+# import.meta.env in production mode), not from Docker ARGs, which Fractal does
+# not pass. Keep public URLs in .env.production and never bake secrets
 RUN bun run build
 
 # TODO: Switch back to Bun runtime once module resolution is fixed

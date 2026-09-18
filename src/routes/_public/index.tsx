@@ -160,16 +160,16 @@ function LandingPage() {
                 </Link>
               </Button>
 
-              <a
-                href={app.links.github}
-                target="_blank"
-                rel="noopener noreferrer"
+              {/* Source is private until the repo goes public, so this CTA stays disabled rather than linking to a 404 */}
+              <Button
+                variant="outline"
+                size="lg"
+                className="h-12 gap-2 px-8"
+                disabled
               >
-                <Button variant="outline" size="lg" className="h-12 gap-2 px-8">
-                  <GithubIcon size={18} aria-hidden="true" />
-                  View on GitHub
-                </Button>
-              </a>
+                <GithubIcon size={18} aria-hidden="true" />
+                Source coming soon
+              </Button>
             </div>
 
             {/* Stats */}
@@ -303,16 +303,16 @@ function LandingPage() {
               </div>
 
               {/* CTA */}
-              <a
-                href={app.links.github}
-                target="_blank"
-                rel="noopener noreferrer"
+              {/* Source is private until the repo goes public, so this CTA stays disabled rather than linking to a 404 */}
+              <Button
+                variant="outline"
+                size="lg"
+                className="h-12 gap-2 px-6"
+                disabled
               >
-                <Button variant="outline" size="lg" className="h-12 gap-2 px-6">
-                  <GithubIcon size={20} aria-hidden="true" />
-                  View on GitHub
-                </Button>
-              </a>
+                <GithubIcon size={20} aria-hidden="true" />
+                Source coming soon
+              </Button>
             </div>
           </div>
         </div>
