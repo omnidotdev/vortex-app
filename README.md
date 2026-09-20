@@ -65,7 +65,7 @@ docker run -p 3000:3000 vortex-app
 
 ## Documentation
 
-For detailed documentation, visit [omni.dev/grid/vortex](https://omni.dev/grid/vortex).
+For detailed documentation, visit [omni.dev/products/vortex](https://omni.dev/products/vortex).
 
 ## License
 
