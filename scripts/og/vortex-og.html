@@ -3,64 +3,170 @@
 <title>Vortex OG</title>
 <!--
   Vortex OG card (1200x630). Self-contained, regenerable.
+  Shows the node builder (dot-grid canvas + connected workflow nodes) with the
+  brand lockup, to read as the actual product at a glance.
+  Nodes are FIXED width/height so the wire endpoints (in the SVG) land exactly
+  on the port dots: port center = (node.left [+width for out], node.top + H/2).
   Regenerate public/og.png:
     1) serve this dir:  python3 -m http.server 8792
     2) render at exact size:
        chromium --headless=new --hide-scrollbars --force-device-scale-factor=1 \
          --virtual-time-budget=5000 --window-size=1200,630 \
          --screenshot=../../public/og.png http://localhost:8792/vortex-og.html
-  Brand #795bbf. Icon 🌪️. Sub: "Workflow automation platform".
+  Brand #795bbf. Icon 🌪️.
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; box-sizing: border-box; }
   html, body { width: 1200px; height: 630px; }
   body { font-family: Inter, sans-serif; overflow: hidden; }
   .card {
     width: 1200px; height: 630px; position: relative; overflow: hidden;
-    background: radial-gradient(120% 130% at 50% 38%, #322155 0%, #1b1236 55%, #0d0820 100%);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    color: #fff; text-align: center; padding-bottom: 44px;
+    background: radial-gradient(120% 120% at 78% 18%, #3a2568 0%, #1c1338 48%, #0c0819 100%);
+    color: #fff;
   }
-  .mesh {
-    position: absolute; inset: 0; pointer-events: none; opacity: .5;
-    background-image:
-      linear-gradient(rgba(160,130,255,.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(160,130,255,.05) 1px, transparent 1px);
-    background-size: 46px 46px;
-    -webkit-mask-image: radial-gradient(60% 60% at 50% 40%, #000 0%, transparent 75%);
-            mask-image: radial-gradient(60% 60% at 50% 40%, #000 0%, transparent 75%);
+  .dots {
+    position: absolute; inset: 0; pointer-events: none; opacity: .55;
+    background-image: radial-gradient(rgba(176,150,255,.16) 1.4px, transparent 1.5px);
+    background-size: 30px 30px;
+    -webkit-mask-image: radial-gradient(90% 90% at 62% 45%, #000 0%, transparent 82%);
+            mask-image: radial-gradient(90% 90% at 62% 45%, #000 0%, transparent 82%);
   }
-  .glow {
-    position: absolute; top: 120px; left: 50%; transform: translateX(-50%);
-    width: 440px; height: 440px; border-radius: 50%; pointer-events: none;
-    background: radial-gradient(circle, rgba(121,91,191,.5) 0%, rgba(121,91,191,0) 70%);
-    filter: blur(8px);
+  .glow-a { position:absolute; width:520px; height:520px; border-radius:50%; top:-140px; right:-80px; pointer-events:none;
+    background: radial-gradient(circle, rgba(140,96,230,.55) 0%, rgba(140,96,230,0) 68%); filter: blur(6px); }
+  .glow-b { position:absolute; width:420px; height:420px; border-radius:50%; bottom:-160px; left:120px; pointer-events:none;
+    background: radial-gradient(circle, rgba(90,70,190,.40) 0%, rgba(90,70,190,0) 70%); filter: blur(8px); }
+  .frame { position:absolute; inset:20px; border:1.5px solid rgba(176,150,255,.16); border-radius:22px; pointer-events:none; }
+
+  /* left brand rail */
+  .rail { position:absolute; left:74px; top:0; bottom:0; width:412px; display:flex; flex-direction:column; justify-content:center; z-index:3; }
+  .brandrow { display:flex; align-items:center; gap:16px; margin-bottom:26px; }
+  .crest { font-size:64px; line-height:1; filter: drop-shadow(0 6px 22px rgba(140,96,230,.6)); }
+  .word { font-weight:800; font-size:64px; letter-spacing:-.035em; }
+  .head { font-weight:800; font-size:50px; line-height:1.05; letter-spacing:-.03em; margin-bottom:22px; }
+  .head .grad { background:linear-gradient(100deg,#c9b4ff,#8b6cf0); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .pills { display:flex; flex-wrap:wrap; gap:9px; max-width:392px; }
+  .pill { font-size:16px; font-weight:600; color:#e7deff; padding:7px 14px; border-radius:999px;
+    border:1px solid rgba(176,150,255,.28); background:rgba(140,96,230,.14); }
+
+  /* builder canvas (right). SVG shares the same 0..720 / 0..630 coord space. */
+  .canvas { position:absolute; right:0; top:0; width:720px; height:630px; z-index:2; }
+  svg.edges { position:absolute; inset:0; width:720px; height:630px; overflow:visible; }
+  .node {
+    position:absolute; width:211px; height:108px; border-radius:16px; padding:15px 16px; overflow:hidden;
+    background: linear-gradient(180deg, rgba(46,33,80,.96), rgba(30,21,56,.96));
+    border:1px solid rgba(176,150,255,.30);
+    box-shadow: 0 18px 40px -12px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.08);
   }
-  .frame { position: absolute; inset: 20px; border: 1.5px solid rgba(160,130,255,.18); border-radius: 18px; pointer-events: none; }
-  .crest { font-size: 150px; line-height: 1; margin-bottom: 6px; position: relative; filter: drop-shadow(0 8px 30px rgba(121,91,191,.55)); }
-  .word { font-weight: 800; font-size: 92px; line-height: 1; letter-spacing: -.035em; color: #fff; margin-top: 8px; }
-  .sub  { font-weight: 600; font-size: 32px; color: #efeaff; margin-top: 18px; letter-spacing: -.01em; }
-  .tag  { font-weight: 500; font-size: 19px; color: #b3a6dd; margin-top: 14px; letter-spacing: .03em; }
-  .credit {
-    position: absolute; left: 0; right: 0; bottom: 42px;
-    display: flex; align-items: center; justify-content: center; gap: 11px;
-    font-size: 22px; color: #9184b8; font-weight: 500;
-  }
-  .credit .omni { width: 26px; height: 26px; display: block; opacity: .92; }
-  .credit .omni svg { width: 100%; height: 100%; display: block; }
+  .node .top { display:flex; align-items:center; gap:10px; }
+  .chip { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:19px; flex:0 0 auto;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.18); }
+  .c-trigger { background:linear-gradient(180deg,#f0a84a,#d97a1f); }
+  .c-code    { background:linear-gradient(180deg,#7c66f0,#5a3fc0); font-family:"JetBrains Mono",monospace; font-weight:600; font-size:16px; }
+  .c-send    { background:linear-gradient(180deg,#3fbf87,#2a9668); }
+  .c-http    { background:linear-gradient(180deg,#4aa8f0,#2f7fd0); }
+  .n-title { font-weight:700; font-size:17px; letter-spacing:-.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+  .n-sub { font-family:"JetBrains Mono",monospace; font-weight:500; font-size:12px; color:#a99ccf; margin-top:11px;
+    padding:5px 9px; border-radius:8px; background:rgba(0,0,0,.28); border:1px solid rgba(176,150,255,.12);
+    display:inline-block; max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .badge { flex:0 0 auto; margin-left:auto; font-size:10px; font-weight:700; letter-spacing:.05em;
+    padding:3px 8px; border-radius:999px; }
+  .b-trigger { color:#ffe6c2; background:rgba(240,168,74,.18); border:1px solid rgba(240,168,74,.45); }
+  .b-done { color:#c9ffe4; background:rgba(63,191,135,.18); border:1px solid rgba(63,191,135,.4); }
+  .port { position:absolute; width:12px; height:12px; border-radius:50%; background:#0c0819; border:2px solid #b096ff; top:50%; transform:translateY(-50%);
+    box-shadow: 0 0 8px rgba(176,150,255,.6); }
+  .port.in { left:-6px; } .port.out { right:-6px; }
+
+  .credit { position:absolute; left:74px; bottom:40px; display:flex; align-items:center; gap:11px; z-index:3;
+    font-size:20px; color:#9c8fc4; font-weight:500; }
+  .credit .omni { width:24px; height:24px; opacity:.92; }
+  .credit .omni svg { width:100%; height:100%; display:block; }
 </style>
 <body>
   <div class="card">
-    <div class="mesh"></div>
-    <div class="glow"></div>
+    <div class="dots"></div>
+    <div class="glow-a"></div>
+    <div class="glow-b"></div>
     <div class="frame"></div>
-    <div class="crest">🌪️</div>
-    <div class="word">Vortex</div>
-    <div class="sub">Workflow automation platform</div>
-    <div class="tag">visual editor · json dsl · typescript sdk · 500+ integrations</div>
+
+    <!-- builder canvas.  node H=108 -> port center y = top+54.  out x = left+211, in x = left -->
+    <div class="canvas">
+      <svg class="edges" viewBox="0 0 720 630">
+        <defs>
+          <linearGradient id="wire" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#8b6cf0" stop-opacity=".95"/>
+            <stop offset="1" stop-color="#b096ff" stop-opacity=".95"/>
+          </linearGradient>
+          <filter id="wireglow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <g fill="none" stroke="url(#wire)" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round" filter="url(#wireglow)">
+          <!-- angled/elbow routing; node H=108 -> port y = top+54 -->
+          <!-- Webhook.out(235,202) -> Transform.in(251,326) -->
+          <path d="M235,202 H243 V326 H251"/>
+          <!-- Transform.out(462,326) -> HTTP.in(478,174) -->
+          <path d="M462,326 H470 V174 H478"/>
+          <!-- Transform.out(462,326) -> Slack.in(478,494) -->
+          <path d="M462,326 H470 V494 H478"/>
+        </g>
+      </svg>
+
+      <!-- Webhook: left 24, top 148 -->
+      <div class="node" style="left:24px; top:148px;">
+        <div class="top">
+          <div class="chip c-trigger">⚡</div>
+          <div class="n-title">Webhook</div>
+        </div>
+        <div class="n-sub">POST /orders.created</div>
+        <span class="port out"></span>
+      </div>
+
+      <!-- Transform: left 251, top 272 -->
+      <div class="node" style="left:251px; top:272px;">
+        <div class="top">
+          <div class="chip c-code">{ }</div>
+          <div class="n-title">Transform</div>
+        </div>
+        <div class="n-sub">map · enrich</div>
+        <span class="port in"></span><span class="port out"></span>
+      </div>
+
+      <!-- HTTP Request: left 478, top 120 -->
+      <div class="node" style="left:478px; top:120px;">
+        <div class="top">
+          <div class="chip c-http">↗</div>
+          <div class="n-title">HTTP Request</div>
+        </div>
+        <div class="n-sub">retry · 3x backoff</div>
+        <span class="port in"></span>
+      </div>
+
+      <!-- Notify Slack: left 478, top 440 -->
+      <div class="node" style="left:478px; top:440px;">
+        <div class="top">
+          <div class="chip c-send">◆</div>
+          <div class="n-title">Notify Slack</div>
+        </div>
+        <div class="n-sub">#ops · rich card</div>
+        <span class="port in"></span>
+      </div>
+    </div>
+
+    <!-- brand rail -->
+    <div class="rail">
+      <div class="brandrow"><span class="crest">🌪️</span><span class="word">Vortex</span></div>
+      <div class="head">Automate anything,<br><span class="grad">visually or in code.</span></div>
+      <div class="pills">
+        <span class="pill">visual editor</span>
+        <span class="pill">json dsl</span>
+        <span class="pill">typescript sdk</span>
+        <span class="pill">500+ integrations</span>
+      </div>
+    </div>
+
     <div class="credit"><span class="omni"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Omni">
   <path fill="#fff" d="m305.55,251.06c-2.25,39.89-22.63,78.45-54.97,102.2-.02,0-.03.02-.05.03-35.35,24.87-81.6,30.43-121.78,16.38-.35-.12-.7-.25-1.04-.37-26.04-9.8-49.08-27.59-64.36-51.03-.35-.54-.7-1.07-1.03-1.61-.36-.56-.7-1.12-1.04-1.68-.84-1.36-1.63-2.74-2.4-4.14-.38-.69-.78-1.4-1.15-2.11,99.71,81.94,249.46-2.53,229.47-130.45,14.13,22.6,19.75,47.95,18.34,72.79Z"/>
   <path fill="#fff" d="m350.16,291.36c-13.92,38.42-46.39,68.99-85.59,80.61-13.5,4.1-27.59,5.99-41.62,5.63,120.83-45.38,122.54-217.31,1.77-263.96,90.07-3.14,158.73,93.67,125.44,177.72Z"/>
