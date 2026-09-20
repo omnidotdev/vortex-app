@@ -1555,7 +1555,7 @@ function WorkflowEditorPage() {
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <header className="flex h-14 shrink-0 items-center justify-between gap-2 border-b px-2 md:px-4">
+      <header className="flex min-h-14 shrink-0 items-center justify-between gap-2 border-b px-2 py-2 md:px-4">
         <div className="flex min-w-0 flex-1 items-center gap-1 sm:gap-2 md:gap-4">
           <button
             type="button"
@@ -1576,7 +1576,7 @@ function WorkflowEditorPage() {
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <h1
-                className="max-w-[200px] truncate font-semibold text-sm sm:max-w-[200px] sm:text-base md:max-w-[400px] lg:max-w-none"
+                className="min-w-0 flex-1 truncate font-semibold text-sm sm:text-base"
                 title={workflow.name}
               >
                 {workflow.name}
@@ -1696,7 +1696,7 @@ function WorkflowEditorPage() {
         </div>
         {/* Stop toolbar clicks from bubbling into ReactFlow pane handlers */}
         <div
-          className="flex shrink-0 items-center gap-0.5 sm:gap-1 md:gap-2"
+          className="flex shrink-0 items-center gap-0.5 sm:gap-1 md:gap-2 [&_button]:h-9 [&_button]:min-h-9"
           onClick={(e) => e.stopPropagation()}
         >
           {error && (

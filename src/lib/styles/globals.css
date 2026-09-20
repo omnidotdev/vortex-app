@@ -201,9 +201,11 @@
     filter: brightness(0) invert(1);
   }
 
-  /* Optimize node rendering for drag performance */
+  /* Keep layout/style containment for perf, but do NOT set
+     `will-change: transform`: it promotes each node to its own raster layer,
+     which the browser scales (instead of re-rasterizing the text) when the
+     canvas is zoomed, making node text fuzzy/pixelated on zoom-in. */
   .react-flow__node {
-    will-change: transform;
     contain: layout style;
   }
 
