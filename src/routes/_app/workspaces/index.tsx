@@ -116,8 +116,12 @@ function WorkspacesPage() {
                     </div>
                   )}
 
-                  <h3 className="mt-3 truncate font-semibold">{org.name}</h3>
-                  <p className="text-muted-foreground text-xs">{org.type}</p>
+                  <h3 className="mt-3 w-full truncate text-center font-semibold">
+                    {org.name}
+                  </h3>
+                  <p className="w-full truncate text-center text-muted-foreground text-xs">
+                    {org.type}
+                  </p>
                 </Link>
               ))}
             </div>

@@ -103,11 +103,15 @@ const stepTypeToNodeType: Record<string, string> = {
   state_wait: "stateWaitNode",
 };
 
-// Layout constants for dagre auto-layout
-const NODE_WIDTH = 250;
-const NODE_HEIGHT = 80;
-const NODE_SEP = 50;
-const RANK_SEP = 80;
+// Layout constants for dagre auto-layout. Width/height MUST match the rendered
+// node box (BaseNode `NODE_WIDTH` / `NODE_MIN_HEIGHT` = 300 / 120); if they
+// drift, dagre centers each node off its true center (edges land shifted) and
+// packs ranks too tightly (nodes overlap). Kept as literals to avoid a lib ->
+// component import; keep in sync with BaseNode.
+const NODE_WIDTH = 300;
+const NODE_HEIGHT = 120;
+const NODE_SEP = 60;
+const RANK_SEP = 90;
 
 // Convert trigger step to node data
 function triggerStepToNodeData(step: TriggerStep): Record<string, unknown> {
