@@ -19,7 +19,7 @@ const app = {
   },
   links: {
     docs: "https://docs.omni.dev/products/vortex",
-    github: "https://github.com/omnidotdev/vortex",
+    github: "https://github.com/omnidotdev/vortex-stack",
     feedback: "https://backfeed.omni.dev/workspaces/omni/projects/vortex",
   },
   // Legal links mirror the omni.dev catalog SSOT

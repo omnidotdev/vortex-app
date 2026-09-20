@@ -12,12 +12,11 @@ import {
 } from "lucide-react";
 import { LuGithub as GithubIcon } from "react-icons/lu";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import authClient from "@/lib/auth/authClient";
 import app from "@/lib/config/app.config";
 
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 export const Route = createFileRoute("/_public/")({
   component: LandingPage,
@@ -31,39 +30,39 @@ interface Feature {
 
 const features: Feature[] = [
   {
-    title: "Visual Workflow Builder",
+    title: "Visual builder",
     description:
-      "Design complex workflows with an intuitive drag-and-drop interface. No coding required to get started.",
+      "Drag, drop, and wire nodes on a canvas. Every edit round-trips to the JSON DSL, so the visual and code views never drift.",
     icon: <Workflow className="h-6 w-6" aria-hidden="true" />,
   },
   {
-    title: "Powerful Integrations",
+    title: "500+ integrations",
     description:
-      "Connect your favorite tools and services. Trigger workflows from webhooks, schedules, or events.",
+      "Trigger from webhooks, schedules, or CloudEvents, and reach the services you already use without writing glue code.",
     icon: <PlugZap className="h-6 w-6" aria-hidden="true" />,
   },
   {
-    title: "Reliable Execution",
+    title: "Reliable by default",
     description:
-      "Built-in retries, error handling, and monitoring. Your workflows run reliably, every time.",
+      "Automatic retries, timeouts, and error handling. Every run is observable end to end, with logs for each step.",
     icon: <RefreshCw className="h-6 w-6" aria-hidden="true" />,
   },
   {
-    title: "Lightning Fast",
+    title: "Pluggable backends",
     description:
-      "Execute thousands of workflows per second. Scale from prototype to production seamlessly.",
+      "Swap the execution engine to fit your stack and scale from a single node to thousands of runs per second.",
     icon: <Zap className="h-6 w-6" aria-hidden="true" />,
   },
   {
-    title: "Scheduled Tasks",
+    title: "Scheduled triggers",
     description:
-      "Run workflows on a schedule with cron expressions. Automate recurring tasks with precision.",
+      "Cron-driven runs for recurring jobs, with timezone-aware schedules you define once and forget.",
     icon: <Timer className="h-6 w-6" aria-hidden="true" />,
   },
   {
-    title: "Version Control",
+    title: "Versioned workflows",
     description:
-      "Track changes to your workflows over time. Roll back to previous versions when needed.",
+      "Every workflow is versioned. Diff what changed and roll back to any previous version in a click.",
     icon: <GitBranch className="h-6 w-6" aria-hidden="true" />,
   },
 ];
@@ -76,6 +75,24 @@ const useCases = [
   "Scheduled reporting",
   "Multi-service coordination",
 ];
+
+/** Fine grid mesh, faded toward the edges (mirrors the social card). */
+const meshStyle: CSSProperties = {
+  backgroundImage:
+    "linear-gradient(rgba(150,120,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(150,120,255,.06) 1px, transparent 1px)",
+  backgroundSize: "46px 46px",
+  maskImage: "radial-gradient(60% 55% at 50% 35%, #000 0%, transparent 78%)",
+  WebkitMaskImage:
+    "radial-gradient(60% 55% at 50% 35%, #000 0%, transparent 78%)",
+};
+
+/** Slow conic swirl that reads as a vortex behind the headline. */
+const swirlStyle: CSSProperties = {
+  background:
+    "conic-gradient(from 0deg, transparent 0%, rgba(150,120,255,.30) 18%, transparent 42%, rgba(150,120,255,.18) 68%, transparent 92%)",
+  maskImage: "radial-gradient(closest-side, #000 12%, transparent 72%)",
+  WebkitMaskImage: "radial-gradient(closest-side, #000 12%, transparent 72%)",
+};
 
 /**
  * Landing page for Vortex.
@@ -94,16 +111,19 @@ function LandingPage() {
   return (
     <div className="relative">
       {/* Hero Section */}
-      <section className="relative px-4 pt-20 pb-32 sm:px-6 md:pt-32 md:pb-40 lg:px-8">
+      <section className="relative overflow-hidden px-4 pt-20 pb-32 sm:px-6 md:pt-32 md:pb-40 lg:px-8">
+        {/* Branded backdrop */}
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute inset-0 opacity-60" style={meshStyle} />
+          <div
+            className="absolute top-[-14%] left-1/2 h-[760px] w-[760px] -translate-x-1/2 animate-spin rounded-full opacity-40 [animation-duration:70s]"
+            style={swirlStyle}
+          />
+          <div className="absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[100px]" />
+        </div>
+
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto max-w-4xl text-center">
-            {/* Badge */}
-            <div className="mb-8 flex justify-center">
-              <Badge className="gap-2 border-primary/20 bg-primary/10 px-4 py-2 text-primary dark:text-primary-300">
-                <span>Workflow automation for the decentralized web</span>
-              </Badge>
-            </div>
-
             {/* Headline */}
             <h1 className="mb-6 font-extrabold text-4xl tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
               <span className="block text-foreground">Automate anything</span>
@@ -112,10 +132,15 @@ function LandingPage() {
               </span>
             </h1>
 
-            <p className="mx-auto mb-10 max-w-2xl text-lg text-muted-foreground">
-              Build, deploy, and monitor powerful workflows with a visual editor
-              or code. Open source workflow automation that scales with your
-              needs.
+            <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
+              Build, deploy, and monitor workflows with a visual editor, a JSON
+              DSL, or the TypeScript SDK. Open source, self-hostable, and wired
+              to the tools you already run.
+            </p>
+
+            {/* Capability line, echoing the brand mark */}
+            <p className="mx-auto mb-10 font-medium text-muted-foreground/80 text-sm tracking-wide">
+              visual editor · json dsl · typescript sdk · 500+ integrations
             </p>
 
             {/* CTAs */}
@@ -160,48 +185,48 @@ function LandingPage() {
                 </Link>
               </Button>
 
-              {/* Source is private until the repo goes public, so this CTA stays disabled rather than linking to a 404 */}
               <Button
                 variant="outline"
                 size="lg"
                 className="h-12 gap-2 px-8"
-                disabled
+                asChild
               >
-                <GithubIcon size={18} aria-hidden="true" />
-                Source coming soon
+                <a href={app.links.github} target="_blank" rel="noreferrer">
+                  <GithubIcon size={18} aria-hidden="true" />
+                  View Source
+                </a>
               </Button>
             </div>
 
             {/* Stats */}
-            <div className="mt-16 flex flex-wrap items-center justify-center gap-8">
+            <div className="mt-16 flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
               <div className="text-center">
                 <div className="font-bold text-2xl text-foreground sm:text-3xl">
-                  100%
-                </div>
-                <div className="text-muted-foreground text-sm">Open Source</div>
-              </div>
-              <div className="text-center">
-                <div className="font-bold text-2xl text-foreground sm:text-3xl">
-                  Free
+                  500+
                 </div>
                 <div className="text-muted-foreground text-sm">
-                  For Individuals
+                  Integrations
                 </div>
               </div>
               <div className="text-center">
                 <div className="font-bold text-2xl text-foreground sm:text-3xl">
-                  Visual
+                  3 ways
                 </div>
                 <div className="text-muted-foreground text-sm">
-                  Workflow Builder
+                  Visual, JSON, or SDK
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="font-bold text-2xl text-foreground sm:text-3xl">
+                  Apache-2.0
+                </div>
+                <div className="text-muted-foreground text-sm">
+                  Open source, self-hostable
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Decorative gradient orb */}
-        <div className="pointer-events-none absolute top-1/2 left-1/2 -z-10 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-[100px]" />
       </section>
 
       {/* Features Section */}
@@ -209,14 +234,12 @@ function LandingPage() {
         <div className="mx-auto max-w-7xl">
           {/* Section Header */}
           <div className="mx-auto mb-16 max-w-2xl text-center">
-            <Badge className="mb-4 border-primary/20 bg-primary/10 text-primary dark:text-primary-300">
-              Features
-            </Badge>
             <h2 className="mb-4 font-bold text-3xl text-foreground sm:text-4xl">
               Everything you need to automate
             </h2>
             <p className="text-lg text-muted-foreground">
-              Powerful features wrapped in a simple, intuitive interface.
+              The authoring, execution, and observability of a workflow engine,
+              without the operational drag.
             </p>
           </div>
 
@@ -246,14 +269,12 @@ function LandingPage() {
       <section className="relative px-4 py-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto mb-16 max-w-2xl text-center">
-            <Badge className="mb-4 border-primary/20 bg-primary/10 text-primary dark:text-primary-300">
-              Use Cases
-            </Badge>
             <h2 className="mb-4 font-bold text-3xl text-foreground sm:text-4xl">
               Built for any automation
             </h2>
             <p className="text-lg text-muted-foreground">
-              From simple tasks to complex orchestration, Vortex handles it all.
+              From a single scheduled task to cross-service orchestration, the
+              same engine scales with you.
             </p>
           </div>
 
@@ -285,33 +306,27 @@ function LandingPage() {
             <div className="relative flex flex-col items-center gap-8 lg:flex-row lg:justify-between">
               {/* Content */}
               <div className="max-w-xl text-center lg:text-left">
-                <Badge className="mb-4 border-primary/20 bg-primary/10 text-primary dark:text-primary-300">
-                  <CheckCircle2
-                    className="mr-1 h-3.5 w-3.5"
-                    aria-hidden="true"
-                  />
-                  Open Source
-                </Badge>
                 <h2 className="mb-4 font-bold text-3xl text-foreground sm:text-4xl">
                   Built in the open, for everyone
                 </h2>
                 <p className="text-lg text-muted-foreground">
-                  {app.name} is completely open source. Inspect the code,
-                  contribute features, or self-host on your own infrastructure.
-                  Your workflows, your rules.
+                  {app.name} is Apache-2.0 licensed. Read the code, open a pull
+                  request, or self-host it on your own infrastructure. Your
+                  workflows, your rules.
                 </p>
               </div>
 
               {/* CTA */}
-              {/* Source is private until the repo goes public, so this CTA stays disabled rather than linking to a 404 */}
               <Button
                 variant="outline"
                 size="lg"
-                className="h-12 gap-2 px-6"
-                disabled
+                className="h-12 shrink-0 gap-2 px-6"
+                asChild
               >
-                <GithubIcon size={20} aria-hidden="true" />
-                Source coming soon
+                <a href={app.links.github} target="_blank" rel="noreferrer">
+                  <GithubIcon size={20} aria-hidden="true" />
+                  View on GitHub
+                </a>
               </Button>
             </div>
           </div>
@@ -319,7 +334,7 @@ function LandingPage() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="relative px-4 py-32 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden px-4 py-32 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
           {/* Decorative elements */}
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
