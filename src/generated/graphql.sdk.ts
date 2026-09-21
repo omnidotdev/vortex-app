@@ -1,13 +1,12 @@
 // @ts-nocheck
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 import { GraphQLClient, RequestOptions } from 'graphql-request';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 type GraphQLClientRequestHeaders = RequestOptions['requestHeaders'];
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -16,13 +15,344 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  BigFloat: { input: any; output: any; }
+  BigFloat: { input: unknown; output: unknown; }
   BigInt: { input: string; output: string; }
   Cursor: { input: string; output: string; }
   Datetime: { input: Date; output: Date; }
   JSON: { input: Record<string, unknown>; output: Record<string, unknown>; }
   UUID: { input: string; output: string; }
 };
+
+export type ApprovalRequest = Node & {
+  __typename?: 'ApprovalRequest';
+  approvers?: Maybe<Scalars['JSON']['output']>;
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  decidedAt?: Maybe<Scalars['Datetime']['output']>;
+  decidedBy?: Maybe<Scalars['String']['output']>;
+  gateType: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  organizationId: Scalars['String']['output'];
+  reason?: Maybe<Scalars['String']['output']>;
+  rowId: Scalars['UUID']['output'];
+  runId: Scalars['String']['output'];
+  signalData?: Maybe<Scalars['JSON']['output']>;
+  signalName?: Maybe<Scalars['String']['output']>;
+  status: Scalars['String']['output'];
+  stepId: Scalars['String']['output'];
+  timeoutAction?: Maybe<Scalars['String']['output']>;
+  timeoutMs?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  /** Reads a single `Workflow` that is related to this `ApprovalRequest`. */
+  workflow?: Maybe<Workflow>;
+  workflowId: Scalars['UUID']['output'];
+};
+
+export type ApprovalRequestAggregates = {
+  __typename?: 'ApprovalRequestAggregates';
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<ApprovalRequestDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+/** A filter to be used against aggregates of `ApprovalRequest` object types. */
+export type ApprovalRequestAggregatesFilter = {
+  /** Distinct count aggregate over matching `ApprovalRequest` objects. */
+  distinctCount?: InputMaybe<ApprovalRequestDistinctCountAggregateFilter>;
+  /** A filter that must pass for the relevant `ApprovalRequest` object to be included within the aggregate. */
+  filter?: InputMaybe<ApprovalRequestFilter>;
+};
+
+/**
+ * A condition to be used against `ApprovalRequest` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type ApprovalRequestCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `decidedAt` field. */
+  decidedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `decidedBy` field. */
+  decidedBy?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `gateType` field. */
+  gateType?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `reason` field. */
+  reason?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `runId` field. */
+  runId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `signalName` field. */
+  signalName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `stepId` field. */
+  stepId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `timeoutAction` field. */
+  timeoutAction?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `timeoutMs` field. */
+  timeoutMs?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `title` field. */
+  title?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `workflowId` field. */
+  workflowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `ApprovalRequest` values. */
+export type ApprovalRequestConnection = {
+  __typename?: 'ApprovalRequestConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<ApprovalRequestAggregates>;
+  /** A list of edges which contains the `ApprovalRequest` and cursor to aid in pagination. */
+  edges: Array<ApprovalRequestEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<ApprovalRequestAggregates>>;
+  /** A list of `ApprovalRequest` objects. */
+  nodes: Array<ApprovalRequest>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ApprovalRequest` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `ApprovalRequest` values. */
+export type ApprovalRequestConnectionGroupedAggregatesArgs = {
+  groupBy: Array<ApprovalRequestGroupBy>;
+  having?: InputMaybe<ApprovalRequestHavingInput>;
+};
+
+export type ApprovalRequestDistinctCountAggregateFilter = {
+  approvers?: InputMaybe<BigIntFilter>;
+  createdAt?: InputMaybe<BigIntFilter>;
+  decidedAt?: InputMaybe<BigIntFilter>;
+  decidedBy?: InputMaybe<BigIntFilter>;
+  gateType?: InputMaybe<BigIntFilter>;
+  organizationId?: InputMaybe<BigIntFilter>;
+  reason?: InputMaybe<BigIntFilter>;
+  rowId?: InputMaybe<BigIntFilter>;
+  runId?: InputMaybe<BigIntFilter>;
+  signalData?: InputMaybe<BigIntFilter>;
+  signalName?: InputMaybe<BigIntFilter>;
+  status?: InputMaybe<BigIntFilter>;
+  stepId?: InputMaybe<BigIntFilter>;
+  timeoutAction?: InputMaybe<BigIntFilter>;
+  timeoutMs?: InputMaybe<BigIntFilter>;
+  title?: InputMaybe<BigIntFilter>;
+  workflowId?: InputMaybe<BigIntFilter>;
+};
+
+export type ApprovalRequestDistinctCountAggregates = {
+  __typename?: 'ApprovalRequestDistinctCountAggregates';
+  /** Distinct count of approvers across the matching connection */
+  approvers?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of decidedAt across the matching connection */
+  decidedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of decidedBy across the matching connection */
+  decidedBy?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of gateType across the matching connection */
+  gateType?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of reason across the matching connection */
+  reason?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of runId across the matching connection */
+  runId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of signalData across the matching connection */
+  signalData?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of signalName across the matching connection */
+  signalName?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of status across the matching connection */
+  status?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of stepId across the matching connection */
+  stepId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of timeoutAction across the matching connection */
+  timeoutAction?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of timeoutMs across the matching connection */
+  timeoutMs?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of title across the matching connection */
+  title?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of workflowId across the matching connection */
+  workflowId?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `ApprovalRequest` edge in the connection. */
+export type ApprovalRequestEdge = {
+  __typename?: 'ApprovalRequestEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `ApprovalRequest` at the end of the edge. */
+  node: ApprovalRequest;
+};
+
+/** A filter to be used against `ApprovalRequest` object types. All fields are combined with a logical ‘and.’ */
+export type ApprovalRequestFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<ApprovalRequestFilter>>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `decidedAt` field. */
+  decidedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `decidedBy` field. */
+  decidedBy?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `gateType` field. */
+  gateType?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<ApprovalRequestFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<ApprovalRequestFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `reason` field. */
+  reason?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `runId` field. */
+  runId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `signalName` field. */
+  signalName?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `stepId` field. */
+  stepId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `timeoutAction` field. */
+  timeoutAction?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `timeoutMs` field. */
+  timeoutMs?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `title` field. */
+  title?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `workflow` relation. */
+  workflow?: InputMaybe<WorkflowFilter>;
+  /** Filter by the object’s `workflowId` field. */
+  workflowId?: InputMaybe<UuidFilter>;
+};
+
+/** Grouping methods for `ApprovalRequest` for usage during aggregation. */
+export enum ApprovalRequestGroupBy {
+  Approvers = 'APPROVERS',
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  DecidedAt = 'DECIDED_AT',
+  DecidedAtTruncatedToDay = 'DECIDED_AT_TRUNCATED_TO_DAY',
+  DecidedAtTruncatedToHour = 'DECIDED_AT_TRUNCATED_TO_HOUR',
+  DecidedBy = 'DECIDED_BY',
+  GateType = 'GATE_TYPE',
+  OrganizationId = 'ORGANIZATION_ID',
+  Reason = 'REASON',
+  RunId = 'RUN_ID',
+  SignalData = 'SIGNAL_DATA',
+  SignalName = 'SIGNAL_NAME',
+  Status = 'STATUS',
+  StepId = 'STEP_ID',
+  TimeoutAction = 'TIMEOUT_ACTION',
+  TimeoutMs = 'TIMEOUT_MS',
+  Title = 'TITLE',
+  WorkflowId = 'WORKFLOW_ID'
+}
+
+export type ApprovalRequestHavingAverageInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  decidedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type ApprovalRequestHavingDistinctCountInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  decidedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `ApprovalRequest` aggregates. */
+export type ApprovalRequestHavingInput = {
+  AND?: InputMaybe<Array<ApprovalRequestHavingInput>>;
+  OR?: InputMaybe<Array<ApprovalRequestHavingInput>>;
+  average?: InputMaybe<ApprovalRequestHavingAverageInput>;
+  distinctCount?: InputMaybe<ApprovalRequestHavingDistinctCountInput>;
+  max?: InputMaybe<ApprovalRequestHavingMaxInput>;
+  min?: InputMaybe<ApprovalRequestHavingMinInput>;
+  stddevPopulation?: InputMaybe<ApprovalRequestHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<ApprovalRequestHavingStddevSampleInput>;
+  sum?: InputMaybe<ApprovalRequestHavingSumInput>;
+  variancePopulation?: InputMaybe<ApprovalRequestHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<ApprovalRequestHavingVarianceSampleInput>;
+};
+
+export type ApprovalRequestHavingMaxInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  decidedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type ApprovalRequestHavingMinInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  decidedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type ApprovalRequestHavingStddevPopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  decidedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type ApprovalRequestHavingStddevSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  decidedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type ApprovalRequestHavingSumInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  decidedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type ApprovalRequestHavingVariancePopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  decidedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type ApprovalRequestHavingVarianceSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  decidedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Methods to use when ordering `ApprovalRequest`. */
+export enum ApprovalRequestOrderBy {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  DecidedAtAsc = 'DECIDED_AT_ASC',
+  DecidedAtDesc = 'DECIDED_AT_DESC',
+  DecidedByAsc = 'DECIDED_BY_ASC',
+  DecidedByDesc = 'DECIDED_BY_DESC',
+  GateTypeAsc = 'GATE_TYPE_ASC',
+  GateTypeDesc = 'GATE_TYPE_DESC',
+  Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  ReasonAsc = 'REASON_ASC',
+  ReasonDesc = 'REASON_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  RunIdAsc = 'RUN_ID_ASC',
+  RunIdDesc = 'RUN_ID_DESC',
+  SignalNameAsc = 'SIGNAL_NAME_ASC',
+  SignalNameDesc = 'SIGNAL_NAME_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  StepIdAsc = 'STEP_ID_ASC',
+  StepIdDesc = 'STEP_ID_DESC',
+  TimeoutActionAsc = 'TIMEOUT_ACTION_ASC',
+  TimeoutActionDesc = 'TIMEOUT_ACTION_DESC',
+  TimeoutMsAsc = 'TIMEOUT_MS_ASC',
+  TimeoutMsDesc = 'TIMEOUT_MS_DESC',
+  TitleAsc = 'TITLE_ASC',
+  TitleDesc = 'TITLE_DESC',
+  WorkflowIdAsc = 'WORKFLOW_ID_ASC',
+  WorkflowIdDesc = 'WORKFLOW_ID_DESC'
+}
 
 /** A filter to be used against BigFloat fields. All fields are combined with a logical ‘and.’ */
 export type BigFloatFilter = {
@@ -135,37 +465,70 @@ export type CreateEventRoutingRulePayloadEventRoutingRuleEdgeArgs = {
   orderBy?: Array<EventRoutingRuleOrderBy>;
 };
 
-/** All input for the create `IntegrationDefinition` mutation. */
-export type CreateIntegrationDefinitionInput = {
+/** All input for the create `EventSchema` mutation. */
+export type CreateEventSchemaInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `IntegrationDefinition` to be created by this mutation. */
-  integrationDefinition: IntegrationDefinitionInput;
+  /** The `EventSchema` to be created by this mutation. */
+  eventSchema: EventSchemaInput;
 };
 
-/** The output of our create `IntegrationDefinition` mutation. */
-export type CreateIntegrationDefinitionPayload = {
-  __typename?: 'CreateIntegrationDefinitionPayload';
+/** The output of our create `EventSchema` mutation. */
+export type CreateEventSchemaPayload = {
+  __typename?: 'CreateEventSchemaPayload';
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `IntegrationDefinition` that was created by this mutation. */
-  integrationDefinition?: Maybe<IntegrationDefinition>;
-  /** An edge for our `IntegrationDefinition`. May be used by Relay 1. */
-  integrationDefinitionEdge?: Maybe<IntegrationDefinitionEdge>;
+  /** The `EventSchema` that was created by this mutation. */
+  eventSchema?: Maybe<EventSchema>;
+  /** An edge for our `EventSchema`. May be used by Relay 1. */
+  eventSchemaEdge?: Maybe<EventSchemaEdge>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
 
 
-/** The output of our create `IntegrationDefinition` mutation. */
-export type CreateIntegrationDefinitionPayloadIntegrationDefinitionEdgeArgs = {
-  orderBy?: Array<IntegrationDefinitionOrderBy>;
+/** The output of our create `EventSchema` mutation. */
+export type CreateEventSchemaPayloadEventSchemaEdgeArgs = {
+  orderBy?: Array<EventSchemaOrderBy>;
+};
+
+/** All input for the create `EventSubscription` mutation. */
+export type CreateEventSubscriptionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `EventSubscription` to be created by this mutation. */
+  eventSubscription: EventSubscriptionInput;
+};
+
+/** The output of our create `EventSubscription` mutation. */
+export type CreateEventSubscriptionPayload = {
+  __typename?: 'CreateEventSubscriptionPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `EventSubscription` that was created by this mutation. */
+  eventSubscription?: Maybe<EventSubscription>;
+  /** An edge for our `EventSubscription`. May be used by Relay 1. */
+  eventSubscriptionEdge?: Maybe<EventSubscriptionEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `EventSubscription` mutation. */
+export type CreateEventSubscriptionPayloadEventSubscriptionEdgeArgs = {
+  orderBy?: Array<EventSubscriptionOrderBy>;
 };
 
 /** All input for the create `Integration` mutation. */
@@ -234,72 +597,6 @@ export type CreateMcpServerPayloadMcpServerEdgeArgs = {
   orderBy?: Array<McpServerOrderBy>;
 };
 
-/** All input for the create `OauthState` mutation. */
-export type CreateOauthStateInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `OauthState` to be created by this mutation. */
-  oauthState: OauthStateInput;
-};
-
-/** The output of our create `OauthState` mutation. */
-export type CreateOauthStatePayload = {
-  __typename?: 'CreateOauthStatePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `OauthState` that was created by this mutation. */
-  oauthState?: Maybe<OauthState>;
-  /** An edge for our `OauthState`. May be used by Relay 1. */
-  oauthStateEdge?: Maybe<OauthStateEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `OauthState` mutation. */
-export type CreateOauthStatePayloadOauthStateEdgeArgs = {
-  orderBy?: Array<OauthStateOrderBy>;
-};
-
-/** All input for the create `OauthToken` mutation. */
-export type CreateOauthTokenInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `OauthToken` to be created by this mutation. */
-  oauthToken: OauthTokenInput;
-};
-
-/** The output of our create `OauthToken` mutation. */
-export type CreateOauthTokenPayload = {
-  __typename?: 'CreateOauthTokenPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `OauthToken` that was created by this mutation. */
-  oauthToken?: Maybe<OauthToken>;
-  /** An edge for our `OauthToken`. May be used by Relay 1. */
-  oauthTokenEdge?: Maybe<OauthTokenEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our create `OauthToken` mutation. */
-export type CreateOauthTokenPayloadOauthTokenEdgeArgs = {
-  orderBy?: Array<OauthTokenOrderBy>;
-};
-
 /** All input for the create `Plugin` mutation. */
 export type CreatePluginInput = {
   /**
@@ -331,72 +628,6 @@ export type CreatePluginPayload = {
 /** The output of our create `Plugin` mutation. */
 export type CreatePluginPayloadPluginEdgeArgs = {
   orderBy?: Array<PluginOrderBy>;
-};
-
-/** All input for the create `User` mutation. */
-export type CreateUserInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `User` to be created by this mutation. */
-  user: UserInput;
-};
-
-/** All input for the create `UserOrganization` mutation. */
-export type CreateUserOrganizationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `UserOrganization` to be created by this mutation. */
-  userOrganization: UserOrganizationInput;
-};
-
-/** The output of our create `UserOrganization` mutation. */
-export type CreateUserOrganizationPayload = {
-  __typename?: 'CreateUserOrganizationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `UserOrganization` that was created by this mutation. */
-  userOrganization?: Maybe<UserOrganization>;
-  /** An edge for our `UserOrganization`. May be used by Relay 1. */
-  userOrganizationEdge?: Maybe<UserOrganizationEdge>;
-};
-
-
-/** The output of our create `UserOrganization` mutation. */
-export type CreateUserOrganizationPayloadUserOrganizationEdgeArgs = {
-  orderBy?: Array<UserOrganizationOrderBy>;
-};
-
-/** The output of our create `User` mutation. */
-export type CreateUserPayload = {
-  __typename?: 'CreateUserPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `User` that was created by this mutation. */
-  user?: Maybe<User>;
-  /** An edge for our `User`. May be used by Relay 1. */
-  userEdge?: Maybe<UserEdge>;
-};
-
-
-/** The output of our create `User` mutation. */
-export type CreateUserPayloadUserEdgeArgs = {
-  orderBy?: Array<UserOrderBy>;
 };
 
 /** All input for the create `Workflow` mutation. */
@@ -432,105 +663,6 @@ export type CreateWorkflowPayloadWorkflowEdgeArgs = {
   orderBy?: Array<WorkflowOrderBy>;
 };
 
-/** All input for the create `WorkflowRun` mutation. */
-export type CreateWorkflowRunInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `WorkflowRun` to be created by this mutation. */
-  workflowRun: WorkflowRunInput;
-};
-
-/** The output of our create `WorkflowRun` mutation. */
-export type CreateWorkflowRunPayload = {
-  __typename?: 'CreateWorkflowRunPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `WorkflowRun` that was created by this mutation. */
-  workflowRun?: Maybe<WorkflowRun>;
-  /** An edge for our `WorkflowRun`. May be used by Relay 1. */
-  workflowRunEdge?: Maybe<WorkflowRunEdge>;
-};
-
-
-/** The output of our create `WorkflowRun` mutation. */
-export type CreateWorkflowRunPayloadWorkflowRunEdgeArgs = {
-  orderBy?: Array<WorkflowRunOrderBy>;
-};
-
-/** All input for the create `WorkflowStepLog` mutation. */
-export type CreateWorkflowStepLogInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `WorkflowStepLog` to be created by this mutation. */
-  workflowStepLog: WorkflowStepLogInput;
-};
-
-/** The output of our create `WorkflowStepLog` mutation. */
-export type CreateWorkflowStepLogPayload = {
-  __typename?: 'CreateWorkflowStepLogPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `WorkflowStepLog` that was created by this mutation. */
-  workflowStepLog?: Maybe<WorkflowStepLog>;
-  /** An edge for our `WorkflowStepLog`. May be used by Relay 1. */
-  workflowStepLogEdge?: Maybe<WorkflowStepLogEdge>;
-};
-
-
-/** The output of our create `WorkflowStepLog` mutation. */
-export type CreateWorkflowStepLogPayloadWorkflowStepLogEdgeArgs = {
-  orderBy?: Array<WorkflowStepLogOrderBy>;
-};
-
-/** All input for the create `WorkflowTemplate` mutation. */
-export type CreateWorkflowTemplateInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The `WorkflowTemplate` to be created by this mutation. */
-  workflowTemplate: WorkflowTemplateInput;
-};
-
-/** The output of our create `WorkflowTemplate` mutation. */
-export type CreateWorkflowTemplatePayload = {
-  __typename?: 'CreateWorkflowTemplatePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `WorkflowTemplate` that was created by this mutation. */
-  workflowTemplate?: Maybe<WorkflowTemplate>;
-  /** An edge for our `WorkflowTemplate`. May be used by Relay 1. */
-  workflowTemplateEdge?: Maybe<WorkflowTemplateEdge>;
-};
-
-
-/** The output of our create `WorkflowTemplate` mutation. */
-export type CreateWorkflowTemplatePayloadWorkflowTemplateEdgeArgs = {
-  orderBy?: Array<WorkflowTemplateOrderBy>;
-};
-
 /** A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’ */
 export type DatetimeFilter = {
   /** Not equal to the specified value, treating null like an ordinary value. */
@@ -557,15 +689,429 @@ export type DatetimeFilter = {
   notIn?: InputMaybe<Array<Scalars['Datetime']['input']>>;
 };
 
-/** All input for the `deleteEventRoutingRuleById` mutation. */
-export type DeleteEventRoutingRuleByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `EventRoutingRule` to be deleted. */
-  id: Scalars['ID']['input'];
+export type DeadLetterEvent = Node & {
+  __typename?: 'DeadLetterEvent';
+  attempts: Scalars['Int']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  error: Scalars['String']['output'];
+  errorCode: Scalars['String']['output'];
+  eventData: Scalars['JSON']['output'];
+  eventSource: Scalars['String']['output'];
+  eventType: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  lastAttemptAt?: Maybe<Scalars['Datetime']['output']>;
+  organizationId: Scalars['String']['output'];
+  originalEventId: Scalars['String']['output'];
+  resolvedAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `EventRoutingRule` that is related to this `DeadLetterEvent`. */
+  routingRule?: Maybe<EventRoutingRule>;
+  routingRuleId: Scalars['UUID']['output'];
+  rowId: Scalars['UUID']['output'];
+};
+
+export type DeadLetterEventAggregates = {
+  __typename?: 'DeadLetterEventAggregates';
+  /** Mean average aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  average?: Maybe<DeadLetterEventAverageAggregates>;
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<DeadLetterEventDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** Maximum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  max?: Maybe<DeadLetterEventMaxAggregates>;
+  /** Minimum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  min?: Maybe<DeadLetterEventMinAggregates>;
+  /** Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevPopulation?: Maybe<DeadLetterEventStddevPopulationAggregates>;
+  /** Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevSample?: Maybe<DeadLetterEventStddevSampleAggregates>;
+  /** Sum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  sum?: Maybe<DeadLetterEventSumAggregates>;
+  /** Population variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  variancePopulation?: Maybe<DeadLetterEventVariancePopulationAggregates>;
+  /** Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  varianceSample?: Maybe<DeadLetterEventVarianceSampleAggregates>;
+};
+
+/** A filter to be used against aggregates of `DeadLetterEvent` object types. */
+export type DeadLetterEventAggregatesFilter = {
+  /** Mean average aggregate over matching `DeadLetterEvent` objects. */
+  average?: InputMaybe<DeadLetterEventAverageAggregateFilter>;
+  /** Distinct count aggregate over matching `DeadLetterEvent` objects. */
+  distinctCount?: InputMaybe<DeadLetterEventDistinctCountAggregateFilter>;
+  /** A filter that must pass for the relevant `DeadLetterEvent` object to be included within the aggregate. */
+  filter?: InputMaybe<DeadLetterEventFilter>;
+  /** Maximum aggregate over matching `DeadLetterEvent` objects. */
+  max?: InputMaybe<DeadLetterEventMaxAggregateFilter>;
+  /** Minimum aggregate over matching `DeadLetterEvent` objects. */
+  min?: InputMaybe<DeadLetterEventMinAggregateFilter>;
+  /** Population standard deviation aggregate over matching `DeadLetterEvent` objects. */
+  stddevPopulation?: InputMaybe<DeadLetterEventStddevPopulationAggregateFilter>;
+  /** Sample standard deviation aggregate over matching `DeadLetterEvent` objects. */
+  stddevSample?: InputMaybe<DeadLetterEventStddevSampleAggregateFilter>;
+  /** Sum aggregate over matching `DeadLetterEvent` objects. */
+  sum?: InputMaybe<DeadLetterEventSumAggregateFilter>;
+  /** Population variance aggregate over matching `DeadLetterEvent` objects. */
+  variancePopulation?: InputMaybe<DeadLetterEventVariancePopulationAggregateFilter>;
+  /** Sample variance aggregate over matching `DeadLetterEvent` objects. */
+  varianceSample?: InputMaybe<DeadLetterEventVarianceSampleAggregateFilter>;
+};
+
+export type DeadLetterEventAverageAggregateFilter = {
+  attempts?: InputMaybe<BigFloatFilter>;
+};
+
+export type DeadLetterEventAverageAggregates = {
+  __typename?: 'DeadLetterEventAverageAggregates';
+  /** Mean average of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+/**
+ * A condition to be used against `DeadLetterEvent` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type DeadLetterEventCondition = {
+  /** Checks for equality with the object’s `attempts` field. */
+  attempts?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `error` field. */
+  error?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `errorCode` field. */
+  errorCode?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `eventSource` field. */
+  eventSource?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `eventType` field. */
+  eventType?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `lastAttemptAt` field. */
+  lastAttemptAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `originalEventId` field. */
+  originalEventId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `resolvedAt` field. */
+  resolvedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `routingRuleId` field. */
+  routingRuleId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `DeadLetterEvent` values. */
+export type DeadLetterEventConnection = {
+  __typename?: 'DeadLetterEventConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<DeadLetterEventAggregates>;
+  /** A list of edges which contains the `DeadLetterEvent` and cursor to aid in pagination. */
+  edges: Array<DeadLetterEventEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<DeadLetterEventAggregates>>;
+  /** A list of `DeadLetterEvent` objects. */
+  nodes: Array<DeadLetterEvent>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `DeadLetterEvent` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `DeadLetterEvent` values. */
+export type DeadLetterEventConnectionGroupedAggregatesArgs = {
+  groupBy: Array<DeadLetterEventGroupBy>;
+  having?: InputMaybe<DeadLetterEventHavingInput>;
+};
+
+export type DeadLetterEventDistinctCountAggregateFilter = {
+  attempts?: InputMaybe<BigIntFilter>;
+  createdAt?: InputMaybe<BigIntFilter>;
+  error?: InputMaybe<BigIntFilter>;
+  errorCode?: InputMaybe<BigIntFilter>;
+  eventData?: InputMaybe<BigIntFilter>;
+  eventSource?: InputMaybe<BigIntFilter>;
+  eventType?: InputMaybe<BigIntFilter>;
+  lastAttemptAt?: InputMaybe<BigIntFilter>;
+  organizationId?: InputMaybe<BigIntFilter>;
+  originalEventId?: InputMaybe<BigIntFilter>;
+  resolvedAt?: InputMaybe<BigIntFilter>;
+  routingRuleId?: InputMaybe<BigIntFilter>;
+  rowId?: InputMaybe<BigIntFilter>;
+};
+
+export type DeadLetterEventDistinctCountAggregates = {
+  __typename?: 'DeadLetterEventDistinctCountAggregates';
+  /** Distinct count of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of error across the matching connection */
+  error?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of errorCode across the matching connection */
+  errorCode?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of eventData across the matching connection */
+  eventData?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of eventSource across the matching connection */
+  eventSource?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of eventType across the matching connection */
+  eventType?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of lastAttemptAt across the matching connection */
+  lastAttemptAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of originalEventId across the matching connection */
+  originalEventId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of resolvedAt across the matching connection */
+  resolvedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of routingRuleId across the matching connection */
+  routingRuleId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `DeadLetterEvent` edge in the connection. */
+export type DeadLetterEventEdge = {
+  __typename?: 'DeadLetterEventEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `DeadLetterEvent` at the end of the edge. */
+  node: DeadLetterEvent;
+};
+
+/** A filter to be used against `DeadLetterEvent` object types. All fields are combined with a logical ‘and.’ */
+export type DeadLetterEventFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<DeadLetterEventFilter>>;
+  /** Filter by the object’s `attempts` field. */
+  attempts?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `error` field. */
+  error?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `errorCode` field. */
+  errorCode?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `eventSource` field. */
+  eventSource?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `eventType` field. */
+  eventType?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `lastAttemptAt` field. */
+  lastAttemptAt?: InputMaybe<DatetimeFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<DeadLetterEventFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<DeadLetterEventFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `originalEventId` field. */
+  originalEventId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `resolvedAt` field. */
+  resolvedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `routingRule` relation. */
+  routingRule?: InputMaybe<EventRoutingRuleFilter>;
+  /** Filter by the object’s `routingRuleId` field. */
+  routingRuleId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+};
+
+/** Grouping methods for `DeadLetterEvent` for usage during aggregation. */
+export enum DeadLetterEventGroupBy {
+  Attempts = 'ATTEMPTS',
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  Error = 'ERROR',
+  ErrorCode = 'ERROR_CODE',
+  EventData = 'EVENT_DATA',
+  EventSource = 'EVENT_SOURCE',
+  EventType = 'EVENT_TYPE',
+  LastAttemptAt = 'LAST_ATTEMPT_AT',
+  LastAttemptAtTruncatedToDay = 'LAST_ATTEMPT_AT_TRUNCATED_TO_DAY',
+  LastAttemptAtTruncatedToHour = 'LAST_ATTEMPT_AT_TRUNCATED_TO_HOUR',
+  OrganizationId = 'ORGANIZATION_ID',
+  OriginalEventId = 'ORIGINAL_EVENT_ID',
+  ResolvedAt = 'RESOLVED_AT',
+  ResolvedAtTruncatedToDay = 'RESOLVED_AT_TRUNCATED_TO_DAY',
+  ResolvedAtTruncatedToHour = 'RESOLVED_AT_TRUNCATED_TO_HOUR',
+  RoutingRuleId = 'ROUTING_RULE_ID'
+}
+
+export type DeadLetterEventHavingAverageInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  lastAttemptAt?: InputMaybe<HavingDatetimeFilter>;
+  resolvedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type DeadLetterEventHavingDistinctCountInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  lastAttemptAt?: InputMaybe<HavingDatetimeFilter>;
+  resolvedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `DeadLetterEvent` aggregates. */
+export type DeadLetterEventHavingInput = {
+  AND?: InputMaybe<Array<DeadLetterEventHavingInput>>;
+  OR?: InputMaybe<Array<DeadLetterEventHavingInput>>;
+  average?: InputMaybe<DeadLetterEventHavingAverageInput>;
+  distinctCount?: InputMaybe<DeadLetterEventHavingDistinctCountInput>;
+  max?: InputMaybe<DeadLetterEventHavingMaxInput>;
+  min?: InputMaybe<DeadLetterEventHavingMinInput>;
+  stddevPopulation?: InputMaybe<DeadLetterEventHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<DeadLetterEventHavingStddevSampleInput>;
+  sum?: InputMaybe<DeadLetterEventHavingSumInput>;
+  variancePopulation?: InputMaybe<DeadLetterEventHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<DeadLetterEventHavingVarianceSampleInput>;
+};
+
+export type DeadLetterEventHavingMaxInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  lastAttemptAt?: InputMaybe<HavingDatetimeFilter>;
+  resolvedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type DeadLetterEventHavingMinInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  lastAttemptAt?: InputMaybe<HavingDatetimeFilter>;
+  resolvedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type DeadLetterEventHavingStddevPopulationInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  lastAttemptAt?: InputMaybe<HavingDatetimeFilter>;
+  resolvedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type DeadLetterEventHavingStddevSampleInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  lastAttemptAt?: InputMaybe<HavingDatetimeFilter>;
+  resolvedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type DeadLetterEventHavingSumInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  lastAttemptAt?: InputMaybe<HavingDatetimeFilter>;
+  resolvedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type DeadLetterEventHavingVariancePopulationInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  lastAttemptAt?: InputMaybe<HavingDatetimeFilter>;
+  resolvedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type DeadLetterEventHavingVarianceSampleInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  lastAttemptAt?: InputMaybe<HavingDatetimeFilter>;
+  resolvedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type DeadLetterEventMaxAggregateFilter = {
+  attempts?: InputMaybe<IntFilter>;
+};
+
+export type DeadLetterEventMaxAggregates = {
+  __typename?: 'DeadLetterEventMaxAggregates';
+  /** Maximum of attempts across the matching connection */
+  attempts?: Maybe<Scalars['Int']['output']>;
+};
+
+export type DeadLetterEventMinAggregateFilter = {
+  attempts?: InputMaybe<IntFilter>;
+};
+
+export type DeadLetterEventMinAggregates = {
+  __typename?: 'DeadLetterEventMinAggregates';
+  /** Minimum of attempts across the matching connection */
+  attempts?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Methods to use when ordering `DeadLetterEvent`. */
+export enum DeadLetterEventOrderBy {
+  AttemptsAsc = 'ATTEMPTS_ASC',
+  AttemptsDesc = 'ATTEMPTS_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  ErrorAsc = 'ERROR_ASC',
+  ErrorCodeAsc = 'ERROR_CODE_ASC',
+  ErrorCodeDesc = 'ERROR_CODE_DESC',
+  ErrorDesc = 'ERROR_DESC',
+  EventSourceAsc = 'EVENT_SOURCE_ASC',
+  EventSourceDesc = 'EVENT_SOURCE_DESC',
+  EventTypeAsc = 'EVENT_TYPE_ASC',
+  EventTypeDesc = 'EVENT_TYPE_DESC',
+  LastAttemptAtAsc = 'LAST_ATTEMPT_AT_ASC',
+  LastAttemptAtDesc = 'LAST_ATTEMPT_AT_DESC',
+  Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
+  OriginalEventIdAsc = 'ORIGINAL_EVENT_ID_ASC',
+  OriginalEventIdDesc = 'ORIGINAL_EVENT_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  ResolvedAtAsc = 'RESOLVED_AT_ASC',
+  ResolvedAtDesc = 'RESOLVED_AT_DESC',
+  RoutingRuleIdAsc = 'ROUTING_RULE_ID_ASC',
+  RoutingRuleIdDesc = 'ROUTING_RULE_ID_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC'
+}
+
+export type DeadLetterEventStddevPopulationAggregateFilter = {
+  attempts?: InputMaybe<BigFloatFilter>;
+};
+
+export type DeadLetterEventStddevPopulationAggregates = {
+  __typename?: 'DeadLetterEventStddevPopulationAggregates';
+  /** Population standard deviation of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type DeadLetterEventStddevSampleAggregateFilter = {
+  attempts?: InputMaybe<BigFloatFilter>;
+};
+
+export type DeadLetterEventStddevSampleAggregates = {
+  __typename?: 'DeadLetterEventStddevSampleAggregates';
+  /** Sample standard deviation of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type DeadLetterEventSumAggregateFilter = {
+  attempts?: InputMaybe<BigIntFilter>;
+};
+
+export type DeadLetterEventSumAggregates = {
+  __typename?: 'DeadLetterEventSumAggregates';
+  /** Sum of attempts across the matching connection */
+  attempts: Scalars['BigInt']['output'];
+};
+
+export type DeadLetterEventVariancePopulationAggregateFilter = {
+  attempts?: InputMaybe<BigFloatFilter>;
+};
+
+export type DeadLetterEventVariancePopulationAggregates = {
+  __typename?: 'DeadLetterEventVariancePopulationAggregates';
+  /** Population variance of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type DeadLetterEventVarianceSampleAggregateFilter = {
+  attempts?: InputMaybe<BigFloatFilter>;
+};
+
+export type DeadLetterEventVarianceSampleAggregates = {
+  __typename?: 'DeadLetterEventVarianceSampleAggregates';
+  /** Sample variance of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigFloat']['output']>;
 };
 
 /** All input for the `deleteEventRoutingRule` mutation. */
@@ -601,59 +1147,70 @@ export type DeleteEventRoutingRulePayloadEventRoutingRuleEdgeArgs = {
   orderBy?: Array<EventRoutingRuleOrderBy>;
 };
 
-/** All input for the `deleteIntegrationById` mutation. */
-export type DeleteIntegrationByIdInput = {
+/** All input for the `deleteEventSchema` mutation. */
+export type DeleteEventSchemaInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Integration` to be deleted. */
-  id: Scalars['ID']['input'];
+  rowId: Scalars['UUID']['input'];
 };
 
-/** All input for the `deleteIntegrationDefinitionById` mutation. */
-export type DeleteIntegrationDefinitionByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `IntegrationDefinition` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteIntegrationDefinition` mutation. */
-export type DeleteIntegrationDefinitionInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['String']['input'];
-};
-
-/** The output of our delete `IntegrationDefinition` mutation. */
-export type DeleteIntegrationDefinitionPayload = {
-  __typename?: 'DeleteIntegrationDefinitionPayload';
+/** The output of our delete `EventSchema` mutation. */
+export type DeleteEventSchemaPayload = {
+  __typename?: 'DeleteEventSchemaPayload';
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedIntegrationDefinitionId?: Maybe<Scalars['ID']['output']>;
-  /** The `IntegrationDefinition` that was deleted by this mutation. */
-  integrationDefinition?: Maybe<IntegrationDefinition>;
-  /** An edge for our `IntegrationDefinition`. May be used by Relay 1. */
-  integrationDefinitionEdge?: Maybe<IntegrationDefinitionEdge>;
+  deletedEventSchemaId?: Maybe<Scalars['ID']['output']>;
+  /** The `EventSchema` that was deleted by this mutation. */
+  eventSchema?: Maybe<EventSchema>;
+  /** An edge for our `EventSchema`. May be used by Relay 1. */
+  eventSchemaEdge?: Maybe<EventSchemaEdge>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
 
 
-/** The output of our delete `IntegrationDefinition` mutation. */
-export type DeleteIntegrationDefinitionPayloadIntegrationDefinitionEdgeArgs = {
-  orderBy?: Array<IntegrationDefinitionOrderBy>;
+/** The output of our delete `EventSchema` mutation. */
+export type DeleteEventSchemaPayloadEventSchemaEdgeArgs = {
+  orderBy?: Array<EventSchemaOrderBy>;
+};
+
+/** All input for the `deleteEventSubscription` mutation. */
+export type DeleteEventSubscriptionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  rowId: Scalars['UUID']['input'];
+};
+
+/** The output of our delete `EventSubscription` mutation. */
+export type DeleteEventSubscriptionPayload = {
+  __typename?: 'DeleteEventSubscriptionPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedEventSubscriptionId?: Maybe<Scalars['ID']['output']>;
+  /** The `EventSubscription` that was deleted by this mutation. */
+  eventSubscription?: Maybe<EventSubscription>;
+  /** An edge for our `EventSubscription`. May be used by Relay 1. */
+  eventSubscriptionEdge?: Maybe<EventSubscriptionEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `EventSubscription` mutation. */
+export type DeleteEventSubscriptionPayloadEventSubscriptionEdgeArgs = {
+  orderBy?: Array<EventSubscriptionOrderBy>;
 };
 
 /** All input for the `deleteIntegration` mutation. */
@@ -689,17 +1246,6 @@ export type DeleteIntegrationPayloadIntegrationEdgeArgs = {
   orderBy?: Array<IntegrationOrderBy>;
 };
 
-/** All input for the `deleteMcpServerById` mutation. */
-export type DeleteMcpServerByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `McpServer` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
 /** All input for the `deleteMcpServer` mutation. */
 export type DeleteMcpServerInput = {
   /**
@@ -731,105 +1277,6 @@ export type DeleteMcpServerPayload = {
 /** The output of our delete `McpServer` mutation. */
 export type DeleteMcpServerPayloadMcpServerEdgeArgs = {
   orderBy?: Array<McpServerOrderBy>;
-};
-
-/** All input for the `deleteOauthStateById` mutation. */
-export type DeleteOauthStateByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `OauthState` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteOauthState` mutation. */
-export type DeleteOauthStateInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `OauthState` mutation. */
-export type DeleteOauthStatePayload = {
-  __typename?: 'DeleteOauthStatePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedOauthStateId?: Maybe<Scalars['ID']['output']>;
-  /** The `OauthState` that was deleted by this mutation. */
-  oauthState?: Maybe<OauthState>;
-  /** An edge for our `OauthState`. May be used by Relay 1. */
-  oauthStateEdge?: Maybe<OauthStateEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `OauthState` mutation. */
-export type DeleteOauthStatePayloadOauthStateEdgeArgs = {
-  orderBy?: Array<OauthStateOrderBy>;
-};
-
-/** All input for the `deleteOauthTokenById` mutation. */
-export type DeleteOauthTokenByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `OauthToken` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteOauthToken` mutation. */
-export type DeleteOauthTokenInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `OauthToken` mutation. */
-export type DeleteOauthTokenPayload = {
-  __typename?: 'DeleteOauthTokenPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedOauthTokenId?: Maybe<Scalars['ID']['output']>;
-  /** The `OauthToken` that was deleted by this mutation. */
-  oauthToken?: Maybe<OauthToken>;
-  /** An edge for our `OauthToken`. May be used by Relay 1. */
-  oauthTokenEdge?: Maybe<OauthTokenEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our delete `OauthToken` mutation. */
-export type DeleteOauthTokenPayloadOauthTokenEdgeArgs = {
-  orderBy?: Array<OauthTokenOrderBy>;
-};
-
-/** All input for the `deletePluginById` mutation. */
-export type DeletePluginByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Plugin` to be deleted. */
-  id: Scalars['ID']['input'];
 };
 
 /** All input for the `deletePlugin` mutation. */
@@ -865,136 +1312,6 @@ export type DeletePluginPayloadPluginEdgeArgs = {
   orderBy?: Array<PluginOrderBy>;
 };
 
-/** All input for the `deleteUserByEmail` mutation. */
-export type DeleteUserByEmailInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  email: Scalars['String']['input'];
-};
-
-/** All input for the `deleteUserById` mutation. */
-export type DeleteUserByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `User` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteUserByIdentityProviderId` mutation. */
-export type DeleteUserByIdentityProviderIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  identityProviderId: Scalars['UUID']['input'];
-};
-
-/** All input for the `deleteUser` mutation. */
-export type DeleteUserInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** All input for the `deleteUserOrganizationById` mutation. */
-export type DeleteUserOrganizationByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `UserOrganization` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteUserOrganizationByUserIdAndOrganizationId` mutation. */
-export type DeleteUserOrganizationByUserIdAndOrganizationIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  organizationId: Scalars['String']['input'];
-  userId: Scalars['UUID']['input'];
-};
-
-/** All input for the `deleteUserOrganization` mutation. */
-export type DeleteUserOrganizationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `UserOrganization` mutation. */
-export type DeleteUserOrganizationPayload = {
-  __typename?: 'DeleteUserOrganizationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedUserOrganizationId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `UserOrganization` that was deleted by this mutation. */
-  userOrganization?: Maybe<UserOrganization>;
-  /** An edge for our `UserOrganization`. May be used by Relay 1. */
-  userOrganizationEdge?: Maybe<UserOrganizationEdge>;
-};
-
-
-/** The output of our delete `UserOrganization` mutation. */
-export type DeleteUserOrganizationPayloadUserOrganizationEdgeArgs = {
-  orderBy?: Array<UserOrganizationOrderBy>;
-};
-
-/** The output of our delete `User` mutation. */
-export type DeleteUserPayload = {
-  __typename?: 'DeleteUserPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedUserId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `User` that was deleted by this mutation. */
-  user?: Maybe<User>;
-  /** An edge for our `User`. May be used by Relay 1. */
-  userEdge?: Maybe<UserEdge>;
-};
-
-
-/** The output of our delete `User` mutation. */
-export type DeleteUserPayloadUserEdgeArgs = {
-  orderBy?: Array<UserOrderBy>;
-};
-
-/** All input for the `deleteWorkflowById` mutation. */
-export type DeleteWorkflowByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Workflow` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
 /** All input for the `deleteWorkflow` mutation. */
 export type DeleteWorkflowInput = {
   /**
@@ -1028,142 +1345,438 @@ export type DeleteWorkflowPayloadWorkflowEdgeArgs = {
   orderBy?: Array<WorkflowOrderBy>;
 };
 
-/** All input for the `deleteWorkflowRunById` mutation. */
-export type DeleteWorkflowRunByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `WorkflowRun` to be deleted. */
-  id: Scalars['ID']['input'];
+export type EmailSuppression = Node & {
+  __typename?: 'EmailSuppression';
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  email: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  reason: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  source?: Maybe<Scalars['String']['output']>;
 };
 
-/** All input for the `deleteWorkflowRun` mutation. */
-export type DeleteWorkflowRunInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
+export type EmailSuppressionAggregates = {
+  __typename?: 'EmailSuppressionAggregates';
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<EmailSuppressionDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
 };
 
-/** The output of our delete `WorkflowRun` mutation. */
-export type DeleteWorkflowRunPayload = {
-  __typename?: 'DeleteWorkflowRunPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedWorkflowRunId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `WorkflowRun` that was deleted by this mutation. */
-  workflowRun?: Maybe<WorkflowRun>;
-  /** An edge for our `WorkflowRun`. May be used by Relay 1. */
-  workflowRunEdge?: Maybe<WorkflowRunEdge>;
+/**
+ * A condition to be used against `EmailSuppression` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type EmailSuppressionCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `email` field. */
+  email?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `reason` field. */
+  reason?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `source` field. */
+  source?: InputMaybe<Scalars['String']['input']>;
 };
 
-
-/** The output of our delete `WorkflowRun` mutation. */
-export type DeleteWorkflowRunPayloadWorkflowRunEdgeArgs = {
-  orderBy?: Array<WorkflowRunOrderBy>;
-};
-
-/** All input for the `deleteWorkflowStepLogById` mutation. */
-export type DeleteWorkflowStepLogByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `WorkflowStepLog` to be deleted. */
-  id: Scalars['ID']['input'];
-};
-
-/** All input for the `deleteWorkflowStepLog` mutation. */
-export type DeleteWorkflowStepLogInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our delete `WorkflowStepLog` mutation. */
-export type DeleteWorkflowStepLogPayload = {
-  __typename?: 'DeleteWorkflowStepLogPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedWorkflowStepLogId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `WorkflowStepLog` that was deleted by this mutation. */
-  workflowStepLog?: Maybe<WorkflowStepLog>;
-  /** An edge for our `WorkflowStepLog`. May be used by Relay 1. */
-  workflowStepLogEdge?: Maybe<WorkflowStepLogEdge>;
+/** A connection to a list of `EmailSuppression` values. */
+export type EmailSuppressionConnection = {
+  __typename?: 'EmailSuppressionConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<EmailSuppressionAggregates>;
+  /** A list of edges which contains the `EmailSuppression` and cursor to aid in pagination. */
+  edges: Array<EmailSuppressionEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<EmailSuppressionAggregates>>;
+  /** A list of `EmailSuppression` objects. */
+  nodes: Array<EmailSuppression>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `EmailSuppression` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
 };
 
 
-/** The output of our delete `WorkflowStepLog` mutation. */
-export type DeleteWorkflowStepLogPayloadWorkflowStepLogEdgeArgs = {
-  orderBy?: Array<WorkflowStepLogOrderBy>;
+/** A connection to a list of `EmailSuppression` values. */
+export type EmailSuppressionConnectionGroupedAggregatesArgs = {
+  groupBy: Array<EmailSuppressionGroupBy>;
+  having?: InputMaybe<EmailSuppressionHavingInput>;
 };
 
-/** All input for the `deleteWorkflowTemplateById` mutation. */
-export type DeleteWorkflowTemplateByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `WorkflowTemplate` to be deleted. */
-  id: Scalars['ID']['input'];
+export type EmailSuppressionDistinctCountAggregates = {
+  __typename?: 'EmailSuppressionDistinctCountAggregates';
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of email across the matching connection */
+  email?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of reason across the matching connection */
+  reason?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of source across the matching connection */
+  source?: Maybe<Scalars['BigInt']['output']>;
 };
 
-/** All input for the `deleteWorkflowTemplate` mutation. */
-export type DeleteWorkflowTemplateInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  rowId: Scalars['UUID']['input'];
+/** A `EmailSuppression` edge in the connection. */
+export type EmailSuppressionEdge = {
+  __typename?: 'EmailSuppressionEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `EmailSuppression` at the end of the edge. */
+  node: EmailSuppression;
 };
 
-/** The output of our delete `WorkflowTemplate` mutation. */
-export type DeleteWorkflowTemplatePayload = {
-  __typename?: 'DeleteWorkflowTemplatePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  deletedWorkflowTemplateId?: Maybe<Scalars['ID']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `WorkflowTemplate` that was deleted by this mutation. */
-  workflowTemplate?: Maybe<WorkflowTemplate>;
-  /** An edge for our `WorkflowTemplate`. May be used by Relay 1. */
-  workflowTemplateEdge?: Maybe<WorkflowTemplateEdge>;
+/** A filter to be used against `EmailSuppression` object types. All fields are combined with a logical ‘and.’ */
+export type EmailSuppressionFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<EmailSuppressionFilter>>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `email` field. */
+  email?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<EmailSuppressionFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<EmailSuppressionFilter>>;
+  /** Filter by the object’s `reason` field. */
+  reason?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `source` field. */
+  source?: InputMaybe<StringFilter>;
+};
+
+/** Grouping methods for `EmailSuppression` for usage during aggregation. */
+export enum EmailSuppressionGroupBy {
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  Email = 'EMAIL',
+  Reason = 'REASON',
+  Source = 'SOURCE'
+}
+
+export type EmailSuppressionHavingAverageInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EmailSuppressionHavingDistinctCountInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `EmailSuppression` aggregates. */
+export type EmailSuppressionHavingInput = {
+  AND?: InputMaybe<Array<EmailSuppressionHavingInput>>;
+  OR?: InputMaybe<Array<EmailSuppressionHavingInput>>;
+  average?: InputMaybe<EmailSuppressionHavingAverageInput>;
+  distinctCount?: InputMaybe<EmailSuppressionHavingDistinctCountInput>;
+  max?: InputMaybe<EmailSuppressionHavingMaxInput>;
+  min?: InputMaybe<EmailSuppressionHavingMinInput>;
+  stddevPopulation?: InputMaybe<EmailSuppressionHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<EmailSuppressionHavingStddevSampleInput>;
+  sum?: InputMaybe<EmailSuppressionHavingSumInput>;
+  variancePopulation?: InputMaybe<EmailSuppressionHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<EmailSuppressionHavingVarianceSampleInput>;
+};
+
+export type EmailSuppressionHavingMaxInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EmailSuppressionHavingMinInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EmailSuppressionHavingStddevPopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EmailSuppressionHavingStddevSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EmailSuppressionHavingSumInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EmailSuppressionHavingVariancePopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EmailSuppressionHavingVarianceSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Methods to use when ordering `EmailSuppression`. */
+export enum EmailSuppressionOrderBy {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  EmailAsc = 'EMAIL_ASC',
+  EmailDesc = 'EMAIL_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  ReasonAsc = 'REASON_ASC',
+  ReasonDesc = 'REASON_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  SourceAsc = 'SOURCE_ASC',
+  SourceDesc = 'SOURCE_DESC'
+}
+
+export type EventLog = Node & {
+  __typename?: 'EventLog';
+  correlationId?: Maybe<Scalars['String']['output']>;
+  data: Scalars['JSON']['output'];
+  dataschema?: Maybe<Scalars['String']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  organizationId: Scalars['String']['output'];
+  recordedAt?: Maybe<Scalars['Datetime']['output']>;
+  rowId: Scalars['UUID']['output'];
+  schemaId?: Maybe<Scalars['String']['output']>;
+  source: Scalars['String']['output'];
+  specversion?: Maybe<Scalars['String']['output']>;
+  subject?: Maybe<Scalars['String']['output']>;
+  timestamp: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+};
+
+export type EventLogAggregates = {
+  __typename?: 'EventLogAggregates';
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<EventLogDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+/**
+ * A condition to be used against `EventLog` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type EventLogCondition = {
+  /** Checks for equality with the object’s `correlationId` field. */
+  correlationId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `dataschema` field. */
+  dataschema?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `recordedAt` field. */
+  recordedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `schemaId` field. */
+  schemaId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `source` field. */
+  source?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `specversion` field. */
+  specversion?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `subject` field. */
+  subject?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `timestamp` field. */
+  timestamp?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `type` field. */
+  type?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `EventLog` values. */
+export type EventLogConnection = {
+  __typename?: 'EventLogConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<EventLogAggregates>;
+  /** A list of edges which contains the `EventLog` and cursor to aid in pagination. */
+  edges: Array<EventLogEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<EventLogAggregates>>;
+  /** A list of `EventLog` objects. */
+  nodes: Array<EventLog>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `EventLog` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
 };
 
 
-/** The output of our delete `WorkflowTemplate` mutation. */
-export type DeleteWorkflowTemplatePayloadWorkflowTemplateEdgeArgs = {
-  orderBy?: Array<WorkflowTemplateOrderBy>;
+/** A connection to a list of `EventLog` values. */
+export type EventLogConnectionGroupedAggregatesArgs = {
+  groupBy: Array<EventLogGroupBy>;
+  having?: InputMaybe<EventLogHavingInput>;
 };
+
+export type EventLogDistinctCountAggregates = {
+  __typename?: 'EventLogDistinctCountAggregates';
+  /** Distinct count of correlationId across the matching connection */
+  correlationId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of data across the matching connection */
+  data?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of dataschema across the matching connection */
+  dataschema?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of recordedAt across the matching connection */
+  recordedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of schemaId across the matching connection */
+  schemaId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of source across the matching connection */
+  source?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of specversion across the matching connection */
+  specversion?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of subject across the matching connection */
+  subject?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of timestamp across the matching connection */
+  timestamp?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of type across the matching connection */
+  type?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `EventLog` edge in the connection. */
+export type EventLogEdge = {
+  __typename?: 'EventLogEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `EventLog` at the end of the edge. */
+  node: EventLog;
+};
+
+/** A filter to be used against `EventLog` object types. All fields are combined with a logical ‘and.’ */
+export type EventLogFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<EventLogFilter>>;
+  /** Filter by the object’s `correlationId` field. */
+  correlationId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `dataschema` field. */
+  dataschema?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<EventLogFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<EventLogFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `recordedAt` field. */
+  recordedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `schemaId` field. */
+  schemaId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `source` field. */
+  source?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `specversion` field. */
+  specversion?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `subject` field. */
+  subject?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `timestamp` field. */
+  timestamp?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `type` field. */
+  type?: InputMaybe<StringFilter>;
+};
+
+/** Grouping methods for `EventLog` for usage during aggregation. */
+export enum EventLogGroupBy {
+  CorrelationId = 'CORRELATION_ID',
+  Data = 'DATA',
+  Dataschema = 'DATASCHEMA',
+  OrganizationId = 'ORGANIZATION_ID',
+  RecordedAt = 'RECORDED_AT',
+  RecordedAtTruncatedToDay = 'RECORDED_AT_TRUNCATED_TO_DAY',
+  RecordedAtTruncatedToHour = 'RECORDED_AT_TRUNCATED_TO_HOUR',
+  SchemaId = 'SCHEMA_ID',
+  Source = 'SOURCE',
+  Specversion = 'SPECVERSION',
+  Subject = 'SUBJECT',
+  Timestamp = 'TIMESTAMP',
+  Type = 'TYPE'
+}
+
+export type EventLogHavingAverageInput = {
+  recordedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventLogHavingDistinctCountInput = {
+  recordedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `EventLog` aggregates. */
+export type EventLogHavingInput = {
+  AND?: InputMaybe<Array<EventLogHavingInput>>;
+  OR?: InputMaybe<Array<EventLogHavingInput>>;
+  average?: InputMaybe<EventLogHavingAverageInput>;
+  distinctCount?: InputMaybe<EventLogHavingDistinctCountInput>;
+  max?: InputMaybe<EventLogHavingMaxInput>;
+  min?: InputMaybe<EventLogHavingMinInput>;
+  stddevPopulation?: InputMaybe<EventLogHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<EventLogHavingStddevSampleInput>;
+  sum?: InputMaybe<EventLogHavingSumInput>;
+  variancePopulation?: InputMaybe<EventLogHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<EventLogHavingVarianceSampleInput>;
+};
+
+export type EventLogHavingMaxInput = {
+  recordedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventLogHavingMinInput = {
+  recordedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventLogHavingStddevPopulationInput = {
+  recordedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventLogHavingStddevSampleInput = {
+  recordedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventLogHavingSumInput = {
+  recordedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventLogHavingVariancePopulationInput = {
+  recordedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventLogHavingVarianceSampleInput = {
+  recordedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Methods to use when ordering `EventLog`. */
+export enum EventLogOrderBy {
+  CorrelationIdAsc = 'CORRELATION_ID_ASC',
+  CorrelationIdDesc = 'CORRELATION_ID_DESC',
+  DataschemaAsc = 'DATASCHEMA_ASC',
+  DataschemaDesc = 'DATASCHEMA_DESC',
+  Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RecordedAtAsc = 'RECORDED_AT_ASC',
+  RecordedAtDesc = 'RECORDED_AT_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  SchemaIdAsc = 'SCHEMA_ID_ASC',
+  SchemaIdDesc = 'SCHEMA_ID_DESC',
+  SourceAsc = 'SOURCE_ASC',
+  SourceDesc = 'SOURCE_DESC',
+  SpecversionAsc = 'SPECVERSION_ASC',
+  SpecversionDesc = 'SPECVERSION_DESC',
+  SubjectAsc = 'SUBJECT_ASC',
+  SubjectDesc = 'SUBJECT_DESC',
+  TimestampAsc = 'TIMESTAMP_ASC',
+  TimestampDesc = 'TIMESTAMP_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC'
+}
 
 export type EventRoutingRule = Node & {
   __typename?: 'EventRoutingRule';
+  batch?: Maybe<Scalars['JSON']['output']>;
+  celCondition?: Maybe<Scalars['String']['output']>;
   condition?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads and enables pagination through a set of `DeadLetterEvent`. */
+  deadLetterEventsByRoutingRuleId: DeadLetterEventConnection;
   enabled: Scalars['Boolean']['output'];
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   id: Scalars['ID']['output'];
@@ -1177,6 +1790,18 @@ export type EventRoutingRule = Node & {
   /** Reads a single `Workflow` that is related to this `EventRoutingRule`. */
   workflow?: Maybe<Workflow>;
   workflowId: Scalars['UUID']['output'];
+};
+
+
+export type EventRoutingRuleDeadLetterEventsByRoutingRuleIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DeadLetterEventCondition>;
+  filter?: InputMaybe<DeadLetterEventFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DeadLetterEventOrderBy>>;
 };
 
 export type EventRoutingRuleAggregates = {
@@ -1241,6 +1866,8 @@ export type EventRoutingRuleAverageAggregates = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type EventRoutingRuleCondition = {
+  /** Checks for equality with the object’s `celCondition` field. */
+  celCondition?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `condition` field. */
   condition?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
@@ -1290,6 +1917,8 @@ export type EventRoutingRuleConnectionGroupedAggregatesArgs = {
 };
 
 export type EventRoutingRuleDistinctCountAggregateFilter = {
+  batch?: InputMaybe<BigIntFilter>;
+  celCondition?: InputMaybe<BigIntFilter>;
   condition?: InputMaybe<BigIntFilter>;
   createdAt?: InputMaybe<BigIntFilter>;
   enabled?: InputMaybe<BigIntFilter>;
@@ -1305,6 +1934,10 @@ export type EventRoutingRuleDistinctCountAggregateFilter = {
 
 export type EventRoutingRuleDistinctCountAggregates = {
   __typename?: 'EventRoutingRuleDistinctCountAggregates';
+  /** Distinct count of batch across the matching connection */
+  batch?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of celCondition across the matching connection */
+  celCondition?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of condition across the matching connection */
   condition?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of createdAt across the matching connection */
@@ -1342,10 +1975,16 @@ export type EventRoutingRuleEdge = {
 export type EventRoutingRuleFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<EventRoutingRuleFilter>>;
+  /** Filter by the object’s `celCondition` field. */
+  celCondition?: InputMaybe<StringFilter>;
   /** Filter by the object’s `condition` field. */
   condition?: InputMaybe<StringFilter>;
   /** Filter by the object’s `createdAt` field. */
   createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `deadLetterEventsByRoutingRuleId` relation. */
+  deadLetterEventsByRoutingRuleId?: InputMaybe<EventRoutingRuleToManyDeadLetterEventFilter>;
+  /** Some related `deadLetterEventsByRoutingRuleId` exist. */
+  deadLetterEventsByRoutingRuleIdExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `enabled` field. */
   enabled?: InputMaybe<BooleanFilter>;
   /** Negates the expression. */
@@ -1374,6 +2013,8 @@ export type EventRoutingRuleFilter = {
 
 /** Grouping methods for `EventRoutingRule` for usage during aggregation. */
 export enum EventRoutingRuleGroupBy {
+  Batch = 'BATCH',
+  CelCondition = 'CEL_CONDITION',
   Condition = 'CONDITION',
   CreatedAt = 'CREATED_AT',
   CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
@@ -1461,6 +2102,8 @@ export type EventRoutingRuleHavingVarianceSampleInput = {
 
 /** An input for mutations affecting `EventRoutingRule` */
 export type EventRoutingRuleInput = {
+  batch?: InputMaybe<Scalars['JSON']['input']>;
+  celCondition?: InputMaybe<Scalars['String']['input']>;
   condition?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   enabled?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1496,10 +2139,56 @@ export type EventRoutingRuleMinAggregates = {
 
 /** Methods to use when ordering `EventRoutingRule`. */
 export enum EventRoutingRuleOrderBy {
+  CelConditionAsc = 'CEL_CONDITION_ASC',
+  CelConditionDesc = 'CEL_CONDITION_DESC',
   ConditionAsc = 'CONDITION_ASC',
   ConditionDesc = 'CONDITION_DESC',
   CreatedAtAsc = 'CREATED_AT_ASC',
   CreatedAtDesc = 'CREATED_AT_DESC',
+  DeadLetterEventsByRoutingRuleIdAverageAttemptsAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_AVERAGE_ATTEMPTS_ASC',
+  DeadLetterEventsByRoutingRuleIdAverageAttemptsDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_AVERAGE_ATTEMPTS_DESC',
+  DeadLetterEventsByRoutingRuleIdCountAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_COUNT_ASC',
+  DeadLetterEventsByRoutingRuleIdCountDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_COUNT_DESC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountAttemptsAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_ATTEMPTS_ASC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountAttemptsDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_ATTEMPTS_DESC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountCreatedAtAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_CREATED_AT_ASC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountCreatedAtDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_CREATED_AT_DESC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountErrorAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_ERROR_ASC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountErrorCodeAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_ERROR_CODE_ASC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountErrorCodeDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_ERROR_CODE_DESC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountErrorDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_ERROR_DESC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountEventDataAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_EVENT_DATA_ASC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountEventDataDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_EVENT_DATA_DESC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountEventSourceAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_EVENT_SOURCE_ASC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountEventSourceDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_EVENT_SOURCE_DESC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountEventTypeAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_EVENT_TYPE_ASC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountEventTypeDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_EVENT_TYPE_DESC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountLastAttemptAtAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_LAST_ATTEMPT_AT_ASC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountLastAttemptAtDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_LAST_ATTEMPT_AT_DESC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountOrganizationIdAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountOrganizationIdDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountOriginalEventIdAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_ORIGINAL_EVENT_ID_ASC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountOriginalEventIdDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_ORIGINAL_EVENT_ID_DESC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountResolvedAtAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_RESOLVED_AT_ASC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountResolvedAtDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_RESOLVED_AT_DESC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountRoutingRuleIdAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_ROUTING_RULE_ID_ASC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountRoutingRuleIdDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_ROUTING_RULE_ID_DESC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountRowIdAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_ROW_ID_ASC',
+  DeadLetterEventsByRoutingRuleIdDistinctCountRowIdDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_DISTINCT_COUNT_ROW_ID_DESC',
+  DeadLetterEventsByRoutingRuleIdMaxAttemptsAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_MAX_ATTEMPTS_ASC',
+  DeadLetterEventsByRoutingRuleIdMaxAttemptsDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_MAX_ATTEMPTS_DESC',
+  DeadLetterEventsByRoutingRuleIdMinAttemptsAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_MIN_ATTEMPTS_ASC',
+  DeadLetterEventsByRoutingRuleIdMinAttemptsDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_MIN_ATTEMPTS_DESC',
+  DeadLetterEventsByRoutingRuleIdStddevPopulationAttemptsAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_STDDEV_POPULATION_ATTEMPTS_ASC',
+  DeadLetterEventsByRoutingRuleIdStddevPopulationAttemptsDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_STDDEV_POPULATION_ATTEMPTS_DESC',
+  DeadLetterEventsByRoutingRuleIdStddevSampleAttemptsAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_STDDEV_SAMPLE_ATTEMPTS_ASC',
+  DeadLetterEventsByRoutingRuleIdStddevSampleAttemptsDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_STDDEV_SAMPLE_ATTEMPTS_DESC',
+  DeadLetterEventsByRoutingRuleIdSumAttemptsAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_SUM_ATTEMPTS_ASC',
+  DeadLetterEventsByRoutingRuleIdSumAttemptsDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_SUM_ATTEMPTS_DESC',
+  DeadLetterEventsByRoutingRuleIdVariancePopulationAttemptsAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_VARIANCE_POPULATION_ATTEMPTS_ASC',
+  DeadLetterEventsByRoutingRuleIdVariancePopulationAttemptsDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_VARIANCE_POPULATION_ATTEMPTS_DESC',
+  DeadLetterEventsByRoutingRuleIdVarianceSampleAttemptsAsc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_VARIANCE_SAMPLE_ATTEMPTS_ASC',
+  DeadLetterEventsByRoutingRuleIdVarianceSampleAttemptsDesc = 'DEAD_LETTER_EVENTS_BY_ROUTING_RULE_ID_VARIANCE_SAMPLE_ATTEMPTS_DESC',
   EnabledAsc = 'ENABLED_ASC',
   EnabledDesc = 'ENABLED_DESC',
   Natural = 'NATURAL',
@@ -1525,6 +2214,8 @@ export enum EventRoutingRuleOrderBy {
 
 /** Represents an update to a `EventRoutingRule`. Fields that are set will be updated. */
 export type EventRoutingRulePatch = {
+  batch?: InputMaybe<Scalars['JSON']['input']>;
+  celCondition?: InputMaybe<Scalars['String']['input']>;
   condition?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   enabled?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1568,6 +2259,18 @@ export type EventRoutingRuleSumAggregates = {
   priority: Scalars['BigInt']['output'];
 };
 
+/** A filter to be used against many `DeadLetterEvent` object types. All fields are combined with a logical ‘and.’ */
+export type EventRoutingRuleToManyDeadLetterEventFilter = {
+  /** Aggregates across related `DeadLetterEvent` match the filter criteria. */
+  aggregates?: InputMaybe<DeadLetterEventAggregatesFilter>;
+  /** Every related `DeadLetterEvent` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<DeadLetterEventFilter>;
+  /** No related `DeadLetterEvent` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<DeadLetterEventFilter>;
+  /** Some related `DeadLetterEvent` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<DeadLetterEventFilter>;
+};
+
 export type EventRoutingRuleVariancePopulationAggregateFilter = {
   priority?: InputMaybe<BigFloatFilter>;
 };
@@ -1586,6 +2289,1296 @@ export type EventRoutingRuleVarianceSampleAggregates = {
   __typename?: 'EventRoutingRuleVarianceSampleAggregates';
   /** Sample variance of priority across the matching connection */
   priority?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type EventSchema = Node & {
+  __typename?: 'EventSchema';
+  compatibilityMode: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  enforcement: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  migrationTransform?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  organizationId: Scalars['String']['output'];
+  payloadSchema?: Maybe<Scalars['JSON']['output']>;
+  previousVersionId?: Maybe<Scalars['UUID']['output']>;
+  rowId: Scalars['UUID']['output'];
+  source: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+  version: Scalars['Int']['output'];
+  visibility: Scalars['String']['output'];
+};
+
+export type EventSchemaAggregates = {
+  __typename?: 'EventSchemaAggregates';
+  /** Mean average aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  average?: Maybe<EventSchemaAverageAggregates>;
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<EventSchemaDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** Maximum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  max?: Maybe<EventSchemaMaxAggregates>;
+  /** Minimum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  min?: Maybe<EventSchemaMinAggregates>;
+  /** Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevPopulation?: Maybe<EventSchemaStddevPopulationAggregates>;
+  /** Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevSample?: Maybe<EventSchemaStddevSampleAggregates>;
+  /** Sum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  sum?: Maybe<EventSchemaSumAggregates>;
+  /** Population variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  variancePopulation?: Maybe<EventSchemaVariancePopulationAggregates>;
+  /** Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  varianceSample?: Maybe<EventSchemaVarianceSampleAggregates>;
+};
+
+export type EventSchemaAverageAggregates = {
+  __typename?: 'EventSchemaAverageAggregates';
+  /** Mean average of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+/**
+ * A condition to be used against `EventSchema` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type EventSchemaCondition = {
+  /** Checks for equality with the object’s `compatibilityMode` field. */
+  compatibilityMode?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `enforcement` field. */
+  enforcement?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `migrationTransform` field. */
+  migrationTransform?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `previousVersionId` field. */
+  previousVersionId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `source` field. */
+  source?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `version` field. */
+  version?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `visibility` field. */
+  visibility?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `EventSchema` values. */
+export type EventSchemaConnection = {
+  __typename?: 'EventSchemaConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<EventSchemaAggregates>;
+  /** A list of edges which contains the `EventSchema` and cursor to aid in pagination. */
+  edges: Array<EventSchemaEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<EventSchemaAggregates>>;
+  /** A list of `EventSchema` objects. */
+  nodes: Array<EventSchema>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `EventSchema` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `EventSchema` values. */
+export type EventSchemaConnectionGroupedAggregatesArgs = {
+  groupBy: Array<EventSchemaGroupBy>;
+  having?: InputMaybe<EventSchemaHavingInput>;
+};
+
+export type EventSchemaDistinctCountAggregates = {
+  __typename?: 'EventSchemaDistinctCountAggregates';
+  /** Distinct count of compatibilityMode across the matching connection */
+  compatibilityMode?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of description across the matching connection */
+  description?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of enforcement across the matching connection */
+  enforcement?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of migrationTransform across the matching connection */
+  migrationTransform?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of name across the matching connection */
+  name?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of payloadSchema across the matching connection */
+  payloadSchema?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of previousVersionId across the matching connection */
+  previousVersionId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of source across the matching connection */
+  source?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of updatedAt across the matching connection */
+  updatedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of version across the matching connection */
+  version?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of visibility across the matching connection */
+  visibility?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `EventSchema` edge in the connection. */
+export type EventSchemaEdge = {
+  __typename?: 'EventSchemaEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `EventSchema` at the end of the edge. */
+  node: EventSchema;
+};
+
+/** A filter to be used against `EventSchema` object types. All fields are combined with a logical ‘and.’ */
+export type EventSchemaFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<EventSchemaFilter>>;
+  /** Filter by the object’s `compatibilityMode` field. */
+  compatibilityMode?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `enforcement` field. */
+  enforcement?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `migrationTransform` field. */
+  migrationTransform?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<EventSchemaFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<EventSchemaFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `previousVersionId` field. */
+  previousVersionId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `source` field. */
+  source?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `version` field. */
+  version?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `visibility` field. */
+  visibility?: InputMaybe<StringFilter>;
+};
+
+/** Grouping methods for `EventSchema` for usage during aggregation. */
+export enum EventSchemaGroupBy {
+  CompatibilityMode = 'COMPATIBILITY_MODE',
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  Description = 'DESCRIPTION',
+  Enforcement = 'ENFORCEMENT',
+  MigrationTransform = 'MIGRATION_TRANSFORM',
+  Name = 'NAME',
+  OrganizationId = 'ORGANIZATION_ID',
+  PayloadSchema = 'PAYLOAD_SCHEMA',
+  PreviousVersionId = 'PREVIOUS_VERSION_ID',
+  Source = 'SOURCE',
+  UpdatedAt = 'UPDATED_AT',
+  UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
+  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR',
+  Version = 'VERSION',
+  Visibility = 'VISIBILITY'
+}
+
+export type EventSchemaHavingAverageInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type EventSchemaHavingDistinctCountInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+/** Conditions for `EventSchema` aggregates. */
+export type EventSchemaHavingInput = {
+  AND?: InputMaybe<Array<EventSchemaHavingInput>>;
+  OR?: InputMaybe<Array<EventSchemaHavingInput>>;
+  average?: InputMaybe<EventSchemaHavingAverageInput>;
+  distinctCount?: InputMaybe<EventSchemaHavingDistinctCountInput>;
+  max?: InputMaybe<EventSchemaHavingMaxInput>;
+  min?: InputMaybe<EventSchemaHavingMinInput>;
+  stddevPopulation?: InputMaybe<EventSchemaHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<EventSchemaHavingStddevSampleInput>;
+  sum?: InputMaybe<EventSchemaHavingSumInput>;
+  variancePopulation?: InputMaybe<EventSchemaHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<EventSchemaHavingVarianceSampleInput>;
+};
+
+export type EventSchemaHavingMaxInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type EventSchemaHavingMinInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type EventSchemaHavingStddevPopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type EventSchemaHavingStddevSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type EventSchemaHavingSumInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type EventSchemaHavingVariancePopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type EventSchemaHavingVarianceSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+/** An input for mutations affecting `EventSchema` */
+export type EventSchemaInput = {
+  compatibilityMode?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  enforcement?: InputMaybe<Scalars['String']['input']>;
+  migrationTransform?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  organizationId: Scalars['String']['input'];
+  payloadSchema?: InputMaybe<Scalars['JSON']['input']>;
+  previousVersionId?: InputMaybe<Scalars['UUID']['input']>;
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  source: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  visibility?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type EventSchemaMaxAggregates = {
+  __typename?: 'EventSchemaMaxAggregates';
+  /** Maximum of version across the matching connection */
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+export type EventSchemaMinAggregates = {
+  __typename?: 'EventSchemaMinAggregates';
+  /** Minimum of version across the matching connection */
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Methods to use when ordering `EventSchema`. */
+export enum EventSchemaOrderBy {
+  CompatibilityModeAsc = 'COMPATIBILITY_MODE_ASC',
+  CompatibilityModeDesc = 'COMPATIBILITY_MODE_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
+  EnforcementAsc = 'ENFORCEMENT_ASC',
+  EnforcementDesc = 'ENFORCEMENT_DESC',
+  MigrationTransformAsc = 'MIGRATION_TRANSFORM_ASC',
+  MigrationTransformDesc = 'MIGRATION_TRANSFORM_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
+  PreviousVersionIdAsc = 'PREVIOUS_VERSION_ID_ASC',
+  PreviousVersionIdDesc = 'PREVIOUS_VERSION_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  SourceAsc = 'SOURCE_ASC',
+  SourceDesc = 'SOURCE_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC',
+  VersionAsc = 'VERSION_ASC',
+  VersionDesc = 'VERSION_DESC',
+  VisibilityAsc = 'VISIBILITY_ASC',
+  VisibilityDesc = 'VISIBILITY_DESC'
+}
+
+/** Represents an update to a `EventSchema`. Fields that are set will be updated. */
+export type EventSchemaPatch = {
+  compatibilityMode?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  enforcement?: InputMaybe<Scalars['String']['input']>;
+  migrationTransform?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  payloadSchema?: InputMaybe<Scalars['JSON']['input']>;
+  previousVersionId?: InputMaybe<Scalars['UUID']['input']>;
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  source?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  visibility?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type EventSchemaStddevPopulationAggregates = {
+  __typename?: 'EventSchemaStddevPopulationAggregates';
+  /** Population standard deviation of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type EventSchemaStddevSampleAggregates = {
+  __typename?: 'EventSchemaStddevSampleAggregates';
+  /** Sample standard deviation of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type EventSchemaSumAggregates = {
+  __typename?: 'EventSchemaSumAggregates';
+  /** Sum of version across the matching connection */
+  version: Scalars['BigInt']['output'];
+};
+
+export type EventSchemaVariancePopulationAggregates = {
+  __typename?: 'EventSchemaVariancePopulationAggregates';
+  /** Population variance of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type EventSchemaVarianceSampleAggregates = {
+  __typename?: 'EventSchemaVarianceSampleAggregates';
+  /** Sample variance of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type EventSubscription = Node & {
+  __typename?: 'EventSubscription';
+  backoffMultiplier: Scalars['Int']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  enabled: Scalars['Boolean']['output'];
+  hmacSecret: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  initialBackoffMs: Scalars['Int']['output'];
+  maxRetries: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  organizationId: Scalars['String']['output'];
+  payloadMode: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  signatureHeader: Scalars['String']['output'];
+  sourcePattern?: Maybe<Scalars['String']['output']>;
+  /** Reads and enables pagination through a set of `SubscriptionDelivery`. */
+  subscriptionDeliveriesBySubscriptionId: SubscriptionDeliveryConnection;
+  targetUrl: Scalars['String']['output'];
+  transform?: Maybe<Scalars['String']['output']>;
+  typePattern: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+
+export type EventSubscriptionSubscriptionDeliveriesBySubscriptionIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<SubscriptionDeliveryCondition>;
+  filter?: InputMaybe<SubscriptionDeliveryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SubscriptionDeliveryOrderBy>>;
+};
+
+export type EventSubscriptionAggregates = {
+  __typename?: 'EventSubscriptionAggregates';
+  /** Mean average aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  average?: Maybe<EventSubscriptionAverageAggregates>;
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<EventSubscriptionDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** Maximum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  max?: Maybe<EventSubscriptionMaxAggregates>;
+  /** Minimum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  min?: Maybe<EventSubscriptionMinAggregates>;
+  /** Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevPopulation?: Maybe<EventSubscriptionStddevPopulationAggregates>;
+  /** Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevSample?: Maybe<EventSubscriptionStddevSampleAggregates>;
+  /** Sum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  sum?: Maybe<EventSubscriptionSumAggregates>;
+  /** Population variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  variancePopulation?: Maybe<EventSubscriptionVariancePopulationAggregates>;
+  /** Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  varianceSample?: Maybe<EventSubscriptionVarianceSampleAggregates>;
+};
+
+export type EventSubscriptionAverageAggregates = {
+  __typename?: 'EventSubscriptionAverageAggregates';
+  /** Mean average of backoffMultiplier across the matching connection */
+  backoffMultiplier?: Maybe<Scalars['BigFloat']['output']>;
+  /** Mean average of initialBackoffMs across the matching connection */
+  initialBackoffMs?: Maybe<Scalars['BigFloat']['output']>;
+  /** Mean average of maxRetries across the matching connection */
+  maxRetries?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+/**
+ * A condition to be used against `EventSubscription` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type EventSubscriptionCondition = {
+  /** Checks for equality with the object’s `backoffMultiplier` field. */
+  backoffMultiplier?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `enabled` field. */
+  enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `hmacSecret` field. */
+  hmacSecret?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `initialBackoffMs` field. */
+  initialBackoffMs?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `maxRetries` field. */
+  maxRetries?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `payloadMode` field. */
+  payloadMode?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `signatureHeader` field. */
+  signatureHeader?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `sourcePattern` field. */
+  sourcePattern?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `targetUrl` field. */
+  targetUrl?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `transform` field. */
+  transform?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `typePattern` field. */
+  typePattern?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** A connection to a list of `EventSubscription` values. */
+export type EventSubscriptionConnection = {
+  __typename?: 'EventSubscriptionConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<EventSubscriptionAggregates>;
+  /** A list of edges which contains the `EventSubscription` and cursor to aid in pagination. */
+  edges: Array<EventSubscriptionEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<EventSubscriptionAggregates>>;
+  /** A list of `EventSubscription` objects. */
+  nodes: Array<EventSubscription>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `EventSubscription` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `EventSubscription` values. */
+export type EventSubscriptionConnectionGroupedAggregatesArgs = {
+  groupBy: Array<EventSubscriptionGroupBy>;
+  having?: InputMaybe<EventSubscriptionHavingInput>;
+};
+
+export type EventSubscriptionDistinctCountAggregates = {
+  __typename?: 'EventSubscriptionDistinctCountAggregates';
+  /** Distinct count of backoffMultiplier across the matching connection */
+  backoffMultiplier?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of description across the matching connection */
+  description?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of enabled across the matching connection */
+  enabled?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of hmacSecret across the matching connection */
+  hmacSecret?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of initialBackoffMs across the matching connection */
+  initialBackoffMs?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of maxRetries across the matching connection */
+  maxRetries?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of name across the matching connection */
+  name?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of payloadMode across the matching connection */
+  payloadMode?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of signatureHeader across the matching connection */
+  signatureHeader?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of sourcePattern across the matching connection */
+  sourcePattern?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of targetUrl across the matching connection */
+  targetUrl?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of transform across the matching connection */
+  transform?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of typePattern across the matching connection */
+  typePattern?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of updatedAt across the matching connection */
+  updatedAt?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `EventSubscription` edge in the connection. */
+export type EventSubscriptionEdge = {
+  __typename?: 'EventSubscriptionEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `EventSubscription` at the end of the edge. */
+  node: EventSubscription;
+};
+
+/** A filter to be used against `EventSubscription` object types. All fields are combined with a logical ‘and.’ */
+export type EventSubscriptionFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<EventSubscriptionFilter>>;
+  /** Filter by the object’s `backoffMultiplier` field. */
+  backoffMultiplier?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `enabled` field. */
+  enabled?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `hmacSecret` field. */
+  hmacSecret?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `initialBackoffMs` field. */
+  initialBackoffMs?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `maxRetries` field. */
+  maxRetries?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<EventSubscriptionFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<EventSubscriptionFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `payloadMode` field. */
+  payloadMode?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `signatureHeader` field. */
+  signatureHeader?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `sourcePattern` field. */
+  sourcePattern?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `subscriptionDeliveriesBySubscriptionId` relation. */
+  subscriptionDeliveriesBySubscriptionId?: InputMaybe<EventSubscriptionToManySubscriptionDeliveryFilter>;
+  /** Some related `subscriptionDeliveriesBySubscriptionId` exist. */
+  subscriptionDeliveriesBySubscriptionIdExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `targetUrl` field. */
+  targetUrl?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `transform` field. */
+  transform?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `typePattern` field. */
+  typePattern?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<DatetimeFilter>;
+};
+
+/** Grouping methods for `EventSubscription` for usage during aggregation. */
+export enum EventSubscriptionGroupBy {
+  BackoffMultiplier = 'BACKOFF_MULTIPLIER',
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  Description = 'DESCRIPTION',
+  Enabled = 'ENABLED',
+  HmacSecret = 'HMAC_SECRET',
+  InitialBackoffMs = 'INITIAL_BACKOFF_MS',
+  MaxRetries = 'MAX_RETRIES',
+  Name = 'NAME',
+  OrganizationId = 'ORGANIZATION_ID',
+  PayloadMode = 'PAYLOAD_MODE',
+  SignatureHeader = 'SIGNATURE_HEADER',
+  SourcePattern = 'SOURCE_PATTERN',
+  TargetUrl = 'TARGET_URL',
+  Transform = 'TRANSFORM',
+  TypePattern = 'TYPE_PATTERN',
+  UpdatedAt = 'UPDATED_AT',
+  UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
+  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR'
+}
+
+export type EventSubscriptionHavingAverageInput = {
+  backoffMultiplier?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  initialBackoffMs?: InputMaybe<HavingIntFilter>;
+  maxRetries?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventSubscriptionHavingDistinctCountInput = {
+  backoffMultiplier?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  initialBackoffMs?: InputMaybe<HavingIntFilter>;
+  maxRetries?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `EventSubscription` aggregates. */
+export type EventSubscriptionHavingInput = {
+  AND?: InputMaybe<Array<EventSubscriptionHavingInput>>;
+  OR?: InputMaybe<Array<EventSubscriptionHavingInput>>;
+  average?: InputMaybe<EventSubscriptionHavingAverageInput>;
+  distinctCount?: InputMaybe<EventSubscriptionHavingDistinctCountInput>;
+  max?: InputMaybe<EventSubscriptionHavingMaxInput>;
+  min?: InputMaybe<EventSubscriptionHavingMinInput>;
+  stddevPopulation?: InputMaybe<EventSubscriptionHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<EventSubscriptionHavingStddevSampleInput>;
+  sum?: InputMaybe<EventSubscriptionHavingSumInput>;
+  variancePopulation?: InputMaybe<EventSubscriptionHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<EventSubscriptionHavingVarianceSampleInput>;
+};
+
+export type EventSubscriptionHavingMaxInput = {
+  backoffMultiplier?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  initialBackoffMs?: InputMaybe<HavingIntFilter>;
+  maxRetries?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventSubscriptionHavingMinInput = {
+  backoffMultiplier?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  initialBackoffMs?: InputMaybe<HavingIntFilter>;
+  maxRetries?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventSubscriptionHavingStddevPopulationInput = {
+  backoffMultiplier?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  initialBackoffMs?: InputMaybe<HavingIntFilter>;
+  maxRetries?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventSubscriptionHavingStddevSampleInput = {
+  backoffMultiplier?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  initialBackoffMs?: InputMaybe<HavingIntFilter>;
+  maxRetries?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventSubscriptionHavingSumInput = {
+  backoffMultiplier?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  initialBackoffMs?: InputMaybe<HavingIntFilter>;
+  maxRetries?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventSubscriptionHavingVariancePopulationInput = {
+  backoffMultiplier?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  initialBackoffMs?: InputMaybe<HavingIntFilter>;
+  maxRetries?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type EventSubscriptionHavingVarianceSampleInput = {
+  backoffMultiplier?: InputMaybe<HavingIntFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  initialBackoffMs?: InputMaybe<HavingIntFilter>;
+  maxRetries?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** An input for mutations affecting `EventSubscription` */
+export type EventSubscriptionInput = {
+  backoffMultiplier?: InputMaybe<Scalars['Int']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  hmacSecret: Scalars['String']['input'];
+  initialBackoffMs?: InputMaybe<Scalars['Int']['input']>;
+  maxRetries?: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
+  organizationId: Scalars['String']['input'];
+  payloadMode?: InputMaybe<Scalars['String']['input']>;
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  signatureHeader?: InputMaybe<Scalars['String']['input']>;
+  sourcePattern?: InputMaybe<Scalars['String']['input']>;
+  targetUrl: Scalars['String']['input'];
+  transform?: InputMaybe<Scalars['String']['input']>;
+  typePattern: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+export type EventSubscriptionMaxAggregates = {
+  __typename?: 'EventSubscriptionMaxAggregates';
+  /** Maximum of backoffMultiplier across the matching connection */
+  backoffMultiplier?: Maybe<Scalars['Int']['output']>;
+  /** Maximum of initialBackoffMs across the matching connection */
+  initialBackoffMs?: Maybe<Scalars['Int']['output']>;
+  /** Maximum of maxRetries across the matching connection */
+  maxRetries?: Maybe<Scalars['Int']['output']>;
+};
+
+export type EventSubscriptionMinAggregates = {
+  __typename?: 'EventSubscriptionMinAggregates';
+  /** Minimum of backoffMultiplier across the matching connection */
+  backoffMultiplier?: Maybe<Scalars['Int']['output']>;
+  /** Minimum of initialBackoffMs across the matching connection */
+  initialBackoffMs?: Maybe<Scalars['Int']['output']>;
+  /** Minimum of maxRetries across the matching connection */
+  maxRetries?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Methods to use when ordering `EventSubscription`. */
+export enum EventSubscriptionOrderBy {
+  BackoffMultiplierAsc = 'BACKOFF_MULTIPLIER_ASC',
+  BackoffMultiplierDesc = 'BACKOFF_MULTIPLIER_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
+  EnabledAsc = 'ENABLED_ASC',
+  EnabledDesc = 'ENABLED_DESC',
+  HmacSecretAsc = 'HMAC_SECRET_ASC',
+  HmacSecretDesc = 'HMAC_SECRET_DESC',
+  InitialBackoffMsAsc = 'INITIAL_BACKOFF_MS_ASC',
+  InitialBackoffMsDesc = 'INITIAL_BACKOFF_MS_DESC',
+  MaxRetriesAsc = 'MAX_RETRIES_ASC',
+  MaxRetriesDesc = 'MAX_RETRIES_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
+  PayloadModeAsc = 'PAYLOAD_MODE_ASC',
+  PayloadModeDesc = 'PAYLOAD_MODE_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  SignatureHeaderAsc = 'SIGNATURE_HEADER_ASC',
+  SignatureHeaderDesc = 'SIGNATURE_HEADER_DESC',
+  SourcePatternAsc = 'SOURCE_PATTERN_ASC',
+  SourcePatternDesc = 'SOURCE_PATTERN_DESC',
+  SubscriptionDeliveriesBySubscriptionIdAverageAttemptsAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_AVERAGE_ATTEMPTS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdAverageAttemptsDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_AVERAGE_ATTEMPTS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdAverageHttpStatusAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_AVERAGE_HTTP_STATUS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdAverageHttpStatusDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_AVERAGE_HTTP_STATUS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdCountAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_COUNT_ASC',
+  SubscriptionDeliveriesBySubscriptionIdCountDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_COUNT_DESC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountAttemptsAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_ATTEMPTS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountAttemptsDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_ATTEMPTS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountCompletedAtAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_COMPLETED_AT_ASC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountCompletedAtDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_COMPLETED_AT_DESC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountCreatedAtAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_CREATED_AT_ASC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountCreatedAtDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_CREATED_AT_DESC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountErrorAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_ERROR_ASC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountErrorDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_ERROR_DESC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountEventIdAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_EVENT_ID_ASC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountEventIdDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_EVENT_ID_DESC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountEventTypeAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_EVENT_TYPE_ASC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountEventTypeDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_EVENT_TYPE_DESC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountHttpStatusAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_HTTP_STATUS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountHttpStatusDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_HTTP_STATUS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountNextRetryAtAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_NEXT_RETRY_AT_ASC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountNextRetryAtDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_NEXT_RETRY_AT_DESC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountOrganizationIdAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_ORGANIZATION_ID_ASC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountOrganizationIdDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountPayloadAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_PAYLOAD_ASC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountPayloadDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_PAYLOAD_DESC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountRowIdAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_ROW_ID_ASC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountRowIdDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_ROW_ID_DESC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountStatusAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_STATUS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountStatusDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_STATUS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountSubscriptionIdAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_SUBSCRIPTION_ID_ASC',
+  SubscriptionDeliveriesBySubscriptionIdDistinctCountSubscriptionIdDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_DISTINCT_COUNT_SUBSCRIPTION_ID_DESC',
+  SubscriptionDeliveriesBySubscriptionIdMaxAttemptsAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_MAX_ATTEMPTS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdMaxAttemptsDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_MAX_ATTEMPTS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdMaxHttpStatusAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_MAX_HTTP_STATUS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdMaxHttpStatusDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_MAX_HTTP_STATUS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdMinAttemptsAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_MIN_ATTEMPTS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdMinAttemptsDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_MIN_ATTEMPTS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdMinHttpStatusAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_MIN_HTTP_STATUS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdMinHttpStatusDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_MIN_HTTP_STATUS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdStddevPopulationAttemptsAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_STDDEV_POPULATION_ATTEMPTS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdStddevPopulationAttemptsDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_STDDEV_POPULATION_ATTEMPTS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdStddevPopulationHttpStatusAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_STDDEV_POPULATION_HTTP_STATUS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdStddevPopulationHttpStatusDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_STDDEV_POPULATION_HTTP_STATUS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdStddevSampleAttemptsAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_STDDEV_SAMPLE_ATTEMPTS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdStddevSampleAttemptsDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_STDDEV_SAMPLE_ATTEMPTS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdStddevSampleHttpStatusAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_STDDEV_SAMPLE_HTTP_STATUS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdStddevSampleHttpStatusDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_STDDEV_SAMPLE_HTTP_STATUS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdSumAttemptsAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_SUM_ATTEMPTS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdSumAttemptsDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_SUM_ATTEMPTS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdSumHttpStatusAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_SUM_HTTP_STATUS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdSumHttpStatusDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_SUM_HTTP_STATUS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdVariancePopulationAttemptsAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_VARIANCE_POPULATION_ATTEMPTS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdVariancePopulationAttemptsDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_VARIANCE_POPULATION_ATTEMPTS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdVariancePopulationHttpStatusAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_VARIANCE_POPULATION_HTTP_STATUS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdVariancePopulationHttpStatusDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_VARIANCE_POPULATION_HTTP_STATUS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdVarianceSampleAttemptsAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_VARIANCE_SAMPLE_ATTEMPTS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdVarianceSampleAttemptsDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_VARIANCE_SAMPLE_ATTEMPTS_DESC',
+  SubscriptionDeliveriesBySubscriptionIdVarianceSampleHttpStatusAsc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_VARIANCE_SAMPLE_HTTP_STATUS_ASC',
+  SubscriptionDeliveriesBySubscriptionIdVarianceSampleHttpStatusDesc = 'SUBSCRIPTION_DELIVERIES_BY_SUBSCRIPTION_ID_VARIANCE_SAMPLE_HTTP_STATUS_DESC',
+  TargetUrlAsc = 'TARGET_URL_ASC',
+  TargetUrlDesc = 'TARGET_URL_DESC',
+  TransformAsc = 'TRANSFORM_ASC',
+  TransformDesc = 'TRANSFORM_DESC',
+  TypePatternAsc = 'TYPE_PATTERN_ASC',
+  TypePatternDesc = 'TYPE_PATTERN_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
+
+/** Represents an update to a `EventSubscription`. Fields that are set will be updated. */
+export type EventSubscriptionPatch = {
+  backoffMultiplier?: InputMaybe<Scalars['Int']['input']>;
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  hmacSecret?: InputMaybe<Scalars['String']['input']>;
+  initialBackoffMs?: InputMaybe<Scalars['Int']['input']>;
+  maxRetries?: InputMaybe<Scalars['Int']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  payloadMode?: InputMaybe<Scalars['String']['input']>;
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  signatureHeader?: InputMaybe<Scalars['String']['input']>;
+  sourcePattern?: InputMaybe<Scalars['String']['input']>;
+  targetUrl?: InputMaybe<Scalars['String']['input']>;
+  transform?: InputMaybe<Scalars['String']['input']>;
+  typePattern?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+export type EventSubscriptionStddevPopulationAggregates = {
+  __typename?: 'EventSubscriptionStddevPopulationAggregates';
+  /** Population standard deviation of backoffMultiplier across the matching connection */
+  backoffMultiplier?: Maybe<Scalars['BigFloat']['output']>;
+  /** Population standard deviation of initialBackoffMs across the matching connection */
+  initialBackoffMs?: Maybe<Scalars['BigFloat']['output']>;
+  /** Population standard deviation of maxRetries across the matching connection */
+  maxRetries?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type EventSubscriptionStddevSampleAggregates = {
+  __typename?: 'EventSubscriptionStddevSampleAggregates';
+  /** Sample standard deviation of backoffMultiplier across the matching connection */
+  backoffMultiplier?: Maybe<Scalars['BigFloat']['output']>;
+  /** Sample standard deviation of initialBackoffMs across the matching connection */
+  initialBackoffMs?: Maybe<Scalars['BigFloat']['output']>;
+  /** Sample standard deviation of maxRetries across the matching connection */
+  maxRetries?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type EventSubscriptionSumAggregates = {
+  __typename?: 'EventSubscriptionSumAggregates';
+  /** Sum of backoffMultiplier across the matching connection */
+  backoffMultiplier: Scalars['BigInt']['output'];
+  /** Sum of initialBackoffMs across the matching connection */
+  initialBackoffMs: Scalars['BigInt']['output'];
+  /** Sum of maxRetries across the matching connection */
+  maxRetries: Scalars['BigInt']['output'];
+};
+
+/** A filter to be used against many `SubscriptionDelivery` object types. All fields are combined with a logical ‘and.’ */
+export type EventSubscriptionToManySubscriptionDeliveryFilter = {
+  /** Aggregates across related `SubscriptionDelivery` match the filter criteria. */
+  aggregates?: InputMaybe<SubscriptionDeliveryAggregatesFilter>;
+  /** Every related `SubscriptionDelivery` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SubscriptionDeliveryFilter>;
+  /** No related `SubscriptionDelivery` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SubscriptionDeliveryFilter>;
+  /** Some related `SubscriptionDelivery` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SubscriptionDeliveryFilter>;
+};
+
+export type EventSubscriptionVariancePopulationAggregates = {
+  __typename?: 'EventSubscriptionVariancePopulationAggregates';
+  /** Population variance of backoffMultiplier across the matching connection */
+  backoffMultiplier?: Maybe<Scalars['BigFloat']['output']>;
+  /** Population variance of initialBackoffMs across the matching connection */
+  initialBackoffMs?: Maybe<Scalars['BigFloat']['output']>;
+  /** Population variance of maxRetries across the matching connection */
+  maxRetries?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type EventSubscriptionVarianceSampleAggregates = {
+  __typename?: 'EventSubscriptionVarianceSampleAggregates';
+  /** Sample variance of backoffMultiplier across the matching connection */
+  backoffMultiplier?: Maybe<Scalars['BigFloat']['output']>;
+  /** Sample variance of initialBackoffMs across the matching connection */
+  initialBackoffMs?: Maybe<Scalars['BigFloat']['output']>;
+  /** Sample variance of maxRetries across the matching connection */
+  maxRetries?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type Fn = Node & {
+  __typename?: 'Fn';
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  executor: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  invocationCount: Scalars['Int']['output'];
+  lastInvokedAt?: Maybe<Scalars['Datetime']['output']>;
+  limits?: Maybe<Scalars['JSON']['output']>;
+  metadata?: Maybe<Scalars['JSON']['output']>;
+  name: Scalars['String']['output'];
+  organizationId: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  runtime: Scalars['String']['output'];
+  source?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+  wasmModuleUrl?: Maybe<Scalars['String']['output']>;
+};
+
+export type FnAggregates = {
+  __typename?: 'FnAggregates';
+  /** Mean average aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  average?: Maybe<FnAverageAggregates>;
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<FnDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** Maximum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  max?: Maybe<FnMaxAggregates>;
+  /** Minimum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  min?: Maybe<FnMinAggregates>;
+  /** Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevPopulation?: Maybe<FnStddevPopulationAggregates>;
+  /** Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevSample?: Maybe<FnStddevSampleAggregates>;
+  /** Sum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  sum?: Maybe<FnSumAggregates>;
+  /** Population variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  variancePopulation?: Maybe<FnVariancePopulationAggregates>;
+  /** Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  varianceSample?: Maybe<FnVarianceSampleAggregates>;
+};
+
+export type FnAverageAggregates = {
+  __typename?: 'FnAverageAggregates';
+  /** Mean average of invocationCount across the matching connection */
+  invocationCount?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+/** A condition to be used against `Fn` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type FnCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `executor` field. */
+  executor?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `invocationCount` field. */
+  invocationCount?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `lastInvokedAt` field. */
+  lastInvokedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `runtime` field. */
+  runtime?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `source` field. */
+  source?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `wasmModuleUrl` field. */
+  wasmModuleUrl?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `Fn` values. */
+export type FnConnection = {
+  __typename?: 'FnConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<FnAggregates>;
+  /** A list of edges which contains the `Fn` and cursor to aid in pagination. */
+  edges: Array<FnEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<FnAggregates>>;
+  /** A list of `Fn` objects. */
+  nodes: Array<Fn>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Fn` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `Fn` values. */
+export type FnConnectionGroupedAggregatesArgs = {
+  groupBy: Array<FnGroupBy>;
+  having?: InputMaybe<FnHavingInput>;
+};
+
+export type FnDistinctCountAggregates = {
+  __typename?: 'FnDistinctCountAggregates';
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of executor across the matching connection */
+  executor?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of invocationCount across the matching connection */
+  invocationCount?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of lastInvokedAt across the matching connection */
+  lastInvokedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of limits across the matching connection */
+  limits?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of metadata across the matching connection */
+  metadata?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of name across the matching connection */
+  name?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of runtime across the matching connection */
+  runtime?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of source across the matching connection */
+  source?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of updatedAt across the matching connection */
+  updatedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of wasmModuleUrl across the matching connection */
+  wasmModuleUrl?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `Fn` edge in the connection. */
+export type FnEdge = {
+  __typename?: 'FnEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Fn` at the end of the edge. */
+  node: Fn;
+};
+
+/** A filter to be used against `Fn` object types. All fields are combined with a logical ‘and.’ */
+export type FnFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<FnFilter>>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `executor` field. */
+  executor?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `invocationCount` field. */
+  invocationCount?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `lastInvokedAt` field. */
+  lastInvokedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<FnFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<FnFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `runtime` field. */
+  runtime?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `source` field. */
+  source?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `wasmModuleUrl` field. */
+  wasmModuleUrl?: InputMaybe<StringFilter>;
+};
+
+/** Grouping methods for `Fn` for usage during aggregation. */
+export enum FnGroupBy {
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  Executor = 'EXECUTOR',
+  InvocationCount = 'INVOCATION_COUNT',
+  LastInvokedAt = 'LAST_INVOKED_AT',
+  LastInvokedAtTruncatedToDay = 'LAST_INVOKED_AT_TRUNCATED_TO_DAY',
+  LastInvokedAtTruncatedToHour = 'LAST_INVOKED_AT_TRUNCATED_TO_HOUR',
+  Limits = 'LIMITS',
+  Metadata = 'METADATA',
+  Name = 'NAME',
+  OrganizationId = 'ORGANIZATION_ID',
+  Runtime = 'RUNTIME',
+  Source = 'SOURCE',
+  UpdatedAt = 'UPDATED_AT',
+  UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
+  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR',
+  WasmModuleUrl = 'WASM_MODULE_URL'
+}
+
+export type FnHavingAverageInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  invocationCount?: InputMaybe<HavingIntFilter>;
+  lastInvokedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type FnHavingDistinctCountInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  invocationCount?: InputMaybe<HavingIntFilter>;
+  lastInvokedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `Fn` aggregates. */
+export type FnHavingInput = {
+  AND?: InputMaybe<Array<FnHavingInput>>;
+  OR?: InputMaybe<Array<FnHavingInput>>;
+  average?: InputMaybe<FnHavingAverageInput>;
+  distinctCount?: InputMaybe<FnHavingDistinctCountInput>;
+  max?: InputMaybe<FnHavingMaxInput>;
+  min?: InputMaybe<FnHavingMinInput>;
+  stddevPopulation?: InputMaybe<FnHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<FnHavingStddevSampleInput>;
+  sum?: InputMaybe<FnHavingSumInput>;
+  variancePopulation?: InputMaybe<FnHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<FnHavingVarianceSampleInput>;
+};
+
+export type FnHavingMaxInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  invocationCount?: InputMaybe<HavingIntFilter>;
+  lastInvokedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type FnHavingMinInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  invocationCount?: InputMaybe<HavingIntFilter>;
+  lastInvokedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type FnHavingStddevPopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  invocationCount?: InputMaybe<HavingIntFilter>;
+  lastInvokedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type FnHavingStddevSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  invocationCount?: InputMaybe<HavingIntFilter>;
+  lastInvokedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type FnHavingSumInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  invocationCount?: InputMaybe<HavingIntFilter>;
+  lastInvokedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type FnHavingVariancePopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  invocationCount?: InputMaybe<HavingIntFilter>;
+  lastInvokedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type FnHavingVarianceSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  invocationCount?: InputMaybe<HavingIntFilter>;
+  lastInvokedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type FnMaxAggregates = {
+  __typename?: 'FnMaxAggregates';
+  /** Maximum of invocationCount across the matching connection */
+  invocationCount?: Maybe<Scalars['Int']['output']>;
+};
+
+export type FnMinAggregates = {
+  __typename?: 'FnMinAggregates';
+  /** Minimum of invocationCount across the matching connection */
+  invocationCount?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Methods to use when ordering `Fn`. */
+export enum FnOrderBy {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  ExecutorAsc = 'EXECUTOR_ASC',
+  ExecutorDesc = 'EXECUTOR_DESC',
+  InvocationCountAsc = 'INVOCATION_COUNT_ASC',
+  InvocationCountDesc = 'INVOCATION_COUNT_DESC',
+  LastInvokedAtAsc = 'LAST_INVOKED_AT_ASC',
+  LastInvokedAtDesc = 'LAST_INVOKED_AT_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  RuntimeAsc = 'RUNTIME_ASC',
+  RuntimeDesc = 'RUNTIME_DESC',
+  SourceAsc = 'SOURCE_ASC',
+  SourceDesc = 'SOURCE_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC',
+  WasmModuleUrlAsc = 'WASM_MODULE_URL_ASC',
+  WasmModuleUrlDesc = 'WASM_MODULE_URL_DESC'
+}
+
+export type FnStddevPopulationAggregates = {
+  __typename?: 'FnStddevPopulationAggregates';
+  /** Population standard deviation of invocationCount across the matching connection */
+  invocationCount?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type FnStddevSampleAggregates = {
+  __typename?: 'FnStddevSampleAggregates';
+  /** Sample standard deviation of invocationCount across the matching connection */
+  invocationCount?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type FnSumAggregates = {
+  __typename?: 'FnSumAggregates';
+  /** Sum of invocationCount across the matching connection */
+  invocationCount: Scalars['BigInt']['output'];
+};
+
+export type FnVariancePopulationAggregates = {
+  __typename?: 'FnVariancePopulationAggregates';
+  /** Population variance of invocationCount across the matching connection */
+  invocationCount?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type FnVarianceSampleAggregates = {
+  __typename?: 'FnVarianceSampleAggregates';
+  /** Sample variance of invocationCount across the matching connection */
+  invocationCount?: Maybe<Scalars['BigFloat']['output']>;
 };
 
 export type HavingDatetimeFilter = {
@@ -2062,29 +4055,6 @@ export type IntegrationDefinitionHavingVarianceSampleInput = {
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
-/** An input for mutations affecting `IntegrationDefinition` */
-export type IntegrationDefinitionInput = {
-  authFields?: InputMaybe<Scalars['JSON']['input']>;
-  authType?: InputMaybe<Scalars['String']['input']>;
-  category?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  docsUrl?: InputMaybe<Scalars['String']['input']>;
-  iconUrl?: InputMaybe<Scalars['String']['input']>;
-  idleTimeoutMs?: InputMaybe<Scalars['Int']['input']>;
-  isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
-  isFeatured?: InputMaybe<Scalars['Boolean']['input']>;
-  keepAlive?: InputMaybe<Scalars['Boolean']['input']>;
-  mcpArgs?: InputMaybe<Scalars['JSON']['input']>;
-  mcpCommand?: InputMaybe<Scalars['String']['input']>;
-  mcpPackage: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-  rowId: Scalars['String']['input'];
-  setupSteps?: InputMaybe<Scalars['JSON']['input']>;
-  supportsOAuth?: InputMaybe<Scalars['Boolean']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
 export type IntegrationDefinitionMaxAggregates = {
   __typename?: 'IntegrationDefinitionMaxAggregates';
   /** Maximum of idleTimeoutMs across the matching connection */
@@ -2163,29 +4133,6 @@ export enum IntegrationDefinitionOrderBy {
   UpdatedAtAsc = 'UPDATED_AT_ASC',
   UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
-
-/** Represents an update to a `IntegrationDefinition`. Fields that are set will be updated. */
-export type IntegrationDefinitionPatch = {
-  authFields?: InputMaybe<Scalars['JSON']['input']>;
-  authType?: InputMaybe<Scalars['String']['input']>;
-  category?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  docsUrl?: InputMaybe<Scalars['String']['input']>;
-  iconUrl?: InputMaybe<Scalars['String']['input']>;
-  idleTimeoutMs?: InputMaybe<Scalars['Int']['input']>;
-  isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
-  isFeatured?: InputMaybe<Scalars['Boolean']['input']>;
-  keepAlive?: InputMaybe<Scalars['Boolean']['input']>;
-  mcpArgs?: InputMaybe<Scalars['JSON']['input']>;
-  mcpCommand?: InputMaybe<Scalars['String']['input']>;
-  mcpPackage?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['String']['input']>;
-  setupSteps?: InputMaybe<Scalars['JSON']['input']>;
-  supportsOAuth?: InputMaybe<Scalars['Boolean']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
 
 export type IntegrationDefinitionStddevPopulationAggregates = {
   __typename?: 'IntegrationDefinitionStddevPopulationAggregates';
@@ -2459,8 +4406,6 @@ export enum IntegrationOrderBy {
   OauthStatusDesc = 'OAUTH_STATUS_DESC',
   OauthTokensCountAsc = 'OAUTH_TOKENS_COUNT_ASC',
   OauthTokensCountDesc = 'OAUTH_TOKENS_COUNT_DESC',
-  OauthTokensDistinctCountAccessTokenAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_ACCESS_TOKEN_ASC',
-  OauthTokensDistinctCountAccessTokenDesc = 'OAUTH_TOKENS_DISTINCT_COUNT_ACCESS_TOKEN_DESC',
   OauthTokensDistinctCountCreatedAtAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_CREATED_AT_ASC',
   OauthTokensDistinctCountCreatedAtDesc = 'OAUTH_TOKENS_DISTINCT_COUNT_CREATED_AT_DESC',
   OauthTokensDistinctCountExpiresAtAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_EXPIRES_AT_ASC',
@@ -2471,8 +4416,6 @@ export enum IntegrationOrderBy {
   OauthTokensDistinctCountOrganizationIdDesc = 'OAUTH_TOKENS_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
   OauthTokensDistinctCountProviderAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_PROVIDER_ASC',
   OauthTokensDistinctCountProviderDesc = 'OAUTH_TOKENS_DISTINCT_COUNT_PROVIDER_DESC',
-  OauthTokensDistinctCountRefreshTokenAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_REFRESH_TOKEN_ASC',
-  OauthTokensDistinctCountRefreshTokenDesc = 'OAUTH_TOKENS_DISTINCT_COUNT_REFRESH_TOKEN_DESC',
   OauthTokensDistinctCountRowIdAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_ROW_ID_ASC',
   OauthTokensDistinctCountRowIdDesc = 'OAUTH_TOKENS_DISTINCT_COUNT_ROW_ID_DESC',
   OauthTokensDistinctCountScopeAsc = 'OAUTH_TOKENS_DISTINCT_COUNT_SCOPE_ASC',
@@ -2525,10 +4468,11 @@ export type IntegrationToManyOauthTokenFilter = {
 export type McpServer = Node & {
   __typename?: 'McpServer';
   args: Scalars['JSON']['output'];
-  command: Scalars['String']['output'];
+  command?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['Datetime']['output']>;
   cwd?: Maybe<Scalars['String']['output']>;
   env: Scalars['JSON']['output'];
+  headers?: Maybe<Scalars['JSON']['output']>;
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   id: Scalars['ID']['output'];
   /** Reads and enables pagination through a set of `Integration`. */
@@ -2537,8 +4481,10 @@ export type McpServer = Node & {
   name: Scalars['String']['output'];
   organizationId: Scalars['String']['output'];
   rowId: Scalars['UUID']['output'];
+  transport?: Maybe<Scalars['String']['output']>;
   type: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['Datetime']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -2579,10 +4525,14 @@ export type McpServerCondition = {
   organizationId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `transport` field. */
+  transport?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `type` field. */
   type?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `url` field. */
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A connection to a list of `McpServer` values. */
@@ -2621,6 +4571,8 @@ export type McpServerDistinctCountAggregates = {
   cwd?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of env across the matching connection */
   env?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of headers across the matching connection */
+  headers?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of isEnabled across the matching connection */
   isEnabled?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of name across the matching connection */
@@ -2629,10 +4581,14 @@ export type McpServerDistinctCountAggregates = {
   organizationId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of rowId across the matching connection */
   rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of transport across the matching connection */
+  transport?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of type across the matching connection */
   type?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of updatedAt across the matching connection */
   updatedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of url across the matching connection */
+  url?: Maybe<Scalars['BigInt']['output']>;
 };
 
 /** A `McpServer` edge in the connection. */
@@ -2670,10 +4626,14 @@ export type McpServerFilter = {
   organizationId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `transport` field. */
+  transport?: InputMaybe<StringFilter>;
   /** Filter by the object’s `type` field. */
   type?: InputMaybe<StringFilter>;
   /** Filter by the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `url` field. */
+  url?: InputMaybe<StringFilter>;
 };
 
 /** Grouping methods for `McpServer` for usage during aggregation. */
@@ -2685,13 +4645,16 @@ export enum McpServerGroupBy {
   CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
   Cwd = 'CWD',
   Env = 'ENV',
+  Headers = 'HEADERS',
   IsEnabled = 'IS_ENABLED',
   Name = 'NAME',
   OrganizationId = 'ORGANIZATION_ID',
+  Transport = 'TRANSPORT',
   Type = 'TYPE',
   UpdatedAt = 'UPDATED_AT',
   UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
-  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR'
+  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR',
+  Url = 'URL'
 }
 
 export type McpServerHavingAverageInput = {
@@ -2757,16 +4720,19 @@ export type McpServerHavingVarianceSampleInput = {
 /** An input for mutations affecting `McpServer` */
 export type McpServerInput = {
   args?: InputMaybe<Scalars['JSON']['input']>;
-  command: Scalars['String']['input'];
+  command?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   cwd?: InputMaybe<Scalars['String']['input']>;
   env?: InputMaybe<Scalars['JSON']['input']>;
+  headers?: InputMaybe<Scalars['JSON']['input']>;
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
   organizationId: Scalars['String']['input'];
   rowId?: InputMaybe<Scalars['UUID']['input']>;
+  transport?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Methods to use when ordering `McpServer`. */
@@ -2816,10 +4782,14 @@ export enum McpServerOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RowIdAsc = 'ROW_ID_ASC',
   RowIdDesc = 'ROW_ID_DESC',
+  TransportAsc = 'TRANSPORT_ASC',
+  TransportDesc = 'TRANSPORT_DESC',
   TypeAsc = 'TYPE_ASC',
   TypeDesc = 'TYPE_DESC',
   UpdatedAtAsc = 'UPDATED_AT_ASC',
-  UpdatedAtDesc = 'UPDATED_AT_DESC'
+  UpdatedAtDesc = 'UPDATED_AT_DESC',
+  UrlAsc = 'URL_ASC',
+  UrlDesc = 'URL_DESC'
 }
 
 /** Represents an update to a `McpServer`. Fields that are set will be updated. */
@@ -2829,12 +4799,15 @@ export type McpServerPatch = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   cwd?: InputMaybe<Scalars['String']['input']>;
   env?: InputMaybe<Scalars['JSON']['input']>;
+  headers?: InputMaybe<Scalars['JSON']['input']>;
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   organizationId?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
+  transport?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** A filter to be used against many `Integration` object types. All fields are combined with a logical ‘and.’ */
@@ -2849,125 +4822,37 @@ export type McpServerToManyIntegrationFilter = {
   some?: InputMaybe<IntegrationFilter>;
 };
 
-export enum MemberRole {
-  Admin = 'admin',
-  Member = 'member',
-  Owner = 'owner'
-}
-
-/** A filter to be used against MemberRole fields. All fields are combined with a logical ‘and.’ */
-export type MemberRoleFilter = {
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<MemberRole>;
-  /** Equal to the specified value. */
-  equalTo?: InputMaybe<MemberRole>;
-  /** Greater than the specified value. */
-  greaterThan?: InputMaybe<MemberRole>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<MemberRole>;
-  /** Included in the specified list. */
-  in?: InputMaybe<Array<MemberRole>>;
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Less than the specified value. */
-  lessThan?: InputMaybe<MemberRole>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<MemberRole>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<MemberRole>;
-  /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<MemberRole>;
-  /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<MemberRole>>;
-};
-
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
   /** Creates a single `EventRoutingRule`. */
   createEventRoutingRule?: Maybe<CreateEventRoutingRulePayload>;
+  /** Creates a single `EventSchema`. */
+  createEventSchema?: Maybe<CreateEventSchemaPayload>;
+  /** Creates a single `EventSubscription`. */
+  createEventSubscription?: Maybe<CreateEventSubscriptionPayload>;
   /** Creates a single `Integration`. */
   createIntegration?: Maybe<CreateIntegrationPayload>;
-  /** Creates a single `IntegrationDefinition`. */
-  createIntegrationDefinition?: Maybe<CreateIntegrationDefinitionPayload>;
   /** Creates a single `McpServer`. */
   createMcpServer?: Maybe<CreateMcpServerPayload>;
-  /** Creates a single `OauthState`. */
-  createOauthState?: Maybe<CreateOauthStatePayload>;
-  /** Creates a single `OauthToken`. */
-  createOauthToken?: Maybe<CreateOauthTokenPayload>;
   /** Creates a single `Plugin`. */
   createPlugin?: Maybe<CreatePluginPayload>;
-  /** Creates a single `User`. */
-  createUser?: Maybe<CreateUserPayload>;
-  /** Creates a single `UserOrganization`. */
-  createUserOrganization?: Maybe<CreateUserOrganizationPayload>;
   /** Creates a single `Workflow`. */
   createWorkflow?: Maybe<CreateWorkflowPayload>;
-  /** Creates a single `WorkflowRun`. */
-  createWorkflowRun?: Maybe<CreateWorkflowRunPayload>;
-  /** Creates a single `WorkflowStepLog`. */
-  createWorkflowStepLog?: Maybe<CreateWorkflowStepLogPayload>;
-  /** Creates a single `WorkflowTemplate`. */
-  createWorkflowTemplate?: Maybe<CreateWorkflowTemplatePayload>;
   /** Deletes a single `EventRoutingRule` using a unique key. */
   deleteEventRoutingRule?: Maybe<DeleteEventRoutingRulePayload>;
-  /** Deletes a single `EventRoutingRule` using its globally unique id. */
-  deleteEventRoutingRuleById?: Maybe<DeleteEventRoutingRulePayload>;
+  /** Deletes a single `EventSchema` using a unique key. */
+  deleteEventSchema?: Maybe<DeleteEventSchemaPayload>;
+  /** Deletes a single `EventSubscription` using a unique key. */
+  deleteEventSubscription?: Maybe<DeleteEventSubscriptionPayload>;
   /** Deletes a single `Integration` using a unique key. */
   deleteIntegration?: Maybe<DeleteIntegrationPayload>;
-  /** Deletes a single `Integration` using its globally unique id. */
-  deleteIntegrationById?: Maybe<DeleteIntegrationPayload>;
-  /** Deletes a single `IntegrationDefinition` using a unique key. */
-  deleteIntegrationDefinition?: Maybe<DeleteIntegrationDefinitionPayload>;
-  /** Deletes a single `IntegrationDefinition` using its globally unique id. */
-  deleteIntegrationDefinitionById?: Maybe<DeleteIntegrationDefinitionPayload>;
   /** Deletes a single `McpServer` using a unique key. */
   deleteMcpServer?: Maybe<DeleteMcpServerPayload>;
-  /** Deletes a single `McpServer` using its globally unique id. */
-  deleteMcpServerById?: Maybe<DeleteMcpServerPayload>;
-  /** Deletes a single `OauthState` using a unique key. */
-  deleteOauthState?: Maybe<DeleteOauthStatePayload>;
-  /** Deletes a single `OauthState` using its globally unique id. */
-  deleteOauthStateById?: Maybe<DeleteOauthStatePayload>;
-  /** Deletes a single `OauthToken` using a unique key. */
-  deleteOauthToken?: Maybe<DeleteOauthTokenPayload>;
-  /** Deletes a single `OauthToken` using its globally unique id. */
-  deleteOauthTokenById?: Maybe<DeleteOauthTokenPayload>;
   /** Deletes a single `Plugin` using a unique key. */
   deletePlugin?: Maybe<DeletePluginPayload>;
-  /** Deletes a single `Plugin` using its globally unique id. */
-  deletePluginById?: Maybe<DeletePluginPayload>;
-  /** Deletes a single `User` using a unique key. */
-  deleteUser?: Maybe<DeleteUserPayload>;
-  /** Deletes a single `User` using a unique key. */
-  deleteUserByEmail?: Maybe<DeleteUserPayload>;
-  /** Deletes a single `User` using its globally unique id. */
-  deleteUserById?: Maybe<DeleteUserPayload>;
-  /** Deletes a single `User` using a unique key. */
-  deleteUserByIdentityProviderId?: Maybe<DeleteUserPayload>;
-  /** Deletes a single `UserOrganization` using a unique key. */
-  deleteUserOrganization?: Maybe<DeleteUserOrganizationPayload>;
-  /** Deletes a single `UserOrganization` using its globally unique id. */
-  deleteUserOrganizationById?: Maybe<DeleteUserOrganizationPayload>;
-  /** Deletes a single `UserOrganization` using a unique key. */
-  deleteUserOrganizationByUserIdAndOrganizationId?: Maybe<DeleteUserOrganizationPayload>;
   /** Deletes a single `Workflow` using a unique key. */
   deleteWorkflow?: Maybe<DeleteWorkflowPayload>;
-  /** Deletes a single `Workflow` using its globally unique id. */
-  deleteWorkflowById?: Maybe<DeleteWorkflowPayload>;
-  /** Deletes a single `WorkflowRun` using a unique key. */
-  deleteWorkflowRun?: Maybe<DeleteWorkflowRunPayload>;
-  /** Deletes a single `WorkflowRun` using its globally unique id. */
-  deleteWorkflowRunById?: Maybe<DeleteWorkflowRunPayload>;
-  /** Deletes a single `WorkflowStepLog` using a unique key. */
-  deleteWorkflowStepLog?: Maybe<DeleteWorkflowStepLogPayload>;
-  /** Deletes a single `WorkflowStepLog` using its globally unique id. */
-  deleteWorkflowStepLogById?: Maybe<DeleteWorkflowStepLogPayload>;
-  /** Deletes a single `WorkflowTemplate` using a unique key. */
-  deleteWorkflowTemplate?: Maybe<DeleteWorkflowTemplatePayload>;
-  /** Deletes a single `WorkflowTemplate` using its globally unique id. */
-  deleteWorkflowTemplateById?: Maybe<DeleteWorkflowTemplatePayload>;
   /**
    * Publish an event to trigger matching workflows.
    *
@@ -2977,62 +4862,18 @@ export type Mutation = {
   publishEvent?: Maybe<PublishEventPayload>;
   /** Updates a single `EventRoutingRule` using a unique key and a patch. */
   updateEventRoutingRule?: Maybe<UpdateEventRoutingRulePayload>;
-  /** Updates a single `EventRoutingRule` using its globally unique id and a patch. */
-  updateEventRoutingRuleById?: Maybe<UpdateEventRoutingRulePayload>;
+  /** Updates a single `EventSchema` using a unique key and a patch. */
+  updateEventSchema?: Maybe<UpdateEventSchemaPayload>;
+  /** Updates a single `EventSubscription` using a unique key and a patch. */
+  updateEventSubscription?: Maybe<UpdateEventSubscriptionPayload>;
   /** Updates a single `Integration` using a unique key and a patch. */
   updateIntegration?: Maybe<UpdateIntegrationPayload>;
-  /** Updates a single `Integration` using its globally unique id and a patch. */
-  updateIntegrationById?: Maybe<UpdateIntegrationPayload>;
-  /** Updates a single `IntegrationDefinition` using a unique key and a patch. */
-  updateIntegrationDefinition?: Maybe<UpdateIntegrationDefinitionPayload>;
-  /** Updates a single `IntegrationDefinition` using its globally unique id and a patch. */
-  updateIntegrationDefinitionById?: Maybe<UpdateIntegrationDefinitionPayload>;
   /** Updates a single `McpServer` using a unique key and a patch. */
   updateMcpServer?: Maybe<UpdateMcpServerPayload>;
-  /** Updates a single `McpServer` using its globally unique id and a patch. */
-  updateMcpServerById?: Maybe<UpdateMcpServerPayload>;
-  /** Updates a single `OauthState` using a unique key and a patch. */
-  updateOauthState?: Maybe<UpdateOauthStatePayload>;
-  /** Updates a single `OauthState` using its globally unique id and a patch. */
-  updateOauthStateById?: Maybe<UpdateOauthStatePayload>;
-  /** Updates a single `OauthToken` using a unique key and a patch. */
-  updateOauthToken?: Maybe<UpdateOauthTokenPayload>;
-  /** Updates a single `OauthToken` using its globally unique id and a patch. */
-  updateOauthTokenById?: Maybe<UpdateOauthTokenPayload>;
   /** Updates a single `Plugin` using a unique key and a patch. */
   updatePlugin?: Maybe<UpdatePluginPayload>;
-  /** Updates a single `Plugin` using its globally unique id and a patch. */
-  updatePluginById?: Maybe<UpdatePluginPayload>;
-  /** Updates a single `User` using a unique key and a patch. */
-  updateUser?: Maybe<UpdateUserPayload>;
-  /** Updates a single `User` using a unique key and a patch. */
-  updateUserByEmail?: Maybe<UpdateUserPayload>;
-  /** Updates a single `User` using its globally unique id and a patch. */
-  updateUserById?: Maybe<UpdateUserPayload>;
-  /** Updates a single `User` using a unique key and a patch. */
-  updateUserByIdentityProviderId?: Maybe<UpdateUserPayload>;
-  /** Updates a single `UserOrganization` using a unique key and a patch. */
-  updateUserOrganization?: Maybe<UpdateUserOrganizationPayload>;
-  /** Updates a single `UserOrganization` using its globally unique id and a patch. */
-  updateUserOrganizationById?: Maybe<UpdateUserOrganizationPayload>;
-  /** Updates a single `UserOrganization` using a unique key and a patch. */
-  updateUserOrganizationByUserIdAndOrganizationId?: Maybe<UpdateUserOrganizationPayload>;
   /** Updates a single `Workflow` using a unique key and a patch. */
   updateWorkflow?: Maybe<UpdateWorkflowPayload>;
-  /** Updates a single `Workflow` using its globally unique id and a patch. */
-  updateWorkflowById?: Maybe<UpdateWorkflowPayload>;
-  /** Updates a single `WorkflowRun` using a unique key and a patch. */
-  updateWorkflowRun?: Maybe<UpdateWorkflowRunPayload>;
-  /** Updates a single `WorkflowRun` using its globally unique id and a patch. */
-  updateWorkflowRunById?: Maybe<UpdateWorkflowRunPayload>;
-  /** Updates a single `WorkflowStepLog` using a unique key and a patch. */
-  updateWorkflowStepLog?: Maybe<UpdateWorkflowStepLogPayload>;
-  /** Updates a single `WorkflowStepLog` using its globally unique id and a patch. */
-  updateWorkflowStepLogById?: Maybe<UpdateWorkflowStepLogPayload>;
-  /** Updates a single `WorkflowTemplate` using a unique key and a patch. */
-  updateWorkflowTemplate?: Maybe<UpdateWorkflowTemplatePayload>;
-  /** Updates a single `WorkflowTemplate` using its globally unique id and a patch. */
-  updateWorkflowTemplateById?: Maybe<UpdateWorkflowTemplatePayload>;
 };
 
 
@@ -3043,14 +4884,20 @@ export type MutationCreateEventRoutingRuleArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateIntegrationArgs = {
-  input: CreateIntegrationInput;
+export type MutationCreateEventSchemaArgs = {
+  input: CreateEventSchemaInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateIntegrationDefinitionArgs = {
-  input: CreateIntegrationDefinitionInput;
+export type MutationCreateEventSubscriptionArgs = {
+  input: CreateEventSubscriptionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateIntegrationArgs = {
+  input: CreateIntegrationInput;
 };
 
 
@@ -3061,32 +4908,8 @@ export type MutationCreateMcpServerArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateOauthStateArgs = {
-  input: CreateOauthStateInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateOauthTokenArgs = {
-  input: CreateOauthTokenInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreatePluginArgs = {
   input: CreatePluginInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateUserArgs = {
-  input: CreateUserInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateUserOrganizationArgs = {
-  input: CreateUserOrganizationInput;
 };
 
 
@@ -3097,32 +4920,20 @@ export type MutationCreateWorkflowArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateWorkflowRunArgs = {
-  input: CreateWorkflowRunInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateWorkflowStepLogArgs = {
-  input: CreateWorkflowStepLogInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateWorkflowTemplateArgs = {
-  input: CreateWorkflowTemplateInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteEventRoutingRuleArgs = {
   input: DeleteEventRoutingRuleInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteEventRoutingRuleByIdArgs = {
-  input: DeleteEventRoutingRuleByIdInput;
+export type MutationDeleteEventSchemaArgs = {
+  input: DeleteEventSchemaInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteEventSubscriptionArgs = {
+  input: DeleteEventSubscriptionInput;
 };
 
 
@@ -3133,56 +4944,8 @@ export type MutationDeleteIntegrationArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteIntegrationByIdArgs = {
-  input: DeleteIntegrationByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteIntegrationDefinitionArgs = {
-  input: DeleteIntegrationDefinitionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteIntegrationDefinitionByIdArgs = {
-  input: DeleteIntegrationDefinitionByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteMcpServerArgs = {
   input: DeleteMcpServerInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteMcpServerByIdArgs = {
-  input: DeleteMcpServerByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteOauthStateArgs = {
-  input: DeleteOauthStateInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteOauthStateByIdArgs = {
-  input: DeleteOauthStateByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteOauthTokenArgs = {
-  input: DeleteOauthTokenInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteOauthTokenByIdArgs = {
-  input: DeleteOauthTokenByIdInput;
 };
 
 
@@ -3193,98 +4956,8 @@ export type MutationDeletePluginArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePluginByIdArgs = {
-  input: DeletePluginByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteUserArgs = {
-  input: DeleteUserInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteUserByEmailArgs = {
-  input: DeleteUserByEmailInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteUserByIdArgs = {
-  input: DeleteUserByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteUserByIdentityProviderIdArgs = {
-  input: DeleteUserByIdentityProviderIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteUserOrganizationArgs = {
-  input: DeleteUserOrganizationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteUserOrganizationByIdArgs = {
-  input: DeleteUserOrganizationByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteUserOrganizationByUserIdAndOrganizationIdArgs = {
-  input: DeleteUserOrganizationByUserIdAndOrganizationIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteWorkflowArgs = {
   input: DeleteWorkflowInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteWorkflowByIdArgs = {
-  input: DeleteWorkflowByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteWorkflowRunArgs = {
-  input: DeleteWorkflowRunInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteWorkflowRunByIdArgs = {
-  input: DeleteWorkflowRunByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteWorkflowStepLogArgs = {
-  input: DeleteWorkflowStepLogInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteWorkflowStepLogByIdArgs = {
-  input: DeleteWorkflowStepLogByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteWorkflowTemplateArgs = {
-  input: DeleteWorkflowTemplateInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteWorkflowTemplateByIdArgs = {
-  input: DeleteWorkflowTemplateByIdInput;
 };
 
 
@@ -3301,8 +4974,14 @@ export type MutationUpdateEventRoutingRuleArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateEventRoutingRuleByIdArgs = {
-  input: UpdateEventRoutingRuleByIdInput;
+export type MutationUpdateEventSchemaArgs = {
+  input: UpdateEventSchemaInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateEventSubscriptionArgs = {
+  input: UpdateEventSubscriptionInput;
 };
 
 
@@ -3313,56 +4992,8 @@ export type MutationUpdateIntegrationArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateIntegrationByIdArgs = {
-  input: UpdateIntegrationByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateIntegrationDefinitionArgs = {
-  input: UpdateIntegrationDefinitionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateIntegrationDefinitionByIdArgs = {
-  input: UpdateIntegrationDefinitionByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateMcpServerArgs = {
   input: UpdateMcpServerInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateMcpServerByIdArgs = {
-  input: UpdateMcpServerByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateOauthStateArgs = {
-  input: UpdateOauthStateInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateOauthStateByIdArgs = {
-  input: UpdateOauthStateByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateOauthTokenArgs = {
-  input: UpdateOauthTokenInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateOauthTokenByIdArgs = {
-  input: UpdateOauthTokenByIdInput;
 };
 
 
@@ -3373,98 +5004,8 @@ export type MutationUpdatePluginArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePluginByIdArgs = {
-  input: UpdatePluginByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateUserArgs = {
-  input: UpdateUserInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateUserByEmailArgs = {
-  input: UpdateUserByEmailInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateUserByIdArgs = {
-  input: UpdateUserByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateUserByIdentityProviderIdArgs = {
-  input: UpdateUserByIdentityProviderIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateUserOrganizationArgs = {
-  input: UpdateUserOrganizationInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateUserOrganizationByIdArgs = {
-  input: UpdateUserOrganizationByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateUserOrganizationByUserIdAndOrganizationIdArgs = {
-  input: UpdateUserOrganizationByUserIdAndOrganizationIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateWorkflowArgs = {
   input: UpdateWorkflowInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateWorkflowByIdArgs = {
-  input: UpdateWorkflowByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateWorkflowRunArgs = {
-  input: UpdateWorkflowRunInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateWorkflowRunByIdArgs = {
-  input: UpdateWorkflowRunByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateWorkflowStepLogArgs = {
-  input: UpdateWorkflowStepLogInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateWorkflowStepLogByIdArgs = {
-  input: UpdateWorkflowStepLogByIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateWorkflowTemplateArgs = {
-  input: UpdateWorkflowTemplateInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateWorkflowTemplateByIdArgs = {
-  input: UpdateWorkflowTemplateByIdInput;
 };
 
 /** An object with a globally unique `ID`. */
@@ -3701,22 +5242,6 @@ export type OauthStateHavingVarianceSampleInput = {
   expiresAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
-/** An input for mutations affecting `OauthState` */
-export type OauthStateInput = {
-  codeChallenge?: InputMaybe<Scalars['String']['input']>;
-  codeVerifier?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  definitionId: Scalars['String']['input'];
-  expiresAt: Scalars['Datetime']['input'];
-  organizationId: Scalars['String']['input'];
-  provider: Scalars['String']['input'];
-  redirectUri: Scalars['String']['input'];
-  returnUrl?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  scopes: Array<InputMaybe<Scalars['String']['input']>>;
-  state: Scalars['String']['input'];
-};
-
 /** Methods to use when ordering `OauthState`. */
 export enum OauthStateOrderBy {
   CodeChallengeAsc = 'CODE_CHALLENGE_ASC',
@@ -3746,25 +5271,8 @@ export enum OauthStateOrderBy {
   StateDesc = 'STATE_DESC'
 }
 
-/** Represents an update to a `OauthState`. Fields that are set will be updated. */
-export type OauthStatePatch = {
-  codeChallenge?: InputMaybe<Scalars['String']['input']>;
-  codeVerifier?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  definitionId?: InputMaybe<Scalars['String']['input']>;
-  expiresAt?: InputMaybe<Scalars['Datetime']['input']>;
-  organizationId?: InputMaybe<Scalars['String']['input']>;
-  provider?: InputMaybe<Scalars['String']['input']>;
-  redirectUri?: InputMaybe<Scalars['String']['input']>;
-  returnUrl?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  scopes?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  state?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type OauthToken = Node & {
   __typename?: 'OauthToken';
-  accessToken: Scalars['String']['output'];
   createdAt?: Maybe<Scalars['Datetime']['output']>;
   expiresAt?: Maybe<Scalars['Datetime']['output']>;
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -3774,7 +5282,6 @@ export type OauthToken = Node & {
   integrationId: Scalars['UUID']['output'];
   organizationId: Scalars['String']['output'];
   provider: Scalars['String']['output'];
-  refreshToken?: Maybe<Scalars['String']['output']>;
   rowId: Scalars['UUID']['output'];
   scope: Scalars['String']['output'];
   tokenType: Scalars['String']['output'];
@@ -3801,8 +5308,6 @@ export type OauthTokenAggregatesFilter = {
  * for equality and combined with a logical ‘and.’
  */
 export type OauthTokenCondition = {
-  /** Checks for equality with the object’s `accessToken` field. */
-  accessToken?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `expiresAt` field. */
@@ -3813,8 +5318,6 @@ export type OauthTokenCondition = {
   organizationId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `provider` field. */
   provider?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `refreshToken` field. */
-  refreshToken?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `scope` field. */
@@ -3850,13 +5353,11 @@ export type OauthTokenConnectionGroupedAggregatesArgs = {
 };
 
 export type OauthTokenDistinctCountAggregateFilter = {
-  accessToken?: InputMaybe<BigIntFilter>;
   createdAt?: InputMaybe<BigIntFilter>;
   expiresAt?: InputMaybe<BigIntFilter>;
   integrationId?: InputMaybe<BigIntFilter>;
   organizationId?: InputMaybe<BigIntFilter>;
   provider?: InputMaybe<BigIntFilter>;
-  refreshToken?: InputMaybe<BigIntFilter>;
   rowId?: InputMaybe<BigIntFilter>;
   scope?: InputMaybe<BigIntFilter>;
   tokenType?: InputMaybe<BigIntFilter>;
@@ -3865,8 +5366,6 @@ export type OauthTokenDistinctCountAggregateFilter = {
 
 export type OauthTokenDistinctCountAggregates = {
   __typename?: 'OauthTokenDistinctCountAggregates';
-  /** Distinct count of accessToken across the matching connection */
-  accessToken?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of createdAt across the matching connection */
   createdAt?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of expiresAt across the matching connection */
@@ -3877,8 +5376,6 @@ export type OauthTokenDistinctCountAggregates = {
   organizationId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of provider across the matching connection */
   provider?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of refreshToken across the matching connection */
-  refreshToken?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of rowId across the matching connection */
   rowId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of scope across the matching connection */
@@ -3900,8 +5397,6 @@ export type OauthTokenEdge = {
 
 /** A filter to be used against `OauthToken` object types. All fields are combined with a logical ‘and.’ */
 export type OauthTokenFilter = {
-  /** Filter by the object’s `accessToken` field. */
-  accessToken?: InputMaybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<OauthTokenFilter>>;
   /** Filter by the object’s `createdAt` field. */
@@ -3920,8 +5415,6 @@ export type OauthTokenFilter = {
   organizationId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `provider` field. */
   provider?: InputMaybe<StringFilter>;
-  /** Filter by the object’s `refreshToken` field. */
-  refreshToken?: InputMaybe<StringFilter>;
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `scope` field. */
@@ -3934,7 +5427,6 @@ export type OauthTokenFilter = {
 
 /** Grouping methods for `OauthToken` for usage during aggregation. */
 export enum OauthTokenGroupBy {
-  AccessToken = 'ACCESS_TOKEN',
   CreatedAt = 'CREATED_AT',
   CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
   CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
@@ -3944,7 +5436,6 @@ export enum OauthTokenGroupBy {
   IntegrationId = 'INTEGRATION_ID',
   OrganizationId = 'ORGANIZATION_ID',
   Provider = 'PROVIDER',
-  RefreshToken = 'REFRESH_TOKEN',
   Scope = 'SCOPE',
   TokenType = 'TOKEN_TYPE',
   UpdatedAt = 'UPDATED_AT',
@@ -4021,25 +5512,8 @@ export type OauthTokenHavingVarianceSampleInput = {
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
-/** An input for mutations affecting `OauthToken` */
-export type OauthTokenInput = {
-  accessToken: Scalars['String']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  expiresAt?: InputMaybe<Scalars['Datetime']['input']>;
-  integrationId: Scalars['UUID']['input'];
-  organizationId: Scalars['String']['input'];
-  provider: Scalars['String']['input'];
-  refreshToken?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  scope: Scalars['String']['input'];
-  tokenType?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
 /** Methods to use when ordering `OauthToken`. */
 export enum OauthTokenOrderBy {
-  AccessTokenAsc = 'ACCESS_TOKEN_ASC',
-  AccessTokenDesc = 'ACCESS_TOKEN_DESC',
   CreatedAtAsc = 'CREATED_AT_ASC',
   CreatedAtDesc = 'CREATED_AT_DESC',
   ExpiresAtAsc = 'EXPIRES_AT_ASC',
@@ -4053,8 +5527,6 @@ export enum OauthTokenOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   ProviderAsc = 'PROVIDER_ASC',
   ProviderDesc = 'PROVIDER_DESC',
-  RefreshTokenAsc = 'REFRESH_TOKEN_ASC',
-  RefreshTokenDesc = 'REFRESH_TOKEN_DESC',
   RowIdAsc = 'ROW_ID_ASC',
   RowIdDesc = 'ROW_ID_DESC',
   ScopeAsc = 'SCOPE_ASC',
@@ -4064,52 +5536,6 @@ export enum OauthTokenOrderBy {
   UpdatedAtAsc = 'UPDATED_AT_ASC',
   UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
-
-/** Represents an update to a `OauthToken`. Fields that are set will be updated. */
-export type OauthTokenPatch = {
-  accessToken?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  expiresAt?: InputMaybe<Scalars['Datetime']['input']>;
-  integrationId?: InputMaybe<Scalars['UUID']['input']>;
-  organizationId?: InputMaybe<Scalars['String']['input']>;
-  provider?: InputMaybe<Scalars['String']['input']>;
-  refreshToken?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  scope?: InputMaybe<Scalars['String']['input']>;
-  tokenType?: InputMaybe<Scalars['String']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-export enum OrganizationType {
-  Personal = 'personal',
-  Team = 'team'
-}
-
-/** A filter to be used against OrganizationType fields. All fields are combined with a logical ‘and.’ */
-export type OrganizationTypeFilter = {
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: InputMaybe<OrganizationType>;
-  /** Equal to the specified value. */
-  equalTo?: InputMaybe<OrganizationType>;
-  /** Greater than the specified value. */
-  greaterThan?: InputMaybe<OrganizationType>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: InputMaybe<OrganizationType>;
-  /** Included in the specified list. */
-  in?: InputMaybe<Array<OrganizationType>>;
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: InputMaybe<Scalars['Boolean']['input']>;
-  /** Less than the specified value. */
-  lessThan?: InputMaybe<OrganizationType>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: InputMaybe<OrganizationType>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: InputMaybe<OrganizationType>;
-  /** Not equal to the specified value. */
-  notEqualTo?: InputMaybe<OrganizationType>;
-  /** Not included in the specified list. */
-  notIn?: InputMaybe<Array<OrganizationType>>;
-};
 
 /** Information about pagination in a connection. */
 export type PageInfo = {
@@ -4132,6 +5558,7 @@ export type Plugin = Node & {
   config?: Maybe<Scalars['JSON']['output']>;
   createdAt?: Maybe<Scalars['Datetime']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  edgeCapable?: Maybe<Scalars['Boolean']['output']>;
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   id: Scalars['ID']['output'];
   isEnabled: Scalars['Boolean']['output'];
@@ -4139,11 +5566,25 @@ export type Plugin = Node & {
   manifest: Scalars['JSON']['output'];
   name: Scalars['String']['output'];
   organizationId: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `PluginUsage`. */
+  pluginUsages: PluginUsageConnection;
   rowId: Scalars['UUID']['output'];
   updatedAt?: Maybe<Scalars['Datetime']['output']>;
   version: Scalars['String']['output'];
   wasmHash: Scalars['String']['output'];
   wasmUrl: Scalars['String']['output'];
+};
+
+
+export type PluginPluginUsagesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PluginUsageCondition>;
+  filter?: InputMaybe<PluginUsageFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PluginUsageOrderBy>>;
 };
 
 export type PluginAggregates = {
@@ -4169,6 +5610,8 @@ export type PluginCondition = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `description` field. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `edgeCapable` field. */
+  edgeCapable?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isEnabled` field. */
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `isVerified` field. */
@@ -4218,6 +5661,7 @@ export type PluginDistinctCountAggregateFilter = {
   config?: InputMaybe<BigIntFilter>;
   createdAt?: InputMaybe<BigIntFilter>;
   description?: InputMaybe<BigIntFilter>;
+  edgeCapable?: InputMaybe<BigIntFilter>;
   isEnabled?: InputMaybe<BigIntFilter>;
   isVerified?: InputMaybe<BigIntFilter>;
   manifest?: InputMaybe<BigIntFilter>;
@@ -4240,6 +5684,8 @@ export type PluginDistinctCountAggregates = {
   createdAt?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of description across the matching connection */
   description?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of edgeCapable across the matching connection */
+  edgeCapable?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of isEnabled across the matching connection */
   isEnabled?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of isVerified across the matching connection */
@@ -4285,6 +5731,8 @@ export type PluginFilter = {
   createdAt?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `description` field. */
   description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `edgeCapable` field. */
+  edgeCapable?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `isEnabled` field. */
   isEnabled?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `isVerified` field. */
@@ -4297,6 +5745,10 @@ export type PluginFilter = {
   or?: InputMaybe<Array<PluginFilter>>;
   /** Filter by the object’s `organizationId` field. */
   organizationId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `pluginUsages` relation. */
+  pluginUsages?: InputMaybe<PluginToManyPluginUsageFilter>;
+  /** Some related `pluginUsages` exist. */
+  pluginUsagesExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `updatedAt` field. */
@@ -4317,6 +5769,7 @@ export enum PluginGroupBy {
   CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
   CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
   Description = 'DESCRIPTION',
+  EdgeCapable = 'EDGE_CAPABLE',
   IsEnabled = 'IS_ENABLED',
   IsVerified = 'IS_VERIFIED',
   Manifest = 'MANIFEST',
@@ -4396,6 +5849,7 @@ export type PluginInput = {
   config?: InputMaybe<Scalars['JSON']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  edgeCapable?: InputMaybe<Scalars['Boolean']['input']>;
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   isVerified?: InputMaybe<Scalars['Boolean']['input']>;
   manifest: Scalars['JSON']['input'];
@@ -4408,6 +5862,365 @@ export type PluginInput = {
   wasmUrl: Scalars['String']['input'];
 };
 
+export type PluginMarketplace = Node & {
+  __typename?: 'PluginMarketplace';
+  author: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  downloads: Scalars['Int']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  isVerified: Scalars['Boolean']['output'];
+  manifest: Scalars['JSON']['output'];
+  name: Scalars['String']['output'];
+  rating?: Maybe<Scalars['Int']['output']>;
+  rowId: Scalars['UUID']['output'];
+  tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+  version: Scalars['String']['output'];
+  wasmUrl: Scalars['String']['output'];
+};
+
+export type PluginMarketplaceAggregates = {
+  __typename?: 'PluginMarketplaceAggregates';
+  /** Mean average aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  average?: Maybe<PluginMarketplaceAverageAggregates>;
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<PluginMarketplaceDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** Maximum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  max?: Maybe<PluginMarketplaceMaxAggregates>;
+  /** Minimum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  min?: Maybe<PluginMarketplaceMinAggregates>;
+  /** Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevPopulation?: Maybe<PluginMarketplaceStddevPopulationAggregates>;
+  /** Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevSample?: Maybe<PluginMarketplaceStddevSampleAggregates>;
+  /** Sum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  sum?: Maybe<PluginMarketplaceSumAggregates>;
+  /** Population variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  variancePopulation?: Maybe<PluginMarketplaceVariancePopulationAggregates>;
+  /** Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  varianceSample?: Maybe<PluginMarketplaceVarianceSampleAggregates>;
+};
+
+export type PluginMarketplaceAverageAggregates = {
+  __typename?: 'PluginMarketplaceAverageAggregates';
+  /** Mean average of downloads across the matching connection */
+  downloads?: Maybe<Scalars['BigFloat']['output']>;
+  /** Mean average of rating across the matching connection */
+  rating?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+/**
+ * A condition to be used against `PluginMarketplace` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type PluginMarketplaceCondition = {
+  /** Checks for equality with the object’s `author` field. */
+  author?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `downloads` field. */
+  downloads?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `isVerified` field. */
+  isVerified?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rating` field. */
+  rating?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `version` field. */
+  version?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `wasmUrl` field. */
+  wasmUrl?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `PluginMarketplace` values. */
+export type PluginMarketplaceConnection = {
+  __typename?: 'PluginMarketplaceConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<PluginMarketplaceAggregates>;
+  /** A list of edges which contains the `PluginMarketplace` and cursor to aid in pagination. */
+  edges: Array<PluginMarketplaceEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<PluginMarketplaceAggregates>>;
+  /** A list of `PluginMarketplace` objects. */
+  nodes: Array<PluginMarketplace>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PluginMarketplace` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `PluginMarketplace` values. */
+export type PluginMarketplaceConnectionGroupedAggregatesArgs = {
+  groupBy: Array<PluginMarketplaceGroupBy>;
+  having?: InputMaybe<PluginMarketplaceHavingInput>;
+};
+
+export type PluginMarketplaceDistinctCountAggregates = {
+  __typename?: 'PluginMarketplaceDistinctCountAggregates';
+  /** Distinct count of author across the matching connection */
+  author?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of description across the matching connection */
+  description?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of downloads across the matching connection */
+  downloads?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of isVerified across the matching connection */
+  isVerified?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of manifest across the matching connection */
+  manifest?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of name across the matching connection */
+  name?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rating across the matching connection */
+  rating?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of tags across the matching connection */
+  tags?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of updatedAt across the matching connection */
+  updatedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of version across the matching connection */
+  version?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of wasmUrl across the matching connection */
+  wasmUrl?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `PluginMarketplace` edge in the connection. */
+export type PluginMarketplaceEdge = {
+  __typename?: 'PluginMarketplaceEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `PluginMarketplace` at the end of the edge. */
+  node: PluginMarketplace;
+};
+
+/** A filter to be used against `PluginMarketplace` object types. All fields are combined with a logical ‘and.’ */
+export type PluginMarketplaceFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<PluginMarketplaceFilter>>;
+  /** Filter by the object’s `author` field. */
+  author?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `downloads` field. */
+  downloads?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `isVerified` field. */
+  isVerified?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<PluginMarketplaceFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<PluginMarketplaceFilter>>;
+  /** Filter by the object’s `rating` field. */
+  rating?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `tags` field. */
+  tags?: InputMaybe<StringListFilter>;
+  /** Filter by the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `version` field. */
+  version?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `wasmUrl` field. */
+  wasmUrl?: InputMaybe<StringFilter>;
+};
+
+/** Grouping methods for `PluginMarketplace` for usage during aggregation. */
+export enum PluginMarketplaceGroupBy {
+  Author = 'AUTHOR',
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  Description = 'DESCRIPTION',
+  Downloads = 'DOWNLOADS',
+  IsVerified = 'IS_VERIFIED',
+  Manifest = 'MANIFEST',
+  Name = 'NAME',
+  Rating = 'RATING',
+  Tags = 'TAGS',
+  UpdatedAt = 'UPDATED_AT',
+  UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
+  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR',
+  Version = 'VERSION',
+  WasmUrl = 'WASM_URL'
+}
+
+export type PluginMarketplaceHavingAverageInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  downloads?: InputMaybe<HavingIntFilter>;
+  rating?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type PluginMarketplaceHavingDistinctCountInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  downloads?: InputMaybe<HavingIntFilter>;
+  rating?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `PluginMarketplace` aggregates. */
+export type PluginMarketplaceHavingInput = {
+  AND?: InputMaybe<Array<PluginMarketplaceHavingInput>>;
+  OR?: InputMaybe<Array<PluginMarketplaceHavingInput>>;
+  average?: InputMaybe<PluginMarketplaceHavingAverageInput>;
+  distinctCount?: InputMaybe<PluginMarketplaceHavingDistinctCountInput>;
+  max?: InputMaybe<PluginMarketplaceHavingMaxInput>;
+  min?: InputMaybe<PluginMarketplaceHavingMinInput>;
+  stddevPopulation?: InputMaybe<PluginMarketplaceHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<PluginMarketplaceHavingStddevSampleInput>;
+  sum?: InputMaybe<PluginMarketplaceHavingSumInput>;
+  variancePopulation?: InputMaybe<PluginMarketplaceHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<PluginMarketplaceHavingVarianceSampleInput>;
+};
+
+export type PluginMarketplaceHavingMaxInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  downloads?: InputMaybe<HavingIntFilter>;
+  rating?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type PluginMarketplaceHavingMinInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  downloads?: InputMaybe<HavingIntFilter>;
+  rating?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type PluginMarketplaceHavingStddevPopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  downloads?: InputMaybe<HavingIntFilter>;
+  rating?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type PluginMarketplaceHavingStddevSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  downloads?: InputMaybe<HavingIntFilter>;
+  rating?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type PluginMarketplaceHavingSumInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  downloads?: InputMaybe<HavingIntFilter>;
+  rating?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type PluginMarketplaceHavingVariancePopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  downloads?: InputMaybe<HavingIntFilter>;
+  rating?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type PluginMarketplaceHavingVarianceSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  downloads?: InputMaybe<HavingIntFilter>;
+  rating?: InputMaybe<HavingIntFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type PluginMarketplaceMaxAggregates = {
+  __typename?: 'PluginMarketplaceMaxAggregates';
+  /** Maximum of downloads across the matching connection */
+  downloads?: Maybe<Scalars['Int']['output']>;
+  /** Maximum of rating across the matching connection */
+  rating?: Maybe<Scalars['Int']['output']>;
+};
+
+export type PluginMarketplaceMinAggregates = {
+  __typename?: 'PluginMarketplaceMinAggregates';
+  /** Minimum of downloads across the matching connection */
+  downloads?: Maybe<Scalars['Int']['output']>;
+  /** Minimum of rating across the matching connection */
+  rating?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Methods to use when ordering `PluginMarketplace`. */
+export enum PluginMarketplaceOrderBy {
+  AuthorAsc = 'AUTHOR_ASC',
+  AuthorDesc = 'AUTHOR_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
+  DownloadsAsc = 'DOWNLOADS_ASC',
+  DownloadsDesc = 'DOWNLOADS_DESC',
+  IsVerifiedAsc = 'IS_VERIFIED_ASC',
+  IsVerifiedDesc = 'IS_VERIFIED_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RatingAsc = 'RATING_ASC',
+  RatingDesc = 'RATING_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC',
+  VersionAsc = 'VERSION_ASC',
+  VersionDesc = 'VERSION_DESC',
+  WasmUrlAsc = 'WASM_URL_ASC',
+  WasmUrlDesc = 'WASM_URL_DESC'
+}
+
+export type PluginMarketplaceStddevPopulationAggregates = {
+  __typename?: 'PluginMarketplaceStddevPopulationAggregates';
+  /** Population standard deviation of downloads across the matching connection */
+  downloads?: Maybe<Scalars['BigFloat']['output']>;
+  /** Population standard deviation of rating across the matching connection */
+  rating?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type PluginMarketplaceStddevSampleAggregates = {
+  __typename?: 'PluginMarketplaceStddevSampleAggregates';
+  /** Sample standard deviation of downloads across the matching connection */
+  downloads?: Maybe<Scalars['BigFloat']['output']>;
+  /** Sample standard deviation of rating across the matching connection */
+  rating?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type PluginMarketplaceSumAggregates = {
+  __typename?: 'PluginMarketplaceSumAggregates';
+  /** Sum of downloads across the matching connection */
+  downloads: Scalars['BigInt']['output'];
+  /** Sum of rating across the matching connection */
+  rating: Scalars['BigInt']['output'];
+};
+
+export type PluginMarketplaceVariancePopulationAggregates = {
+  __typename?: 'PluginMarketplaceVariancePopulationAggregates';
+  /** Population variance of downloads across the matching connection */
+  downloads?: Maybe<Scalars['BigFloat']['output']>;
+  /** Population variance of rating across the matching connection */
+  rating?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type PluginMarketplaceVarianceSampleAggregates = {
+  __typename?: 'PluginMarketplaceVarianceSampleAggregates';
+  /** Sample variance of downloads across the matching connection */
+  downloads?: Maybe<Scalars['BigFloat']['output']>;
+  /** Sample variance of rating across the matching connection */
+  rating?: Maybe<Scalars['BigFloat']['output']>;
+};
+
 /** Methods to use when ordering `Plugin`. */
 export enum PluginOrderBy {
   AuthorIdAsc = 'AUTHOR_ID_ASC',
@@ -4416,6 +6229,8 @@ export enum PluginOrderBy {
   CreatedAtDesc = 'CREATED_AT_DESC',
   DescriptionAsc = 'DESCRIPTION_ASC',
   DescriptionDesc = 'DESCRIPTION_DESC',
+  EdgeCapableAsc = 'EDGE_CAPABLE_ASC',
+  EdgeCapableDesc = 'EDGE_CAPABLE_DESC',
   IsEnabledAsc = 'IS_ENABLED_ASC',
   IsEnabledDesc = 'IS_ENABLED_DESC',
   IsVerifiedAsc = 'IS_VERIFIED_ASC',
@@ -4425,6 +6240,44 @@ export enum PluginOrderBy {
   Natural = 'NATURAL',
   OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
   OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
+  PluginUsagesAverageDurationMsAsc = 'PLUGIN_USAGES_AVERAGE_DURATION_MS_ASC',
+  PluginUsagesAverageDurationMsDesc = 'PLUGIN_USAGES_AVERAGE_DURATION_MS_DESC',
+  PluginUsagesCountAsc = 'PLUGIN_USAGES_COUNT_ASC',
+  PluginUsagesCountDesc = 'PLUGIN_USAGES_COUNT_DESC',
+  PluginUsagesDistinctCountDurationMsAsc = 'PLUGIN_USAGES_DISTINCT_COUNT_DURATION_MS_ASC',
+  PluginUsagesDistinctCountDurationMsDesc = 'PLUGIN_USAGES_DISTINCT_COUNT_DURATION_MS_DESC',
+  PluginUsagesDistinctCountExecutedAtAsc = 'PLUGIN_USAGES_DISTINCT_COUNT_EXECUTED_AT_ASC',
+  PluginUsagesDistinctCountExecutedAtDesc = 'PLUGIN_USAGES_DISTINCT_COUNT_EXECUTED_AT_DESC',
+  PluginUsagesDistinctCountFunctionNameAsc = 'PLUGIN_USAGES_DISTINCT_COUNT_FUNCTION_NAME_ASC',
+  PluginUsagesDistinctCountFunctionNameDesc = 'PLUGIN_USAGES_DISTINCT_COUNT_FUNCTION_NAME_DESC',
+  PluginUsagesDistinctCountInvocationSourceAsc = 'PLUGIN_USAGES_DISTINCT_COUNT_INVOCATION_SOURCE_ASC',
+  PluginUsagesDistinctCountInvocationSourceDesc = 'PLUGIN_USAGES_DISTINCT_COUNT_INVOCATION_SOURCE_DESC',
+  PluginUsagesDistinctCountOrganizationIdAsc = 'PLUGIN_USAGES_DISTINCT_COUNT_ORGANIZATION_ID_ASC',
+  PluginUsagesDistinctCountOrganizationIdDesc = 'PLUGIN_USAGES_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
+  PluginUsagesDistinctCountPluginIdAsc = 'PLUGIN_USAGES_DISTINCT_COUNT_PLUGIN_ID_ASC',
+  PluginUsagesDistinctCountPluginIdDesc = 'PLUGIN_USAGES_DISTINCT_COUNT_PLUGIN_ID_DESC',
+  PluginUsagesDistinctCountRowIdAsc = 'PLUGIN_USAGES_DISTINCT_COUNT_ROW_ID_ASC',
+  PluginUsagesDistinctCountRowIdDesc = 'PLUGIN_USAGES_DISTINCT_COUNT_ROW_ID_DESC',
+  PluginUsagesDistinctCountRunIdAsc = 'PLUGIN_USAGES_DISTINCT_COUNT_RUN_ID_ASC',
+  PluginUsagesDistinctCountRunIdDesc = 'PLUGIN_USAGES_DISTINCT_COUNT_RUN_ID_DESC',
+  PluginUsagesDistinctCountSuccessAsc = 'PLUGIN_USAGES_DISTINCT_COUNT_SUCCESS_ASC',
+  PluginUsagesDistinctCountSuccessDesc = 'PLUGIN_USAGES_DISTINCT_COUNT_SUCCESS_DESC',
+  PluginUsagesDistinctCountWorkflowIdAsc = 'PLUGIN_USAGES_DISTINCT_COUNT_WORKFLOW_ID_ASC',
+  PluginUsagesDistinctCountWorkflowIdDesc = 'PLUGIN_USAGES_DISTINCT_COUNT_WORKFLOW_ID_DESC',
+  PluginUsagesMaxDurationMsAsc = 'PLUGIN_USAGES_MAX_DURATION_MS_ASC',
+  PluginUsagesMaxDurationMsDesc = 'PLUGIN_USAGES_MAX_DURATION_MS_DESC',
+  PluginUsagesMinDurationMsAsc = 'PLUGIN_USAGES_MIN_DURATION_MS_ASC',
+  PluginUsagesMinDurationMsDesc = 'PLUGIN_USAGES_MIN_DURATION_MS_DESC',
+  PluginUsagesStddevPopulationDurationMsAsc = 'PLUGIN_USAGES_STDDEV_POPULATION_DURATION_MS_ASC',
+  PluginUsagesStddevPopulationDurationMsDesc = 'PLUGIN_USAGES_STDDEV_POPULATION_DURATION_MS_DESC',
+  PluginUsagesStddevSampleDurationMsAsc = 'PLUGIN_USAGES_STDDEV_SAMPLE_DURATION_MS_ASC',
+  PluginUsagesStddevSampleDurationMsDesc = 'PLUGIN_USAGES_STDDEV_SAMPLE_DURATION_MS_DESC',
+  PluginUsagesSumDurationMsAsc = 'PLUGIN_USAGES_SUM_DURATION_MS_ASC',
+  PluginUsagesSumDurationMsDesc = 'PLUGIN_USAGES_SUM_DURATION_MS_DESC',
+  PluginUsagesVariancePopulationDurationMsAsc = 'PLUGIN_USAGES_VARIANCE_POPULATION_DURATION_MS_ASC',
+  PluginUsagesVariancePopulationDurationMsDesc = 'PLUGIN_USAGES_VARIANCE_POPULATION_DURATION_MS_DESC',
+  PluginUsagesVarianceSampleDurationMsAsc = 'PLUGIN_USAGES_VARIANCE_SAMPLE_DURATION_MS_ASC',
+  PluginUsagesVarianceSampleDurationMsDesc = 'PLUGIN_USAGES_VARIANCE_SAMPLE_DURATION_MS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RowIdAsc = 'ROW_ID_ASC',
@@ -4445,6 +6298,7 @@ export type PluginPatch = {
   config?: InputMaybe<Scalars['JSON']['input']>;
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  edgeCapable?: InputMaybe<Scalars['Boolean']['input']>;
   isEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   isVerified?: InputMaybe<Scalars['Boolean']['input']>;
   manifest?: InputMaybe<Scalars['JSON']['input']>;
@@ -4455,6 +6309,394 @@ export type PluginPatch = {
   version?: InputMaybe<Scalars['String']['input']>;
   wasmHash?: InputMaybe<Scalars['String']['input']>;
   wasmUrl?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A filter to be used against many `PluginUsage` object types. All fields are combined with a logical ‘and.’ */
+export type PluginToManyPluginUsageFilter = {
+  /** Aggregates across related `PluginUsage` match the filter criteria. */
+  aggregates?: InputMaybe<PluginUsageAggregatesFilter>;
+  /** Every related `PluginUsage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<PluginUsageFilter>;
+  /** No related `PluginUsage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<PluginUsageFilter>;
+  /** Some related `PluginUsage` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<PluginUsageFilter>;
+};
+
+export type PluginUsage = Node & {
+  __typename?: 'PluginUsage';
+  durationMs: Scalars['Int']['output'];
+  executedAt?: Maybe<Scalars['Datetime']['output']>;
+  functionName: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  invocationSource: Scalars['String']['output'];
+  organizationId: Scalars['String']['output'];
+  /** Reads a single `Plugin` that is related to this `PluginUsage`. */
+  plugin?: Maybe<Plugin>;
+  pluginId: Scalars['UUID']['output'];
+  rowId: Scalars['UUID']['output'];
+  runId?: Maybe<Scalars['UUID']['output']>;
+  success: Scalars['Boolean']['output'];
+  workflowId?: Maybe<Scalars['UUID']['output']>;
+};
+
+export type PluginUsageAggregates = {
+  __typename?: 'PluginUsageAggregates';
+  /** Mean average aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  average?: Maybe<PluginUsageAverageAggregates>;
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<PluginUsageDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** Maximum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  max?: Maybe<PluginUsageMaxAggregates>;
+  /** Minimum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  min?: Maybe<PluginUsageMinAggregates>;
+  /** Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevPopulation?: Maybe<PluginUsageStddevPopulationAggregates>;
+  /** Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevSample?: Maybe<PluginUsageStddevSampleAggregates>;
+  /** Sum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  sum?: Maybe<PluginUsageSumAggregates>;
+  /** Population variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  variancePopulation?: Maybe<PluginUsageVariancePopulationAggregates>;
+  /** Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  varianceSample?: Maybe<PluginUsageVarianceSampleAggregates>;
+};
+
+/** A filter to be used against aggregates of `PluginUsage` object types. */
+export type PluginUsageAggregatesFilter = {
+  /** Mean average aggregate over matching `PluginUsage` objects. */
+  average?: InputMaybe<PluginUsageAverageAggregateFilter>;
+  /** Distinct count aggregate over matching `PluginUsage` objects. */
+  distinctCount?: InputMaybe<PluginUsageDistinctCountAggregateFilter>;
+  /** A filter that must pass for the relevant `PluginUsage` object to be included within the aggregate. */
+  filter?: InputMaybe<PluginUsageFilter>;
+  /** Maximum aggregate over matching `PluginUsage` objects. */
+  max?: InputMaybe<PluginUsageMaxAggregateFilter>;
+  /** Minimum aggregate over matching `PluginUsage` objects. */
+  min?: InputMaybe<PluginUsageMinAggregateFilter>;
+  /** Population standard deviation aggregate over matching `PluginUsage` objects. */
+  stddevPopulation?: InputMaybe<PluginUsageStddevPopulationAggregateFilter>;
+  /** Sample standard deviation aggregate over matching `PluginUsage` objects. */
+  stddevSample?: InputMaybe<PluginUsageStddevSampleAggregateFilter>;
+  /** Sum aggregate over matching `PluginUsage` objects. */
+  sum?: InputMaybe<PluginUsageSumAggregateFilter>;
+  /** Population variance aggregate over matching `PluginUsage` objects. */
+  variancePopulation?: InputMaybe<PluginUsageVariancePopulationAggregateFilter>;
+  /** Sample variance aggregate over matching `PluginUsage` objects. */
+  varianceSample?: InputMaybe<PluginUsageVarianceSampleAggregateFilter>;
+};
+
+export type PluginUsageAverageAggregateFilter = {
+  durationMs?: InputMaybe<BigFloatFilter>;
+};
+
+export type PluginUsageAverageAggregates = {
+  __typename?: 'PluginUsageAverageAggregates';
+  /** Mean average of durationMs across the matching connection */
+  durationMs?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+/**
+ * A condition to be used against `PluginUsage` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type PluginUsageCondition = {
+  /** Checks for equality with the object’s `durationMs` field. */
+  durationMs?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `executedAt` field. */
+  executedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `functionName` field. */
+  functionName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `invocationSource` field. */
+  invocationSource?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `pluginId` field. */
+  pluginId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `runId` field. */
+  runId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `success` field. */
+  success?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Checks for equality with the object’s `workflowId` field. */
+  workflowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `PluginUsage` values. */
+export type PluginUsageConnection = {
+  __typename?: 'PluginUsageConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<PluginUsageAggregates>;
+  /** A list of edges which contains the `PluginUsage` and cursor to aid in pagination. */
+  edges: Array<PluginUsageEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<PluginUsageAggregates>>;
+  /** A list of `PluginUsage` objects. */
+  nodes: Array<PluginUsage>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PluginUsage` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `PluginUsage` values. */
+export type PluginUsageConnectionGroupedAggregatesArgs = {
+  groupBy: Array<PluginUsageGroupBy>;
+  having?: InputMaybe<PluginUsageHavingInput>;
+};
+
+export type PluginUsageDistinctCountAggregateFilter = {
+  durationMs?: InputMaybe<BigIntFilter>;
+  executedAt?: InputMaybe<BigIntFilter>;
+  functionName?: InputMaybe<BigIntFilter>;
+  invocationSource?: InputMaybe<BigIntFilter>;
+  organizationId?: InputMaybe<BigIntFilter>;
+  pluginId?: InputMaybe<BigIntFilter>;
+  rowId?: InputMaybe<BigIntFilter>;
+  runId?: InputMaybe<BigIntFilter>;
+  success?: InputMaybe<BigIntFilter>;
+  workflowId?: InputMaybe<BigIntFilter>;
+};
+
+export type PluginUsageDistinctCountAggregates = {
+  __typename?: 'PluginUsageDistinctCountAggregates';
+  /** Distinct count of durationMs across the matching connection */
+  durationMs?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of executedAt across the matching connection */
+  executedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of functionName across the matching connection */
+  functionName?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of invocationSource across the matching connection */
+  invocationSource?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of pluginId across the matching connection */
+  pluginId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of runId across the matching connection */
+  runId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of success across the matching connection */
+  success?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of workflowId across the matching connection */
+  workflowId?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `PluginUsage` edge in the connection. */
+export type PluginUsageEdge = {
+  __typename?: 'PluginUsageEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `PluginUsage` at the end of the edge. */
+  node: PluginUsage;
+};
+
+/** A filter to be used against `PluginUsage` object types. All fields are combined with a logical ‘and.’ */
+export type PluginUsageFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<PluginUsageFilter>>;
+  /** Filter by the object’s `durationMs` field. */
+  durationMs?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `executedAt` field. */
+  executedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `functionName` field. */
+  functionName?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `invocationSource` field. */
+  invocationSource?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<PluginUsageFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<PluginUsageFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `plugin` relation. */
+  plugin?: InputMaybe<PluginFilter>;
+  /** Filter by the object’s `pluginId` field. */
+  pluginId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `runId` field. */
+  runId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `success` field. */
+  success?: InputMaybe<BooleanFilter>;
+  /** Filter by the object’s `workflowId` field. */
+  workflowId?: InputMaybe<UuidFilter>;
+};
+
+/** Grouping methods for `PluginUsage` for usage during aggregation. */
+export enum PluginUsageGroupBy {
+  DurationMs = 'DURATION_MS',
+  ExecutedAt = 'EXECUTED_AT',
+  ExecutedAtTruncatedToDay = 'EXECUTED_AT_TRUNCATED_TO_DAY',
+  ExecutedAtTruncatedToHour = 'EXECUTED_AT_TRUNCATED_TO_HOUR',
+  FunctionName = 'FUNCTION_NAME',
+  InvocationSource = 'INVOCATION_SOURCE',
+  OrganizationId = 'ORGANIZATION_ID',
+  PluginId = 'PLUGIN_ID',
+  RunId = 'RUN_ID',
+  Success = 'SUCCESS',
+  WorkflowId = 'WORKFLOW_ID'
+}
+
+export type PluginUsageHavingAverageInput = {
+  durationMs?: InputMaybe<HavingIntFilter>;
+  executedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type PluginUsageHavingDistinctCountInput = {
+  durationMs?: InputMaybe<HavingIntFilter>;
+  executedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `PluginUsage` aggregates. */
+export type PluginUsageHavingInput = {
+  AND?: InputMaybe<Array<PluginUsageHavingInput>>;
+  OR?: InputMaybe<Array<PluginUsageHavingInput>>;
+  average?: InputMaybe<PluginUsageHavingAverageInput>;
+  distinctCount?: InputMaybe<PluginUsageHavingDistinctCountInput>;
+  max?: InputMaybe<PluginUsageHavingMaxInput>;
+  min?: InputMaybe<PluginUsageHavingMinInput>;
+  stddevPopulation?: InputMaybe<PluginUsageHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<PluginUsageHavingStddevSampleInput>;
+  sum?: InputMaybe<PluginUsageHavingSumInput>;
+  variancePopulation?: InputMaybe<PluginUsageHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<PluginUsageHavingVarianceSampleInput>;
+};
+
+export type PluginUsageHavingMaxInput = {
+  durationMs?: InputMaybe<HavingIntFilter>;
+  executedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type PluginUsageHavingMinInput = {
+  durationMs?: InputMaybe<HavingIntFilter>;
+  executedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type PluginUsageHavingStddevPopulationInput = {
+  durationMs?: InputMaybe<HavingIntFilter>;
+  executedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type PluginUsageHavingStddevSampleInput = {
+  durationMs?: InputMaybe<HavingIntFilter>;
+  executedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type PluginUsageHavingSumInput = {
+  durationMs?: InputMaybe<HavingIntFilter>;
+  executedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type PluginUsageHavingVariancePopulationInput = {
+  durationMs?: InputMaybe<HavingIntFilter>;
+  executedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type PluginUsageHavingVarianceSampleInput = {
+  durationMs?: InputMaybe<HavingIntFilter>;
+  executedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type PluginUsageMaxAggregateFilter = {
+  durationMs?: InputMaybe<IntFilter>;
+};
+
+export type PluginUsageMaxAggregates = {
+  __typename?: 'PluginUsageMaxAggregates';
+  /** Maximum of durationMs across the matching connection */
+  durationMs?: Maybe<Scalars['Int']['output']>;
+};
+
+export type PluginUsageMinAggregateFilter = {
+  durationMs?: InputMaybe<IntFilter>;
+};
+
+export type PluginUsageMinAggregates = {
+  __typename?: 'PluginUsageMinAggregates';
+  /** Minimum of durationMs across the matching connection */
+  durationMs?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Methods to use when ordering `PluginUsage`. */
+export enum PluginUsageOrderBy {
+  DurationMsAsc = 'DURATION_MS_ASC',
+  DurationMsDesc = 'DURATION_MS_DESC',
+  ExecutedAtAsc = 'EXECUTED_AT_ASC',
+  ExecutedAtDesc = 'EXECUTED_AT_DESC',
+  FunctionNameAsc = 'FUNCTION_NAME_ASC',
+  FunctionNameDesc = 'FUNCTION_NAME_DESC',
+  InvocationSourceAsc = 'INVOCATION_SOURCE_ASC',
+  InvocationSourceDesc = 'INVOCATION_SOURCE_DESC',
+  Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
+  PluginIdAsc = 'PLUGIN_ID_ASC',
+  PluginIdDesc = 'PLUGIN_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  RunIdAsc = 'RUN_ID_ASC',
+  RunIdDesc = 'RUN_ID_DESC',
+  SuccessAsc = 'SUCCESS_ASC',
+  SuccessDesc = 'SUCCESS_DESC',
+  WorkflowIdAsc = 'WORKFLOW_ID_ASC',
+  WorkflowIdDesc = 'WORKFLOW_ID_DESC'
+}
+
+export type PluginUsageStddevPopulationAggregateFilter = {
+  durationMs?: InputMaybe<BigFloatFilter>;
+};
+
+export type PluginUsageStddevPopulationAggregates = {
+  __typename?: 'PluginUsageStddevPopulationAggregates';
+  /** Population standard deviation of durationMs across the matching connection */
+  durationMs?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type PluginUsageStddevSampleAggregateFilter = {
+  durationMs?: InputMaybe<BigFloatFilter>;
+};
+
+export type PluginUsageStddevSampleAggregates = {
+  __typename?: 'PluginUsageStddevSampleAggregates';
+  /** Sample standard deviation of durationMs across the matching connection */
+  durationMs?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type PluginUsageSumAggregateFilter = {
+  durationMs?: InputMaybe<BigIntFilter>;
+};
+
+export type PluginUsageSumAggregates = {
+  __typename?: 'PluginUsageSumAggregates';
+  /** Sum of durationMs across the matching connection */
+  durationMs: Scalars['BigInt']['output'];
+};
+
+export type PluginUsageVariancePopulationAggregateFilter = {
+  durationMs?: InputMaybe<BigFloatFilter>;
+};
+
+export type PluginUsageVariancePopulationAggregates = {
+  __typename?: 'PluginUsageVariancePopulationAggregates';
+  /** Population variance of durationMs across the matching connection */
+  durationMs?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type PluginUsageVarianceSampleAggregateFilter = {
+  durationMs?: InputMaybe<BigFloatFilter>;
+};
+
+export type PluginUsageVarianceSampleAggregates = {
+  __typename?: 'PluginUsageVarianceSampleAggregates';
+  /** Sample variance of durationMs across the matching connection */
+  durationMs?: Maybe<Scalars['BigFloat']['output']>;
 };
 
 /** Input for publishing an event to trigger workflows */
@@ -4485,12 +6727,54 @@ export type PublishEventPayload = {
 /** The root query type which gives access points into the data universe. */
 export type Query = Node & {
   __typename?: 'Query';
+  /** Get a single `ApprovalRequest`. */
+  approvalRequest?: Maybe<ApprovalRequest>;
+  /** Reads a single `ApprovalRequest` using its globally unique `ID`. */
+  approvalRequestById?: Maybe<ApprovalRequest>;
+  /** Reads and enables pagination through a set of `ApprovalRequest`. */
+  approvalRequests?: Maybe<ApprovalRequestConnection>;
+  /** Get a single `DeadLetterEvent`. */
+  deadLetterEvent?: Maybe<DeadLetterEvent>;
+  /** Reads a single `DeadLetterEvent` using its globally unique `ID`. */
+  deadLetterEventById?: Maybe<DeadLetterEvent>;
+  /** Reads and enables pagination through a set of `DeadLetterEvent`. */
+  deadLetterEvents?: Maybe<DeadLetterEventConnection>;
+  /** Get a single `EmailSuppression`. */
+  emailSuppression?: Maybe<EmailSuppression>;
+  /** Reads a single `EmailSuppression` using its globally unique `ID`. */
+  emailSuppressionById?: Maybe<EmailSuppression>;
+  /** Reads and enables pagination through a set of `EmailSuppression`. */
+  emailSuppressions?: Maybe<EmailSuppressionConnection>;
+  /** Get a single `EventLog`. */
+  eventLog?: Maybe<EventLog>;
+  /** Reads a single `EventLog` using its globally unique `ID`. */
+  eventLogById?: Maybe<EventLog>;
+  /** Reads and enables pagination through a set of `EventLog`. */
+  eventLogs?: Maybe<EventLogConnection>;
   /** Get a single `EventRoutingRule`. */
   eventRoutingRule?: Maybe<EventRoutingRule>;
   /** Reads a single `EventRoutingRule` using its globally unique `ID`. */
   eventRoutingRuleById?: Maybe<EventRoutingRule>;
   /** Reads and enables pagination through a set of `EventRoutingRule`. */
   eventRoutingRules?: Maybe<EventRoutingRuleConnection>;
+  /** Get a single `EventSchema`. */
+  eventSchema?: Maybe<EventSchema>;
+  /** Reads a single `EventSchema` using its globally unique `ID`. */
+  eventSchemaById?: Maybe<EventSchema>;
+  /** Reads and enables pagination through a set of `EventSchema`. */
+  eventSchemata?: Maybe<EventSchemaConnection>;
+  /** Get a single `EventSubscription`. */
+  eventSubscription?: Maybe<EventSubscription>;
+  /** Reads a single `EventSubscription` using its globally unique `ID`. */
+  eventSubscriptionById?: Maybe<EventSubscription>;
+  /** Reads and enables pagination through a set of `EventSubscription`. */
+  eventSubscriptions?: Maybe<EventSubscriptionConnection>;
+  /** Get a single `Fn`. */
+  fn?: Maybe<Fn>;
+  /** Reads a single `Fn` using its globally unique `ID`. */
+  fnById?: Maybe<Fn>;
+  /** Reads and enables pagination through a set of `Fn`. */
+  fns?: Maybe<FnConnection>;
   /** The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`. */
   id: Scalars['ID']['output'];
   /** Get a single `Integration`. */
@@ -4529,6 +6813,18 @@ export type Query = Node & {
   plugin?: Maybe<Plugin>;
   /** Reads a single `Plugin` using its globally unique `ID`. */
   pluginById?: Maybe<Plugin>;
+  /** Get a single `PluginMarketplace`. */
+  pluginMarketplace?: Maybe<PluginMarketplace>;
+  /** Reads a single `PluginMarketplace` using its globally unique `ID`. */
+  pluginMarketplaceById?: Maybe<PluginMarketplace>;
+  /** Reads and enables pagination through a set of `PluginMarketplace`. */
+  pluginMarketplaces?: Maybe<PluginMarketplaceConnection>;
+  /** Get a single `PluginUsage`. */
+  pluginUsage?: Maybe<PluginUsage>;
+  /** Reads a single `PluginUsage` using its globally unique `ID`. */
+  pluginUsageById?: Maybe<PluginUsage>;
+  /** Reads and enables pagination through a set of `PluginUsage`. */
+  pluginUsages?: Maybe<PluginUsageConnection>;
   /** Reads and enables pagination through a set of `Plugin`. */
   plugins?: Maybe<PluginConnection>;
   /**
@@ -4536,14 +6832,30 @@ export type Query = Node & {
    * which can only query top level fields if they are in a particular form.
    */
   query: Query;
-  /** Get a single `User`. */
-  user?: Maybe<User>;
-  /** Get a single `User`. */
-  userByEmail?: Maybe<User>;
-  /** Reads a single `User` using its globally unique `ID`. */
-  userById?: Maybe<User>;
-  /** Get a single `User`. */
-  userByIdentityProviderId?: Maybe<User>;
+  /** Get a single `RivetGraph`. */
+  rivetGraph?: Maybe<RivetGraph>;
+  /** Reads a single `RivetGraph` using its globally unique `ID`. */
+  rivetGraphById?: Maybe<RivetGraph>;
+  /** Reads and enables pagination through a set of `RivetGraph`. */
+  rivetGraphs?: Maybe<RivetGraphConnection>;
+  /** Get a single `SagaRun`. */
+  sagaRun?: Maybe<SagaRun>;
+  /** Reads a single `SagaRun` using its globally unique `ID`. */
+  sagaRunById?: Maybe<SagaRun>;
+  /** Reads and enables pagination through a set of `SagaRun`. */
+  sagaRuns?: Maybe<SagaRunConnection>;
+  /** Get a single `SagaStepLog`. */
+  sagaStepLog?: Maybe<SagaStepLog>;
+  /** Reads a single `SagaStepLog` using its globally unique `ID`. */
+  sagaStepLogById?: Maybe<SagaStepLog>;
+  /** Reads and enables pagination through a set of `SagaStepLog`. */
+  sagaStepLogs?: Maybe<SagaStepLogConnection>;
+  /** Reads and enables pagination through a set of `SubscriptionDelivery`. */
+  subscriptionDeliveries?: Maybe<SubscriptionDeliveryConnection>;
+  /** Get a single `SubscriptionDelivery`. */
+  subscriptionDelivery?: Maybe<SubscriptionDelivery>;
+  /** Reads a single `SubscriptionDelivery` using its globally unique `ID`. */
+  subscriptionDeliveryById?: Maybe<SubscriptionDelivery>;
   /** Get a single `UserOrganization`. */
   userOrganization?: Maybe<UserOrganization>;
   /** Reads a single `UserOrganization` using its globally unique `ID`. */
@@ -4552,12 +6864,22 @@ export type Query = Node & {
   userOrganizationByUserIdAndOrganizationId?: Maybe<UserOrganization>;
   /** Reads and enables pagination through a set of `UserOrganization`. */
   userOrganizations?: Maybe<UserOrganizationConnection>;
-  /** Reads and enables pagination through a set of `User`. */
-  users?: Maybe<UserConnection>;
+  /** Get a single `WardenSyncQueue`. */
+  wardenSyncQueue?: Maybe<WardenSyncQueue>;
+  /** Reads a single `WardenSyncQueue` using its globally unique `ID`. */
+  wardenSyncQueueById?: Maybe<WardenSyncQueue>;
+  /** Reads and enables pagination through a set of `WardenSyncQueue`. */
+  wardenSyncQueues?: Maybe<WardenSyncQueueConnection>;
   /** Get a single `Workflow`. */
   workflow?: Maybe<Workflow>;
   /** Reads a single `Workflow` using its globally unique `ID`. */
   workflowById?: Maybe<Workflow>;
+  /** Get a single `WorkflowExecutorConfig`. */
+  workflowExecutorConfig?: Maybe<WorkflowExecutorConfig>;
+  /** Reads a single `WorkflowExecutorConfig` using its globally unique `ID`. */
+  workflowExecutorConfigById?: Maybe<WorkflowExecutorConfig>;
+  /** Reads and enables pagination through a set of `WorkflowExecutorConfig`. */
+  workflowExecutorConfigs?: Maybe<WorkflowExecutorConfigConnection>;
   /** Get a single `WorkflowRun`. */
   workflowRun?: Maybe<WorkflowRun>;
   /** Reads a single `WorkflowRun` using its globally unique `ID`. */
@@ -4576,8 +6898,114 @@ export type Query = Node & {
   workflowTemplateById?: Maybe<WorkflowTemplate>;
   /** Reads and enables pagination through a set of `WorkflowTemplate`. */
   workflowTemplates?: Maybe<WorkflowTemplateConnection>;
+  /** Get a single `WorkflowVersion`. */
+  workflowVersion?: Maybe<WorkflowVersion>;
+  /** Reads a single `WorkflowVersion` using its globally unique `ID`. */
+  workflowVersionById?: Maybe<WorkflowVersion>;
+  /** Reads and enables pagination through a set of `WorkflowVersion`. */
+  workflowVersions?: Maybe<WorkflowVersionConnection>;
   /** Reads and enables pagination through a set of `Workflow`. */
   workflows?: Maybe<WorkflowConnection>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApprovalRequestArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApprovalRequestByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApprovalRequestsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<ApprovalRequestCondition>;
+  filter?: InputMaybe<ApprovalRequestFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ApprovalRequestOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDeadLetterEventArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDeadLetterEventByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDeadLetterEventsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<DeadLetterEventCondition>;
+  filter?: InputMaybe<DeadLetterEventFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<DeadLetterEventOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEmailSuppressionArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEmailSuppressionByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEmailSuppressionsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EmailSuppressionCondition>;
+  filter?: InputMaybe<EmailSuppressionFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EmailSuppressionOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventLogArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventLogByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventLogsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EventLogCondition>;
+  filter?: InputMaybe<EventLogFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventLogOrderBy>>;
 };
 
 
@@ -4603,6 +7031,81 @@ export type QueryEventRoutingRulesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<EventRoutingRuleOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventSchemaArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventSchemaByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventSchemataArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EventSchemaCondition>;
+  filter?: InputMaybe<EventSchemaFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventSchemaOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventSubscriptionArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventSubscriptionByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEventSubscriptionsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<EventSubscriptionCondition>;
+  filter?: InputMaybe<EventSubscriptionFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<EventSubscriptionOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryFnArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryFnByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryFnsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<FnCondition>;
+  filter?: InputMaybe<FnFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<FnOrderBy>>;
 };
 
 
@@ -4750,6 +7253,56 @@ export type QueryPluginByIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryPluginMarketplaceArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPluginMarketplaceByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPluginMarketplacesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PluginMarketplaceCondition>;
+  filter?: InputMaybe<PluginMarketplaceFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PluginMarketplaceOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPluginUsageArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPluginUsageByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPluginUsagesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<PluginUsageCondition>;
+  filter?: InputMaybe<PluginUsageFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<PluginUsageOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryPluginsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -4763,26 +7316,102 @@ export type QueryPluginsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryUserArgs = {
+export type QueryRivetGraphArgs = {
   rowId: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryUserByEmailArgs = {
-  email: Scalars['String']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryUserByIdArgs = {
+export type QueryRivetGraphByIdArgs = {
   id: Scalars['ID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryUserByIdentityProviderIdArgs = {
-  identityProviderId: Scalars['UUID']['input'];
+export type QueryRivetGraphsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<RivetGraphCondition>;
+  filter?: InputMaybe<RivetGraphFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<RivetGraphOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySagaRunArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySagaRunByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySagaRunsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<SagaRunCondition>;
+  filter?: InputMaybe<SagaRunFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SagaRunOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySagaStepLogArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySagaStepLogByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySagaStepLogsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<SagaStepLogCondition>;
+  filter?: InputMaybe<SagaStepLogFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SagaStepLogOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySubscriptionDeliveriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<SubscriptionDeliveryCondition>;
+  filter?: InputMaybe<SubscriptionDeliveryFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SubscriptionDeliveryOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySubscriptionDeliveryArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySubscriptionDeliveryByIdArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -4819,15 +7448,27 @@ export type QueryUserOrganizationsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryUsersArgs = {
+export type QueryWardenSyncQueueArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryWardenSyncQueueByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryWardenSyncQueuesArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<UserCondition>;
-  filter?: InputMaybe<UserFilter>;
+  condition?: InputMaybe<WardenSyncQueueCondition>;
+  filter?: InputMaybe<WardenSyncQueueFilter>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<UserOrderBy>>;
+  orderBy?: InputMaybe<Array<WardenSyncQueueOrderBy>>;
 };
 
 
@@ -4840,6 +7481,31 @@ export type QueryWorkflowArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryWorkflowByIdArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryWorkflowExecutorConfigArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryWorkflowExecutorConfigByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryWorkflowExecutorConfigsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<WorkflowExecutorConfigCondition>;
+  filter?: InputMaybe<WorkflowExecutorConfigFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<WorkflowExecutorConfigOrderBy>>;
 };
 
 
@@ -4919,6 +7585,31 @@ export type QueryWorkflowTemplatesArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryWorkflowVersionArgs = {
+  rowId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryWorkflowVersionByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryWorkflowVersionsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<WorkflowVersionCondition>;
+  filter?: InputMaybe<WorkflowVersionFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<WorkflowVersionOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryWorkflowsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -4929,6 +7620,925 @@ export type QueryWorkflowsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<WorkflowOrderBy>>;
 };
+
+export type RivetGraph = Node & {
+  __typename?: 'RivetGraph';
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  graphJson: Scalars['JSON']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  organizationId: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+  version: Scalars['Int']['output'];
+};
+
+export type RivetGraphAggregates = {
+  __typename?: 'RivetGraphAggregates';
+  /** Mean average aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  average?: Maybe<RivetGraphAverageAggregates>;
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<RivetGraphDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** Maximum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  max?: Maybe<RivetGraphMaxAggregates>;
+  /** Minimum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  min?: Maybe<RivetGraphMinAggregates>;
+  /** Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevPopulation?: Maybe<RivetGraphStddevPopulationAggregates>;
+  /** Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevSample?: Maybe<RivetGraphStddevSampleAggregates>;
+  /** Sum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  sum?: Maybe<RivetGraphSumAggregates>;
+  /** Population variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  variancePopulation?: Maybe<RivetGraphVariancePopulationAggregates>;
+  /** Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  varianceSample?: Maybe<RivetGraphVarianceSampleAggregates>;
+};
+
+export type RivetGraphAverageAggregates = {
+  __typename?: 'RivetGraphAverageAggregates';
+  /** Mean average of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+/**
+ * A condition to be used against `RivetGraph` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type RivetGraphCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `version` field. */
+  version?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** A connection to a list of `RivetGraph` values. */
+export type RivetGraphConnection = {
+  __typename?: 'RivetGraphConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<RivetGraphAggregates>;
+  /** A list of edges which contains the `RivetGraph` and cursor to aid in pagination. */
+  edges: Array<RivetGraphEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<RivetGraphAggregates>>;
+  /** A list of `RivetGraph` objects. */
+  nodes: Array<RivetGraph>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `RivetGraph` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `RivetGraph` values. */
+export type RivetGraphConnectionGroupedAggregatesArgs = {
+  groupBy: Array<RivetGraphGroupBy>;
+  having?: InputMaybe<RivetGraphHavingInput>;
+};
+
+export type RivetGraphDistinctCountAggregates = {
+  __typename?: 'RivetGraphDistinctCountAggregates';
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of description across the matching connection */
+  description?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of graphJson across the matching connection */
+  graphJson?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of name across the matching connection */
+  name?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of updatedAt across the matching connection */
+  updatedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of version across the matching connection */
+  version?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `RivetGraph` edge in the connection. */
+export type RivetGraphEdge = {
+  __typename?: 'RivetGraphEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `RivetGraph` at the end of the edge. */
+  node: RivetGraph;
+};
+
+/** A filter to be used against `RivetGraph` object types. All fields are combined with a logical ‘and.’ */
+export type RivetGraphFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<RivetGraphFilter>>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<RivetGraphFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<RivetGraphFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `version` field. */
+  version?: InputMaybe<IntFilter>;
+};
+
+/** Grouping methods for `RivetGraph` for usage during aggregation. */
+export enum RivetGraphGroupBy {
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  Description = 'DESCRIPTION',
+  GraphJson = 'GRAPH_JSON',
+  Name = 'NAME',
+  OrganizationId = 'ORGANIZATION_ID',
+  UpdatedAt = 'UPDATED_AT',
+  UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
+  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR',
+  Version = 'VERSION'
+}
+
+export type RivetGraphHavingAverageInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type RivetGraphHavingDistinctCountInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+/** Conditions for `RivetGraph` aggregates. */
+export type RivetGraphHavingInput = {
+  AND?: InputMaybe<Array<RivetGraphHavingInput>>;
+  OR?: InputMaybe<Array<RivetGraphHavingInput>>;
+  average?: InputMaybe<RivetGraphHavingAverageInput>;
+  distinctCount?: InputMaybe<RivetGraphHavingDistinctCountInput>;
+  max?: InputMaybe<RivetGraphHavingMaxInput>;
+  min?: InputMaybe<RivetGraphHavingMinInput>;
+  stddevPopulation?: InputMaybe<RivetGraphHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<RivetGraphHavingStddevSampleInput>;
+  sum?: InputMaybe<RivetGraphHavingSumInput>;
+  variancePopulation?: InputMaybe<RivetGraphHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<RivetGraphHavingVarianceSampleInput>;
+};
+
+export type RivetGraphHavingMaxInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type RivetGraphHavingMinInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type RivetGraphHavingStddevPopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type RivetGraphHavingStddevSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type RivetGraphHavingSumInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type RivetGraphHavingVariancePopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type RivetGraphHavingVarianceSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type RivetGraphMaxAggregates = {
+  __typename?: 'RivetGraphMaxAggregates';
+  /** Maximum of version across the matching connection */
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+export type RivetGraphMinAggregates = {
+  __typename?: 'RivetGraphMinAggregates';
+  /** Minimum of version across the matching connection */
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Methods to use when ordering `RivetGraph`. */
+export enum RivetGraphOrderBy {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC',
+  VersionAsc = 'VERSION_ASC',
+  VersionDesc = 'VERSION_DESC'
+}
+
+export type RivetGraphStddevPopulationAggregates = {
+  __typename?: 'RivetGraphStddevPopulationAggregates';
+  /** Population standard deviation of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type RivetGraphStddevSampleAggregates = {
+  __typename?: 'RivetGraphStddevSampleAggregates';
+  /** Sample standard deviation of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type RivetGraphSumAggregates = {
+  __typename?: 'RivetGraphSumAggregates';
+  /** Sum of version across the matching connection */
+  version: Scalars['BigInt']['output'];
+};
+
+export type RivetGraphVariancePopulationAggregates = {
+  __typename?: 'RivetGraphVariancePopulationAggregates';
+  /** Population variance of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type RivetGraphVarianceSampleAggregates = {
+  __typename?: 'RivetGraphVarianceSampleAggregates';
+  /** Sample variance of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type SagaRun = Node & {
+  __typename?: 'SagaRun';
+  completedAt?: Maybe<Scalars['Datetime']['output']>;
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  error?: Maybe<Scalars['String']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  organizationId: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  /** Reads and enables pagination through a set of `SagaStepLog`. */
+  sagaStepLogs: SagaStepLogConnection;
+  startedAt?: Maybe<Scalars['Datetime']['output']>;
+  status: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `WorkflowRun` that is related to this `SagaRun`. */
+  workflowRun?: Maybe<WorkflowRun>;
+  workflowRunId: Scalars['UUID']['output'];
+};
+
+
+export type SagaRunSagaStepLogsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<SagaStepLogCondition>;
+  filter?: InputMaybe<SagaStepLogFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SagaStepLogOrderBy>>;
+};
+
+export type SagaRunAggregates = {
+  __typename?: 'SagaRunAggregates';
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<SagaRunDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+/** A filter to be used against aggregates of `SagaRun` object types. */
+export type SagaRunAggregatesFilter = {
+  /** Distinct count aggregate over matching `SagaRun` objects. */
+  distinctCount?: InputMaybe<SagaRunDistinctCountAggregateFilter>;
+  /** A filter that must pass for the relevant `SagaRun` object to be included within the aggregate. */
+  filter?: InputMaybe<SagaRunFilter>;
+};
+
+/** A condition to be used against `SagaRun` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type SagaRunCondition = {
+  /** Checks for equality with the object’s `completedAt` field. */
+  completedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `error` field. */
+  error?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `startedAt` field. */
+  startedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `workflowRunId` field. */
+  workflowRunId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `SagaRun` values. */
+export type SagaRunConnection = {
+  __typename?: 'SagaRunConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<SagaRunAggregates>;
+  /** A list of edges which contains the `SagaRun` and cursor to aid in pagination. */
+  edges: Array<SagaRunEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<SagaRunAggregates>>;
+  /** A list of `SagaRun` objects. */
+  nodes: Array<SagaRun>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `SagaRun` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `SagaRun` values. */
+export type SagaRunConnectionGroupedAggregatesArgs = {
+  groupBy: Array<SagaRunGroupBy>;
+  having?: InputMaybe<SagaRunHavingInput>;
+};
+
+export type SagaRunDistinctCountAggregateFilter = {
+  completedAt?: InputMaybe<BigIntFilter>;
+  createdAt?: InputMaybe<BigIntFilter>;
+  error?: InputMaybe<BigIntFilter>;
+  organizationId?: InputMaybe<BigIntFilter>;
+  rowId?: InputMaybe<BigIntFilter>;
+  startedAt?: InputMaybe<BigIntFilter>;
+  status?: InputMaybe<BigIntFilter>;
+  updatedAt?: InputMaybe<BigIntFilter>;
+  workflowRunId?: InputMaybe<BigIntFilter>;
+};
+
+export type SagaRunDistinctCountAggregates = {
+  __typename?: 'SagaRunDistinctCountAggregates';
+  /** Distinct count of completedAt across the matching connection */
+  completedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of error across the matching connection */
+  error?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of startedAt across the matching connection */
+  startedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of status across the matching connection */
+  status?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of updatedAt across the matching connection */
+  updatedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of workflowRunId across the matching connection */
+  workflowRunId?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `SagaRun` edge in the connection. */
+export type SagaRunEdge = {
+  __typename?: 'SagaRunEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `SagaRun` at the end of the edge. */
+  node: SagaRun;
+};
+
+/** A filter to be used against `SagaRun` object types. All fields are combined with a logical ‘and.’ */
+export type SagaRunFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<SagaRunFilter>>;
+  /** Filter by the object’s `completedAt` field. */
+  completedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `error` field. */
+  error?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<SagaRunFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<SagaRunFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `sagaStepLogs` relation. */
+  sagaStepLogs?: InputMaybe<SagaRunToManySagaStepLogFilter>;
+  /** Some related `sagaStepLogs` exist. */
+  sagaStepLogsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `startedAt` field. */
+  startedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `workflowRun` relation. */
+  workflowRun?: InputMaybe<WorkflowRunFilter>;
+  /** Filter by the object’s `workflowRunId` field. */
+  workflowRunId?: InputMaybe<UuidFilter>;
+};
+
+/** Grouping methods for `SagaRun` for usage during aggregation. */
+export enum SagaRunGroupBy {
+  CompletedAt = 'COMPLETED_AT',
+  CompletedAtTruncatedToDay = 'COMPLETED_AT_TRUNCATED_TO_DAY',
+  CompletedAtTruncatedToHour = 'COMPLETED_AT_TRUNCATED_TO_HOUR',
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  Error = 'ERROR',
+  OrganizationId = 'ORGANIZATION_ID',
+  StartedAt = 'STARTED_AT',
+  StartedAtTruncatedToDay = 'STARTED_AT_TRUNCATED_TO_DAY',
+  StartedAtTruncatedToHour = 'STARTED_AT_TRUNCATED_TO_HOUR',
+  Status = 'STATUS',
+  UpdatedAt = 'UPDATED_AT',
+  UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
+  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR',
+  WorkflowRunId = 'WORKFLOW_RUN_ID'
+}
+
+export type SagaRunHavingAverageInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SagaRunHavingDistinctCountInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `SagaRun` aggregates. */
+export type SagaRunHavingInput = {
+  AND?: InputMaybe<Array<SagaRunHavingInput>>;
+  OR?: InputMaybe<Array<SagaRunHavingInput>>;
+  average?: InputMaybe<SagaRunHavingAverageInput>;
+  distinctCount?: InputMaybe<SagaRunHavingDistinctCountInput>;
+  max?: InputMaybe<SagaRunHavingMaxInput>;
+  min?: InputMaybe<SagaRunHavingMinInput>;
+  stddevPopulation?: InputMaybe<SagaRunHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<SagaRunHavingStddevSampleInput>;
+  sum?: InputMaybe<SagaRunHavingSumInput>;
+  variancePopulation?: InputMaybe<SagaRunHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<SagaRunHavingVarianceSampleInput>;
+};
+
+export type SagaRunHavingMaxInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SagaRunHavingMinInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SagaRunHavingStddevPopulationInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SagaRunHavingStddevSampleInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SagaRunHavingSumInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SagaRunHavingVariancePopulationInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SagaRunHavingVarianceSampleInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Methods to use when ordering `SagaRun`. */
+export enum SagaRunOrderBy {
+  CompletedAtAsc = 'COMPLETED_AT_ASC',
+  CompletedAtDesc = 'COMPLETED_AT_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  ErrorAsc = 'ERROR_ASC',
+  ErrorDesc = 'ERROR_DESC',
+  Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  SagaStepLogsCountAsc = 'SAGA_STEP_LOGS_COUNT_ASC',
+  SagaStepLogsCountDesc = 'SAGA_STEP_LOGS_COUNT_DESC',
+  SagaStepLogsDistinctCountCompensateInputAsc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_COMPENSATE_INPUT_ASC',
+  SagaStepLogsDistinctCountCompensateInputDesc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_COMPENSATE_INPUT_DESC',
+  SagaStepLogsDistinctCountCompensateOutputAsc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_COMPENSATE_OUTPUT_ASC',
+  SagaStepLogsDistinctCountCompensateOutputDesc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_COMPENSATE_OUTPUT_DESC',
+  SagaStepLogsDistinctCountCompensateStatusAsc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_COMPENSATE_STATUS_ASC',
+  SagaStepLogsDistinctCountCompensateStatusDesc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_COMPENSATE_STATUS_DESC',
+  SagaStepLogsDistinctCountCompletedAtAsc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_COMPLETED_AT_ASC',
+  SagaStepLogsDistinctCountCompletedAtDesc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_COMPLETED_AT_DESC',
+  SagaStepLogsDistinctCountCreatedAtAsc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_CREATED_AT_ASC',
+  SagaStepLogsDistinctCountCreatedAtDesc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_CREATED_AT_DESC',
+  SagaStepLogsDistinctCountErrorAsc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_ERROR_ASC',
+  SagaStepLogsDistinctCountErrorDesc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_ERROR_DESC',
+  SagaStepLogsDistinctCountExecuteInputAsc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_EXECUTE_INPUT_ASC',
+  SagaStepLogsDistinctCountExecuteInputDesc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_EXECUTE_INPUT_DESC',
+  SagaStepLogsDistinctCountExecuteOutputAsc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_EXECUTE_OUTPUT_ASC',
+  SagaStepLogsDistinctCountExecuteOutputDesc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_EXECUTE_OUTPUT_DESC',
+  SagaStepLogsDistinctCountExecuteStatusAsc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_EXECUTE_STATUS_ASC',
+  SagaStepLogsDistinctCountExecuteStatusDesc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_EXECUTE_STATUS_DESC',
+  SagaStepLogsDistinctCountIdempotencyKeyAsc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_IDEMPOTENCY_KEY_ASC',
+  SagaStepLogsDistinctCountIdempotencyKeyDesc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_IDEMPOTENCY_KEY_DESC',
+  SagaStepLogsDistinctCountRowIdAsc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_ROW_ID_ASC',
+  SagaStepLogsDistinctCountRowIdDesc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_ROW_ID_DESC',
+  SagaStepLogsDistinctCountSagaRunIdAsc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_SAGA_RUN_ID_ASC',
+  SagaStepLogsDistinctCountSagaRunIdDesc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_SAGA_RUN_ID_DESC',
+  SagaStepLogsDistinctCountStartedAtAsc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_STARTED_AT_ASC',
+  SagaStepLogsDistinctCountStartedAtDesc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_STARTED_AT_DESC',
+  SagaStepLogsDistinctCountStepNameAsc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_STEP_NAME_ASC',
+  SagaStepLogsDistinctCountStepNameDesc = 'SAGA_STEP_LOGS_DISTINCT_COUNT_STEP_NAME_DESC',
+  StartedAtAsc = 'STARTED_AT_ASC',
+  StartedAtDesc = 'STARTED_AT_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC',
+  WorkflowRunIdAsc = 'WORKFLOW_RUN_ID_ASC',
+  WorkflowRunIdDesc = 'WORKFLOW_RUN_ID_DESC'
+}
+
+/** A filter to be used against many `SagaStepLog` object types. All fields are combined with a logical ‘and.’ */
+export type SagaRunToManySagaStepLogFilter = {
+  /** Aggregates across related `SagaStepLog` match the filter criteria. */
+  aggregates?: InputMaybe<SagaStepLogAggregatesFilter>;
+  /** Every related `SagaStepLog` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SagaStepLogFilter>;
+  /** No related `SagaStepLog` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SagaStepLogFilter>;
+  /** Some related `SagaStepLog` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SagaStepLogFilter>;
+};
+
+export type SagaStepLog = Node & {
+  __typename?: 'SagaStepLog';
+  compensateInput?: Maybe<Scalars['JSON']['output']>;
+  compensateOutput?: Maybe<Scalars['JSON']['output']>;
+  compensateStatus: Scalars['String']['output'];
+  completedAt?: Maybe<Scalars['Datetime']['output']>;
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  error?: Maybe<Scalars['String']['output']>;
+  executeInput?: Maybe<Scalars['JSON']['output']>;
+  executeOutput?: Maybe<Scalars['JSON']['output']>;
+  executeStatus: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  idempotencyKey: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  /** Reads a single `SagaRun` that is related to this `SagaStepLog`. */
+  sagaRun?: Maybe<SagaRun>;
+  sagaRunId: Scalars['UUID']['output'];
+  startedAt?: Maybe<Scalars['Datetime']['output']>;
+  stepName: Scalars['String']['output'];
+};
+
+export type SagaStepLogAggregates = {
+  __typename?: 'SagaStepLogAggregates';
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<SagaStepLogDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+/** A filter to be used against aggregates of `SagaStepLog` object types. */
+export type SagaStepLogAggregatesFilter = {
+  /** Distinct count aggregate over matching `SagaStepLog` objects. */
+  distinctCount?: InputMaybe<SagaStepLogDistinctCountAggregateFilter>;
+  /** A filter that must pass for the relevant `SagaStepLog` object to be included within the aggregate. */
+  filter?: InputMaybe<SagaStepLogFilter>;
+};
+
+/**
+ * A condition to be used against `SagaStepLog` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type SagaStepLogCondition = {
+  /** Checks for equality with the object’s `compensateStatus` field. */
+  compensateStatus?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `completedAt` field. */
+  completedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `error` field. */
+  error?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `executeStatus` field. */
+  executeStatus?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `idempotencyKey` field. */
+  idempotencyKey?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `sagaRunId` field. */
+  sagaRunId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `startedAt` field. */
+  startedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `stepName` field. */
+  stepName?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `SagaStepLog` values. */
+export type SagaStepLogConnection = {
+  __typename?: 'SagaStepLogConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<SagaStepLogAggregates>;
+  /** A list of edges which contains the `SagaStepLog` and cursor to aid in pagination. */
+  edges: Array<SagaStepLogEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<SagaStepLogAggregates>>;
+  /** A list of `SagaStepLog` objects. */
+  nodes: Array<SagaStepLog>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `SagaStepLog` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `SagaStepLog` values. */
+export type SagaStepLogConnectionGroupedAggregatesArgs = {
+  groupBy: Array<SagaStepLogGroupBy>;
+  having?: InputMaybe<SagaStepLogHavingInput>;
+};
+
+export type SagaStepLogDistinctCountAggregateFilter = {
+  compensateInput?: InputMaybe<BigIntFilter>;
+  compensateOutput?: InputMaybe<BigIntFilter>;
+  compensateStatus?: InputMaybe<BigIntFilter>;
+  completedAt?: InputMaybe<BigIntFilter>;
+  createdAt?: InputMaybe<BigIntFilter>;
+  error?: InputMaybe<BigIntFilter>;
+  executeInput?: InputMaybe<BigIntFilter>;
+  executeOutput?: InputMaybe<BigIntFilter>;
+  executeStatus?: InputMaybe<BigIntFilter>;
+  idempotencyKey?: InputMaybe<BigIntFilter>;
+  rowId?: InputMaybe<BigIntFilter>;
+  sagaRunId?: InputMaybe<BigIntFilter>;
+  startedAt?: InputMaybe<BigIntFilter>;
+  stepName?: InputMaybe<BigIntFilter>;
+};
+
+export type SagaStepLogDistinctCountAggregates = {
+  __typename?: 'SagaStepLogDistinctCountAggregates';
+  /** Distinct count of compensateInput across the matching connection */
+  compensateInput?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of compensateOutput across the matching connection */
+  compensateOutput?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of compensateStatus across the matching connection */
+  compensateStatus?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of completedAt across the matching connection */
+  completedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of error across the matching connection */
+  error?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of executeInput across the matching connection */
+  executeInput?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of executeOutput across the matching connection */
+  executeOutput?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of executeStatus across the matching connection */
+  executeStatus?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of idempotencyKey across the matching connection */
+  idempotencyKey?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of sagaRunId across the matching connection */
+  sagaRunId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of startedAt across the matching connection */
+  startedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of stepName across the matching connection */
+  stepName?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `SagaStepLog` edge in the connection. */
+export type SagaStepLogEdge = {
+  __typename?: 'SagaStepLogEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `SagaStepLog` at the end of the edge. */
+  node: SagaStepLog;
+};
+
+/** A filter to be used against `SagaStepLog` object types. All fields are combined with a logical ‘and.’ */
+export type SagaStepLogFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<SagaStepLogFilter>>;
+  /** Filter by the object’s `compensateStatus` field. */
+  compensateStatus?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `completedAt` field. */
+  completedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `error` field. */
+  error?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `executeStatus` field. */
+  executeStatus?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `idempotencyKey` field. */
+  idempotencyKey?: InputMaybe<StringFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<SagaStepLogFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<SagaStepLogFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `sagaRun` relation. */
+  sagaRun?: InputMaybe<SagaRunFilter>;
+  /** Filter by the object’s `sagaRunId` field. */
+  sagaRunId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `startedAt` field. */
+  startedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `stepName` field. */
+  stepName?: InputMaybe<StringFilter>;
+};
+
+/** Grouping methods for `SagaStepLog` for usage during aggregation. */
+export enum SagaStepLogGroupBy {
+  CompensateInput = 'COMPENSATE_INPUT',
+  CompensateOutput = 'COMPENSATE_OUTPUT',
+  CompensateStatus = 'COMPENSATE_STATUS',
+  CompletedAt = 'COMPLETED_AT',
+  CompletedAtTruncatedToDay = 'COMPLETED_AT_TRUNCATED_TO_DAY',
+  CompletedAtTruncatedToHour = 'COMPLETED_AT_TRUNCATED_TO_HOUR',
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  Error = 'ERROR',
+  ExecuteInput = 'EXECUTE_INPUT',
+  ExecuteOutput = 'EXECUTE_OUTPUT',
+  ExecuteStatus = 'EXECUTE_STATUS',
+  IdempotencyKey = 'IDEMPOTENCY_KEY',
+  SagaRunId = 'SAGA_RUN_ID',
+  StartedAt = 'STARTED_AT',
+  StartedAtTruncatedToDay = 'STARTED_AT_TRUNCATED_TO_DAY',
+  StartedAtTruncatedToHour = 'STARTED_AT_TRUNCATED_TO_HOUR',
+  StepName = 'STEP_NAME'
+}
+
+export type SagaStepLogHavingAverageInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SagaStepLogHavingDistinctCountInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `SagaStepLog` aggregates. */
+export type SagaStepLogHavingInput = {
+  AND?: InputMaybe<Array<SagaStepLogHavingInput>>;
+  OR?: InputMaybe<Array<SagaStepLogHavingInput>>;
+  average?: InputMaybe<SagaStepLogHavingAverageInput>;
+  distinctCount?: InputMaybe<SagaStepLogHavingDistinctCountInput>;
+  max?: InputMaybe<SagaStepLogHavingMaxInput>;
+  min?: InputMaybe<SagaStepLogHavingMinInput>;
+  stddevPopulation?: InputMaybe<SagaStepLogHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<SagaStepLogHavingStddevSampleInput>;
+  sum?: InputMaybe<SagaStepLogHavingSumInput>;
+  variancePopulation?: InputMaybe<SagaStepLogHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<SagaStepLogHavingVarianceSampleInput>;
+};
+
+export type SagaStepLogHavingMaxInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SagaStepLogHavingMinInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SagaStepLogHavingStddevPopulationInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SagaStepLogHavingStddevSampleInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SagaStepLogHavingSumInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SagaStepLogHavingVariancePopulationInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SagaStepLogHavingVarianceSampleInput = {
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  startedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Methods to use when ordering `SagaStepLog`. */
+export enum SagaStepLogOrderBy {
+  CompensateStatusAsc = 'COMPENSATE_STATUS_ASC',
+  CompensateStatusDesc = 'COMPENSATE_STATUS_DESC',
+  CompletedAtAsc = 'COMPLETED_AT_ASC',
+  CompletedAtDesc = 'COMPLETED_AT_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  ErrorAsc = 'ERROR_ASC',
+  ErrorDesc = 'ERROR_DESC',
+  ExecuteStatusAsc = 'EXECUTE_STATUS_ASC',
+  ExecuteStatusDesc = 'EXECUTE_STATUS_DESC',
+  IdempotencyKeyAsc = 'IDEMPOTENCY_KEY_ASC',
+  IdempotencyKeyDesc = 'IDEMPOTENCY_KEY_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  SagaRunIdAsc = 'SAGA_RUN_ID_ASC',
+  SagaRunIdDesc = 'SAGA_RUN_ID_DESC',
+  StartedAtAsc = 'STARTED_AT_ASC',
+  StartedAtDesc = 'STARTED_AT_DESC',
+  StepNameAsc = 'STEP_NAME_ASC',
+  StepNameDesc = 'STEP_NAME_DESC'
+}
 
 /** A filter to be used against String fields. All fields are combined with a logical ‘and.’ */
 export type StringFilter = {
@@ -5048,6 +8658,464 @@ export type StringListFilter = {
   overlaps?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
+export type SubscriptionDelivery = Node & {
+  __typename?: 'SubscriptionDelivery';
+  attempts: Scalars['Int']['output'];
+  completedAt?: Maybe<Scalars['Datetime']['output']>;
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  error?: Maybe<Scalars['String']['output']>;
+  eventId: Scalars['String']['output'];
+  eventType: Scalars['String']['output'];
+  httpStatus?: Maybe<Scalars['Int']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  nextRetryAt?: Maybe<Scalars['Datetime']['output']>;
+  organizationId: Scalars['String']['output'];
+  payload?: Maybe<Scalars['JSON']['output']>;
+  rowId: Scalars['UUID']['output'];
+  status: Scalars['String']['output'];
+  /** Reads a single `EventSubscription` that is related to this `SubscriptionDelivery`. */
+  subscription?: Maybe<EventSubscription>;
+  subscriptionId: Scalars['UUID']['output'];
+};
+
+export type SubscriptionDeliveryAggregates = {
+  __typename?: 'SubscriptionDeliveryAggregates';
+  /** Mean average aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  average?: Maybe<SubscriptionDeliveryAverageAggregates>;
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<SubscriptionDeliveryDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** Maximum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  max?: Maybe<SubscriptionDeliveryMaxAggregates>;
+  /** Minimum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  min?: Maybe<SubscriptionDeliveryMinAggregates>;
+  /** Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevPopulation?: Maybe<SubscriptionDeliveryStddevPopulationAggregates>;
+  /** Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevSample?: Maybe<SubscriptionDeliveryStddevSampleAggregates>;
+  /** Sum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  sum?: Maybe<SubscriptionDeliverySumAggregates>;
+  /** Population variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  variancePopulation?: Maybe<SubscriptionDeliveryVariancePopulationAggregates>;
+  /** Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  varianceSample?: Maybe<SubscriptionDeliveryVarianceSampleAggregates>;
+};
+
+/** A filter to be used against aggregates of `SubscriptionDelivery` object types. */
+export type SubscriptionDeliveryAggregatesFilter = {
+  /** Mean average aggregate over matching `SubscriptionDelivery` objects. */
+  average?: InputMaybe<SubscriptionDeliveryAverageAggregateFilter>;
+  /** Distinct count aggregate over matching `SubscriptionDelivery` objects. */
+  distinctCount?: InputMaybe<SubscriptionDeliveryDistinctCountAggregateFilter>;
+  /** A filter that must pass for the relevant `SubscriptionDelivery` object to be included within the aggregate. */
+  filter?: InputMaybe<SubscriptionDeliveryFilter>;
+  /** Maximum aggregate over matching `SubscriptionDelivery` objects. */
+  max?: InputMaybe<SubscriptionDeliveryMaxAggregateFilter>;
+  /** Minimum aggregate over matching `SubscriptionDelivery` objects. */
+  min?: InputMaybe<SubscriptionDeliveryMinAggregateFilter>;
+  /** Population standard deviation aggregate over matching `SubscriptionDelivery` objects. */
+  stddevPopulation?: InputMaybe<SubscriptionDeliveryStddevPopulationAggregateFilter>;
+  /** Sample standard deviation aggregate over matching `SubscriptionDelivery` objects. */
+  stddevSample?: InputMaybe<SubscriptionDeliveryStddevSampleAggregateFilter>;
+  /** Sum aggregate over matching `SubscriptionDelivery` objects. */
+  sum?: InputMaybe<SubscriptionDeliverySumAggregateFilter>;
+  /** Population variance aggregate over matching `SubscriptionDelivery` objects. */
+  variancePopulation?: InputMaybe<SubscriptionDeliveryVariancePopulationAggregateFilter>;
+  /** Sample variance aggregate over matching `SubscriptionDelivery` objects. */
+  varianceSample?: InputMaybe<SubscriptionDeliveryVarianceSampleAggregateFilter>;
+};
+
+export type SubscriptionDeliveryAverageAggregateFilter = {
+  attempts?: InputMaybe<BigFloatFilter>;
+  httpStatus?: InputMaybe<BigFloatFilter>;
+};
+
+export type SubscriptionDeliveryAverageAggregates = {
+  __typename?: 'SubscriptionDeliveryAverageAggregates';
+  /** Mean average of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigFloat']['output']>;
+  /** Mean average of httpStatus across the matching connection */
+  httpStatus?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+/**
+ * A condition to be used against `SubscriptionDelivery` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type SubscriptionDeliveryCondition = {
+  /** Checks for equality with the object’s `attempts` field. */
+  attempts?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `completedAt` field. */
+  completedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `error` field. */
+  error?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `eventId` field. */
+  eventId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `eventType` field. */
+  eventType?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `httpStatus` field. */
+  httpStatus?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `nextRetryAt` field. */
+  nextRetryAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `subscriptionId` field. */
+  subscriptionId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `SubscriptionDelivery` values. */
+export type SubscriptionDeliveryConnection = {
+  __typename?: 'SubscriptionDeliveryConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<SubscriptionDeliveryAggregates>;
+  /** A list of edges which contains the `SubscriptionDelivery` and cursor to aid in pagination. */
+  edges: Array<SubscriptionDeliveryEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<SubscriptionDeliveryAggregates>>;
+  /** A list of `SubscriptionDelivery` objects. */
+  nodes: Array<SubscriptionDelivery>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `SubscriptionDelivery` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `SubscriptionDelivery` values. */
+export type SubscriptionDeliveryConnectionGroupedAggregatesArgs = {
+  groupBy: Array<SubscriptionDeliveryGroupBy>;
+  having?: InputMaybe<SubscriptionDeliveryHavingInput>;
+};
+
+export type SubscriptionDeliveryDistinctCountAggregateFilter = {
+  attempts?: InputMaybe<BigIntFilter>;
+  completedAt?: InputMaybe<BigIntFilter>;
+  createdAt?: InputMaybe<BigIntFilter>;
+  error?: InputMaybe<BigIntFilter>;
+  eventId?: InputMaybe<BigIntFilter>;
+  eventType?: InputMaybe<BigIntFilter>;
+  httpStatus?: InputMaybe<BigIntFilter>;
+  nextRetryAt?: InputMaybe<BigIntFilter>;
+  organizationId?: InputMaybe<BigIntFilter>;
+  payload?: InputMaybe<BigIntFilter>;
+  rowId?: InputMaybe<BigIntFilter>;
+  status?: InputMaybe<BigIntFilter>;
+  subscriptionId?: InputMaybe<BigIntFilter>;
+};
+
+export type SubscriptionDeliveryDistinctCountAggregates = {
+  __typename?: 'SubscriptionDeliveryDistinctCountAggregates';
+  /** Distinct count of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of completedAt across the matching connection */
+  completedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of error across the matching connection */
+  error?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of eventId across the matching connection */
+  eventId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of eventType across the matching connection */
+  eventType?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of httpStatus across the matching connection */
+  httpStatus?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of nextRetryAt across the matching connection */
+  nextRetryAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of payload across the matching connection */
+  payload?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of status across the matching connection */
+  status?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of subscriptionId across the matching connection */
+  subscriptionId?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `SubscriptionDelivery` edge in the connection. */
+export type SubscriptionDeliveryEdge = {
+  __typename?: 'SubscriptionDeliveryEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `SubscriptionDelivery` at the end of the edge. */
+  node: SubscriptionDelivery;
+};
+
+/** A filter to be used against `SubscriptionDelivery` object types. All fields are combined with a logical ‘and.’ */
+export type SubscriptionDeliveryFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<SubscriptionDeliveryFilter>>;
+  /** Filter by the object’s `attempts` field. */
+  attempts?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `completedAt` field. */
+  completedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `error` field. */
+  error?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `eventId` field. */
+  eventId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `eventType` field. */
+  eventType?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `httpStatus` field. */
+  httpStatus?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `nextRetryAt` field. */
+  nextRetryAt?: InputMaybe<DatetimeFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<SubscriptionDeliveryFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<SubscriptionDeliveryFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `subscription` relation. */
+  subscription?: InputMaybe<EventSubscriptionFilter>;
+  /** Filter by the object’s `subscriptionId` field. */
+  subscriptionId?: InputMaybe<UuidFilter>;
+};
+
+/** Grouping methods for `SubscriptionDelivery` for usage during aggregation. */
+export enum SubscriptionDeliveryGroupBy {
+  Attempts = 'ATTEMPTS',
+  CompletedAt = 'COMPLETED_AT',
+  CompletedAtTruncatedToDay = 'COMPLETED_AT_TRUNCATED_TO_DAY',
+  CompletedAtTruncatedToHour = 'COMPLETED_AT_TRUNCATED_TO_HOUR',
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  Error = 'ERROR',
+  EventId = 'EVENT_ID',
+  EventType = 'EVENT_TYPE',
+  HttpStatus = 'HTTP_STATUS',
+  NextRetryAt = 'NEXT_RETRY_AT',
+  NextRetryAtTruncatedToDay = 'NEXT_RETRY_AT_TRUNCATED_TO_DAY',
+  NextRetryAtTruncatedToHour = 'NEXT_RETRY_AT_TRUNCATED_TO_HOUR',
+  OrganizationId = 'ORGANIZATION_ID',
+  Payload = 'PAYLOAD',
+  Status = 'STATUS',
+  SubscriptionId = 'SUBSCRIPTION_ID'
+}
+
+export type SubscriptionDeliveryHavingAverageInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  httpStatus?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SubscriptionDeliveryHavingDistinctCountInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  httpStatus?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `SubscriptionDelivery` aggregates. */
+export type SubscriptionDeliveryHavingInput = {
+  AND?: InputMaybe<Array<SubscriptionDeliveryHavingInput>>;
+  OR?: InputMaybe<Array<SubscriptionDeliveryHavingInput>>;
+  average?: InputMaybe<SubscriptionDeliveryHavingAverageInput>;
+  distinctCount?: InputMaybe<SubscriptionDeliveryHavingDistinctCountInput>;
+  max?: InputMaybe<SubscriptionDeliveryHavingMaxInput>;
+  min?: InputMaybe<SubscriptionDeliveryHavingMinInput>;
+  stddevPopulation?: InputMaybe<SubscriptionDeliveryHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<SubscriptionDeliveryHavingStddevSampleInput>;
+  sum?: InputMaybe<SubscriptionDeliveryHavingSumInput>;
+  variancePopulation?: InputMaybe<SubscriptionDeliveryHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<SubscriptionDeliveryHavingVarianceSampleInput>;
+};
+
+export type SubscriptionDeliveryHavingMaxInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  httpStatus?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SubscriptionDeliveryHavingMinInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  httpStatus?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SubscriptionDeliveryHavingStddevPopulationInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  httpStatus?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SubscriptionDeliveryHavingStddevSampleInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  httpStatus?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SubscriptionDeliveryHavingSumInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  httpStatus?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SubscriptionDeliveryHavingVariancePopulationInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  httpStatus?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SubscriptionDeliveryHavingVarianceSampleInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  httpStatus?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type SubscriptionDeliveryMaxAggregateFilter = {
+  attempts?: InputMaybe<IntFilter>;
+  httpStatus?: InputMaybe<IntFilter>;
+};
+
+export type SubscriptionDeliveryMaxAggregates = {
+  __typename?: 'SubscriptionDeliveryMaxAggregates';
+  /** Maximum of attempts across the matching connection */
+  attempts?: Maybe<Scalars['Int']['output']>;
+  /** Maximum of httpStatus across the matching connection */
+  httpStatus?: Maybe<Scalars['Int']['output']>;
+};
+
+export type SubscriptionDeliveryMinAggregateFilter = {
+  attempts?: InputMaybe<IntFilter>;
+  httpStatus?: InputMaybe<IntFilter>;
+};
+
+export type SubscriptionDeliveryMinAggregates = {
+  __typename?: 'SubscriptionDeliveryMinAggregates';
+  /** Minimum of attempts across the matching connection */
+  attempts?: Maybe<Scalars['Int']['output']>;
+  /** Minimum of httpStatus across the matching connection */
+  httpStatus?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Methods to use when ordering `SubscriptionDelivery`. */
+export enum SubscriptionDeliveryOrderBy {
+  AttemptsAsc = 'ATTEMPTS_ASC',
+  AttemptsDesc = 'ATTEMPTS_DESC',
+  CompletedAtAsc = 'COMPLETED_AT_ASC',
+  CompletedAtDesc = 'COMPLETED_AT_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  ErrorAsc = 'ERROR_ASC',
+  ErrorDesc = 'ERROR_DESC',
+  EventIdAsc = 'EVENT_ID_ASC',
+  EventIdDesc = 'EVENT_ID_DESC',
+  EventTypeAsc = 'EVENT_TYPE_ASC',
+  EventTypeDesc = 'EVENT_TYPE_DESC',
+  HttpStatusAsc = 'HTTP_STATUS_ASC',
+  HttpStatusDesc = 'HTTP_STATUS_DESC',
+  Natural = 'NATURAL',
+  NextRetryAtAsc = 'NEXT_RETRY_AT_ASC',
+  NextRetryAtDesc = 'NEXT_RETRY_AT_DESC',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  SubscriptionIdAsc = 'SUBSCRIPTION_ID_ASC',
+  SubscriptionIdDesc = 'SUBSCRIPTION_ID_DESC'
+}
+
+export type SubscriptionDeliveryStddevPopulationAggregateFilter = {
+  attempts?: InputMaybe<BigFloatFilter>;
+  httpStatus?: InputMaybe<BigFloatFilter>;
+};
+
+export type SubscriptionDeliveryStddevPopulationAggregates = {
+  __typename?: 'SubscriptionDeliveryStddevPopulationAggregates';
+  /** Population standard deviation of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigFloat']['output']>;
+  /** Population standard deviation of httpStatus across the matching connection */
+  httpStatus?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type SubscriptionDeliveryStddevSampleAggregateFilter = {
+  attempts?: InputMaybe<BigFloatFilter>;
+  httpStatus?: InputMaybe<BigFloatFilter>;
+};
+
+export type SubscriptionDeliveryStddevSampleAggregates = {
+  __typename?: 'SubscriptionDeliveryStddevSampleAggregates';
+  /** Sample standard deviation of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigFloat']['output']>;
+  /** Sample standard deviation of httpStatus across the matching connection */
+  httpStatus?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type SubscriptionDeliverySumAggregateFilter = {
+  attempts?: InputMaybe<BigIntFilter>;
+  httpStatus?: InputMaybe<BigIntFilter>;
+};
+
+export type SubscriptionDeliverySumAggregates = {
+  __typename?: 'SubscriptionDeliverySumAggregates';
+  /** Sum of attempts across the matching connection */
+  attempts: Scalars['BigInt']['output'];
+  /** Sum of httpStatus across the matching connection */
+  httpStatus: Scalars['BigInt']['output'];
+};
+
+export type SubscriptionDeliveryVariancePopulationAggregateFilter = {
+  attempts?: InputMaybe<BigFloatFilter>;
+  httpStatus?: InputMaybe<BigFloatFilter>;
+};
+
+export type SubscriptionDeliveryVariancePopulationAggregates = {
+  __typename?: 'SubscriptionDeliveryVariancePopulationAggregates';
+  /** Population variance of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigFloat']['output']>;
+  /** Population variance of httpStatus across the matching connection */
+  httpStatus?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type SubscriptionDeliveryVarianceSampleAggregateFilter = {
+  attempts?: InputMaybe<BigFloatFilter>;
+  httpStatus?: InputMaybe<BigFloatFilter>;
+};
+
+export type SubscriptionDeliveryVarianceSampleAggregates = {
+  __typename?: 'SubscriptionDeliveryVarianceSampleAggregates';
+  /** Sample variance of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigFloat']['output']>;
+  /** Sample variance of httpStatus across the matching connection */
+  httpStatus?: Maybe<Scalars['BigFloat']['output']>;
+};
+
 /** Information about a workflow that was triggered by an event */
 export type TriggeredWorkflow = {
   __typename?: 'TriggeredWorkflow';
@@ -5087,19 +9155,6 @@ export type UuidFilter = {
   notIn?: InputMaybe<Array<Scalars['UUID']['input']>>;
 };
 
-/** All input for the `updateEventRoutingRuleById` mutation. */
-export type UpdateEventRoutingRuleByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `EventRoutingRule` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `EventRoutingRule` being updated. */
-  patch: EventRoutingRulePatch;
-};
-
 /** All input for the `updateEventRoutingRule` mutation. */
 export type UpdateEventRoutingRuleInput = {
   /**
@@ -5134,64 +9189,72 @@ export type UpdateEventRoutingRulePayloadEventRoutingRuleEdgeArgs = {
   orderBy?: Array<EventRoutingRuleOrderBy>;
 };
 
-/** All input for the `updateIntegrationById` mutation. */
-export type UpdateIntegrationByIdInput = {
+/** All input for the `updateEventSchema` mutation. */
+export type UpdateEventSchemaInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Integration` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `Integration` being updated. */
-  patch: IntegrationPatch;
+  /** An object where the defined keys will be set on the `EventSchema` being updated. */
+  patch: EventSchemaPatch;
+  rowId: Scalars['UUID']['input'];
 };
 
-/** All input for the `updateIntegrationDefinitionById` mutation. */
-export type UpdateIntegrationDefinitionByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `IntegrationDefinition` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `IntegrationDefinition` being updated. */
-  patch: IntegrationDefinitionPatch;
-};
-
-/** All input for the `updateIntegrationDefinition` mutation. */
-export type UpdateIntegrationDefinitionInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `IntegrationDefinition` being updated. */
-  patch: IntegrationDefinitionPatch;
-  rowId: Scalars['String']['input'];
-};
-
-/** The output of our update `IntegrationDefinition` mutation. */
-export type UpdateIntegrationDefinitionPayload = {
-  __typename?: 'UpdateIntegrationDefinitionPayload';
+/** The output of our update `EventSchema` mutation. */
+export type UpdateEventSchemaPayload = {
+  __typename?: 'UpdateEventSchemaPayload';
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `IntegrationDefinition` that was updated by this mutation. */
-  integrationDefinition?: Maybe<IntegrationDefinition>;
-  /** An edge for our `IntegrationDefinition`. May be used by Relay 1. */
-  integrationDefinitionEdge?: Maybe<IntegrationDefinitionEdge>;
+  /** The `EventSchema` that was updated by this mutation. */
+  eventSchema?: Maybe<EventSchema>;
+  /** An edge for our `EventSchema`. May be used by Relay 1. */
+  eventSchemaEdge?: Maybe<EventSchemaEdge>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
 
 
-/** The output of our update `IntegrationDefinition` mutation. */
-export type UpdateIntegrationDefinitionPayloadIntegrationDefinitionEdgeArgs = {
-  orderBy?: Array<IntegrationDefinitionOrderBy>;
+/** The output of our update `EventSchema` mutation. */
+export type UpdateEventSchemaPayloadEventSchemaEdgeArgs = {
+  orderBy?: Array<EventSchemaOrderBy>;
+};
+
+/** All input for the `updateEventSubscription` mutation. */
+export type UpdateEventSubscriptionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** An object where the defined keys will be set on the `EventSubscription` being updated. */
+  patch: EventSubscriptionPatch;
+  rowId: Scalars['UUID']['input'];
+};
+
+/** The output of our update `EventSubscription` mutation. */
+export type UpdateEventSubscriptionPayload = {
+  __typename?: 'UpdateEventSubscriptionPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `EventSubscription` that was updated by this mutation. */
+  eventSubscription?: Maybe<EventSubscription>;
+  /** An edge for our `EventSubscription`. May be used by Relay 1. */
+  eventSubscriptionEdge?: Maybe<EventSubscriptionEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `EventSubscription` mutation. */
+export type UpdateEventSubscriptionPayloadEventSubscriptionEdgeArgs = {
+  orderBy?: Array<EventSubscriptionOrderBy>;
 };
 
 /** All input for the `updateIntegration` mutation. */
@@ -5228,19 +9291,6 @@ export type UpdateIntegrationPayloadIntegrationEdgeArgs = {
   orderBy?: Array<IntegrationOrderBy>;
 };
 
-/** All input for the `updateMcpServerById` mutation. */
-export type UpdateMcpServerByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `McpServer` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `McpServer` being updated. */
-  patch: McpServerPatch;
-};
-
 /** All input for the `updateMcpServer` mutation. */
 export type UpdateMcpServerInput = {
   /**
@@ -5273,113 +9323,6 @@ export type UpdateMcpServerPayload = {
 /** The output of our update `McpServer` mutation. */
 export type UpdateMcpServerPayloadMcpServerEdgeArgs = {
   orderBy?: Array<McpServerOrderBy>;
-};
-
-/** All input for the `updateOauthStateById` mutation. */
-export type UpdateOauthStateByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `OauthState` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `OauthState` being updated. */
-  patch: OauthStatePatch;
-};
-
-/** All input for the `updateOauthState` mutation. */
-export type UpdateOauthStateInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `OauthState` being updated. */
-  patch: OauthStatePatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `OauthState` mutation. */
-export type UpdateOauthStatePayload = {
-  __typename?: 'UpdateOauthStatePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `OauthState` that was updated by this mutation. */
-  oauthState?: Maybe<OauthState>;
-  /** An edge for our `OauthState`. May be used by Relay 1. */
-  oauthStateEdge?: Maybe<OauthStateEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `OauthState` mutation. */
-export type UpdateOauthStatePayloadOauthStateEdgeArgs = {
-  orderBy?: Array<OauthStateOrderBy>;
-};
-
-/** All input for the `updateOauthTokenById` mutation. */
-export type UpdateOauthTokenByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `OauthToken` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `OauthToken` being updated. */
-  patch: OauthTokenPatch;
-};
-
-/** All input for the `updateOauthToken` mutation. */
-export type UpdateOauthTokenInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `OauthToken` being updated. */
-  patch: OauthTokenPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `OauthToken` mutation. */
-export type UpdateOauthTokenPayload = {
-  __typename?: 'UpdateOauthTokenPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** The `OauthToken` that was updated by this mutation. */
-  oauthToken?: Maybe<OauthToken>;
-  /** An edge for our `OauthToken`. May be used by Relay 1. */
-  oauthTokenEdge?: Maybe<OauthTokenEdge>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-};
-
-
-/** The output of our update `OauthToken` mutation. */
-export type UpdateOauthTokenPayloadOauthTokenEdgeArgs = {
-  orderBy?: Array<OauthTokenOrderBy>;
-};
-
-/** All input for the `updatePluginById` mutation. */
-export type UpdatePluginByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Plugin` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `Plugin` being updated. */
-  patch: PluginPatch;
 };
 
 /** All input for the `updatePlugin` mutation. */
@@ -5416,150 +9359,6 @@ export type UpdatePluginPayloadPluginEdgeArgs = {
   orderBy?: Array<PluginOrderBy>;
 };
 
-/** All input for the `updateUserByEmail` mutation. */
-export type UpdateUserByEmailInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  email: Scalars['String']['input'];
-  /** An object where the defined keys will be set on the `User` being updated. */
-  patch: UserPatch;
-};
-
-/** All input for the `updateUserById` mutation. */
-export type UpdateUserByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `User` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `User` being updated. */
-  patch: UserPatch;
-};
-
-/** All input for the `updateUserByIdentityProviderId` mutation. */
-export type UpdateUserByIdentityProviderIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  identityProviderId: Scalars['UUID']['input'];
-  /** An object where the defined keys will be set on the `User` being updated. */
-  patch: UserPatch;
-};
-
-/** All input for the `updateUser` mutation. */
-export type UpdateUserInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `User` being updated. */
-  patch: UserPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** All input for the `updateUserOrganizationById` mutation. */
-export type UpdateUserOrganizationByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `UserOrganization` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `UserOrganization` being updated. */
-  patch: UserOrganizationPatch;
-};
-
-/** All input for the `updateUserOrganizationByUserIdAndOrganizationId` mutation. */
-export type UpdateUserOrganizationByUserIdAndOrganizationIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  organizationId: Scalars['String']['input'];
-  /** An object where the defined keys will be set on the `UserOrganization` being updated. */
-  patch: UserOrganizationPatch;
-  userId: Scalars['UUID']['input'];
-};
-
-/** All input for the `updateUserOrganization` mutation. */
-export type UpdateUserOrganizationInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `UserOrganization` being updated. */
-  patch: UserOrganizationPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `UserOrganization` mutation. */
-export type UpdateUserOrganizationPayload = {
-  __typename?: 'UpdateUserOrganizationPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `UserOrganization` that was updated by this mutation. */
-  userOrganization?: Maybe<UserOrganization>;
-  /** An edge for our `UserOrganization`. May be used by Relay 1. */
-  userOrganizationEdge?: Maybe<UserOrganizationEdge>;
-};
-
-
-/** The output of our update `UserOrganization` mutation. */
-export type UpdateUserOrganizationPayloadUserOrganizationEdgeArgs = {
-  orderBy?: Array<UserOrganizationOrderBy>;
-};
-
-/** The output of our update `User` mutation. */
-export type UpdateUserPayload = {
-  __typename?: 'UpdateUserPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `User` that was updated by this mutation. */
-  user?: Maybe<User>;
-  /** An edge for our `User`. May be used by Relay 1. */
-  userEdge?: Maybe<UserEdge>;
-};
-
-
-/** The output of our update `User` mutation. */
-export type UpdateUserPayloadUserEdgeArgs = {
-  orderBy?: Array<UserOrderBy>;
-};
-
-/** All input for the `updateWorkflowById` mutation. */
-export type UpdateWorkflowByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `Workflow` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `Workflow` being updated. */
-  patch: WorkflowPatch;
-};
-
 /** All input for the `updateWorkflow` mutation. */
 export type UpdateWorkflowInput = {
   /**
@@ -5594,162 +9393,21 @@ export type UpdateWorkflowPayloadWorkflowEdgeArgs = {
   orderBy?: Array<WorkflowOrderBy>;
 };
 
-/** All input for the `updateWorkflowRunById` mutation. */
-export type UpdateWorkflowRunByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `WorkflowRun` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `WorkflowRun` being updated. */
-  patch: WorkflowRunPatch;
-};
-
-/** All input for the `updateWorkflowRun` mutation. */
-export type UpdateWorkflowRunInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `WorkflowRun` being updated. */
-  patch: WorkflowRunPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `WorkflowRun` mutation. */
-export type UpdateWorkflowRunPayload = {
-  __typename?: 'UpdateWorkflowRunPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `WorkflowRun` that was updated by this mutation. */
-  workflowRun?: Maybe<WorkflowRun>;
-  /** An edge for our `WorkflowRun`. May be used by Relay 1. */
-  workflowRunEdge?: Maybe<WorkflowRunEdge>;
-};
-
-
-/** The output of our update `WorkflowRun` mutation. */
-export type UpdateWorkflowRunPayloadWorkflowRunEdgeArgs = {
-  orderBy?: Array<WorkflowRunOrderBy>;
-};
-
-/** All input for the `updateWorkflowStepLogById` mutation. */
-export type UpdateWorkflowStepLogByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `WorkflowStepLog` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `WorkflowStepLog` being updated. */
-  patch: WorkflowStepLogPatch;
-};
-
-/** All input for the `updateWorkflowStepLog` mutation. */
-export type UpdateWorkflowStepLogInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `WorkflowStepLog` being updated. */
-  patch: WorkflowStepLogPatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `WorkflowStepLog` mutation. */
-export type UpdateWorkflowStepLogPayload = {
-  __typename?: 'UpdateWorkflowStepLogPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `WorkflowStepLog` that was updated by this mutation. */
-  workflowStepLog?: Maybe<WorkflowStepLog>;
-  /** An edge for our `WorkflowStepLog`. May be used by Relay 1. */
-  workflowStepLogEdge?: Maybe<WorkflowStepLogEdge>;
-};
-
-
-/** The output of our update `WorkflowStepLog` mutation. */
-export type UpdateWorkflowStepLogPayloadWorkflowStepLogEdgeArgs = {
-  orderBy?: Array<WorkflowStepLogOrderBy>;
-};
-
-/** All input for the `updateWorkflowTemplateById` mutation. */
-export type UpdateWorkflowTemplateByIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** The globally unique `ID` which will identify a single `WorkflowTemplate` to be updated. */
-  id: Scalars['ID']['input'];
-  /** An object where the defined keys will be set on the `WorkflowTemplate` being updated. */
-  patch: WorkflowTemplatePatch;
-};
-
-/** All input for the `updateWorkflowTemplate` mutation. */
-export type UpdateWorkflowTemplateInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  /** An object where the defined keys will be set on the `WorkflowTemplate` being updated. */
-  patch: WorkflowTemplatePatch;
-  rowId: Scalars['UUID']['input'];
-};
-
-/** The output of our update `WorkflowTemplate` mutation. */
-export type UpdateWorkflowTemplatePayload = {
-  __typename?: 'UpdateWorkflowTemplatePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']['output']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** The `WorkflowTemplate` that was updated by this mutation. */
-  workflowTemplate?: Maybe<WorkflowTemplate>;
-  /** An edge for our `WorkflowTemplate`. May be used by Relay 1. */
-  workflowTemplateEdge?: Maybe<WorkflowTemplateEdge>;
-};
-
-
-/** The output of our update `WorkflowTemplate` mutation. */
-export type UpdateWorkflowTemplatePayloadWorkflowTemplateEdgeArgs = {
-  orderBy?: Array<WorkflowTemplateOrderBy>;
-};
-
-export type User = Node & {
+export type User = {
   __typename?: 'User';
   /** Reads and enables pagination through a set of `Plugin`. */
   authoredPlugins: PluginConnection;
   avatarUrl?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['Datetime']['output']>;
   email: Scalars['String']['output'];
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  id: Scalars['ID']['output'];
   identityProviderId: Scalars['UUID']['output'];
   name: Scalars['String']['output'];
   rowId: Scalars['UUID']['output'];
   updatedAt?: Maybe<Scalars['Datetime']['output']>;
   /** Reads and enables pagination through a set of `UserOrganization`. */
   userOrganizations: UserOrganizationConnection;
+  /** Reads and enables pagination through a set of `WorkflowVersion`. */
+  workflowVersionsByCreatedBy: WorkflowVersionConnection;
   /** Reads and enables pagination through a set of `Workflow`. */
   workflowsByCreatedBy: WorkflowConnection;
 };
@@ -5779,6 +9437,18 @@ export type UserUserOrganizationsArgs = {
 };
 
 
+export type UserWorkflowVersionsByCreatedByArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<WorkflowVersionCondition>;
+  filter?: InputMaybe<WorkflowVersionFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<WorkflowVersionOrderBy>>;
+};
+
+
 export type UserWorkflowsByCreatedByArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -5788,82 +9458,6 @@ export type UserWorkflowsByCreatedByArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<WorkflowOrderBy>>;
-};
-
-export type UserAggregates = {
-  __typename?: 'UserAggregates';
-  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  distinctCount?: Maybe<UserDistinctCountAggregates>;
-  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-};
-
-/** A condition to be used against `User` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type UserCondition = {
-  /** Checks for equality with the object’s `avatarUrl` field. */
-  avatarUrl?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `createdAt` field. */
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  /** Checks for equality with the object’s `email` field. */
-  email?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `identityProviderId` field. */
-  identityProviderId?: InputMaybe<Scalars['UUID']['input']>;
-  /** Checks for equality with the object’s `name` field. */
-  name?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `rowId` field. */
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  /** Checks for equality with the object’s `updatedAt` field. */
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** A connection to a list of `User` values. */
-export type UserConnection = {
-  __typename?: 'UserConnection';
-  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  aggregates?: Maybe<UserAggregates>;
-  /** A list of edges which contains the `User` and cursor to aid in pagination. */
-  edges: Array<UserEdge>;
-  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
-  groupedAggregates?: Maybe<Array<UserAggregates>>;
-  /** A list of `User` objects. */
-  nodes: Array<User>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `User` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-
-/** A connection to a list of `User` values. */
-export type UserConnectionGroupedAggregatesArgs = {
-  groupBy: Array<UserGroupBy>;
-  having?: InputMaybe<UserHavingInput>;
-};
-
-export type UserDistinctCountAggregates = {
-  __typename?: 'UserDistinctCountAggregates';
-  /** Distinct count of avatarUrl across the matching connection */
-  avatarUrl?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of createdAt across the matching connection */
-  createdAt?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of email across the matching connection */
-  email?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of identityProviderId across the matching connection */
-  identityProviderId?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of name across the matching connection */
-  name?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of rowId across the matching connection */
-  rowId?: Maybe<Scalars['BigInt']['output']>;
-  /** Distinct count of updatedAt across the matching connection */
-  updatedAt?: Maybe<Scalars['BigInt']['output']>;
-};
-
-/** A `User` edge in the connection. */
-export type UserEdge = {
-  __typename?: 'UserEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `User` at the end of the edge. */
-  node: User;
 };
 
 /** A filter to be used against `User` object types. All fields are combined with a logical ‘and.’ */
@@ -5896,208 +9490,29 @@ export type UserFilter = {
   userOrganizations?: InputMaybe<UserToManyUserOrganizationFilter>;
   /** Some related `userOrganizations` exist. */
   userOrganizationsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `workflowVersionsByCreatedBy` relation. */
+  workflowVersionsByCreatedBy?: InputMaybe<UserToManyWorkflowVersionFilter>;
+  /** Some related `workflowVersionsByCreatedBy` exist. */
+  workflowVersionsByCreatedByExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `workflowsByCreatedBy` relation. */
   workflowsByCreatedBy?: InputMaybe<UserToManyWorkflowFilter>;
   /** Some related `workflowsByCreatedBy` exist. */
   workflowsByCreatedByExist?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** Grouping methods for `User` for usage during aggregation. */
-export enum UserGroupBy {
-  AvatarUrl = 'AVATAR_URL',
-  CreatedAt = 'CREATED_AT',
-  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
-  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
-  Name = 'NAME',
-  UpdatedAt = 'UPDATED_AT',
-  UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
-  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR'
-}
-
-export type UserHavingAverageInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type UserHavingDistinctCountInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-/** Conditions for `User` aggregates. */
-export type UserHavingInput = {
-  AND?: InputMaybe<Array<UserHavingInput>>;
-  OR?: InputMaybe<Array<UserHavingInput>>;
-  average?: InputMaybe<UserHavingAverageInput>;
-  distinctCount?: InputMaybe<UserHavingDistinctCountInput>;
-  max?: InputMaybe<UserHavingMaxInput>;
-  min?: InputMaybe<UserHavingMinInput>;
-  stddevPopulation?: InputMaybe<UserHavingStddevPopulationInput>;
-  stddevSample?: InputMaybe<UserHavingStddevSampleInput>;
-  sum?: InputMaybe<UserHavingSumInput>;
-  variancePopulation?: InputMaybe<UserHavingVariancePopulationInput>;
-  varianceSample?: InputMaybe<UserHavingVarianceSampleInput>;
-};
-
-export type UserHavingMaxInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type UserHavingMinInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type UserHavingStddevPopulationInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type UserHavingStddevSampleInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type UserHavingSumInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type UserHavingVariancePopulationInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-export type UserHavingVarianceSampleInput = {
-  createdAt?: InputMaybe<HavingDatetimeFilter>;
-  updatedAt?: InputMaybe<HavingDatetimeFilter>;
-};
-
-/** An input for mutations affecting `User` */
-export type UserInput = {
-  avatarUrl?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  email: Scalars['String']['input'];
-  identityProviderId: Scalars['UUID']['input'];
-  name: Scalars['String']['input'];
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
-/** Methods to use when ordering `User`. */
-export enum UserOrderBy {
-  AuthoredPluginsCountAsc = 'AUTHORED_PLUGINS_COUNT_ASC',
-  AuthoredPluginsCountDesc = 'AUTHORED_PLUGINS_COUNT_DESC',
-  AuthoredPluginsDistinctCountAuthorIdAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_AUTHOR_ID_ASC',
-  AuthoredPluginsDistinctCountAuthorIdDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_AUTHOR_ID_DESC',
-  AuthoredPluginsDistinctCountConfigAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_CONFIG_ASC',
-  AuthoredPluginsDistinctCountConfigDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_CONFIG_DESC',
-  AuthoredPluginsDistinctCountCreatedAtAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_CREATED_AT_ASC',
-  AuthoredPluginsDistinctCountCreatedAtDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_CREATED_AT_DESC',
-  AuthoredPluginsDistinctCountDescriptionAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_DESCRIPTION_ASC',
-  AuthoredPluginsDistinctCountDescriptionDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_DESCRIPTION_DESC',
-  AuthoredPluginsDistinctCountIsEnabledAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_IS_ENABLED_ASC',
-  AuthoredPluginsDistinctCountIsEnabledDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_IS_ENABLED_DESC',
-  AuthoredPluginsDistinctCountIsVerifiedAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_IS_VERIFIED_ASC',
-  AuthoredPluginsDistinctCountIsVerifiedDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_IS_VERIFIED_DESC',
-  AuthoredPluginsDistinctCountManifestAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_MANIFEST_ASC',
-  AuthoredPluginsDistinctCountManifestDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_MANIFEST_DESC',
-  AuthoredPluginsDistinctCountNameAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_NAME_ASC',
-  AuthoredPluginsDistinctCountNameDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_NAME_DESC',
-  AuthoredPluginsDistinctCountOrganizationIdAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_ORGANIZATION_ID_ASC',
-  AuthoredPluginsDistinctCountOrganizationIdDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
-  AuthoredPluginsDistinctCountRowIdAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_ROW_ID_ASC',
-  AuthoredPluginsDistinctCountRowIdDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_ROW_ID_DESC',
-  AuthoredPluginsDistinctCountUpdatedAtAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_UPDATED_AT_ASC',
-  AuthoredPluginsDistinctCountUpdatedAtDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_UPDATED_AT_DESC',
-  AuthoredPluginsDistinctCountVersionAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_VERSION_ASC',
-  AuthoredPluginsDistinctCountVersionDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_VERSION_DESC',
-  AuthoredPluginsDistinctCountWasmHashAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_WASM_HASH_ASC',
-  AuthoredPluginsDistinctCountWasmHashDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_WASM_HASH_DESC',
-  AuthoredPluginsDistinctCountWasmUrlAsc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_WASM_URL_ASC',
-  AuthoredPluginsDistinctCountWasmUrlDesc = 'AUTHORED_PLUGINS_DISTINCT_COUNT_WASM_URL_DESC',
-  AvatarUrlAsc = 'AVATAR_URL_ASC',
-  AvatarUrlDesc = 'AVATAR_URL_DESC',
-  CreatedAtAsc = 'CREATED_AT_ASC',
-  CreatedAtDesc = 'CREATED_AT_DESC',
-  EmailAsc = 'EMAIL_ASC',
-  EmailDesc = 'EMAIL_DESC',
-  IdentityProviderIdAsc = 'IDENTITY_PROVIDER_ID_ASC',
-  IdentityProviderIdDesc = 'IDENTITY_PROVIDER_ID_DESC',
-  NameAsc = 'NAME_ASC',
-  NameDesc = 'NAME_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  RowIdAsc = 'ROW_ID_ASC',
-  RowIdDesc = 'ROW_ID_DESC',
-  UpdatedAtAsc = 'UPDATED_AT_ASC',
-  UpdatedAtDesc = 'UPDATED_AT_DESC',
-  UserOrganizationsCountAsc = 'USER_ORGANIZATIONS_COUNT_ASC',
-  UserOrganizationsCountDesc = 'USER_ORGANIZATIONS_COUNT_DESC',
-  UserOrganizationsDistinctCountCreatedAtAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_ASC',
-  UserOrganizationsDistinctCountCreatedAtDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_CREATED_AT_DESC',
-  UserOrganizationsDistinctCountNameAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_NAME_ASC',
-  UserOrganizationsDistinctCountNameDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_NAME_DESC',
-  UserOrganizationsDistinctCountOrganizationIdAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_ORGANIZATION_ID_ASC',
-  UserOrganizationsDistinctCountOrganizationIdDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
-  UserOrganizationsDistinctCountRoleAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_ASC',
-  UserOrganizationsDistinctCountRoleDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_ROLE_DESC',
-  UserOrganizationsDistinctCountRowIdAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_ASC',
-  UserOrganizationsDistinctCountRowIdDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_ROW_ID_DESC',
-  UserOrganizationsDistinctCountSlugAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_SLUG_ASC',
-  UserOrganizationsDistinctCountSlugDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_SLUG_DESC',
-  UserOrganizationsDistinctCountSyncedAtAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_SYNCED_AT_ASC',
-  UserOrganizationsDistinctCountSyncedAtDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_SYNCED_AT_DESC',
-  UserOrganizationsDistinctCountTypeAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_TYPE_ASC',
-  UserOrganizationsDistinctCountTypeDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_TYPE_DESC',
-  UserOrganizationsDistinctCountUpdatedAtAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_UPDATED_AT_ASC',
-  UserOrganizationsDistinctCountUpdatedAtDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_UPDATED_AT_DESC',
-  UserOrganizationsDistinctCountUserIdAsc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_USER_ID_ASC',
-  UserOrganizationsDistinctCountUserIdDesc = 'USER_ORGANIZATIONS_DISTINCT_COUNT_USER_ID_DESC',
-  WorkflowsByCreatedByCountAsc = 'WORKFLOWS_BY_CREATED_BY_COUNT_ASC',
-  WorkflowsByCreatedByCountDesc = 'WORKFLOWS_BY_CREATED_BY_COUNT_DESC',
-  WorkflowsByCreatedByDistinctCountCreatedAtAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_CREATED_AT_ASC',
-  WorkflowsByCreatedByDistinctCountCreatedAtDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_CREATED_AT_DESC',
-  WorkflowsByCreatedByDistinctCountCreatedByAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_CREATED_BY_ASC',
-  WorkflowsByCreatedByDistinctCountCreatedByDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_CREATED_BY_DESC',
-  WorkflowsByCreatedByDistinctCountCronExpressionAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_CRON_EXPRESSION_ASC',
-  WorkflowsByCreatedByDistinctCountCronExpressionDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_CRON_EXPRESSION_DESC',
-  WorkflowsByCreatedByDistinctCountDefinitionAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_DEFINITION_ASC',
-  WorkflowsByCreatedByDistinctCountDefinitionDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_DEFINITION_DESC',
-  WorkflowsByCreatedByDistinctCountDescriptionAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_DESCRIPTION_ASC',
-  WorkflowsByCreatedByDistinctCountDescriptionDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_DESCRIPTION_DESC',
-  WorkflowsByCreatedByDistinctCountIsActiveAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_IS_ACTIVE_ASC',
-  WorkflowsByCreatedByDistinctCountIsActiveDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_IS_ACTIVE_DESC',
-  WorkflowsByCreatedByDistinctCountLastRunAtAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_LAST_RUN_AT_ASC',
-  WorkflowsByCreatedByDistinctCountLastRunAtDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_LAST_RUN_AT_DESC',
-  WorkflowsByCreatedByDistinctCountLastRunStatusAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_LAST_RUN_STATUS_ASC',
-  WorkflowsByCreatedByDistinctCountLastRunStatusDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_LAST_RUN_STATUS_DESC',
-  WorkflowsByCreatedByDistinctCountNameAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_NAME_ASC',
-  WorkflowsByCreatedByDistinctCountNameDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_NAME_DESC',
-  WorkflowsByCreatedByDistinctCountOrganizationIdAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_ORGANIZATION_ID_ASC',
-  WorkflowsByCreatedByDistinctCountOrganizationIdDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
-  WorkflowsByCreatedByDistinctCountRowIdAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_ROW_ID_ASC',
-  WorkflowsByCreatedByDistinctCountRowIdDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_ROW_ID_DESC',
-  WorkflowsByCreatedByDistinctCountUpdatedAtAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_UPDATED_AT_ASC',
-  WorkflowsByCreatedByDistinctCountUpdatedAtDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_UPDATED_AT_DESC',
-  WorkflowsByCreatedByDistinctCountWebhookSecretAsc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_WEBHOOK_SECRET_ASC',
-  WorkflowsByCreatedByDistinctCountWebhookSecretDesc = 'WORKFLOWS_BY_CREATED_BY_DISTINCT_COUNT_WEBHOOK_SECRET_DESC'
-}
-
 export type UserOrganization = Node & {
   __typename?: 'UserOrganization';
+  billingAccountId?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['Datetime']['output']>;
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   id: Scalars['ID']['output'];
   name?: Maybe<Scalars['String']['output']>;
   organizationId: Scalars['String']['output'];
-  role: MemberRole;
+  role: Scalars['String']['output'];
   rowId: Scalars['UUID']['output'];
   slug: Scalars['String']['output'];
   syncedAt?: Maybe<Scalars['Datetime']['output']>;
-  type: OrganizationType;
+  type: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `User` that is related to this `UserOrganization`. */
   user?: Maybe<User>;
@@ -6124,6 +9539,8 @@ export type UserOrganizationAggregatesFilter = {
  * tested for equality and combined with a logical ‘and.’
  */
 export type UserOrganizationCondition = {
+  /** Checks for equality with the object’s `billingAccountId` field. */
+  billingAccountId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `createdAt` field. */
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `name` field. */
@@ -6131,7 +9548,7 @@ export type UserOrganizationCondition = {
   /** Checks for equality with the object’s `organizationId` field. */
   organizationId?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `role` field. */
-  role?: InputMaybe<MemberRole>;
+  role?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `rowId` field. */
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `slug` field. */
@@ -6139,7 +9556,7 @@ export type UserOrganizationCondition = {
   /** Checks for equality with the object’s `syncedAt` field. */
   syncedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `type` field. */
-  type?: InputMaybe<OrganizationType>;
+  type?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `userId` field. */
@@ -6171,6 +9588,7 @@ export type UserOrganizationConnectionGroupedAggregatesArgs = {
 };
 
 export type UserOrganizationDistinctCountAggregateFilter = {
+  billingAccountId?: InputMaybe<BigIntFilter>;
   createdAt?: InputMaybe<BigIntFilter>;
   name?: InputMaybe<BigIntFilter>;
   organizationId?: InputMaybe<BigIntFilter>;
@@ -6185,6 +9603,8 @@ export type UserOrganizationDistinctCountAggregateFilter = {
 
 export type UserOrganizationDistinctCountAggregates = {
   __typename?: 'UserOrganizationDistinctCountAggregates';
+  /** Distinct count of billingAccountId across the matching connection */
+  billingAccountId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of createdAt across the matching connection */
   createdAt?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of name across the matching connection */
@@ -6220,6 +9640,8 @@ export type UserOrganizationEdge = {
 export type UserOrganizationFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<UserOrganizationFilter>>;
+  /** Filter by the object’s `billingAccountId` field. */
+  billingAccountId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `createdAt` field. */
   createdAt?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `name` field. */
@@ -6231,7 +9653,7 @@ export type UserOrganizationFilter = {
   /** Filter by the object’s `organizationId` field. */
   organizationId?: InputMaybe<StringFilter>;
   /** Filter by the object’s `role` field. */
-  role?: InputMaybe<MemberRoleFilter>;
+  role?: InputMaybe<StringFilter>;
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<UuidFilter>;
   /** Filter by the object’s `slug` field. */
@@ -6239,7 +9661,7 @@ export type UserOrganizationFilter = {
   /** Filter by the object’s `syncedAt` field. */
   syncedAt?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `type` field. */
-  type?: InputMaybe<OrganizationTypeFilter>;
+  type?: InputMaybe<StringFilter>;
   /** Filter by the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `user` relation. */
@@ -6250,6 +9672,7 @@ export type UserOrganizationFilter = {
 
 /** Grouping methods for `UserOrganization` for usage during aggregation. */
 export enum UserOrganizationGroupBy {
+  BillingAccountId = 'BILLING_ACCOUNT_ID',
   CreatedAt = 'CREATED_AT',
   CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
   CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
@@ -6336,22 +9759,10 @@ export type UserOrganizationHavingVarianceSampleInput = {
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
-/** An input for mutations affecting `UserOrganization` */
-export type UserOrganizationInput = {
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  organizationId: Scalars['String']['input'];
-  role?: InputMaybe<MemberRole>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  slug: Scalars['String']['input'];
-  syncedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  type?: InputMaybe<OrganizationType>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  userId: Scalars['UUID']['input'];
-};
-
 /** Methods to use when ordering `UserOrganization`. */
 export enum UserOrganizationOrderBy {
+  BillingAccountIdAsc = 'BILLING_ACCOUNT_ID_ASC',
+  BillingAccountIdDesc = 'BILLING_ACCOUNT_ID_DESC',
   CreatedAtAsc = 'CREATED_AT_ASC',
   CreatedAtDesc = 'CREATED_AT_DESC',
   NameAsc = 'NAME_ASC',
@@ -6361,42 +9772,21 @@ export enum UserOrganizationOrderBy {
   OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RoleAsc = 'ROLE_ASC',
+  RoleDesc = 'ROLE_DESC',
   RowIdAsc = 'ROW_ID_ASC',
   RowIdDesc = 'ROW_ID_DESC',
   SlugAsc = 'SLUG_ASC',
   SlugDesc = 'SLUG_DESC',
   SyncedAtAsc = 'SYNCED_AT_ASC',
   SyncedAtDesc = 'SYNCED_AT_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC',
   UpdatedAtAsc = 'UPDATED_AT_ASC',
   UpdatedAtDesc = 'UPDATED_AT_DESC',
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC'
 }
-
-/** Represents an update to a `UserOrganization`. Fields that are set will be updated. */
-export type UserOrganizationPatch = {
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  organizationId?: InputMaybe<Scalars['String']['input']>;
-  role?: InputMaybe<MemberRole>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  slug?: InputMaybe<Scalars['String']['input']>;
-  syncedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  type?: InputMaybe<OrganizationType>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  userId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
-/** Represents an update to a `User`. Fields that are set will be updated. */
-export type UserPatch = {
-  avatarUrl?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  identityProviderId?: InputMaybe<Scalars['UUID']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
 
 /** A filter to be used against many `Plugin` object types. All fields are combined with a logical ‘and.’ */
 export type UserToManyPluginFilter = {
@@ -6434,8 +9824,376 @@ export type UserToManyWorkflowFilter = {
   some?: InputMaybe<WorkflowFilter>;
 };
 
+/** A filter to be used against many `WorkflowVersion` object types. All fields are combined with a logical ‘and.’ */
+export type UserToManyWorkflowVersionFilter = {
+  /** Aggregates across related `WorkflowVersion` match the filter criteria. */
+  aggregates?: InputMaybe<WorkflowVersionAggregatesFilter>;
+  /** Every related `WorkflowVersion` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<WorkflowVersionFilter>;
+  /** No related `WorkflowVersion` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<WorkflowVersionFilter>;
+  /** Some related `WorkflowVersion` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<WorkflowVersionFilter>;
+};
+
+export type WardenSyncQueue = Node & {
+  __typename?: 'WardenSyncQueue';
+  attempts: Scalars['Int']['output'];
+  completedAt?: Maybe<Scalars['Datetime']['output']>;
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  description: Scalars['String']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  lastError?: Maybe<Scalars['String']['output']>;
+  maxAttempts: Scalars['Int']['output'];
+  nextRetryAt: Scalars['Datetime']['output'];
+  operation: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  status: Scalars['String']['output'];
+  tuples: Scalars['JSON']['output'];
+};
+
+export type WardenSyncQueueAggregates = {
+  __typename?: 'WardenSyncQueueAggregates';
+  /** Mean average aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  average?: Maybe<WardenSyncQueueAverageAggregates>;
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<WardenSyncQueueDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** Maximum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  max?: Maybe<WardenSyncQueueMaxAggregates>;
+  /** Minimum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  min?: Maybe<WardenSyncQueueMinAggregates>;
+  /** Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevPopulation?: Maybe<WardenSyncQueueStddevPopulationAggregates>;
+  /** Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevSample?: Maybe<WardenSyncQueueStddevSampleAggregates>;
+  /** Sum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  sum?: Maybe<WardenSyncQueueSumAggregates>;
+  /** Population variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  variancePopulation?: Maybe<WardenSyncQueueVariancePopulationAggregates>;
+  /** Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  varianceSample?: Maybe<WardenSyncQueueVarianceSampleAggregates>;
+};
+
+export type WardenSyncQueueAverageAggregates = {
+  __typename?: 'WardenSyncQueueAverageAggregates';
+  /** Mean average of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigFloat']['output']>;
+  /** Mean average of maxAttempts across the matching connection */
+  maxAttempts?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+/**
+ * A condition to be used against `WardenSyncQueue` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type WardenSyncQueueCondition = {
+  /** Checks for equality with the object’s `attempts` field. */
+  attempts?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `completedAt` field. */
+  completedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `lastError` field. */
+  lastError?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `maxAttempts` field. */
+  maxAttempts?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `nextRetryAt` field. */
+  nextRetryAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `operation` field. */
+  operation?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `WardenSyncQueue` values. */
+export type WardenSyncQueueConnection = {
+  __typename?: 'WardenSyncQueueConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<WardenSyncQueueAggregates>;
+  /** A list of edges which contains the `WardenSyncQueue` and cursor to aid in pagination. */
+  edges: Array<WardenSyncQueueEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<WardenSyncQueueAggregates>>;
+  /** A list of `WardenSyncQueue` objects. */
+  nodes: Array<WardenSyncQueue>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `WardenSyncQueue` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `WardenSyncQueue` values. */
+export type WardenSyncQueueConnectionGroupedAggregatesArgs = {
+  groupBy: Array<WardenSyncQueueGroupBy>;
+  having?: InputMaybe<WardenSyncQueueHavingInput>;
+};
+
+export type WardenSyncQueueDistinctCountAggregates = {
+  __typename?: 'WardenSyncQueueDistinctCountAggregates';
+  /** Distinct count of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of completedAt across the matching connection */
+  completedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of description across the matching connection */
+  description?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of lastError across the matching connection */
+  lastError?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of maxAttempts across the matching connection */
+  maxAttempts?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of nextRetryAt across the matching connection */
+  nextRetryAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of operation across the matching connection */
+  operation?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of status across the matching connection */
+  status?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of tuples across the matching connection */
+  tuples?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `WardenSyncQueue` edge in the connection. */
+export type WardenSyncQueueEdge = {
+  __typename?: 'WardenSyncQueueEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `WardenSyncQueue` at the end of the edge. */
+  node: WardenSyncQueue;
+};
+
+/** A filter to be used against `WardenSyncQueue` object types. All fields are combined with a logical ‘and.’ */
+export type WardenSyncQueueFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<WardenSyncQueueFilter>>;
+  /** Filter by the object’s `attempts` field. */
+  attempts?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `completedAt` field. */
+  completedAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `lastError` field. */
+  lastError?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `maxAttempts` field. */
+  maxAttempts?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `nextRetryAt` field. */
+  nextRetryAt?: InputMaybe<DatetimeFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<WardenSyncQueueFilter>;
+  /** Filter by the object’s `operation` field. */
+  operation?: InputMaybe<StringFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<WardenSyncQueueFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: InputMaybe<StringFilter>;
+};
+
+/** Grouping methods for `WardenSyncQueue` for usage during aggregation. */
+export enum WardenSyncQueueGroupBy {
+  Attempts = 'ATTEMPTS',
+  CompletedAt = 'COMPLETED_AT',
+  CompletedAtTruncatedToDay = 'COMPLETED_AT_TRUNCATED_TO_DAY',
+  CompletedAtTruncatedToHour = 'COMPLETED_AT_TRUNCATED_TO_HOUR',
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  Description = 'DESCRIPTION',
+  LastError = 'LAST_ERROR',
+  MaxAttempts = 'MAX_ATTEMPTS',
+  NextRetryAt = 'NEXT_RETRY_AT',
+  NextRetryAtTruncatedToDay = 'NEXT_RETRY_AT_TRUNCATED_TO_DAY',
+  NextRetryAtTruncatedToHour = 'NEXT_RETRY_AT_TRUNCATED_TO_HOUR',
+  Operation = 'OPERATION',
+  Status = 'STATUS',
+  Tuples = 'TUPLES'
+}
+
+export type WardenSyncQueueHavingAverageInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  maxAttempts?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WardenSyncQueueHavingDistinctCountInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  maxAttempts?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `WardenSyncQueue` aggregates. */
+export type WardenSyncQueueHavingInput = {
+  AND?: InputMaybe<Array<WardenSyncQueueHavingInput>>;
+  OR?: InputMaybe<Array<WardenSyncQueueHavingInput>>;
+  average?: InputMaybe<WardenSyncQueueHavingAverageInput>;
+  distinctCount?: InputMaybe<WardenSyncQueueHavingDistinctCountInput>;
+  max?: InputMaybe<WardenSyncQueueHavingMaxInput>;
+  min?: InputMaybe<WardenSyncQueueHavingMinInput>;
+  stddevPopulation?: InputMaybe<WardenSyncQueueHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<WardenSyncQueueHavingStddevSampleInput>;
+  sum?: InputMaybe<WardenSyncQueueHavingSumInput>;
+  variancePopulation?: InputMaybe<WardenSyncQueueHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<WardenSyncQueueHavingVarianceSampleInput>;
+};
+
+export type WardenSyncQueueHavingMaxInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  maxAttempts?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WardenSyncQueueHavingMinInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  maxAttempts?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WardenSyncQueueHavingStddevPopulationInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  maxAttempts?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WardenSyncQueueHavingStddevSampleInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  maxAttempts?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WardenSyncQueueHavingSumInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  maxAttempts?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WardenSyncQueueHavingVariancePopulationInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  maxAttempts?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WardenSyncQueueHavingVarianceSampleInput = {
+  attempts?: InputMaybe<HavingIntFilter>;
+  completedAt?: InputMaybe<HavingDatetimeFilter>;
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  maxAttempts?: InputMaybe<HavingIntFilter>;
+  nextRetryAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WardenSyncQueueMaxAggregates = {
+  __typename?: 'WardenSyncQueueMaxAggregates';
+  /** Maximum of attempts across the matching connection */
+  attempts?: Maybe<Scalars['Int']['output']>;
+  /** Maximum of maxAttempts across the matching connection */
+  maxAttempts?: Maybe<Scalars['Int']['output']>;
+};
+
+export type WardenSyncQueueMinAggregates = {
+  __typename?: 'WardenSyncQueueMinAggregates';
+  /** Minimum of attempts across the matching connection */
+  attempts?: Maybe<Scalars['Int']['output']>;
+  /** Minimum of maxAttempts across the matching connection */
+  maxAttempts?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Methods to use when ordering `WardenSyncQueue`. */
+export enum WardenSyncQueueOrderBy {
+  AttemptsAsc = 'ATTEMPTS_ASC',
+  AttemptsDesc = 'ATTEMPTS_DESC',
+  CompletedAtAsc = 'COMPLETED_AT_ASC',
+  CompletedAtDesc = 'COMPLETED_AT_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
+  LastErrorAsc = 'LAST_ERROR_ASC',
+  LastErrorDesc = 'LAST_ERROR_DESC',
+  MaxAttemptsAsc = 'MAX_ATTEMPTS_ASC',
+  MaxAttemptsDesc = 'MAX_ATTEMPTS_DESC',
+  Natural = 'NATURAL',
+  NextRetryAtAsc = 'NEXT_RETRY_AT_ASC',
+  NextRetryAtDesc = 'NEXT_RETRY_AT_DESC',
+  OperationAsc = 'OPERATION_ASC',
+  OperationDesc = 'OPERATION_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC'
+}
+
+export type WardenSyncQueueStddevPopulationAggregates = {
+  __typename?: 'WardenSyncQueueStddevPopulationAggregates';
+  /** Population standard deviation of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigFloat']['output']>;
+  /** Population standard deviation of maxAttempts across the matching connection */
+  maxAttempts?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type WardenSyncQueueStddevSampleAggregates = {
+  __typename?: 'WardenSyncQueueStddevSampleAggregates';
+  /** Sample standard deviation of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigFloat']['output']>;
+  /** Sample standard deviation of maxAttempts across the matching connection */
+  maxAttempts?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type WardenSyncQueueSumAggregates = {
+  __typename?: 'WardenSyncQueueSumAggregates';
+  /** Sum of attempts across the matching connection */
+  attempts: Scalars['BigInt']['output'];
+  /** Sum of maxAttempts across the matching connection */
+  maxAttempts: Scalars['BigInt']['output'];
+};
+
+export type WardenSyncQueueVariancePopulationAggregates = {
+  __typename?: 'WardenSyncQueueVariancePopulationAggregates';
+  /** Population variance of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigFloat']['output']>;
+  /** Population variance of maxAttempts across the matching connection */
+  maxAttempts?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type WardenSyncQueueVarianceSampleAggregates = {
+  __typename?: 'WardenSyncQueueVarianceSampleAggregates';
+  /** Sample variance of attempts across the matching connection */
+  attempts?: Maybe<Scalars['BigFloat']['output']>;
+  /** Sample variance of maxAttempts across the matching connection */
+  maxAttempts?: Maybe<Scalars['BigFloat']['output']>;
+};
+
 export type Workflow = Node & {
   __typename?: 'Workflow';
+  /** Reads and enables pagination through a set of `ApprovalRequest`. */
+  approvalRequests: ApprovalRequestConnection;
   createdAt?: Maybe<Scalars['Datetime']['output']>;
   createdBy?: Maybe<Scalars['UUID']['output']>;
   cronExpression?: Maybe<Scalars['String']['output']>;
@@ -6443,6 +10201,7 @@ export type Workflow = Node & {
   description?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `EventRoutingRule`. */
   eventRoutingRules: EventRoutingRuleConnection;
+  executor: Scalars['String']['output'];
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   id: Scalars['ID']['output'];
   isActive: Scalars['Boolean']['output'];
@@ -6454,9 +10213,24 @@ export type Workflow = Node & {
   updatedAt?: Maybe<Scalars['Datetime']['output']>;
   /** Reads a single `User` that is related to this `Workflow`. */
   user?: Maybe<User>;
+  version: Scalars['Int']['output'];
   webhookSecret?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `WorkflowRun`. */
   workflowRuns: WorkflowRunConnection;
+  /** Reads and enables pagination through a set of `WorkflowVersion`. */
+  workflowVersions: WorkflowVersionConnection;
+};
+
+
+export type WorkflowApprovalRequestsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<ApprovalRequestCondition>;
+  filter?: InputMaybe<ApprovalRequestFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<ApprovalRequestOrderBy>>;
 };
 
 
@@ -6483,19 +10257,73 @@ export type WorkflowWorkflowRunsArgs = {
   orderBy?: InputMaybe<Array<WorkflowRunOrderBy>>;
 };
 
+
+export type WorkflowWorkflowVersionsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<WorkflowVersionCondition>;
+  filter?: InputMaybe<WorkflowVersionFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<WorkflowVersionOrderBy>>;
+};
+
 export type WorkflowAggregates = {
   __typename?: 'WorkflowAggregates';
+  /** Mean average aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  average?: Maybe<WorkflowAverageAggregates>;
   /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
   distinctCount?: Maybe<WorkflowDistinctCountAggregates>;
   keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** Maximum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  max?: Maybe<WorkflowMaxAggregates>;
+  /** Minimum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  min?: Maybe<WorkflowMinAggregates>;
+  /** Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevPopulation?: Maybe<WorkflowStddevPopulationAggregates>;
+  /** Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevSample?: Maybe<WorkflowStddevSampleAggregates>;
+  /** Sum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  sum?: Maybe<WorkflowSumAggregates>;
+  /** Population variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  variancePopulation?: Maybe<WorkflowVariancePopulationAggregates>;
+  /** Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  varianceSample?: Maybe<WorkflowVarianceSampleAggregates>;
 };
 
 /** A filter to be used against aggregates of `Workflow` object types. */
 export type WorkflowAggregatesFilter = {
+  /** Mean average aggregate over matching `Workflow` objects. */
+  average?: InputMaybe<WorkflowAverageAggregateFilter>;
   /** Distinct count aggregate over matching `Workflow` objects. */
   distinctCount?: InputMaybe<WorkflowDistinctCountAggregateFilter>;
   /** A filter that must pass for the relevant `Workflow` object to be included within the aggregate. */
   filter?: InputMaybe<WorkflowFilter>;
+  /** Maximum aggregate over matching `Workflow` objects. */
+  max?: InputMaybe<WorkflowMaxAggregateFilter>;
+  /** Minimum aggregate over matching `Workflow` objects. */
+  min?: InputMaybe<WorkflowMinAggregateFilter>;
+  /** Population standard deviation aggregate over matching `Workflow` objects. */
+  stddevPopulation?: InputMaybe<WorkflowStddevPopulationAggregateFilter>;
+  /** Sample standard deviation aggregate over matching `Workflow` objects. */
+  stddevSample?: InputMaybe<WorkflowStddevSampleAggregateFilter>;
+  /** Sum aggregate over matching `Workflow` objects. */
+  sum?: InputMaybe<WorkflowSumAggregateFilter>;
+  /** Population variance aggregate over matching `Workflow` objects. */
+  variancePopulation?: InputMaybe<WorkflowVariancePopulationAggregateFilter>;
+  /** Sample variance aggregate over matching `Workflow` objects. */
+  varianceSample?: InputMaybe<WorkflowVarianceSampleAggregateFilter>;
+};
+
+export type WorkflowAverageAggregateFilter = {
+  version?: InputMaybe<BigFloatFilter>;
+};
+
+export type WorkflowAverageAggregates = {
+  __typename?: 'WorkflowAverageAggregates';
+  /** Mean average of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
 };
 
 /**
@@ -6511,6 +10339,8 @@ export type WorkflowCondition = {
   cronExpression?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `description` field. */
   description?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `executor` field. */
+  executor?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `isActive` field. */
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** Checks for equality with the object’s `lastRunAt` field. */
@@ -6525,6 +10355,8 @@ export type WorkflowCondition = {
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `updatedAt` field. */
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `version` field. */
+  version?: InputMaybe<Scalars['Int']['input']>;
   /** Checks for equality with the object’s `webhookSecret` field. */
   webhookSecret?: InputMaybe<Scalars['String']['input']>;
 };
@@ -6559,6 +10391,7 @@ export type WorkflowDistinctCountAggregateFilter = {
   cronExpression?: InputMaybe<BigIntFilter>;
   definition?: InputMaybe<BigIntFilter>;
   description?: InputMaybe<BigIntFilter>;
+  executor?: InputMaybe<BigIntFilter>;
   isActive?: InputMaybe<BigIntFilter>;
   lastRunAt?: InputMaybe<BigIntFilter>;
   lastRunStatus?: InputMaybe<BigIntFilter>;
@@ -6566,6 +10399,7 @@ export type WorkflowDistinctCountAggregateFilter = {
   organizationId?: InputMaybe<BigIntFilter>;
   rowId?: InputMaybe<BigIntFilter>;
   updatedAt?: InputMaybe<BigIntFilter>;
+  version?: InputMaybe<BigIntFilter>;
   webhookSecret?: InputMaybe<BigIntFilter>;
 };
 
@@ -6581,6 +10415,8 @@ export type WorkflowDistinctCountAggregates = {
   definition?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of description across the matching connection */
   description?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of executor across the matching connection */
+  executor?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of isActive across the matching connection */
   isActive?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of lastRunAt across the matching connection */
@@ -6595,6 +10431,8 @@ export type WorkflowDistinctCountAggregates = {
   rowId?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of updatedAt across the matching connection */
   updatedAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of version across the matching connection */
+  version?: Maybe<Scalars['BigInt']['output']>;
   /** Distinct count of webhookSecret across the matching connection */
   webhookSecret?: Maybe<Scalars['BigInt']['output']>;
 };
@@ -6608,10 +10446,225 @@ export type WorkflowEdge = {
   node: Workflow;
 };
 
+export type WorkflowExecutorConfig = Node & {
+  __typename?: 'WorkflowExecutorConfig';
+  config: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  organizationId: Scalars['String']['output'];
+  rowId: Scalars['UUID']['output'];
+  slug: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+export type WorkflowExecutorConfigAggregates = {
+  __typename?: 'WorkflowExecutorConfigAggregates';
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<WorkflowExecutorConfigDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+/**
+ * A condition to be used against `WorkflowExecutorConfig` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type WorkflowExecutorConfigCondition = {
+  /** Checks for equality with the object’s `config` field. */
+  config?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `organizationId` field. */
+  organizationId?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `slug` field. */
+  slug?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `type` field. */
+  type?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** A connection to a list of `WorkflowExecutorConfig` values. */
+export type WorkflowExecutorConfigConnection = {
+  __typename?: 'WorkflowExecutorConfigConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<WorkflowExecutorConfigAggregates>;
+  /** A list of edges which contains the `WorkflowExecutorConfig` and cursor to aid in pagination. */
+  edges: Array<WorkflowExecutorConfigEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<WorkflowExecutorConfigAggregates>>;
+  /** A list of `WorkflowExecutorConfig` objects. */
+  nodes: Array<WorkflowExecutorConfig>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `WorkflowExecutorConfig` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `WorkflowExecutorConfig` values. */
+export type WorkflowExecutorConfigConnectionGroupedAggregatesArgs = {
+  groupBy: Array<WorkflowExecutorConfigGroupBy>;
+  having?: InputMaybe<WorkflowExecutorConfigHavingInput>;
+};
+
+export type WorkflowExecutorConfigDistinctCountAggregates = {
+  __typename?: 'WorkflowExecutorConfigDistinctCountAggregates';
+  /** Distinct count of config across the matching connection */
+  config?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of organizationId across the matching connection */
+  organizationId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of slug across the matching connection */
+  slug?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of type across the matching connection */
+  type?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of updatedAt across the matching connection */
+  updatedAt?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `WorkflowExecutorConfig` edge in the connection. */
+export type WorkflowExecutorConfigEdge = {
+  __typename?: 'WorkflowExecutorConfigEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `WorkflowExecutorConfig` at the end of the edge. */
+  node: WorkflowExecutorConfig;
+};
+
+/** A filter to be used against `WorkflowExecutorConfig` object types. All fields are combined with a logical ‘and.’ */
+export type WorkflowExecutorConfigFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<WorkflowExecutorConfigFilter>>;
+  /** Filter by the object’s `config` field. */
+  config?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<WorkflowExecutorConfigFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<WorkflowExecutorConfigFilter>>;
+  /** Filter by the object’s `organizationId` field. */
+  organizationId?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `slug` field. */
+  slug?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `type` field. */
+  type?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<DatetimeFilter>;
+};
+
+/** Grouping methods for `WorkflowExecutorConfig` for usage during aggregation. */
+export enum WorkflowExecutorConfigGroupBy {
+  Config = 'CONFIG',
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  OrganizationId = 'ORGANIZATION_ID',
+  Slug = 'SLUG',
+  Type = 'TYPE',
+  UpdatedAt = 'UPDATED_AT',
+  UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
+  UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR'
+}
+
+export type WorkflowExecutorConfigHavingAverageInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WorkflowExecutorConfigHavingDistinctCountInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Conditions for `WorkflowExecutorConfig` aggregates. */
+export type WorkflowExecutorConfigHavingInput = {
+  AND?: InputMaybe<Array<WorkflowExecutorConfigHavingInput>>;
+  OR?: InputMaybe<Array<WorkflowExecutorConfigHavingInput>>;
+  average?: InputMaybe<WorkflowExecutorConfigHavingAverageInput>;
+  distinctCount?: InputMaybe<WorkflowExecutorConfigHavingDistinctCountInput>;
+  max?: InputMaybe<WorkflowExecutorConfigHavingMaxInput>;
+  min?: InputMaybe<WorkflowExecutorConfigHavingMinInput>;
+  stddevPopulation?: InputMaybe<WorkflowExecutorConfigHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<WorkflowExecutorConfigHavingStddevSampleInput>;
+  sum?: InputMaybe<WorkflowExecutorConfigHavingSumInput>;
+  variancePopulation?: InputMaybe<WorkflowExecutorConfigHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<WorkflowExecutorConfigHavingVarianceSampleInput>;
+};
+
+export type WorkflowExecutorConfigHavingMaxInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WorkflowExecutorConfigHavingMinInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WorkflowExecutorConfigHavingStddevPopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WorkflowExecutorConfigHavingStddevSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WorkflowExecutorConfigHavingSumInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WorkflowExecutorConfigHavingVariancePopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+export type WorkflowExecutorConfigHavingVarianceSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  updatedAt?: InputMaybe<HavingDatetimeFilter>;
+};
+
+/** Methods to use when ordering `WorkflowExecutorConfig`. */
+export enum WorkflowExecutorConfigOrderBy {
+  ConfigAsc = 'CONFIG_ASC',
+  ConfigDesc = 'CONFIG_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  Natural = 'NATURAL',
+  OrganizationIdAsc = 'ORGANIZATION_ID_ASC',
+  OrganizationIdDesc = 'ORGANIZATION_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  SlugAsc = 'SLUG_ASC',
+  SlugDesc = 'SLUG_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
+
 /** A filter to be used against `Workflow` object types. All fields are combined with a logical ‘and.’ */
 export type WorkflowFilter = {
   /** Checks for all expressions in this list. */
   and?: InputMaybe<Array<WorkflowFilter>>;
+  /** Filter by the object’s `approvalRequests` relation. */
+  approvalRequests?: InputMaybe<WorkflowToManyApprovalRequestFilter>;
+  /** Some related `approvalRequests` exist. */
+  approvalRequestsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `createdAt` field. */
   createdAt?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `createdBy` field. */
@@ -6624,6 +10677,8 @@ export type WorkflowFilter = {
   eventRoutingRules?: InputMaybe<WorkflowToManyEventRoutingRuleFilter>;
   /** Some related `eventRoutingRules` exist. */
   eventRoutingRulesExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `executor` field. */
+  executor?: InputMaybe<StringFilter>;
   /** Filter by the object’s `isActive` field. */
   isActive?: InputMaybe<BooleanFilter>;
   /** Filter by the object’s `lastRunAt` field. */
@@ -6646,12 +10701,18 @@ export type WorkflowFilter = {
   user?: InputMaybe<UserFilter>;
   /** A related `user` exists. */
   userExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `version` field. */
+  version?: InputMaybe<IntFilter>;
   /** Filter by the object’s `webhookSecret` field. */
   webhookSecret?: InputMaybe<StringFilter>;
   /** Filter by the object’s `workflowRuns` relation. */
   workflowRuns?: InputMaybe<WorkflowToManyWorkflowRunFilter>;
   /** Some related `workflowRuns` exist. */
   workflowRunsExist?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `workflowVersions` relation. */
+  workflowVersions?: InputMaybe<WorkflowToManyWorkflowVersionFilter>;
+  /** Some related `workflowVersions` exist. */
+  workflowVersionsExist?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** Grouping methods for `Workflow` for usage during aggregation. */
@@ -6663,6 +10724,7 @@ export enum WorkflowGroupBy {
   CronExpression = 'CRON_EXPRESSION',
   Definition = 'DEFINITION',
   Description = 'DESCRIPTION',
+  Executor = 'EXECUTOR',
   IsActive = 'IS_ACTIVE',
   LastRunAt = 'LAST_RUN_AT',
   LastRunAtTruncatedToDay = 'LAST_RUN_AT_TRUNCATED_TO_DAY',
@@ -6673,6 +10735,7 @@ export enum WorkflowGroupBy {
   UpdatedAt = 'UPDATED_AT',
   UpdatedAtTruncatedToDay = 'UPDATED_AT_TRUNCATED_TO_DAY',
   UpdatedAtTruncatedToHour = 'UPDATED_AT_TRUNCATED_TO_HOUR',
+  Version = 'VERSION',
   WebhookSecret = 'WEBHOOK_SECRET'
 }
 
@@ -6680,12 +10743,14 @@ export type WorkflowHavingAverageInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
   lastRunAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
 };
 
 export type WorkflowHavingDistinctCountInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
   lastRunAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
 };
 
 /** Conditions for `Workflow` aggregates. */
@@ -6707,42 +10772,49 @@ export type WorkflowHavingMaxInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
   lastRunAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
 };
 
 export type WorkflowHavingMinInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
   lastRunAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
 };
 
 export type WorkflowHavingStddevPopulationInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
   lastRunAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
 };
 
 export type WorkflowHavingStddevSampleInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
   lastRunAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
 };
 
 export type WorkflowHavingSumInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
   lastRunAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
 };
 
 export type WorkflowHavingVariancePopulationInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
   lastRunAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
 };
 
 export type WorkflowHavingVarianceSampleInput = {
   createdAt?: InputMaybe<HavingDatetimeFilter>;
   lastRunAt?: InputMaybe<HavingDatetimeFilter>;
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
 };
 
 /** An input for mutations affecting `Workflow` */
@@ -6752,6 +10824,7 @@ export type WorkflowInput = {
   cronExpression?: InputMaybe<Scalars['String']['input']>;
   definition: Scalars['JSON']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
+  executor?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   lastRunAt?: InputMaybe<Scalars['Datetime']['input']>;
   lastRunStatus?: InputMaybe<Scalars['String']['input']>;
@@ -6759,11 +10832,68 @@ export type WorkflowInput = {
   organizationId: Scalars['String']['input'];
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
   webhookSecret?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type WorkflowMaxAggregateFilter = {
+  version?: InputMaybe<IntFilter>;
+};
+
+export type WorkflowMaxAggregates = {
+  __typename?: 'WorkflowMaxAggregates';
+  /** Maximum of version across the matching connection */
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+export type WorkflowMinAggregateFilter = {
+  version?: InputMaybe<IntFilter>;
+};
+
+export type WorkflowMinAggregates = {
+  __typename?: 'WorkflowMinAggregates';
+  /** Minimum of version across the matching connection */
+  version?: Maybe<Scalars['Int']['output']>;
 };
 
 /** Methods to use when ordering `Workflow`. */
 export enum WorkflowOrderBy {
+  ApprovalRequestsCountAsc = 'APPROVAL_REQUESTS_COUNT_ASC',
+  ApprovalRequestsCountDesc = 'APPROVAL_REQUESTS_COUNT_DESC',
+  ApprovalRequestsDistinctCountApproversAsc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_APPROVERS_ASC',
+  ApprovalRequestsDistinctCountApproversDesc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_APPROVERS_DESC',
+  ApprovalRequestsDistinctCountCreatedAtAsc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_CREATED_AT_ASC',
+  ApprovalRequestsDistinctCountCreatedAtDesc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_CREATED_AT_DESC',
+  ApprovalRequestsDistinctCountDecidedAtAsc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_DECIDED_AT_ASC',
+  ApprovalRequestsDistinctCountDecidedAtDesc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_DECIDED_AT_DESC',
+  ApprovalRequestsDistinctCountDecidedByAsc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_DECIDED_BY_ASC',
+  ApprovalRequestsDistinctCountDecidedByDesc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_DECIDED_BY_DESC',
+  ApprovalRequestsDistinctCountGateTypeAsc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_GATE_TYPE_ASC',
+  ApprovalRequestsDistinctCountGateTypeDesc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_GATE_TYPE_DESC',
+  ApprovalRequestsDistinctCountOrganizationIdAsc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_ORGANIZATION_ID_ASC',
+  ApprovalRequestsDistinctCountOrganizationIdDesc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
+  ApprovalRequestsDistinctCountReasonAsc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_REASON_ASC',
+  ApprovalRequestsDistinctCountReasonDesc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_REASON_DESC',
+  ApprovalRequestsDistinctCountRowIdAsc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_ROW_ID_ASC',
+  ApprovalRequestsDistinctCountRowIdDesc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_ROW_ID_DESC',
+  ApprovalRequestsDistinctCountRunIdAsc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_RUN_ID_ASC',
+  ApprovalRequestsDistinctCountRunIdDesc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_RUN_ID_DESC',
+  ApprovalRequestsDistinctCountSignalDataAsc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_SIGNAL_DATA_ASC',
+  ApprovalRequestsDistinctCountSignalDataDesc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_SIGNAL_DATA_DESC',
+  ApprovalRequestsDistinctCountSignalNameAsc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_SIGNAL_NAME_ASC',
+  ApprovalRequestsDistinctCountSignalNameDesc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_SIGNAL_NAME_DESC',
+  ApprovalRequestsDistinctCountStatusAsc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_STATUS_ASC',
+  ApprovalRequestsDistinctCountStatusDesc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_STATUS_DESC',
+  ApprovalRequestsDistinctCountStepIdAsc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_STEP_ID_ASC',
+  ApprovalRequestsDistinctCountStepIdDesc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_STEP_ID_DESC',
+  ApprovalRequestsDistinctCountTimeoutActionAsc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_TIMEOUT_ACTION_ASC',
+  ApprovalRequestsDistinctCountTimeoutActionDesc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_TIMEOUT_ACTION_DESC',
+  ApprovalRequestsDistinctCountTimeoutMsAsc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_TIMEOUT_MS_ASC',
+  ApprovalRequestsDistinctCountTimeoutMsDesc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_TIMEOUT_MS_DESC',
+  ApprovalRequestsDistinctCountTitleAsc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_TITLE_ASC',
+  ApprovalRequestsDistinctCountTitleDesc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_TITLE_DESC',
+  ApprovalRequestsDistinctCountWorkflowIdAsc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_WORKFLOW_ID_ASC',
+  ApprovalRequestsDistinctCountWorkflowIdDesc = 'APPROVAL_REQUESTS_DISTINCT_COUNT_WORKFLOW_ID_DESC',
   CreatedAtAsc = 'CREATED_AT_ASC',
   CreatedAtDesc = 'CREATED_AT_DESC',
   CreatedByAsc = 'CREATED_BY_ASC',
@@ -6776,6 +10906,10 @@ export enum WorkflowOrderBy {
   EventRoutingRulesAveragePriorityDesc = 'EVENT_ROUTING_RULES_AVERAGE_PRIORITY_DESC',
   EventRoutingRulesCountAsc = 'EVENT_ROUTING_RULES_COUNT_ASC',
   EventRoutingRulesCountDesc = 'EVENT_ROUTING_RULES_COUNT_DESC',
+  EventRoutingRulesDistinctCountBatchAsc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_BATCH_ASC',
+  EventRoutingRulesDistinctCountBatchDesc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_BATCH_DESC',
+  EventRoutingRulesDistinctCountCelConditionAsc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_CEL_CONDITION_ASC',
+  EventRoutingRulesDistinctCountCelConditionDesc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_CEL_CONDITION_DESC',
   EventRoutingRulesDistinctCountConditionAsc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_CONDITION_ASC',
   EventRoutingRulesDistinctCountConditionDesc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_CONDITION_DESC',
   EventRoutingRulesDistinctCountCreatedAtAsc = 'EVENT_ROUTING_RULES_DISTINCT_COUNT_CREATED_AT_ASC',
@@ -6812,6 +10946,8 @@ export enum WorkflowOrderBy {
   EventRoutingRulesVariancePopulationPriorityDesc = 'EVENT_ROUTING_RULES_VARIANCE_POPULATION_PRIORITY_DESC',
   EventRoutingRulesVarianceSamplePriorityAsc = 'EVENT_ROUTING_RULES_VARIANCE_SAMPLE_PRIORITY_ASC',
   EventRoutingRulesVarianceSamplePriorityDesc = 'EVENT_ROUTING_RULES_VARIANCE_SAMPLE_PRIORITY_DESC',
+  ExecutorAsc = 'EXECUTOR_ASC',
+  ExecutorDesc = 'EXECUTOR_DESC',
   IsActiveAsc = 'IS_ACTIVE_ASC',
   IsActiveDesc = 'IS_ACTIVE_DESC',
   LastRunAtAsc = 'LAST_RUN_AT_ASC',
@@ -6829,6 +10965,8 @@ export enum WorkflowOrderBy {
   RowIdDesc = 'ROW_ID_DESC',
   UpdatedAtAsc = 'UPDATED_AT_ASC',
   UpdatedAtDesc = 'UPDATED_AT_DESC',
+  VersionAsc = 'VERSION_ASC',
+  VersionDesc = 'VERSION_DESC',
   WebhookSecretAsc = 'WEBHOOK_SECRET_ASC',
   WebhookSecretDesc = 'WEBHOOK_SECRET_DESC',
   WorkflowRunsCountAsc = 'WORKFLOW_RUNS_COUNT_ASC',
@@ -6854,7 +10992,39 @@ export enum WorkflowOrderBy {
   WorkflowRunsDistinctCountStatusAsc = 'WORKFLOW_RUNS_DISTINCT_COUNT_STATUS_ASC',
   WorkflowRunsDistinctCountStatusDesc = 'WORKFLOW_RUNS_DISTINCT_COUNT_STATUS_DESC',
   WorkflowRunsDistinctCountWorkflowIdAsc = 'WORKFLOW_RUNS_DISTINCT_COUNT_WORKFLOW_ID_ASC',
-  WorkflowRunsDistinctCountWorkflowIdDesc = 'WORKFLOW_RUNS_DISTINCT_COUNT_WORKFLOW_ID_DESC'
+  WorkflowRunsDistinctCountWorkflowIdDesc = 'WORKFLOW_RUNS_DISTINCT_COUNT_WORKFLOW_ID_DESC',
+  WorkflowVersionsAverageVersionAsc = 'WORKFLOW_VERSIONS_AVERAGE_VERSION_ASC',
+  WorkflowVersionsAverageVersionDesc = 'WORKFLOW_VERSIONS_AVERAGE_VERSION_DESC',
+  WorkflowVersionsCountAsc = 'WORKFLOW_VERSIONS_COUNT_ASC',
+  WorkflowVersionsCountDesc = 'WORKFLOW_VERSIONS_COUNT_DESC',
+  WorkflowVersionsDistinctCountChangeNoteAsc = 'WORKFLOW_VERSIONS_DISTINCT_COUNT_CHANGE_NOTE_ASC',
+  WorkflowVersionsDistinctCountChangeNoteDesc = 'WORKFLOW_VERSIONS_DISTINCT_COUNT_CHANGE_NOTE_DESC',
+  WorkflowVersionsDistinctCountCreatedAtAsc = 'WORKFLOW_VERSIONS_DISTINCT_COUNT_CREATED_AT_ASC',
+  WorkflowVersionsDistinctCountCreatedAtDesc = 'WORKFLOW_VERSIONS_DISTINCT_COUNT_CREATED_AT_DESC',
+  WorkflowVersionsDistinctCountCreatedByAsc = 'WORKFLOW_VERSIONS_DISTINCT_COUNT_CREATED_BY_ASC',
+  WorkflowVersionsDistinctCountCreatedByDesc = 'WORKFLOW_VERSIONS_DISTINCT_COUNT_CREATED_BY_DESC',
+  WorkflowVersionsDistinctCountDefinitionAsc = 'WORKFLOW_VERSIONS_DISTINCT_COUNT_DEFINITION_ASC',
+  WorkflowVersionsDistinctCountDefinitionDesc = 'WORKFLOW_VERSIONS_DISTINCT_COUNT_DEFINITION_DESC',
+  WorkflowVersionsDistinctCountRowIdAsc = 'WORKFLOW_VERSIONS_DISTINCT_COUNT_ROW_ID_ASC',
+  WorkflowVersionsDistinctCountRowIdDesc = 'WORKFLOW_VERSIONS_DISTINCT_COUNT_ROW_ID_DESC',
+  WorkflowVersionsDistinctCountVersionAsc = 'WORKFLOW_VERSIONS_DISTINCT_COUNT_VERSION_ASC',
+  WorkflowVersionsDistinctCountVersionDesc = 'WORKFLOW_VERSIONS_DISTINCT_COUNT_VERSION_DESC',
+  WorkflowVersionsDistinctCountWorkflowIdAsc = 'WORKFLOW_VERSIONS_DISTINCT_COUNT_WORKFLOW_ID_ASC',
+  WorkflowVersionsDistinctCountWorkflowIdDesc = 'WORKFLOW_VERSIONS_DISTINCT_COUNT_WORKFLOW_ID_DESC',
+  WorkflowVersionsMaxVersionAsc = 'WORKFLOW_VERSIONS_MAX_VERSION_ASC',
+  WorkflowVersionsMaxVersionDesc = 'WORKFLOW_VERSIONS_MAX_VERSION_DESC',
+  WorkflowVersionsMinVersionAsc = 'WORKFLOW_VERSIONS_MIN_VERSION_ASC',
+  WorkflowVersionsMinVersionDesc = 'WORKFLOW_VERSIONS_MIN_VERSION_DESC',
+  WorkflowVersionsStddevPopulationVersionAsc = 'WORKFLOW_VERSIONS_STDDEV_POPULATION_VERSION_ASC',
+  WorkflowVersionsStddevPopulationVersionDesc = 'WORKFLOW_VERSIONS_STDDEV_POPULATION_VERSION_DESC',
+  WorkflowVersionsStddevSampleVersionAsc = 'WORKFLOW_VERSIONS_STDDEV_SAMPLE_VERSION_ASC',
+  WorkflowVersionsStddevSampleVersionDesc = 'WORKFLOW_VERSIONS_STDDEV_SAMPLE_VERSION_DESC',
+  WorkflowVersionsSumVersionAsc = 'WORKFLOW_VERSIONS_SUM_VERSION_ASC',
+  WorkflowVersionsSumVersionDesc = 'WORKFLOW_VERSIONS_SUM_VERSION_DESC',
+  WorkflowVersionsVariancePopulationVersionAsc = 'WORKFLOW_VERSIONS_VARIANCE_POPULATION_VERSION_ASC',
+  WorkflowVersionsVariancePopulationVersionDesc = 'WORKFLOW_VERSIONS_VARIANCE_POPULATION_VERSION_DESC',
+  WorkflowVersionsVarianceSampleVersionAsc = 'WORKFLOW_VERSIONS_VARIANCE_SAMPLE_VERSION_ASC',
+  WorkflowVersionsVarianceSampleVersionDesc = 'WORKFLOW_VERSIONS_VARIANCE_SAMPLE_VERSION_DESC'
 }
 
 /** Represents an update to a `Workflow`. Fields that are set will be updated. */
@@ -6864,6 +11034,7 @@ export type WorkflowPatch = {
   cronExpression?: InputMaybe<Scalars['String']['input']>;
   definition?: InputMaybe<Scalars['JSON']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  executor?: InputMaybe<Scalars['String']['input']>;
   isActive?: InputMaybe<Scalars['Boolean']['input']>;
   lastRunAt?: InputMaybe<Scalars['Datetime']['input']>;
   lastRunStatus?: InputMaybe<Scalars['String']['input']>;
@@ -6871,6 +11042,7 @@ export type WorkflowPatch = {
   organizationId?: InputMaybe<Scalars['String']['input']>;
   rowId?: InputMaybe<Scalars['UUID']['input']>;
   updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
   webhookSecret?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -6886,6 +11058,8 @@ export type WorkflowRun = Node & {
   input?: Maybe<Scalars['JSON']['output']>;
   output?: Maybe<Scalars['JSON']['output']>;
   rowId: Scalars['UUID']['output'];
+  /** Reads and enables pagination through a set of `SagaRun`. */
+  sagaRuns: SagaRunConnection;
   startedAt?: Maybe<Scalars['Datetime']['output']>;
   status: Scalars['String']['output'];
   /** Reads a single `Workflow` that is related to this `WorkflowRun`. */
@@ -6893,6 +11067,18 @@ export type WorkflowRun = Node & {
   workflowId?: Maybe<Scalars['UUID']['output']>;
   /** Reads and enables pagination through a set of `WorkflowStepLog`. */
   workflowStepLogs: WorkflowStepLogConnection;
+};
+
+
+export type WorkflowRunSagaRunsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<SagaRunCondition>;
+  filter?: InputMaybe<SagaRunFilter>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<SagaRunOrderBy>>;
 };
 
 
@@ -7040,6 +11226,10 @@ export type WorkflowRunFilter = {
   or?: InputMaybe<Array<WorkflowRunFilter>>;
   /** Filter by the object’s `rowId` field. */
   rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `sagaRuns` relation. */
+  sagaRuns?: InputMaybe<WorkflowRunToManySagaRunFilter>;
+  /** Some related `sagaRuns` exist. */
+  sagaRunsExist?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by the object’s `startedAt` field. */
   startedAt?: InputMaybe<DatetimeFilter>;
   /** Filter by the object’s `status` field. */
@@ -7145,21 +11335,6 @@ export type WorkflowRunHavingVarianceSampleInput = {
   startedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
-/** An input for mutations affecting `WorkflowRun` */
-export type WorkflowRunInput = {
-  completedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  engineRunId: Scalars['String']['input'];
-  engineWorkflowId: Scalars['String']['input'];
-  error?: InputMaybe<Scalars['String']['input']>;
-  input?: InputMaybe<Scalars['JSON']['input']>;
-  output?: InputMaybe<Scalars['JSON']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  startedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  workflowId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
 /** Methods to use when ordering `WorkflowRun`. */
 export enum WorkflowRunOrderBy {
   CompletedAtAsc = 'COMPLETED_AT_ASC',
@@ -7177,6 +11352,26 @@ export enum WorkflowRunOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RowIdAsc = 'ROW_ID_ASC',
   RowIdDesc = 'ROW_ID_DESC',
+  SagaRunsCountAsc = 'SAGA_RUNS_COUNT_ASC',
+  SagaRunsCountDesc = 'SAGA_RUNS_COUNT_DESC',
+  SagaRunsDistinctCountCompletedAtAsc = 'SAGA_RUNS_DISTINCT_COUNT_COMPLETED_AT_ASC',
+  SagaRunsDistinctCountCompletedAtDesc = 'SAGA_RUNS_DISTINCT_COUNT_COMPLETED_AT_DESC',
+  SagaRunsDistinctCountCreatedAtAsc = 'SAGA_RUNS_DISTINCT_COUNT_CREATED_AT_ASC',
+  SagaRunsDistinctCountCreatedAtDesc = 'SAGA_RUNS_DISTINCT_COUNT_CREATED_AT_DESC',
+  SagaRunsDistinctCountErrorAsc = 'SAGA_RUNS_DISTINCT_COUNT_ERROR_ASC',
+  SagaRunsDistinctCountErrorDesc = 'SAGA_RUNS_DISTINCT_COUNT_ERROR_DESC',
+  SagaRunsDistinctCountOrganizationIdAsc = 'SAGA_RUNS_DISTINCT_COUNT_ORGANIZATION_ID_ASC',
+  SagaRunsDistinctCountOrganizationIdDesc = 'SAGA_RUNS_DISTINCT_COUNT_ORGANIZATION_ID_DESC',
+  SagaRunsDistinctCountRowIdAsc = 'SAGA_RUNS_DISTINCT_COUNT_ROW_ID_ASC',
+  SagaRunsDistinctCountRowIdDesc = 'SAGA_RUNS_DISTINCT_COUNT_ROW_ID_DESC',
+  SagaRunsDistinctCountStartedAtAsc = 'SAGA_RUNS_DISTINCT_COUNT_STARTED_AT_ASC',
+  SagaRunsDistinctCountStartedAtDesc = 'SAGA_RUNS_DISTINCT_COUNT_STARTED_AT_DESC',
+  SagaRunsDistinctCountStatusAsc = 'SAGA_RUNS_DISTINCT_COUNT_STATUS_ASC',
+  SagaRunsDistinctCountStatusDesc = 'SAGA_RUNS_DISTINCT_COUNT_STATUS_DESC',
+  SagaRunsDistinctCountUpdatedAtAsc = 'SAGA_RUNS_DISTINCT_COUNT_UPDATED_AT_ASC',
+  SagaRunsDistinctCountUpdatedAtDesc = 'SAGA_RUNS_DISTINCT_COUNT_UPDATED_AT_DESC',
+  SagaRunsDistinctCountWorkflowRunIdAsc = 'SAGA_RUNS_DISTINCT_COUNT_WORKFLOW_RUN_ID_ASC',
+  SagaRunsDistinctCountWorkflowRunIdDesc = 'SAGA_RUNS_DISTINCT_COUNT_WORKFLOW_RUN_ID_DESC',
   StartedAtAsc = 'STARTED_AT_ASC',
   StartedAtDesc = 'STARTED_AT_DESC',
   StatusAsc = 'STATUS_ASC',
@@ -7211,19 +11406,16 @@ export enum WorkflowRunOrderBy {
   WorkflowStepLogsDistinctCountWorkflowRunIdDesc = 'WORKFLOW_STEP_LOGS_DISTINCT_COUNT_WORKFLOW_RUN_ID_DESC'
 }
 
-/** Represents an update to a `WorkflowRun`. Fields that are set will be updated. */
-export type WorkflowRunPatch = {
-  completedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  engineRunId?: InputMaybe<Scalars['String']['input']>;
-  engineWorkflowId?: InputMaybe<Scalars['String']['input']>;
-  error?: InputMaybe<Scalars['String']['input']>;
-  input?: InputMaybe<Scalars['JSON']['input']>;
-  output?: InputMaybe<Scalars['JSON']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  startedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  workflowId?: InputMaybe<Scalars['UUID']['input']>;
+/** A filter to be used against many `SagaRun` object types. All fields are combined with a logical ‘and.’ */
+export type WorkflowRunToManySagaRunFilter = {
+  /** Aggregates across related `SagaRun` match the filter criteria. */
+  aggregates?: InputMaybe<SagaRunAggregatesFilter>;
+  /** Every related `SagaRun` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<SagaRunFilter>;
+  /** No related `SagaRun` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<SagaRunFilter>;
+  /** Some related `SagaRun` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<SagaRunFilter>;
 };
 
 /** A filter to be used against many `WorkflowStepLog` object types. All fields are combined with a logical ‘and.’ */
@@ -7236,6 +11428,26 @@ export type WorkflowRunToManyWorkflowStepLogFilter = {
   none?: InputMaybe<WorkflowStepLogFilter>;
   /** Some related `WorkflowStepLog` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   some?: InputMaybe<WorkflowStepLogFilter>;
+};
+
+export type WorkflowStddevPopulationAggregateFilter = {
+  version?: InputMaybe<BigFloatFilter>;
+};
+
+export type WorkflowStddevPopulationAggregates = {
+  __typename?: 'WorkflowStddevPopulationAggregates';
+  /** Population standard deviation of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type WorkflowStddevSampleAggregateFilter = {
+  version?: InputMaybe<BigFloatFilter>;
+};
+
+export type WorkflowStddevSampleAggregates = {
+  __typename?: 'WorkflowStddevSampleAggregates';
+  /** Sample standard deviation of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
 };
 
 export type WorkflowStepLog = Node & {
@@ -7498,22 +11710,6 @@ export type WorkflowStepLogHavingVarianceSampleInput = {
   startedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
-/** An input for mutations affecting `WorkflowStepLog` */
-export type WorkflowStepLogInput = {
-  completedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  error?: InputMaybe<Scalars['String']['input']>;
-  input?: InputMaybe<Scalars['JSON']['input']>;
-  output?: InputMaybe<Scalars['JSON']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  startedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  stepId: Scalars['String']['input'];
-  stepName: Scalars['String']['input'];
-  stepType: Scalars['String']['input'];
-  workflowRunId: Scalars['UUID']['input'];
-};
-
 /** Methods to use when ordering `WorkflowStepLog`. */
 export enum WorkflowStepLogOrderBy {
   CompletedAtAsc = 'COMPLETED_AT_ASC',
@@ -7541,20 +11737,14 @@ export enum WorkflowStepLogOrderBy {
   WorkflowRunIdDesc = 'WORKFLOW_RUN_ID_DESC'
 }
 
-/** Represents an update to a `WorkflowStepLog`. Fields that are set will be updated. */
-export type WorkflowStepLogPatch = {
-  completedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  error?: InputMaybe<Scalars['String']['input']>;
-  input?: InputMaybe<Scalars['JSON']['input']>;
-  output?: InputMaybe<Scalars['JSON']['input']>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  startedAt?: InputMaybe<Scalars['Datetime']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  stepId?: InputMaybe<Scalars['String']['input']>;
-  stepName?: InputMaybe<Scalars['String']['input']>;
-  stepType?: InputMaybe<Scalars['String']['input']>;
-  workflowRunId?: InputMaybe<Scalars['UUID']['input']>;
+export type WorkflowSumAggregateFilter = {
+  version?: InputMaybe<BigIntFilter>;
+};
+
+export type WorkflowSumAggregates = {
+  __typename?: 'WorkflowSumAggregates';
+  /** Sum of version across the matching connection */
+  version: Scalars['BigInt']['output'];
 };
 
 export type WorkflowTemplate = Node & {
@@ -7803,25 +11993,6 @@ export type WorkflowTemplateHavingVarianceSampleInput = {
   updatedAt?: InputMaybe<HavingDatetimeFilter>;
 };
 
-/** An input for mutations affecting `WorkflowTemplate` */
-export type WorkflowTemplateInput = {
-  category: Scalars['String']['input'];
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  definition: Scalars['JSON']['input'];
-  description?: InputMaybe<Scalars['String']['input']>;
-  iconUrl?: InputMaybe<Scalars['String']['input']>;
-  isFeatured?: InputMaybe<Scalars['Boolean']['input']>;
-  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
-  longDescription?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-  requiredIntegrations?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  slug: Scalars['String']['input'];
-  sortOrder?: InputMaybe<Scalars['String']['input']>;
-  tags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
-};
-
 /** Methods to use when ordering `WorkflowTemplate`. */
 export enum WorkflowTemplateOrderBy {
   CategoryAsc = 'CATEGORY_ASC',
@@ -7853,23 +12024,16 @@ export enum WorkflowTemplateOrderBy {
   UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
 
-/** Represents an update to a `WorkflowTemplate`. Fields that are set will be updated. */
-export type WorkflowTemplatePatch = {
-  category?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
-  definition?: InputMaybe<Scalars['JSON']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  iconUrl?: InputMaybe<Scalars['String']['input']>;
-  isFeatured?: InputMaybe<Scalars['Boolean']['input']>;
-  isPublic?: InputMaybe<Scalars['Boolean']['input']>;
-  longDescription?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  requiredIntegrations?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  rowId?: InputMaybe<Scalars['UUID']['input']>;
-  slug?: InputMaybe<Scalars['String']['input']>;
-  sortOrder?: InputMaybe<Scalars['String']['input']>;
-  tags?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+/** A filter to be used against many `ApprovalRequest` object types. All fields are combined with a logical ‘and.’ */
+export type WorkflowToManyApprovalRequestFilter = {
+  /** Aggregates across related `ApprovalRequest` match the filter criteria. */
+  aggregates?: InputMaybe<ApprovalRequestAggregatesFilter>;
+  /** Every related `ApprovalRequest` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<ApprovalRequestFilter>;
+  /** No related `ApprovalRequest` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<ApprovalRequestFilter>;
+  /** Some related `ApprovalRequest` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<ApprovalRequestFilter>;
 };
 
 /** A filter to be used against many `EventRoutingRule` object types. All fields are combined with a logical ‘and.’ */
@@ -7896,129 +12060,740 @@ export type WorkflowToManyWorkflowRunFilter = {
   some?: InputMaybe<WorkflowRunFilter>;
 };
 
+/** A filter to be used against many `WorkflowVersion` object types. All fields are combined with a logical ‘and.’ */
+export type WorkflowToManyWorkflowVersionFilter = {
+  /** Aggregates across related `WorkflowVersion` match the filter criteria. */
+  aggregates?: InputMaybe<WorkflowVersionAggregatesFilter>;
+  /** Every related `WorkflowVersion` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: InputMaybe<WorkflowVersionFilter>;
+  /** No related `WorkflowVersion` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: InputMaybe<WorkflowVersionFilter>;
+  /** Some related `WorkflowVersion` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: InputMaybe<WorkflowVersionFilter>;
+};
+
+export type WorkflowVariancePopulationAggregateFilter = {
+  version?: InputMaybe<BigFloatFilter>;
+};
+
+export type WorkflowVariancePopulationAggregates = {
+  __typename?: 'WorkflowVariancePopulationAggregates';
+  /** Population variance of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type WorkflowVarianceSampleAggregateFilter = {
+  version?: InputMaybe<BigFloatFilter>;
+};
+
+export type WorkflowVarianceSampleAggregates = {
+  __typename?: 'WorkflowVarianceSampleAggregates';
+  /** Sample variance of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type WorkflowVersion = Node & {
+  __typename?: 'WorkflowVersion';
+  changeNote?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['Datetime']['output']>;
+  createdBy?: Maybe<Scalars['UUID']['output']>;
+  definition: Scalars['JSON']['output'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  id: Scalars['ID']['output'];
+  rowId: Scalars['UUID']['output'];
+  /** Reads a single `User` that is related to this `WorkflowVersion`. */
+  user?: Maybe<User>;
+  version: Scalars['Int']['output'];
+  /** Reads a single `Workflow` that is related to this `WorkflowVersion`. */
+  workflow?: Maybe<Workflow>;
+  workflowId: Scalars['UUID']['output'];
+};
+
+export type WorkflowVersionAggregates = {
+  __typename?: 'WorkflowVersionAggregates';
+  /** Mean average aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  average?: Maybe<WorkflowVersionAverageAggregates>;
+  /** Distinct count aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  distinctCount?: Maybe<WorkflowVersionDistinctCountAggregates>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  /** Maximum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  max?: Maybe<WorkflowVersionMaxAggregates>;
+  /** Minimum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  min?: Maybe<WorkflowVersionMinAggregates>;
+  /** Population standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevPopulation?: Maybe<WorkflowVersionStddevPopulationAggregates>;
+  /** Sample standard deviation aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  stddevSample?: Maybe<WorkflowVersionStddevSampleAggregates>;
+  /** Sum aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  sum?: Maybe<WorkflowVersionSumAggregates>;
+  /** Population variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  variancePopulation?: Maybe<WorkflowVersionVariancePopulationAggregates>;
+  /** Sample variance aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  varianceSample?: Maybe<WorkflowVersionVarianceSampleAggregates>;
+};
+
+/** A filter to be used against aggregates of `WorkflowVersion` object types. */
+export type WorkflowVersionAggregatesFilter = {
+  /** Mean average aggregate over matching `WorkflowVersion` objects. */
+  average?: InputMaybe<WorkflowVersionAverageAggregateFilter>;
+  /** Distinct count aggregate over matching `WorkflowVersion` objects. */
+  distinctCount?: InputMaybe<WorkflowVersionDistinctCountAggregateFilter>;
+  /** A filter that must pass for the relevant `WorkflowVersion` object to be included within the aggregate. */
+  filter?: InputMaybe<WorkflowVersionFilter>;
+  /** Maximum aggregate over matching `WorkflowVersion` objects. */
+  max?: InputMaybe<WorkflowVersionMaxAggregateFilter>;
+  /** Minimum aggregate over matching `WorkflowVersion` objects. */
+  min?: InputMaybe<WorkflowVersionMinAggregateFilter>;
+  /** Population standard deviation aggregate over matching `WorkflowVersion` objects. */
+  stddevPopulation?: InputMaybe<WorkflowVersionStddevPopulationAggregateFilter>;
+  /** Sample standard deviation aggregate over matching `WorkflowVersion` objects. */
+  stddevSample?: InputMaybe<WorkflowVersionStddevSampleAggregateFilter>;
+  /** Sum aggregate over matching `WorkflowVersion` objects. */
+  sum?: InputMaybe<WorkflowVersionSumAggregateFilter>;
+  /** Population variance aggregate over matching `WorkflowVersion` objects. */
+  variancePopulation?: InputMaybe<WorkflowVersionVariancePopulationAggregateFilter>;
+  /** Sample variance aggregate over matching `WorkflowVersion` objects. */
+  varianceSample?: InputMaybe<WorkflowVersionVarianceSampleAggregateFilter>;
+};
+
+export type WorkflowVersionAverageAggregateFilter = {
+  version?: InputMaybe<BigFloatFilter>;
+};
+
+export type WorkflowVersionAverageAggregates = {
+  __typename?: 'WorkflowVersionAverageAggregates';
+  /** Mean average of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+/**
+ * A condition to be used against `WorkflowVersion` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type WorkflowVersionCondition = {
+  /** Checks for equality with the object’s `changeNote` field. */
+  changeNote?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `createdBy` field. */
+  createdBy?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `rowId` field. */
+  rowId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `version` field. */
+  version?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `workflowId` field. */
+  workflowId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `WorkflowVersion` values. */
+export type WorkflowVersionConnection = {
+  __typename?: 'WorkflowVersionConnection';
+  /** Aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  aggregates?: Maybe<WorkflowVersionAggregates>;
+  /** A list of edges which contains the `WorkflowVersion` and cursor to aid in pagination. */
+  edges: Array<WorkflowVersionEdge>;
+  /** Grouped aggregates across the matching connection (ignoring before/after/first/last/offset) */
+  groupedAggregates?: Maybe<Array<WorkflowVersionAggregates>>;
+  /** A list of `WorkflowVersion` objects. */
+  nodes: Array<WorkflowVersion>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `WorkflowVersion` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+
+/** A connection to a list of `WorkflowVersion` values. */
+export type WorkflowVersionConnectionGroupedAggregatesArgs = {
+  groupBy: Array<WorkflowVersionGroupBy>;
+  having?: InputMaybe<WorkflowVersionHavingInput>;
+};
+
+export type WorkflowVersionDistinctCountAggregateFilter = {
+  changeNote?: InputMaybe<BigIntFilter>;
+  createdAt?: InputMaybe<BigIntFilter>;
+  createdBy?: InputMaybe<BigIntFilter>;
+  definition?: InputMaybe<BigIntFilter>;
+  rowId?: InputMaybe<BigIntFilter>;
+  version?: InputMaybe<BigIntFilter>;
+  workflowId?: InputMaybe<BigIntFilter>;
+};
+
+export type WorkflowVersionDistinctCountAggregates = {
+  __typename?: 'WorkflowVersionDistinctCountAggregates';
+  /** Distinct count of changeNote across the matching connection */
+  changeNote?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdAt across the matching connection */
+  createdAt?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of createdBy across the matching connection */
+  createdBy?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of definition across the matching connection */
+  definition?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of rowId across the matching connection */
+  rowId?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of version across the matching connection */
+  version?: Maybe<Scalars['BigInt']['output']>;
+  /** Distinct count of workflowId across the matching connection */
+  workflowId?: Maybe<Scalars['BigInt']['output']>;
+};
+
+/** A `WorkflowVersion` edge in the connection. */
+export type WorkflowVersionEdge = {
+  __typename?: 'WorkflowVersionEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `WorkflowVersion` at the end of the edge. */
+  node: WorkflowVersion;
+};
+
+/** A filter to be used against `WorkflowVersion` object types. All fields are combined with a logical ‘and.’ */
+export type WorkflowVersionFilter = {
+  /** Checks for all expressions in this list. */
+  and?: InputMaybe<Array<WorkflowVersionFilter>>;
+  /** Filter by the object’s `changeNote` field. */
+  changeNote?: InputMaybe<StringFilter>;
+  /** Filter by the object’s `createdAt` field. */
+  createdAt?: InputMaybe<DatetimeFilter>;
+  /** Filter by the object’s `createdBy` field. */
+  createdBy?: InputMaybe<UuidFilter>;
+  /** Negates the expression. */
+  not?: InputMaybe<WorkflowVersionFilter>;
+  /** Checks for any expressions in this list. */
+  or?: InputMaybe<Array<WorkflowVersionFilter>>;
+  /** Filter by the object’s `rowId` field. */
+  rowId?: InputMaybe<UuidFilter>;
+  /** Filter by the object’s `user` relation. */
+  user?: InputMaybe<UserFilter>;
+  /** A related `user` exists. */
+  userExists?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by the object’s `version` field. */
+  version?: InputMaybe<IntFilter>;
+  /** Filter by the object’s `workflow` relation. */
+  workflow?: InputMaybe<WorkflowFilter>;
+  /** Filter by the object’s `workflowId` field. */
+  workflowId?: InputMaybe<UuidFilter>;
+};
+
+/** Grouping methods for `WorkflowVersion` for usage during aggregation. */
+export enum WorkflowVersionGroupBy {
+  ChangeNote = 'CHANGE_NOTE',
+  CreatedAt = 'CREATED_AT',
+  CreatedAtTruncatedToDay = 'CREATED_AT_TRUNCATED_TO_DAY',
+  CreatedAtTruncatedToHour = 'CREATED_AT_TRUNCATED_TO_HOUR',
+  CreatedBy = 'CREATED_BY',
+  Definition = 'DEFINITION',
+  Version = 'VERSION',
+  WorkflowId = 'WORKFLOW_ID'
+}
+
+export type WorkflowVersionHavingAverageInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type WorkflowVersionHavingDistinctCountInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+/** Conditions for `WorkflowVersion` aggregates. */
+export type WorkflowVersionHavingInput = {
+  AND?: InputMaybe<Array<WorkflowVersionHavingInput>>;
+  OR?: InputMaybe<Array<WorkflowVersionHavingInput>>;
+  average?: InputMaybe<WorkflowVersionHavingAverageInput>;
+  distinctCount?: InputMaybe<WorkflowVersionHavingDistinctCountInput>;
+  max?: InputMaybe<WorkflowVersionHavingMaxInput>;
+  min?: InputMaybe<WorkflowVersionHavingMinInput>;
+  stddevPopulation?: InputMaybe<WorkflowVersionHavingStddevPopulationInput>;
+  stddevSample?: InputMaybe<WorkflowVersionHavingStddevSampleInput>;
+  sum?: InputMaybe<WorkflowVersionHavingSumInput>;
+  variancePopulation?: InputMaybe<WorkflowVersionHavingVariancePopulationInput>;
+  varianceSample?: InputMaybe<WorkflowVersionHavingVarianceSampleInput>;
+};
+
+export type WorkflowVersionHavingMaxInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type WorkflowVersionHavingMinInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type WorkflowVersionHavingStddevPopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type WorkflowVersionHavingStddevSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type WorkflowVersionHavingSumInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type WorkflowVersionHavingVariancePopulationInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type WorkflowVersionHavingVarianceSampleInput = {
+  createdAt?: InputMaybe<HavingDatetimeFilter>;
+  version?: InputMaybe<HavingIntFilter>;
+};
+
+export type WorkflowVersionMaxAggregateFilter = {
+  version?: InputMaybe<IntFilter>;
+};
+
+export type WorkflowVersionMaxAggregates = {
+  __typename?: 'WorkflowVersionMaxAggregates';
+  /** Maximum of version across the matching connection */
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+export type WorkflowVersionMinAggregateFilter = {
+  version?: InputMaybe<IntFilter>;
+};
+
+export type WorkflowVersionMinAggregates = {
+  __typename?: 'WorkflowVersionMinAggregates';
+  /** Minimum of version across the matching connection */
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Methods to use when ordering `WorkflowVersion`. */
+export enum WorkflowVersionOrderBy {
+  ChangeNoteAsc = 'CHANGE_NOTE_ASC',
+  ChangeNoteDesc = 'CHANGE_NOTE_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  CreatedByAsc = 'CREATED_BY_ASC',
+  CreatedByDesc = 'CREATED_BY_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RowIdAsc = 'ROW_ID_ASC',
+  RowIdDesc = 'ROW_ID_DESC',
+  VersionAsc = 'VERSION_ASC',
+  VersionDesc = 'VERSION_DESC',
+  WorkflowIdAsc = 'WORKFLOW_ID_ASC',
+  WorkflowIdDesc = 'WORKFLOW_ID_DESC'
+}
+
+export type WorkflowVersionStddevPopulationAggregateFilter = {
+  version?: InputMaybe<BigFloatFilter>;
+};
+
+export type WorkflowVersionStddevPopulationAggregates = {
+  __typename?: 'WorkflowVersionStddevPopulationAggregates';
+  /** Population standard deviation of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type WorkflowVersionStddevSampleAggregateFilter = {
+  version?: InputMaybe<BigFloatFilter>;
+};
+
+export type WorkflowVersionStddevSampleAggregates = {
+  __typename?: 'WorkflowVersionStddevSampleAggregates';
+  /** Sample standard deviation of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type WorkflowVersionSumAggregateFilter = {
+  version?: InputMaybe<BigIntFilter>;
+};
+
+export type WorkflowVersionSumAggregates = {
+  __typename?: 'WorkflowVersionSumAggregates';
+  /** Sum of version across the matching connection */
+  version: Scalars['BigInt']['output'];
+};
+
+export type WorkflowVersionVariancePopulationAggregateFilter = {
+  version?: InputMaybe<BigFloatFilter>;
+};
+
+export type WorkflowVersionVariancePopulationAggregates = {
+  __typename?: 'WorkflowVersionVariancePopulationAggregates';
+  /** Population variance of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+export type WorkflowVersionVarianceSampleAggregateFilter = {
+  version?: InputMaybe<BigFloatFilter>;
+};
+
+export type WorkflowVersionVarianceSampleAggregates = {
+  __typename?: 'WorkflowVersionVarianceSampleAggregates';
+  /** Sample variance of version across the matching connection */
+  version?: Maybe<Scalars['BigFloat']['output']>;
+};
+
+/** All input for the create `Integration` mutation. */
+export type CreateIntegrationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: string | null | undefined;
+  /** The `Integration` to be created by this mutation. */
+  integration: IntegrationInput;
+};
+
+/** All input for the create `McpServer` mutation. */
+export type CreateMcpServerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: string | null | undefined;
+  /** The `McpServer` to be created by this mutation. */
+  mcpServer: McpServerInput;
+};
+
+/** All input for the create `Workflow` mutation. */
+export type CreateWorkflowInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: string | null | undefined;
+  /** The `Workflow` to be created by this mutation. */
+  workflow: WorkflowInput;
+};
+
+/** All input for the `deleteIntegration` mutation. */
+export type DeleteIntegrationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: string | null | undefined;
+  rowId: string;
+};
+
+/** All input for the `deleteMcpServer` mutation. */
+export type DeleteMcpServerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: string | null | undefined;
+  rowId: string;
+};
+
+/** All input for the `deleteWorkflow` mutation. */
+export type DeleteWorkflowInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: string | null | undefined;
+  rowId: string;
+};
+
+/** An input for mutations affecting `Integration` */
+export type IntegrationInput = {
+  authMethod?: string | null | undefined;
+  config?: Record<string, unknown> | null | undefined;
+  createdAt?: Date | null | undefined;
+  definitionId?: string | null | undefined;
+  isEnabled?: boolean | null | undefined;
+  mcpServerId?: string | null | undefined;
+  name: string;
+  oauthConnectedAt?: Date | null | undefined;
+  oauthStatus?: string | null | undefined;
+  organizationId: string;
+  rowId?: string | null | undefined;
+  type: string;
+  updatedAt?: Date | null | undefined;
+};
+
+/** Represents an update to a `Integration`. Fields that are set will be updated. */
+export type IntegrationPatch = {
+  authMethod?: string | null | undefined;
+  config?: Record<string, unknown> | null | undefined;
+  createdAt?: Date | null | undefined;
+  definitionId?: string | null | undefined;
+  isEnabled?: boolean | null | undefined;
+  mcpServerId?: string | null | undefined;
+  name?: string | null | undefined;
+  oauthConnectedAt?: Date | null | undefined;
+  oauthStatus?: string | null | undefined;
+  organizationId?: string | null | undefined;
+  rowId?: string | null | undefined;
+  type?: string | null | undefined;
+  updatedAt?: Date | null | undefined;
+};
+
+/** An input for mutations affecting `McpServer` */
+export type McpServerInput = {
+  args?: Record<string, unknown> | null | undefined;
+  command?: string | null | undefined;
+  createdAt?: Date | null | undefined;
+  cwd?: string | null | undefined;
+  env?: Record<string, unknown> | null | undefined;
+  headers?: Record<string, unknown> | null | undefined;
+  isEnabled?: boolean | null | undefined;
+  name: string;
+  organizationId: string;
+  rowId?: string | null | undefined;
+  transport?: string | null | undefined;
+  type?: string | null | undefined;
+  updatedAt?: Date | null | undefined;
+  url?: string | null | undefined;
+};
+
+/** Represents an update to a `McpServer`. Fields that are set will be updated. */
+export type McpServerPatch = {
+  args?: Record<string, unknown> | null | undefined;
+  command?: string | null | undefined;
+  createdAt?: Date | null | undefined;
+  cwd?: string | null | undefined;
+  env?: Record<string, unknown> | null | undefined;
+  headers?: Record<string, unknown> | null | undefined;
+  isEnabled?: boolean | null | undefined;
+  name?: string | null | undefined;
+  organizationId?: string | null | undefined;
+  rowId?: string | null | undefined;
+  transport?: string | null | undefined;
+  type?: string | null | undefined;
+  updatedAt?: Date | null | undefined;
+  url?: string | null | undefined;
+};
+
+/** Input for publishing an event to trigger workflows */
+export type PublishEventInput = {
+  /** Optional correlation ID for tracing related events */
+  correlationId?: string | null | undefined;
+  /** Event data payload as JSON */
+  data?: Record<string, unknown> | null | undefined;
+  /** Optional idempotency key for deduplication */
+  idempotencyKey?: string | null | undefined;
+  /** Organization ID that owns the event routing rules */
+  organizationId: string;
+  /** Optional event subject (e.g., user ID, subscription ID) */
+  subject?: string | null | undefined;
+  /** Event type (e.g., "user.created", "subscription.updated") */
+  type: string;
+};
+
+/** All input for the `updateIntegration` mutation. */
+export type UpdateIntegrationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: string | null | undefined;
+  /** An object where the defined keys will be set on the `Integration` being updated. */
+  patch: IntegrationPatch;
+  rowId: string;
+};
+
+/** All input for the `updateMcpServer` mutation. */
+export type UpdateMcpServerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: string | null | undefined;
+  /** An object where the defined keys will be set on the `McpServer` being updated. */
+  patch: McpServerPatch;
+  rowId: string;
+};
+
+/** All input for the `updateWorkflow` mutation. */
+export type UpdateWorkflowInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: string | null | undefined;
+  /** An object where the defined keys will be set on the `Workflow` being updated. */
+  patch: WorkflowPatch;
+  rowId: string;
+};
+
+/** An input for mutations affecting `Workflow` */
+export type WorkflowInput = {
+  createdAt?: Date | null | undefined;
+  createdBy?: string | null | undefined;
+  cronExpression?: string | null | undefined;
+  definition: Record<string, unknown>;
+  description?: string | null | undefined;
+  executor?: string | null | undefined;
+  isActive?: boolean | null | undefined;
+  lastRunAt?: Date | null | undefined;
+  lastRunStatus?: string | null | undefined;
+  name: string;
+  organizationId: string;
+  rowId?: string | null | undefined;
+  updatedAt?: Date | null | undefined;
+  version?: number | null | undefined;
+  webhookSecret?: string | null | undefined;
+};
+
+/** Represents an update to a `Workflow`. Fields that are set will be updated. */
+export type WorkflowPatch = {
+  createdAt?: Date | null | undefined;
+  createdBy?: string | null | undefined;
+  cronExpression?: string | null | undefined;
+  definition?: Record<string, unknown> | null | undefined;
+  description?: string | null | undefined;
+  executor?: string | null | undefined;
+  isActive?: boolean | null | undefined;
+  lastRunAt?: Date | null | undefined;
+  lastRunStatus?: string | null | undefined;
+  name?: string | null | undefined;
+  organizationId?: string | null | undefined;
+  rowId?: string | null | undefined;
+  updatedAt?: Date | null | undefined;
+  version?: number | null | undefined;
+  webhookSecret?: string | null | undefined;
+};
+
+export type PublishEventMutationVariables = Exact<{
+  input: PublishEventInput;
+}>;
+
+
+export type PublishEventMutation = { publishEvent: { eventId: string, workflowsTriggered: Array<{ workflowId: string, workflowName: string, runId: string, status: string }> } | null };
+
 export type CreateIntegrationMutationVariables = Exact<{
   input: CreateIntegrationInput;
 }>;
 
 
-export type CreateIntegrationMutation = { __typename?: 'Mutation', createIntegration?: { __typename?: 'CreateIntegrationPayload', integration?: { __typename?: 'Integration', rowId: string, name: string, type: string, isEnabled: boolean, createdAt?: Date | null } | null } | null };
+export type CreateIntegrationMutation = { createIntegration: { integration: { rowId: string, name: string, type: string, isEnabled: boolean, createdAt: Date | null } | null } | null };
 
 export type UpdateIntegrationMutationVariables = Exact<{
   input: UpdateIntegrationInput;
 }>;
 
 
-export type UpdateIntegrationMutation = { __typename?: 'Mutation', updateIntegration?: { __typename?: 'UpdateIntegrationPayload', integration?: { __typename?: 'Integration', rowId: string, name: string, type: string, isEnabled: boolean, updatedAt?: Date | null } | null } | null };
+export type UpdateIntegrationMutation = { updateIntegration: { integration: { rowId: string, name: string, type: string, isEnabled: boolean, updatedAt: Date | null } | null } | null };
 
 export type DeleteIntegrationMutationVariables = Exact<{
   input: DeleteIntegrationInput;
 }>;
 
 
-export type DeleteIntegrationMutation = { __typename?: 'Mutation', deleteIntegration?: { __typename?: 'DeleteIntegrationPayload', integration?: { __typename?: 'Integration', rowId: string, name: string } | null } | null };
+export type DeleteIntegrationMutation = { deleteIntegration: { integration: { rowId: string, name: string } | null } | null };
 
 export type CreateMcpServerMutationVariables = Exact<{
   input: CreateMcpServerInput;
 }>;
 
 
-export type CreateMcpServerMutation = { __typename?: 'Mutation', createMcpServer?: { __typename?: 'CreateMcpServerPayload', mcpServer?: { __typename?: 'McpServer', rowId: string, name: string, type: string, command: string, args: Record<string, unknown>, isEnabled: boolean, createdAt?: Date | null } | null } | null };
+export type CreateMcpServerMutation = { createMcpServer: { mcpServer: { rowId: string, name: string, type: string, command: string | null, args: Record<string, unknown>, isEnabled: boolean, createdAt: Date | null } | null } | null };
 
 export type UpdateMcpServerMutationVariables = Exact<{
   input: UpdateMcpServerInput;
 }>;
 
 
-export type UpdateMcpServerMutation = { __typename?: 'Mutation', updateMcpServer?: { __typename?: 'UpdateMcpServerPayload', mcpServer?: { __typename?: 'McpServer', rowId: string, name: string, type: string, command: string, args: Record<string, unknown>, isEnabled: boolean, updatedAt?: Date | null } | null } | null };
+export type UpdateMcpServerMutation = { updateMcpServer: { mcpServer: { rowId: string, name: string, type: string, command: string | null, args: Record<string, unknown>, isEnabled: boolean, updatedAt: Date | null } | null } | null };
 
 export type DeleteMcpServerMutationVariables = Exact<{
   input: DeleteMcpServerInput;
 }>;
 
 
-export type DeleteMcpServerMutation = { __typename?: 'Mutation', deleteMcpServer?: { __typename?: 'DeleteMcpServerPayload', mcpServer?: { __typename?: 'McpServer', rowId: string, name: string } | null } | null };
+export type DeleteMcpServerMutation = { deleteMcpServer: { mcpServer: { rowId: string, name: string } | null } | null };
 
 export type CreateWorkflowMutationVariables = Exact<{
   input: CreateWorkflowInput;
 }>;
 
 
-export type CreateWorkflowMutation = { __typename?: 'Mutation', createWorkflow?: { __typename?: 'CreateWorkflowPayload', workflow?: { __typename?: 'Workflow', rowId: string, organizationId: string, name: string, description?: string | null, definition: Record<string, unknown>, cronExpression?: string | null, isActive: boolean, createdAt?: Date | null } | null } | null };
+export type CreateWorkflowMutation = { createWorkflow: { workflow: { rowId: string, organizationId: string, name: string, description: string | null, definition: Record<string, unknown>, cronExpression: string | null, isActive: boolean, createdAt: Date | null } | null } | null };
 
 export type DeleteWorkflowMutationVariables = Exact<{
   input: DeleteWorkflowInput;
 }>;
 
 
-export type DeleteWorkflowMutation = { __typename?: 'Mutation', deleteWorkflow?: { __typename?: 'DeleteWorkflowPayload', workflow?: { __typename?: 'Workflow', rowId: string } | null } | null };
+export type DeleteWorkflowMutation = { deleteWorkflow: { workflow: { rowId: string } | null } | null };
 
 export type UpdateWorkflowMutationVariables = Exact<{
   input: UpdateWorkflowInput;
 }>;
 
 
-export type UpdateWorkflowMutation = { __typename?: 'Mutation', updateWorkflow?: { __typename?: 'UpdateWorkflowPayload', workflow?: { __typename?: 'Workflow', rowId: string, organizationId: string, name: string, description?: string | null, definition: Record<string, unknown>, cronExpression?: string | null, isActive: boolean, updatedAt?: Date | null } | null } | null };
+export type UpdateWorkflowMutation = { updateWorkflow: { workflow: { rowId: string, organizationId: string, name: string, description: string | null, definition: Record<string, unknown>, cronExpression: string | null, isActive: boolean, updatedAt: Date | null } | null } | null };
 
 export type IntegrationDefinitionsQueryVariables = Exact<{
-  isFeatured?: InputMaybe<Scalars['Boolean']['input']>;
+  isFeatured?: boolean | null | undefined;
 }>;
 
 
-export type IntegrationDefinitionsQuery = { __typename?: 'Query', integrationDefinitions?: { __typename?: 'IntegrationDefinitionConnection', totalCount: number, nodes: Array<{ __typename?: 'IntegrationDefinition', id: string, rowId: string, name: string, description?: string | null, iconUrl?: string | null, category: string, authType: string, authFields: Record<string, unknown>, isFeatured: boolean, keepAlive: boolean, setupSteps?: Record<string, unknown> | null, docsUrl?: string | null, supportsOAuth: boolean }> } | null };
+export type IntegrationDefinitionsQuery = { integrationDefinitions: { totalCount: number, nodes: Array<{ id: string, rowId: string, name: string, description: string | null, iconUrl: string | null, category: string, authType: string, authFields: Record<string, unknown>, isFeatured: boolean, keepAlive: boolean, setupSteps: Record<string, unknown> | null, docsUrl: string | null, supportsOAuth: boolean }> } | null };
 
 export type IntegrationDefinitionQueryVariables = Exact<{
-  rowId: Scalars['String']['input'];
+  rowId: string;
 }>;
 
 
-export type IntegrationDefinitionQuery = { __typename?: 'Query', integrationDefinition?: { __typename?: 'IntegrationDefinition', id: string, rowId: string, name: string, description?: string | null, iconUrl?: string | null, category: string, authType: string, authFields: Record<string, unknown>, mcpPackage: string, mcpCommand: string, mcpArgs: Record<string, unknown>, keepAlive: boolean, idleTimeoutMs: number, isFeatured: boolean, isEnabled: boolean, setupSteps?: Record<string, unknown> | null, docsUrl?: string | null, supportsOAuth: boolean } | null };
+export type IntegrationDefinitionQuery = { integrationDefinition: { id: string, rowId: string, name: string, description: string | null, iconUrl: string | null, category: string, authType: string, authFields: Record<string, unknown>, mcpPackage: string, mcpCommand: string, mcpArgs: Record<string, unknown>, keepAlive: boolean, idleTimeoutMs: number, isFeatured: boolean, isEnabled: boolean, setupSteps: Record<string, unknown> | null, docsUrl: string | null, supportsOAuth: boolean } | null };
 
 export type IntegrationsQueryVariables = Exact<{
-  organizationId: Scalars['String']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
+  organizationId: string;
+  limit?: number | null | undefined;
 }>;
 
 
-export type IntegrationsQuery = { __typename?: 'Query', integrations?: { __typename?: 'IntegrationConnection', totalCount: number, nodes: Array<{ __typename?: 'Integration', rowId: string, name: string, type: string, isEnabled: boolean, mcpServerId?: string | null, createdAt?: Date | null, updatedAt?: Date | null }> } | null };
+export type IntegrationsQuery = { integrations: { totalCount: number, nodes: Array<{ rowId: string, name: string, type: string, isEnabled: boolean, mcpServerId: string | null, createdAt: Date | null, updatedAt: Date | null }> } | null };
 
 export type IntegrationQueryVariables = Exact<{
-  id: Scalars['UUID']['input'];
+  id: string;
 }>;
 
 
-export type IntegrationQuery = { __typename?: 'Query', integration?: { __typename?: 'Integration', rowId: string, name: string, type: string, isEnabled: boolean, config: Record<string, unknown>, createdAt?: Date | null, updatedAt?: Date | null } | null };
+export type IntegrationQuery = { integration: { rowId: string, name: string, type: string, isEnabled: boolean, config: Record<string, unknown>, createdAt: Date | null, updatedAt: Date | null } | null };
 
 export type PluginsQueryVariables = Exact<{
-  organizationId: Scalars['String']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
+  organizationId: string;
+  limit?: number | null | undefined;
 }>;
 
 
-export type PluginsQuery = { __typename?: 'Query', plugins?: { __typename?: 'PluginConnection', totalCount: number, nodes: Array<{ __typename?: 'Plugin', rowId: string, name: string, version: string, manifest: Record<string, unknown>, wasmUrl: string, isEnabled: boolean, isVerified: boolean, createdAt?: Date | null, updatedAt?: Date | null }> } | null };
-
-export type UserByIdentityProviderIdQueryVariables = Exact<{
-  identityProviderId: Scalars['UUID']['input'];
-}>;
-
-
-export type UserByIdentityProviderIdQuery = { __typename?: 'Query', userByIdentityProviderId?: { __typename?: 'User', rowId: string, email: string, name: string, avatarUrl?: string | null, createdAt?: Date | null, userOrganizations: { __typename?: 'UserOrganizationConnection', nodes: Array<{ __typename?: 'UserOrganization', organizationId: string, slug: string, name?: string | null, type: OrganizationType, role: MemberRole }> } } | null };
+export type PluginsQuery = { plugins: { totalCount: number, nodes: Array<{ rowId: string, name: string, version: string, manifest: Record<string, unknown>, wasmUrl: string, isEnabled: boolean, isVerified: boolean, createdAt: Date | null, updatedAt: Date | null }> } | null };
 
 export type WorkflowQueryVariables = Exact<{
-  rowId: Scalars['UUID']['input'];
+  rowId: string;
 }>;
 
 
-export type WorkflowQuery = { __typename?: 'Query', workflow?: { __typename?: 'Workflow', rowId: string, organizationId: string, name: string, description?: string | null, definition: Record<string, unknown>, cronExpression?: string | null, webhookSecret?: string | null, isActive: boolean, createdAt?: Date | null, updatedAt?: Date | null, workflowRuns: { __typename?: 'WorkflowRunConnection', totalCount: number, nodes: Array<{ __typename?: 'WorkflowRun', rowId: string, engineWorkflowId: string, status: string, startedAt?: Date | null, completedAt?: Date | null, input?: Record<string, unknown> | null, output?: Record<string, unknown> | null, error?: string | null, createdAt?: Date | null, workflowStepLogs: { __typename?: 'WorkflowStepLogConnection', nodes: Array<{ __typename?: 'WorkflowStepLog', rowId: string, stepId: string, stepName: string, stepType: string, status: string, input?: Record<string, unknown> | null, output?: Record<string, unknown> | null, error?: string | null, startedAt?: Date | null, completedAt?: Date | null }> } }> } } | null };
+export type WorkflowQuery = { workflow: { rowId: string, organizationId: string, name: string, description: string | null, definition: Record<string, unknown>, cronExpression: string | null, webhookSecret: string | null, isActive: boolean, createdAt: Date | null, updatedAt: Date | null, workflowRuns: { totalCount: number, nodes: Array<{ rowId: string, engineWorkflowId: string, status: string, startedAt: Date | null, completedAt: Date | null, input: Record<string, unknown> | null, output: Record<string, unknown> | null, error: string | null, createdAt: Date | null, workflowStepLogs: { nodes: Array<{ rowId: string, stepId: string, stepName: string, stepType: string, status: string, input: Record<string, unknown> | null, output: Record<string, unknown> | null, error: string | null, startedAt: Date | null, completedAt: Date | null }> } }> } } | null };
 
 export type WorkflowsQueryVariables = Exact<{
-  organizationId: Scalars['String']['input'];
-  limit?: InputMaybe<Scalars['Int']['input']>;
+  organizationId: string;
+  limit?: number | null | undefined;
 }>;
 
 
-export type WorkflowsQuery = { __typename?: 'Query', workflows?: { __typename?: 'WorkflowConnection', totalCount: number, nodes: Array<{ __typename?: 'Workflow', rowId: string, name: string, description?: string | null, cronExpression?: string | null, isActive: boolean, createdAt?: Date | null, updatedAt?: Date | null, workflowRuns: { __typename?: 'WorkflowRunConnection', nodes: Array<{ __typename?: 'WorkflowRun', rowId: string, status: string, createdAt?: Date | null }> } }> } | null };
+export type WorkflowsQuery = { workflows: { totalCount: number, nodes: Array<{ rowId: string, name: string, description: string | null, cronExpression: string | null, isActive: boolean, createdAt: Date | null, updatedAt: Date | null, workflowRuns: { nodes: Array<{ rowId: string, status: string, createdAt: Date | null }> } }> } | null };
 
 
+export const PublishEventDocument = gql`
+    mutation PublishEvent($input: PublishEventInput!) {
+  publishEvent(input: $input) {
+    eventId
+    workflowsTriggered {
+      workflowId
+      workflowName
+      runId
+      status
+    }
+  }
+}
+    `;
 export const CreateIntegrationDocument = gql`
     mutation CreateIntegration($input: CreateIntegrationInput!) {
   createIntegration(input: $input) {
@@ -8221,7 +12996,7 @@ export const IntegrationDocument = gql`
 export const PluginsDocument = gql`
     query Plugins($organizationId: String!, $limit: Int) {
   plugins(
-    condition: {organizationId: $organizationId, isEnabled: true}
+    condition: {organizationId: $organizationId}
     orderBy: NAME_ASC
     first: $limit
   ) {
@@ -8237,26 +13012,6 @@ export const PluginsDocument = gql`
       updatedAt
     }
     totalCount
-  }
-}
-    `;
-export const UserByIdentityProviderIdDocument = gql`
-    query UserByIdentityProviderId($identityProviderId: UUID!) {
-  userByIdentityProviderId(identityProviderId: $identityProviderId) {
-    rowId
-    email
-    name
-    avatarUrl
-    createdAt
-    userOrganizations {
-      nodes {
-        organizationId
-        slug
-        name
-        type
-        role
-      }
-    }
   }
 }
     `;
@@ -8339,6 +13094,9 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    PublishEvent(variables: PublishEventMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<PublishEventMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<PublishEventMutation>({ document: PublishEventDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'PublishEvent', 'mutation', variables);
+    },
     CreateIntegration(variables: CreateIntegrationMutationVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<CreateIntegrationMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateIntegrationMutation>({ document: CreateIntegrationDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'CreateIntegration', 'mutation', variables);
     },
@@ -8380,9 +13138,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     Plugins(variables: PluginsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<PluginsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<PluginsQuery>({ document: PluginsDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'Plugins', 'query', variables);
-    },
-    UserByIdentityProviderId(variables: UserByIdentityProviderIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<UserByIdentityProviderIdQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<UserByIdentityProviderIdQuery>({ document: UserByIdentityProviderIdDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'UserByIdentityProviderId', 'query', variables);
     },
     Workflow(variables: WorkflowQueryVariables, requestHeaders?: GraphQLClientRequestHeaders, signal?: RequestInit['signal']): Promise<WorkflowQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<WorkflowQuery>({ document: WorkflowDocument, variables, requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders }, signal }), 'Workflow', 'query', variables);

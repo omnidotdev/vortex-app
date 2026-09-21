@@ -1,8 +1,0 @@
-mutation UpdatePlugin($id: UUID!, $patch: PluginPatch!) {
-  updatePluginById(input: { id: $id, pluginPatch: $patch }) {
-    plugin {
-      rowId
-      isEnabled
-    }
-  }
-}
