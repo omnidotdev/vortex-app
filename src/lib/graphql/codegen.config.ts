@@ -9,14 +9,18 @@ type GraphQLCodegenConfig = Types.ConfiguredOutput;
  * Shared plugins across the generated GraphQL Codegen artifacts.
  */
 const sharedPlugins: GraphQLCodegenConfig["plugins"] = [
-  "typescript",
-  "typescript-operations",
   {
+    // Prepend the TS no-check directive. It MUST be the first line of the file
+    // to disable checking for the whole artifact, so keep this plugin first and
+    // pin `placement: "prepend"` (newer @graphql-codegen/add otherwise emits it
+    // after the typescript plugin's helper types, landing on line 5).
     add: {
-      // prepend artifact with TS no-check directive
+      placement: "prepend",
       content: "// @ts-nocheck",
     },
   },
+  "typescript",
+  "typescript-operations",
 ];
 
 /**
