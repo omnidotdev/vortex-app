@@ -139,7 +139,7 @@ function WorkspacesPage() {
               <InfoIcon className="size-6 text-muted-foreground" />
               <div className="space-y-2">
                 <p className="text-muted-foreground text-sm">
-                  Workspaces are currently managed via Omni Organizations.
+                  Workspaces are currently managed via Omni Workspaces.
                 </p>
               </div>
               {orgDashboardUrl && (
@@ -149,7 +149,7 @@ function WorkspacesPage() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-primary text-sm hover:underline"
                 >
-                  Manage Organizations
+                  Manage Workspaces
                   <ExternalLinkIcon className="size-3" />
                 </a>
               )}
