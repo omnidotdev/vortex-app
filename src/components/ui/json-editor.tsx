@@ -1,25 +1,13 @@
-import { autocompletion, closeBrackets } from "@codemirror/autocomplete";
-import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import { json, jsonParseLinter } from "@codemirror/lang-json";
-import {
-  bracketMatching,
-  foldGutter,
-  indentOnInput,
-} from "@codemirror/language";
 import { lintGutter, linter } from "@codemirror/lint";
-import { EditorState } from "@codemirror/state";
-import {
-  EditorView,
-  drawSelection,
-  highlightActiveLine,
-  highlightActiveLineGutter,
-  keymap,
-  lineNumbers,
-} from "@codemirror/view";
+import { EditorView, placeholder as placeholderExt } from "@codemirror/view";
+import { CodeEditor } from "@omnidotdev/thornberry/code-editor";
 import { githubDark, githubLight } from "@uiw/codemirror-theme-github";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { cn } from "@/lib/utils";
+
+import type { Extension } from "@codemirror/state";
 
 interface JsonEditorProps {
   value: string;
@@ -33,7 +21,8 @@ interface JsonEditorProps {
 
 /**
  * JSON editor with syntax highlighting, validation, and auto-formatting.
- * Uses CodeMirror 6 for a rich editing experience.
+ * Built on the shared `@omnidotdev/thornberry/code-editor`, injecting the JSON
+ * language, lint, and theme through its extension and theme props
  */
 export function JsonEditor({
   value,
@@ -44,8 +33,6 @@ export function JsonEditor({
   maxHeight = 300,
   readOnly = false,
 }: JsonEditorProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const viewRef = useRef<EditorView | null>(null);
   const [isDark, setIsDark] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -84,12 +71,10 @@ export function JsonEditor({
     }
   }, [value]);
 
-  // Initialize editor
-  // biome-ignore lint/correctness/useExhaustiveDependencies: editor is initialized once per mount; value/onChange/placeholder are handled by separate effects or refs to avoid destroying the editor on every keystroke
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const theme = EditorView.theme({
+  // Layout theme preserving the editor's font size, height bounds, gutter, and
+  // placeholder styling; reconfigured live alongside the light/dark theme
+  const theme = useMemo<Extension>(() => {
+    const layoutTheme = EditorView.theme({
       "&": {
         fontSize: "16px",
         minHeight: `${minHeight}px`,
@@ -117,65 +102,14 @@ export function JsonEditor({
       },
     });
 
-    const updateListener = EditorView.updateListener.of((update) => {
-      if (update.docChanged) {
-        onChange(update.state.doc.toString());
-      }
-    });
+    return [isDark ? githubDark : githubLight, layoutTheme];
+  }, [isDark, minHeight, maxHeight]);
 
-    const state = EditorState.create({
-      doc: value,
-      extensions: [
-        lineNumbers(),
-        highlightActiveLineGutter(),
-        history(),
-        foldGutter(),
-        drawSelection(),
-        indentOnInput(),
-        bracketMatching(),
-        closeBrackets(),
-        autocompletion(),
-        highlightActiveLine(),
-        keymap.of([...defaultKeymap, ...historyKeymap]),
-        json(),
-        linter(jsonParseLinter()),
-        lintGutter(),
-        isDark ? githubDark : githubLight,
-        theme,
-        updateListener,
-        EditorState.readOnly.of(readOnly),
-        placeholder
-          ? EditorView.contentAttributes.of({ "data-placeholder": placeholder })
-          : [],
-      ],
-    });
-
-    const view = new EditorView({
-      state,
-      parent: containerRef.current,
-    });
-
-    viewRef.current = view;
-
-    return () => {
-      view.destroy();
-      viewRef.current = null;
-    };
-  }, [isDark, minHeight, maxHeight, readOnly]);
-
-  // Update content when value changes externally
-  useEffect(() => {
-    const view = viewRef.current;
-    if (view && value !== view.state.doc.toString()) {
-      view.dispatch({
-        changes: {
-          from: 0,
-          to: view.state.doc.length,
-          insert: value,
-        },
-      });
-    }
-  }, [value]);
+  const extensions = useMemo<Extension[]>(() => {
+    const exts: Extension[] = [linter(jsonParseLinter()), lintGutter()];
+    if (placeholder) exts.push(placeholderExt(placeholder));
+    return exts;
+  }, [placeholder]);
 
   // Format JSON
   const handleFormat = useCallback(() => {
@@ -201,8 +135,13 @@ export function JsonEditor({
 
   return (
     <div className={cn("relative", className)}>
-      <div
-        ref={containerRef}
+      <CodeEditor
+        value={value}
+        onChange={onChange}
+        language={json()}
+        theme={theme}
+        extensions={extensions}
+        readOnly={readOnly}
         className={cn(
           "overflow-hidden rounded-md border bg-background",
           error && "border-destructive",

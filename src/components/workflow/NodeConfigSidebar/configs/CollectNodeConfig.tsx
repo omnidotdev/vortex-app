@@ -1,4 +1,5 @@
 import { Input } from "@/components/ui/input";
+import { JsonEditor } from "@/components/ui/json-editor";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -76,20 +77,19 @@ export const CollectNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
       <div className="space-y-2">
         <Label htmlFor="events">Events (JSON)</Label>
-        <Textarea
-          id="events"
+        <JsonEditor
           value={data.events ? JSON.stringify(data.events, null, 2) : "[]"}
-          onChange={(e) => {
+          onChange={(next) => {
             try {
-              const parsed = JSON.parse(e.target.value);
+              const parsed = JSON.parse(next);
               onChange("events", parsed);
             } catch {
               // Allow invalid JSON while typing
             }
           }}
           placeholder='[{"name": "payment", "sourcePattern": "*", "typePattern": "payment.*"}]'
-          rows={6}
-          className="font-mono text-xs"
+          minHeight={140}
+          maxHeight={280}
         />
       </div>
     </>
