@@ -1,3 +1,4 @@
+import { JsonEditor } from "@/components/ui/json-editor";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -42,20 +43,19 @@ export const SagaNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
       <div className="space-y-2">
         <Label htmlFor="steps">Steps (JSON)</Label>
-        <Textarea
-          id="steps"
+        <JsonEditor
           value={data.steps ? JSON.stringify(data.steps, null, 2) : "[]"}
-          onChange={(e) => {
+          onChange={(next) => {
             try {
-              const parsed = JSON.parse(e.target.value);
+              const parsed = JSON.parse(next);
               onChange("steps", parsed);
             } catch {
               // Allow invalid JSON while typing
             }
           }}
           placeholder='[{"name": "step1", "execute": {"type": "action"}, "compensate": {"type": "action"}}]'
-          rows={8}
-          className="font-mono text-xs"
+          minHeight={160}
+          maxHeight={320}
         />
       </div>
     </>

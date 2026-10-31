@@ -22,6 +22,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { JsonEditor } from "@/components/ui/json-editor";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateIntegrationMutation } from "@/generated/graphql";
@@ -75,9 +76,6 @@ export function ConnectIntegrationDialog({
   const [credentials, setCredentials] = useState<Record<string, string>>({});
   const [showSecrets, setShowSecrets] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
-  const [jsonErrors, setJsonErrors] = useState<Record<string, string | null>>(
-    {},
-  );
   const [connectionName, setConnectionName] = useState("");
 
   const createIntegration = useCreateIntegrationMutation();
@@ -125,7 +123,6 @@ export function ConnectIntegrationDialog({
     }
 
     if (Object.values(jsonFieldErrors).some((err) => err !== null)) {
-      setJsonErrors(jsonFieldErrors);
       setError("Please fix the JSON errors before submitting");
       return;
     }
@@ -374,49 +371,36 @@ export function ConnectIntegrationDialog({
                     )}
                   </Label>
 
-                  {field.type === "json" || field.type === "text" ? (
-                    <>
-                      <Textarea
-                        id={fieldName}
-                        value={credentials[fieldName] || ""}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          setCredentials((prev) => ({
-                            ...prev,
-                            [fieldName]: value,
-                          }));
-                          // Validate JSON on change for json fields
-                          if (field.type === "json") {
-                            setJsonErrors((prev) => ({
-                              ...prev,
-                              [fieldName]: validateJson(value),
-                            }));
-                          }
-                        }}
-                        onBlur={(e) => {
-                          // Re-validate on blur for json fields
-                          if (field.type === "json") {
-                            setJsonErrors((prev) => ({
-                              ...prev,
-                              [fieldName]: validateJson(e.target.value),
-                            }));
-                          }
-                        }}
-                        placeholder={field.placeholder}
-                        required={field.required}
-                        rows={6}
-                        className={`w-full font-mono text-sm ${
-                          jsonErrors[fieldName]
-                            ? "border-destructive focus-visible:ring-destructive"
-                            : ""
-                        }`}
-                      />
-                      {jsonErrors[fieldName] && (
-                        <p className="text-destructive text-xs">
-                          {jsonErrors[fieldName]}
-                        </p>
-                      )}
-                    </>
+                  {field.type === "json" ? (
+                    // The editor surfaces its own parse error inline; submission
+                    // is gated by the re-validation in handleSubmit
+                    <JsonEditor
+                      value={credentials[fieldName] || ""}
+                      onChange={(value) => {
+                        setCredentials((prev) => ({
+                          ...prev,
+                          [fieldName]: value,
+                        }));
+                      }}
+                      placeholder={field.placeholder}
+                      minHeight={140}
+                      maxHeight={240}
+                    />
+                  ) : field.type === "text" ? (
+                    <Textarea
+                      id={fieldName}
+                      value={credentials[fieldName] || ""}
+                      onChange={(e) => {
+                        setCredentials((prev) => ({
+                          ...prev,
+                          [fieldName]: e.target.value,
+                        }));
+                      }}
+                      placeholder={field.placeholder}
+                      required={field.required}
+                      rows={6}
+                      className="w-full font-mono text-sm"
+                    />
                   ) : (
                     <div className="relative w-full">
                       <Input

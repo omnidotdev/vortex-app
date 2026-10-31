@@ -13,7 +13,7 @@ import {
   DialogRoot,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
+import { JsonEditor } from "@/components/ui/json-editor";
 import dslToReactFlow, { isDslFormat } from "@/lib/workflow/dslToReactFlow";
 
 import type { Edge, Node } from "reactflow";
@@ -262,11 +262,12 @@ function ImportWorkflowDialog({
               <p className="text-muted-foreground text-sm">
                 Or paste JSON below:
               </p>
-              <Textarea
+              <JsonEditor
                 value={jsonText}
-                onChange={(e) => processJsonText(e.target.value)}
+                onChange={processJsonText}
                 placeholder='{"version": "1.0", "steps": [...], "edges": [...]}'
-                className="min-h-[200px] font-mono text-sm"
+                minHeight={200}
+                maxHeight={360}
               />
             </div>
 

@@ -16,8 +16,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { JsonEditor } from "@/components/ui/json-editor";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { API_BASE_URL } from "@/lib/config/env.config";
 import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
 import pluginsOptions from "@/lib/options/plugins.options";
@@ -265,13 +265,12 @@ function UploadPluginDialog({
               {/* Manifest JSON */}
               <div className="space-y-2">
                 <Label htmlFor="plugin-manifest">Manifest JSON</Label>
-                <Textarea
-                  id="plugin-manifest"
+                <JsonEditor
                   value={manifest}
-                  onChange={(e) => setManifest(e.target.value)}
+                  onChange={setManifest}
                   placeholder={MANIFEST_PLACEHOLDER}
-                  rows={8}
-                  className="font-mono text-sm"
+                  minHeight={160}
+                  maxHeight={320}
                 />
                 <p className="text-muted-foreground text-xs">
                   Optional JSON describing the plugin's steps and I/O schema
