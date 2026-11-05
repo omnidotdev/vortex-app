@@ -1,7 +1,4 @@
-import {
-  gatekeeperDashboardUrl,
-  workspacesUrl,
-} from "@omnidotdev/providers/react";
+import { workspacesUrl } from "@omnidotdev/providers/react";
 import { Button, buttonVariants } from "@omnidotdev/thornberry/button";
 import { Link, createFileRoute, useRouter } from "@tanstack/react-router";
 import {
@@ -14,7 +11,7 @@ import {
 } from "lucide-react";
 
 import signIn from "@/lib/auth/signIn";
-import { ACCOUNT_URL, AUTH_BASE_URL } from "@/lib/config/env.config";
+import { ACCOUNT_URL } from "@/lib/config/env.config";
 import { fetchFreshSession, signOutLocal } from "@/server/functions/auth";
 
 import type { OrganizationClaim } from "@/lib/auth/getAuth";
@@ -75,11 +72,8 @@ function WorkspacesPage() {
       )
     : () => null;
 
-  // Workspace management lives on the Gatekeeper identity dashboard
-  const orgDashboardUrl = AUTH_BASE_URL
-    ? gatekeeperDashboardUrl(AUTH_BASE_URL)
-    : "";
-
+  // Workspace management lives on the account hub workspaces console
+  // (account.omni.dev/workspaces); reuse the account hub URL computed above
   return (
     <div className="flex h-full flex-col">
       {/* Sticky header */}
@@ -182,9 +176,9 @@ function WorkspacesPage() {
                   Workspaces are currently managed via Omni Workspaces.
                 </p>
               </div>
-              {orgDashboardUrl && (
+              {newWorkspaceHref && (
                 <a
-                  href={orgDashboardUrl}
+                  href={newWorkspaceHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-primary text-sm hover:underline"
