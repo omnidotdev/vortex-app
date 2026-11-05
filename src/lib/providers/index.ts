@@ -21,7 +21,7 @@ const FLAGS = {
 /**
  * Fetch the value of the maintenance mode feature flag.
  */
-export const fetchMaintenanceMode = createServerFn({ method: "GET" }).handler(
+export const fetchMaintenanceMode = createServerFn({ method: "POST" }).handler(
   async () => {
     const isMaintenanceMode = await flags.isEnabled(FLAGS.MAINTENANCE_MODE);
     return { isMaintenanceMode };
