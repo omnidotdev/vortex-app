@@ -13,21 +13,44 @@ import {
 } from "@/lib/config/env.config";
 
 /**
- * Fetch the current session with access token for GraphQL.
+ * Resolve the current session and its organizations.
+ *
+ * A degraded session is authenticated (getAuth returned it) but carries no
+ * access token: the refresh-token grant failed, so getAuth served the session
+ * without a fresh token and userinfo org hydration was skipped, leaving
+ * organizations empty. This is distinct from a genuinely workspace-less user
+ * (who has a valid access token), and the workspaces page uses it to prompt a
+ * re-login instead of the silent "Create a workspace to get started" state.
+ *
+ * `forceRefreshOrgs` bypasses getAuth's in-memory org display cache and
+ * re-hydrates the list live from userinfo, so a workspace created out-of-band
+ * (in the account hub) is reflected immediately instead of after the cache TTL.
  */
-export const fetchSession = createServerFn().handler(async () => {
+const loadSession = async (forceRefreshOrgs = false) => {
   const request = getRequest();
 
-  const session = await getAuth(request);
+  const session = await getAuth(request, { forceRefreshOrgs });
 
-  // A degraded session is authenticated (getAuth returned it) but carries no
-  // access token: the refresh-token grant failed, so getAuth served the session
-  // without a fresh token and userinfo org hydration was skipped, leaving
-  // organizations empty. This is distinct from a genuinely workspace-less user
-  // (who has a valid access token), and the workspaces page uses it to prompt a
-  // re-login instead of the silent "Create a workspace to get started" state
-  return { session, authDegraded: isSessionDegraded(session) };
-});
+  return {
+    session,
+    organizations: session?.organizations ?? [],
+    authDegraded: isSessionDegraded(session),
+  };
+};
+
+/**
+ * Fetch the current session with access token for GraphQL.
+ */
+export const fetchSession = createServerFn().handler(() => loadSession());
+
+/**
+ * Fetch the session with a live organization re-hydration (bypasses the org
+ * display cache). Used by the workspaces list so a workspace just created in
+ * the account hub appears without waiting out the cache TTL.
+ */
+export const fetchFreshSession = createServerFn().handler(() =>
+  loadSession(true),
+);
 
 const clearRowIdCacheCookie = () => {
   setCookie(authCache.cookieName, "", { maxAge: 0, path: "/" });

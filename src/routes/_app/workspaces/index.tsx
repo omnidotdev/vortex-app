@@ -1,32 +1,46 @@
-import { gatekeeperDashboardUrl } from "@omnidotdev/providers/react";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import {
+  gatekeeperDashboardUrl,
+  workspacesUrl,
+} from "@omnidotdev/providers/react";
+import { Button, buttonVariants } from "@omnidotdev/thornberry/button";
+import { Link, createFileRoute, useRouter } from "@tanstack/react-router";
 import {
   ExternalLinkIcon,
   InfoIcon,
   LayersIcon,
   LogInIcon,
+  Plus,
+  RefreshCw,
 } from "lucide-react";
 
-import CreateWorkspaceButton from "@/components/workspaces/CreateWorkspaceButton";
 import signIn from "@/lib/auth/signIn";
-import { AUTH_BASE_URL } from "@/lib/config/env.config";
-import { signOutLocal } from "@/server/functions/auth";
+import { ACCOUNT_URL, AUTH_BASE_URL } from "@/lib/config/env.config";
+import { fetchFreshSession, signOutLocal } from "@/server/functions/auth";
 
 import type { OrganizationClaim } from "@/lib/auth/getAuth";
 
 export const Route = createFileRoute("/_app/workspaces/")({
+  // Re-hydrate organizations live (bypassing the display cache) so a workspace
+  // just created in the account hub shows on arrival, rather than waiting out
+  // getAuth's org cache TTL. Invalidating the route re-runs this.
+  loader: async () => {
+    const { organizations, authDegraded } = await fetchFreshSession();
+    return { organizations, authDegraded };
+  },
   component: WorkspacesPage,
 });
 
 /**
  * Workspaces list page.
- * Displays Omni organizations from JWT claims as workspaces.
+ *
+ * Lists the Omni organizations the user is a member of as workspaces.
+ * Workspace creation and management is funneled to the account hub
+ * (account.omni.dev/workspaces), the single ecosystem surface that owns it, so
+ * this page lists and links out rather than embedding its own creation flow.
  */
 function WorkspacesPage() {
-  const { session, authDegraded } = Route.useRouteContext();
-
-  // Get user's organizations from JWT claims
-  const organizations = session?.organizations ?? [];
+  const router = useRouter();
+  const { organizations, authDegraded } = Route.useLoaderData();
 
   // A degraded session (refresh-token grant failed) is authenticated but has no
   // access token, so organizations came back empty. Without a signal it renders
@@ -48,7 +62,20 @@ function WorkspacesPage() {
     await signIn({ redirectUrl: "/workspaces" });
   };
 
-  // Org/workspace lifecycle lives on the Gatekeeper identity dashboard
+  // The account hub owns workspace creation; link out to it. Rendered only when
+  // the hub URL is configured (optional env), so a missing config degrades to
+  // no button rather than a dead link.
+  const newWorkspaceHref = workspacesUrl(ACCOUNT_URL);
+  const NewWorkspaceLink = newWorkspaceHref
+    ? ({ className }: { className?: string }) => (
+        <a href={newWorkspaceHref} className={buttonVariants({ className })}>
+          <Plus className="size-4" />
+          New workspace
+        </a>
+      )
+    : () => null;
+
+  // Workspace management lives on the Gatekeeper identity dashboard
   const orgDashboardUrl = AUTH_BASE_URL
     ? gatekeeperDashboardUrl(AUTH_BASE_URL)
     : "";
@@ -68,7 +95,20 @@ function WorkspacesPage() {
                 : "Create a workspace to get started"}
           </h1>
 
-          {!!organizations.length && <CreateWorkspaceButton />}
+          {!!organizations.length && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                aria-label="Refresh workspaces"
+                title="Refresh workspaces"
+                onClick={() => router.invalidate()}
+              >
+                <RefreshCw className="size-4" />
+              </Button>
+              <NewWorkspaceLink />
+            </div>
+          )}
         </div>
       </div>
 
@@ -129,11 +169,11 @@ function WorkspacesPage() {
 
           {!showReauth && !organizations.length && (
             <div className="mb-8 flex justify-center">
-              <CreateWorkspaceButton />
+              <NewWorkspaceLink />
             </div>
           )}
 
-          {/* Info about organization management */}
+          {/* Info about workspace management */}
           {!showReauth && (
             <div className="flex flex-col items-center gap-4 rounded-lg border border-dashed bg-muted/50 p-8 text-center">
               <InfoIcon className="size-6 text-muted-foreground" />
