@@ -16,7 +16,7 @@ const THEME_COOKIE = "vortex:theme";
 /**
  * Get the current theme from cookies.
  */
-export const getTheme = createServerFn().handler(
+export const getTheme = createServerFn({ method: "POST" }).handler(
   async (): Promise<Theme> => (getCookie(THEME_COOKIE) || "system") as Theme,
 );
 

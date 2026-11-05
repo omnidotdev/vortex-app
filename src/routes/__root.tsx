@@ -32,7 +32,7 @@ import type { Theme } from "@/providers/ThemeProvider";
  * Fetch session and maintenance mode flag in a single server function.
  */
 const fetchSessionAndMaintenanceMode = createServerFn({
-  method: "GET",
+  method: "POST",
 }).handler(async () => {
   let session = null;
   let authDegraded = false;

@@ -34,4 +34,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD wget -q --spider http://localhost:3000/api/_health || exit 1
 
-CMD ["node", ".output/server/index.mjs"]
+# Raise the max request-header size so large many-workspace auth cookies do not 431
+CMD ["node", "--max-http-header-size=65536", ".output/server/index.mjs"]

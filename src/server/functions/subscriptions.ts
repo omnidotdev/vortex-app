@@ -51,7 +51,7 @@ const requireAccessToken = (accessToken: string | undefined): string => {
 /**
  * Get subscription details for an organization.
  */
-export const getSubscription = createServerFn()
+export const getSubscription = createServerFn({ method: "POST" })
   .middleware([authMiddleware])
   .inputValidator((data) => organizationSchema.parse(data))
   .handler(async ({ data, context }) => {

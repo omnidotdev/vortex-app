@@ -9,7 +9,7 @@ import type { Price } from "@/lib/providers/billing";
  * Fetch all prices for this app.
  * Prices are filtered by app name metadata and sorted by unit amount (ascending).
  */
-export const getPrices = createServerFn().handler(
+export const getPrices = createServerFn({ method: "POST" }).handler(
   async (): Promise<Price[]> => {
     try {
       return await billing.getPrices(app.name.toLowerCase());

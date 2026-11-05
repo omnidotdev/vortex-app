@@ -41,15 +41,17 @@ const loadSession = async (forceRefreshOrgs = false) => {
 /**
  * Fetch the current session with access token for GraphQL.
  */
-export const fetchSession = createServerFn().handler(() => loadSession());
+export const fetchSession = createServerFn({ method: "POST" }).handler(() =>
+  loadSession(),
+);
 
 /**
  * Fetch the session with a live organization re-hydration (bypasses the org
  * display cache). Used by the workspaces list so a workspace just created in
  * the account hub appears without waiting out the cache TTL.
  */
-export const fetchFreshSession = createServerFn().handler(() =>
-  loadSession(true),
+export const fetchFreshSession = createServerFn({ method: "POST" }).handler(
+  () => loadSession(true),
 );
 
 const clearRowIdCacheCookie = () => {
