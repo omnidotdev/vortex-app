@@ -34,7 +34,7 @@
     "@codemirror/lint": "^6.9.7",
     "@codemirror/state": "^6.7.6",
     "@codemirror/view": "^6.43.13",
-    "@omnidotdev/providers": "github:omnidotdev/providers#2a38a3c62fc9791d68ebaabeb14e467a8784d733",
+    "@omnidotdev/providers": "github:omnidotdev/providers#31f580972ee99aed58489e6cc48152b24567421d",
     "@omnidotdev/thornberry": "github:omnidotdev/thornberry#b41f0c8e9e9237e2959534fcdfa01c23a0f021aa",
     "@radix-ui/react-alert-dialog": "^1.1.23",
     "@radix-ui/react-label": "^2.1.15",
