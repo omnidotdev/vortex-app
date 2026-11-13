@@ -223,7 +223,7 @@ const demoWorkflow: WorkflowDefinition = {
       description: "Categorize each article by topic",
       position: { x: 0, y: 0 },
       classify: {
-        model: "claude-sonnet-4-20250514",
+        model: "claude-sonnet-5-5",
         source: "{{ newArticles }}",
         categories: ["technology", "science", "business", "other"],
         outputVariable: "classifiedArticles",
@@ -287,7 +287,7 @@ const demoWorkflow: WorkflowDefinition = {
       description: "Generate a brief summary for business articles",
       position: { x: 0, y: 0 },
       summarize: {
-        model: "claude-sonnet-4-20250514",
+        model: "claude-sonnet-5-5",
         source: "{{ classifiedArticles.content }}",
         style: "brief",
         outputVariable: "businessSummary",

@@ -721,16 +721,9 @@ const ActionInputs = ({
         { value: "gpt-3.5-turbo", label: "GPT-3.5 Turbo" },
       ];
       const anthropicModels = [
-        {
-          value: "claude-sonnet-4-20250514",
-          label: "Claude Sonnet 4 (Latest)",
-        },
-        { value: "claude-3-5-sonnet-20241022", label: "Claude 3.5 Sonnet" },
-        {
-          value: "claude-3-5-haiku-20241022",
-          label: "Claude 3.5 Haiku (Fast)",
-        },
-        { value: "claude-3-opus-20240229", label: "Claude 3 Opus" },
+        { value: "claude-sonnet-5-5", label: "Claude Sonnet 5.5 (Latest)" },
+        { value: "claude-opus-5-5", label: "Claude Opus 5.5 (Most capable)" },
+        { value: "claude-haiku-5-5", label: "Claude Haiku 5.5 (Fast)" },
       ];
       const models =
         integrationId === "openai" ? openaiModels : anthropicModels;
