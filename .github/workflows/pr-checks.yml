@@ -6,4 +6,4 @@ on:
 
 jobs:
   checks:
-    uses: omnidotdev/.github/.github/workflows/pr-checks.yml@master
+    uses: omnidotdev/.github/.github/workflows/pr-checks.yml@8597ec6180fe4b8dfc361298e9b2294ee3c9607c # master
