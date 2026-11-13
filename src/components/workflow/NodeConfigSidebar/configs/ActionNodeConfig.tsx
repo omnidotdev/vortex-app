@@ -1172,7 +1172,7 @@ const AiNodeConfig = ({
               id="model"
               value={(inputs.model as string) || ""}
               onChange={(e) => updateInput("model", e.target.value)}
-              placeholder="gpt-4o, claude-sonnet-4-20250514, etc."
+              placeholder="gpt-4o, claude-sonnet-5-5, etc."
             />
           </div>
           <div className="space-y-2">

@@ -12,7 +12,7 @@ interface LLMNodeData {
   serverId?: string;
   /** Display name of the MCP server */
   serverName?: string;
-  /** Model identifier (e.g., "gpt-4", "claude-3-opus") */
+  /** Model identifier (e.g., "gpt-4o", "claude-sonnet-5-5") */
   model?: string;
   /** System prompt for the LLM */
   systemPrompt?: string;
