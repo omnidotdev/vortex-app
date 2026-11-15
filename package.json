@@ -7,6 +7,7 @@
   "type": "module",
   "packageManager": "bun@1.3.11",
   "scripts": {
+    "release": "changeset publish",
     "dev": "concurrently --kill-others --names \"GRAPHQL-CODEGEN,CLIENT\" -c \"bgBlue.bold,bgMagenta.bold\" \"bun run graphql:generate:watch\" \"bun dev:vite\"",
     "dev:vite": "bun --env-file .env.local --env-file .env.development vite dev",
     "build": "vite build",
