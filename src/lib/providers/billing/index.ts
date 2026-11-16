@@ -10,7 +10,6 @@ import { BILLING_INTERNAL_URL } from "@/lib/config/env.config";
 
 export type {
   BillingProvider,
-  CheckoutParams,
   Entitlement,
   EntitlementsResponse,
   Price,
