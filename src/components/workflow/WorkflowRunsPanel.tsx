@@ -1,6 +1,6 @@
+import { ScrollArea } from "@omnidotdev/thornberry/scroll-area";
 import { useState } from "react";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { RunDetail } from "./RunDetail";
 import { WorkflowRunsList } from "./WorkflowRunsList";
 
