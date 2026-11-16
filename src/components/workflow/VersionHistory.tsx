@@ -1,3 +1,4 @@
+import { ScrollArea } from "@omnidotdev/thornberry/scroll-area";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -24,7 +25,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import VersionDiff from "@/components/workflow/VersionDiff";
 import { useWorkflowQuery } from "@/generated/graphql";
 import { API_BASE_URL } from "@/lib/config/env.config";

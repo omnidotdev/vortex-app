@@ -1,3 +1,4 @@
+import { ScrollArea } from "@omnidotdev/thornberry/scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
 import {
@@ -38,7 +39,6 @@ import IntegrationPreviewModal from "@/components/integrations/IntegrationPrevie
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   integrationDefinitionsOptions,
   integrationsOptions,

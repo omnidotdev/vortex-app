@@ -1,3 +1,4 @@
+import { ScrollArea } from "@omnidotdev/thornberry/scroll-area";
 import { Cable, CheckCircle2, Plus, Search, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
@@ -15,7 +16,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { getIntegrationActions } from "@/lib/integrations/actions";
 
 import type { IntegrationAction } from "@/lib/integrations/actions";

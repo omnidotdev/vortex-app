@@ -1,3 +1,4 @@
+import { ScrollArea } from "@omnidotdev/thornberry/scroll-area";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import {
@@ -12,7 +13,6 @@ import {
 import { useEffect, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { useWorkflowRunStream } from "@/lib/hooks/useWorkflowRunStream";
 import { RunStatusBadge } from "./RunStatusBadge";
 import { StepLogItem } from "./StepLogItem";
@@ -196,7 +196,7 @@ export function RunDetail({
               Live Events
             </span>
           </div>
-          <ScrollArea className="max-h-36">
+          <ScrollArea className="max-h-36" viewportClassName="max-h-36">
             <div className="space-y-0.5 px-4 pb-3">
               {events.map((event, index) => (
                 <div
