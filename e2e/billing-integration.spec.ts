@@ -2,7 +2,8 @@ import { expect, test } from "./fixtures";
 
 /**
  * Aether billing integration tests.
- * Verifies the pricing page, plan display, and Stripe checkout flow.
+ * Verifies the pricing page, plan display, and the hand-off to the account
+ * hub, where plans are bought.
  */
 test.describe("billing / Aether integration", () => {
   test("pricing page should display all tiers", async ({ page }) => {
@@ -80,7 +81,7 @@ test.describe("billing / Aether integration", () => {
     ).toBeVisible({ timeout: 5_000 });
   });
 
-  test("upgrade should redirect to Stripe checkout", async ({ page }) => {
+  test("upgrade should open the plan on the account hub", async ({ page }) => {
     await page.goto("/pricing");
     await page.waitForLoadState("networkidle");
 
@@ -96,20 +97,10 @@ test.describe("billing / Aether integration", () => {
     await expect(upgradeItem).toBeVisible({ timeout: 5_000 });
     await upgradeItem.click();
 
-    // Should redirect to Stripe checkout
-    // The checkout session creation requires a working Aether backend
-    try {
-      await page.waitForURL(/checkout\.stripe\.com/, { timeout: 30_000 });
-    } catch {
-      // Stripe redirect may fail if the billing backend is unavailable.
-      // Verify the click at least triggered the upgrade flow
-      const url = page.url();
-
-      if (url.includes("/pricing")) {
-        // Still on pricing = the checkout session creation likely failed
-        test.skip(true, "Stripe checkout redirect not available");
-      }
-    }
+    // Should open the account hub's confirm step for the plan and workspace
+    await page.waitForURL(/\/billing\?product=vortex&plan=/, {
+      timeout: 30_000,
+    });
   });
 
   test("workspace settings should show current plan", async ({

@@ -38,8 +38,8 @@ export const FLAGS_CLIENT_KEY =
 export const BILLING_BASE_URL = clientEnv.VITE_BILLING_BASE_URL as
   | string
   | undefined;
-// Canonical account-management host that products link out to for "manage
-// account" (moves to https://account.omni.dev later)
+// Omni account hub that products link out to for "manage account" and for
+// buying and managing plans
 export const ACCOUNT_URL = clientEnv.VITE_ACCOUNT_URL as string | undefined;
 
 // Server-side runtime overrides for VITE_-prefixed vars. These allow Railway

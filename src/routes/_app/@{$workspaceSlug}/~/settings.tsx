@@ -18,6 +18,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
+import ManageSubscription from "@/components/billing/ManageSubscription";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -42,10 +43,7 @@ import {
   resolvePlanName,
 } from "@/lib/constants/tiers";
 import { tierOptions } from "@/lib/options/stats.options";
-import {
-  getBillingPortalUrl,
-  getSubscription,
-} from "@/server/functions/subscriptions";
+import { getSubscription } from "@/server/functions/subscriptions";
 
 import type { OrganizationClaim } from "@/lib/auth/getAuth";
 import type { Subscription } from "@/lib/providers/billing";
@@ -461,13 +459,11 @@ function ApiKeysSection({
  */
 function PlanSection({
   subscription,
-  organizationId,
+  workspaceSlug,
 }: {
   subscription: Subscription | null;
-  organizationId: string;
+  workspaceSlug: string;
 }) {
-  const [isRedirecting, setIsRedirecting] = useState(false);
-
   // Entitlement tier from Aether, used as the fallback when there is no live
   // Stripe subscription (a failed subscription read, or a comped/manually
   // granted tier) so a paid workspace is never shown as free
@@ -499,22 +495,6 @@ function PlanSection({
   }
 
   const product = subscription?.product;
-
-  const handleManageBilling = async () => {
-    setIsRedirecting(true);
-    try {
-      const url = await getBillingPortalUrl({
-        data: {
-          organizationId,
-          returnUrl: window.location.href,
-        },
-      });
-      window.location.href = url;
-    } catch {
-      toast.error("Failed to open billing portal");
-      setIsRedirecting(false);
-    }
-  };
 
   if (product) {
     const features =
@@ -550,17 +530,8 @@ function PlanSection({
                 </p>
               )}
             </div>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={handleManageBilling}
-              disabled={isRedirecting}
-            >
-              {isRedirecting && (
-                <Loader2 className="mr-1 h-4 w-4 animate-spin" />
-              )}
-              Manage Billing
-            </Button>
+            {/* Plans are managed on the Omni account hub */}
+            <ManageSubscription workspaceSlug={workspaceSlug} />
           </div>
         </div>
       </section>
@@ -665,7 +636,7 @@ function WorkspaceSettingsPage() {
         {/* Plan */}
         <PlanSection
           subscription={subscription}
-          organizationId={organizationId}
+          workspaceSlug={workspaceSlug}
         />
 
         {/* API Keys */}
