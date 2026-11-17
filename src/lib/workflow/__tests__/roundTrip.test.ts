@@ -523,6 +523,59 @@ describe("round trip: ReactFlow -> DSL -> ReactFlow", () => {
     expect(promptStep!.type).toBe("prompt");
   });
 
+  it("should preserve an agent step's provider and model", () => {
+    const dsl: WorkflowDefinition = {
+      version: "1.0",
+      steps: [
+        {
+          id: "t1",
+          type: "trigger",
+          name: "Start",
+          position: { x: 100, y: 50 },
+          trigger: { type: "manual", config: {} },
+        },
+        {
+          id: "agent1",
+          type: "agent",
+          name: "Research",
+          position: { x: 200, y: 200 },
+          agent: {
+            serverId: "srv",
+            provider: "openai",
+            model: "gpt-4o",
+            goal: "Research the topic",
+            maxIterations: 5,
+          },
+        },
+        {
+          id: "agent2",
+          type: "agent",
+          name: "Default",
+          position: { x: 400, y: 200 },
+          agent: { serverId: "srv", goal: "Summarize", maxIterations: 10 },
+        },
+      ],
+      edges: [
+        { id: "e1", source: "t1", target: "agent1" },
+        { id: "e2", source: "agent1", target: "agent2" },
+      ],
+    };
+
+    const { nodes, edges } = dslToReactFlow(dsl);
+    const dsl2 = reactFlowToDsl(nodes, edges);
+
+    const named = dsl2.steps.find((s) => s.id === "agent1");
+    expect(named?.type).toBe("agent");
+    if (named?.type !== "agent") return;
+    expect(named.agent.provider).toBe("openai");
+    expect(named.agent.model).toBe("gpt-4o");
+
+    // No provider stays unset so the worker applies its Synapse default
+    const defaulted = dsl2.steps.find((s) => s.id === "agent2");
+    if (defaulted?.type !== "agent") throw new Error("expected agent step");
+    expect(defaulted.agent.provider).toBeUndefined();
+  });
+
   it("should preserve an MCP step via the plugin node type", () => {
     const nodes: Node[] = [
       makeTriggerNode("t1"),

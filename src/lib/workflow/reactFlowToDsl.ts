@@ -1008,7 +1008,8 @@ function agentNodeToStep(node: Node): Step {
     position: node.position,
     agent: {
       serverId: (data.serverId as string) || "",
-      model: data.model as string | undefined,
+      provider: (data.provider as string) || undefined,
+      model: (data.model as string) || undefined,
       goal: (data.goal as string) || "",
       tools: data.tools as string[] | undefined,
       maxIterations: (data.maxIterations as number) || 10,
