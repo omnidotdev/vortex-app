@@ -32,6 +32,20 @@ type PluginSubConfigProps = SubConfigProps & {
   pluginId: string;
 };
 
+/**
+ * AI providers the worker runs agent and model steps against. Synapse (the
+ * Omni AI gateway) is the default and is stored as an unset provider; the
+ * others bring their own key from workspace integrations
+ */
+const AI_PROVIDERS = [
+  { value: "synapse", label: "Synapse (default)" },
+  { value: "openai", label: "OpenAI" },
+  { value: "anthropic", label: "Anthropic" },
+  { value: "groq", label: "Groq" },
+  { value: "mistral", label: "Mistral" },
+  { value: "together", label: "Together" },
+] as const;
+
 export const ActionNodeConfig = (props: NodeConfigProps) => {
   const { data, onChange } = props;
   const preset = data.preset as string | undefined;
@@ -1498,6 +1512,44 @@ const AiNodeConfig = ({
       {pluginId === "builtin:agent" && (
         <>
           <div className="space-y-2">
+            <Label>Provider</Label>
+            <Select
+              value={(inputs.provider as string) || "synapse"}
+              onValueChange={(value) =>
+                updateInput("provider", value === "synapse" ? "" : value)
+              }
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {AI_PROVIDERS.map((provider) => (
+                  <SelectItem key={provider.value} value={provider.value}>
+                    {provider.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-muted-foreground text-xs">
+              {(inputs.provider as string) && inputs.provider !== "synapse"
+                ? "Uses this provider's key from your workspace integrations"
+                : "Uses your workspace's Synapse key from integrations"}
+            </p>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="agentModel">Model</Label>
+            <Input
+              id="agentModel"
+              value={(inputs.model as string) || ""}
+              onChange={(e) => updateInput("model", e.target.value)}
+              placeholder={
+                (inputs.provider as string) && inputs.provider !== "synapse"
+                  ? "gpt-4o-mini"
+                  : "auto"
+              }
+            />
+          </div>
+          <div className="space-y-2">
             <Label htmlFor="serverId">Server ID</Label>
             <Input
               id="serverId"
@@ -1765,18 +1817,20 @@ const AiNodeConfig = ({
           <div className="space-y-2">
             <Label>Provider</Label>
             <Select
-              value={(inputs.provider as string) || ""}
-              onValueChange={(value) => updateInput("provider", value)}
+              value={(inputs.provider as string) || "synapse"}
+              onValueChange={(value) =>
+                updateInput("provider", value === "synapse" ? "" : value)
+              }
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select provider" />
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="openai">OpenAI</SelectItem>
-                <SelectItem value="anthropic">Anthropic</SelectItem>
-                <SelectItem value="google">Google</SelectItem>
-                <SelectItem value="azure">Azure OpenAI</SelectItem>
-                <SelectItem value="custom">Custom</SelectItem>
+                {AI_PROVIDERS.map((provider) => (
+                  <SelectItem key={provider.value} value={provider.value}>
+                    {provider.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

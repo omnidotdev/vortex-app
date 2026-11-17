@@ -750,6 +750,9 @@ export interface AgentStep extends Omit<StepBase, "type"> {
   type: "agent";
   agent: {
     serverId: string;
+    /** AI provider; unset runs through Synapse, the Omni AI gateway */
+    provider?: string;
+    /** Model id; unset uses Synapse's `auto` routing */
     model?: string;
     goal: string;
     tools?: string[];
