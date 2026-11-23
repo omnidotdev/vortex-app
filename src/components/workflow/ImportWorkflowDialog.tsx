@@ -1,18 +1,17 @@
-import { Upload } from "lucide-react";
-import { useCallback, useRef, useState } from "react";
-
-import { Button } from "@/components/ui/button";
+import { Button } from "@omnidotdev/thornberry/button";
 import {
   DialogBackdrop,
   DialogCloseTrigger,
   DialogContent,
   DialogDescription,
-  DialogFooter,
-  DialogHeader,
+  DialogPortal,
   DialogPositioner,
   DialogRoot,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@omnidotdev/thornberry/dialog";
+import { Upload } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
+
 import { JsonEditor } from "@/components/ui/json-editor";
 import dslToReactFlow, { isDslFormat } from "@/lib/workflow/dslToReactFlow";
 
@@ -220,90 +219,93 @@ function ImportWorkflowDialog({
 
   return (
     <DialogRoot open={open} onOpenChange={handleOpenChange}>
-      <DialogBackdrop />
-      <DialogPositioner>
-        <DialogContent
-          className={`max-w-lg ${isDragging ? "ring-2 ring-primary" : ""}`}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-        >
-          <DialogHeader>
-            <DialogTitle>Import Workflow</DialogTitle>
-            <DialogDescription>
-              Import a workflow definition from JSON
-            </DialogDescription>
-          </DialogHeader>
-          <DialogCloseTrigger />
+      <DialogPortal>
+        <DialogBackdrop />
+        <DialogPositioner>
+          <DialogContent
+            className={`max-w-lg ${isDragging ? "ring-2 ring-primary" : ""}`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            <div className="flex flex-col gap-1.5">
+              <DialogTitle>Import Workflow</DialogTitle>
+              <DialogDescription>
+                Import a workflow definition from JSON
+              </DialogDescription>
+            </div>
+            <DialogCloseTrigger />
 
-          <div className="space-y-4">
-            {/* File upload button */}
-            <div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".json"
-                className="hidden"
-                onChange={handleFileChange}
-              />
+            <div className="min-w-0 space-y-4">
+              {/* File upload button */}
+              <div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".json"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <Upload className="mr-2 h-4 w-4" />
+                  Upload JSON File
+                </Button>
+              </div>
+
+              {/* Paste section */}
+              <div className="space-y-2">
+                <p className="text-muted-foreground text-sm">
+                  Or paste JSON below:
+                </p>
+                <JsonEditor
+                  value={jsonText}
+                  onChange={processJsonText}
+                  placeholder='{"version": "1.0", "steps": [...], "edges": [...]}'
+                  minHeight={200}
+                  maxHeight={360}
+                />
+              </div>
+
+              {/* Validation error */}
+              {validationError && (
+                <p className="text-destructive text-sm">{validationError}</p>
+              )}
+
+              {/* Preview */}
+              {preview && (
+                <div className="rounded-md border bg-muted/30 p-3">
+                  <p className="text-sm">
+                    <span className="font-medium">
+                      {preview.stepCount} step
+                      {preview.stepCount !== 1 ? "s" : ""}
+                      {" found: "}
+                    </span>
+                    {preview.stepNames.join(", ")}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
               <Button
                 type="button"
                 variant="outline"
-                className="w-full"
-                onClick={() => fileInputRef.current?.click()}
+                onClick={() => onOpenChange(false)}
               >
-                <Upload className="mr-2 h-4 w-4" />
-                Upload JSON File
+                Cancel
+              </Button>
+              <Button type="button" disabled={!preview} onClick={handleImport}>
+                Import
               </Button>
             </div>
-
-            {/* Paste section */}
-            <div className="space-y-2">
-              <p className="text-muted-foreground text-sm">
-                Or paste JSON below:
-              </p>
-              <JsonEditor
-                value={jsonText}
-                onChange={processJsonText}
-                placeholder='{"version": "1.0", "steps": [...], "edges": [...]}'
-                minHeight={200}
-                maxHeight={360}
-              />
-            </div>
-
-            {/* Validation error */}
-            {validationError && (
-              <p className="text-destructive text-sm">{validationError}</p>
-            )}
-
-            {/* Preview */}
-            {preview && (
-              <div className="rounded-md border bg-muted/30 p-3">
-                <p className="text-sm">
-                  <span className="font-medium">
-                    {preview.stepCount} step{preview.stepCount !== 1 ? "s" : ""}
-                    {" found: "}
-                  </span>
-                  {preview.stepNames.join(", ")}
-                </p>
-              </div>
-            )}
-          </div>
-
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
-              Cancel
-            </Button>
-            <Button type="button" disabled={!preview} onClick={handleImport}>
-              Import
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </DialogPositioner>
+          </DialogContent>
+        </DialogPositioner>
+      </DialogPortal>
     </DialogRoot>
   );
 }

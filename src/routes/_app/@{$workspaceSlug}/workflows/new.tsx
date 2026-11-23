@@ -1,3 +1,5 @@
+import { Button } from "@omnidotdev/thornberry/button";
+import { ConfirmDialog } from "@omnidotdev/thornberry/confirm-dialog";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import {
   Link,
@@ -18,17 +20,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import {
   useCreateWorkflowMutation,
   useWorkflowsQuery,
@@ -880,31 +871,23 @@ function NewWorkflowPage() {
       )}
 
       {/* Template confirmation dialog */}
-      <AlertDialog
+      <ConfirmDialog
         open={!!confirmTemplate}
         onOpenChange={(open) => {
           if (!open) setConfirmTemplate(null);
         }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              Create from "{confirmTemplate?.name}"?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              This will create a new workflow using the{" "}
-              <strong>{confirmTemplate?.name}</strong> template. You can
-              customize it in the editor afterward.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmTemplate}>
-              Create Workflow
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        title={`Create from "${confirmTemplate?.name}"?`}
+        description={
+          <>
+            This will create a new workflow using the{" "}
+            <strong>{confirmTemplate?.name}</strong> template. You can customize
+            it in the editor afterward.
+          </>
+        }
+        confirmLabel="Create Workflow"
+        confirmVariant="solid"
+        onConfirm={handleConfirmTemplate}
+      />
     </div>
   );
 }

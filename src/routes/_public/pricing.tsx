@@ -1,23 +1,23 @@
 import { useTabs } from "@ark-ui/react";
-import { createFileRoute } from "@tanstack/react-router";
-import { CheckCircle2 } from "lucide-react";
-import { z } from "zod";
-
-import { PriceCard } from "@/components/pricing";
 import {
   AccordionItem,
   AccordionItemContent,
   AccordionItemTrigger,
   AccordionRoot,
-} from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+} from "@omnidotdev/thornberry/accordion";
+import { Badge } from "@omnidotdev/thornberry/badge";
+import { Button } from "@omnidotdev/thornberry/button";
 import {
   TabsContent,
   TabsList,
   TabsProvider,
   TabsTrigger,
-} from "@/components/ui/tabs";
+} from "@omnidotdev/thornberry/tabs";
+import { createFileRoute } from "@tanstack/react-router";
+import { CheckCircle2 } from "lucide-react";
+import { z } from "zod";
+
+import { PriceCard } from "@/components/pricing";
 import { hasBilling } from "@/lib/config/env.config";
 import { DEFAULT_FEATURES, FREE_PRICE } from "@/lib/constants/tiers";
 import pricesOptions from "@/lib/options/prices.options";

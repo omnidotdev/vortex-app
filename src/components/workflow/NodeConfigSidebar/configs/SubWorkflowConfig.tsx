@@ -1,18 +1,12 @@
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
+import { Textarea } from "@omnidotdev/thornberry/textarea";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouteContext } from "@tanstack/react-router";
 import { ChevronDown, ChevronRight, ExternalLink, Loader2 } from "lucide-react";
 import { useState } from "react";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import Dropdown from "@/components/ui/dropdown";
 import workflowsOptions from "@/lib/options/workflows.options";
 import { DurationField } from "../fields/DurationField";
 import { JsonField } from "../fields/JsonField";
@@ -89,28 +83,16 @@ export const SubWorkflowConfig = ({
             No other workflows found. Create another workflow first.
           </div>
         ) : (
-          <Select
+          <Dropdown
             value={workflowId}
             onValueChange={(value) => onChange("workflowId", value)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select a workflow..." />
-            </SelectTrigger>
-            <SelectContent>
-              {availableWorkflows.map((workflow) => (
-                <SelectItem key={workflow.rowId} value={workflow.rowId}>
-                  <div className="flex flex-col">
-                    <span>{workflow.name}</span>
-                    {workflow.description && (
-                      <span className="text-muted-foreground text-xs">
-                        {workflow.description}
-                      </span>
-                    )}
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            placeholder="Select a workflow..."
+            options={availableWorkflows.map((workflow) => ({
+              value: workflow.rowId,
+              label: workflow.name,
+              hint: workflow.description,
+            }))}
+          />
         )}
 
         {/* Link to open selected workflow */}
@@ -192,40 +174,27 @@ export const SubWorkflowConfig = ({
         <div className="space-y-4 pt-2">
           <div className="space-y-2">
             <Label>On Error</Label>
-            <Select
+            <Dropdown
               value={onError}
               onValueChange={(value) => onChange("onError", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="fail">
-                  <div className="flex flex-col">
-                    <span>Fail workflow</span>
-                    <span className="text-muted-foreground text-xs">
-                      Stop execution if sub-workflow fails
-                    </span>
-                  </div>
-                </SelectItem>
-                <SelectItem value="continue">
-                  <div className="flex flex-col">
-                    <span>Continue</span>
-                    <span className="text-muted-foreground text-xs">
-                      Continue even if sub-workflow fails
-                    </span>
-                  </div>
-                </SelectItem>
-                <SelectItem value="retry">
-                  <div className="flex flex-col">
-                    <span>Retry</span>
-                    <span className="text-muted-foreground text-xs">
-                      Retry the sub-workflow on failure
-                    </span>
-                  </div>
-                </SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                {
+                  value: "fail",
+                  label: "Fail workflow",
+                  hint: "Stop execution if sub-workflow fails",
+                },
+                {
+                  value: "continue",
+                  label: "Continue",
+                  hint: "Continue even if sub-workflow fails",
+                },
+                {
+                  value: "retry",
+                  label: "Retry",
+                  hint: "Retry the sub-workflow on failure",
+                },
+              ]}
+            />
           </div>
 
           {/* Retry settings (only shown when retry is selected) */}

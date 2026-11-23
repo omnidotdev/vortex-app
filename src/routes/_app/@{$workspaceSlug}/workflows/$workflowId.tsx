@@ -50,6 +50,32 @@ import { toast } from "sonner";
 import type { Connection, Edge, Node, ReactFlowInstance } from "reactflow";
 import "reactflow/dist/style.css";
 
+import { Button } from "@omnidotdev/thornberry/button";
+import { ConfirmDialog } from "@omnidotdev/thornberry/confirm-dialog";
+import {
+  DialogBackdrop,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogDescription,
+  DialogPortal,
+  DialogPositioner,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+} from "@omnidotdev/thornberry/dialog";
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
+import {
+  MenuContent,
+  MenuItem,
+  MenuItemText,
+  MenuPositioner,
+  MenuRoot,
+  MenuSeparator,
+  MenuTrigger,
+} from "@omnidotdev/thornberry/menu";
+import { Textarea } from "@omnidotdev/thornberry/textarea";
+
 import { AddNodeButton } from "@/components/AddNodeButton";
 import DebugPane from "@/components/DebugPane";
 import { SmartEdge } from "@/components/edges/SmartEdge";
@@ -123,49 +149,7 @@ import { WaitNode } from "@/components/nodes/WaitNode";
 import { WebhookResponseNode } from "@/components/nodes/WebhookResponseNode";
 import { ZipNode } from "@/components/nodes/ZipNode";
 import ThemeToggle from "@/components/ThemeToggle";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import {
-  DialogBackdrop,
-  DialogCloseTrigger,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogPositioner,
-  DialogRoot,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  MenuContent,
-  MenuItem,
-  MenuItemText,
-  MenuPositioner,
-  MenuRoot,
-  MenuSeparator,
-  MenuTrigger,
-} from "@/components/ui/menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import Dropdown from "@/components/ui/dropdown";
 import ExportWorkflowDialog from "@/components/workflow/ExportWorkflowDialog";
 import ImportWorkflowDialog from "@/components/workflow/ImportWorkflowDialog";
 import { NodeConfigSidebar } from "@/components/workflow/NodeConfigSidebar";
@@ -557,6 +541,7 @@ function WorkflowEditorPage() {
   const [showRunsPanel, setShowRunsPanel] = useState(false);
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [showMonitoring, setShowMonitoring] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [stepStatuses, setStepStatuses] = useState<Record<string, string>>({});
   const [snapToGrid, setSnapToGrid] = useState(true);
   const [showRightSidebar, setShowRightSidebar] = useState(false);
@@ -1601,81 +1586,80 @@ function WorkflowEditorPage() {
                     <Pencil className="h-4 w-4" />
                   </button>
                 </DialogTrigger>
-                <DialogBackdrop />
-                <DialogPositioner>
-                  <DialogContent>
-                    <DialogCloseTrigger />
-                    <DialogHeader>
-                      <DialogTitle>Edit Workflow</DialogTitle>
-                      <DialogDescription>
-                        Update the workflow name, description, and status.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4 py-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="edit-name">Name</Label>
-                        <Input
-                          id="edit-name"
-                          value={editName}
-                          onChange={(e) => setEditName(e.target.value)}
-                          placeholder="Workflow name"
-                        />
+                <DialogPortal>
+                  <DialogBackdrop />
+                  <DialogPositioner>
+                    <DialogContent>
+                      <DialogCloseTrigger />
+                      <div className="flex flex-col gap-1.5">
+                        <DialogTitle>Edit Workflow</DialogTitle>
+                        <DialogDescription>
+                          Update the workflow name, description, and status.
+                        </DialogDescription>
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="edit-description">Description</Label>
-                        <Textarea
-                          id="edit-description"
-                          value={editDescription}
-                          onChange={(e) => setEditDescription(e.target.value)}
-                          placeholder="Optional description"
-                          rows={3}
-                        />
+                      <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="edit-name">Name</Label>
+                          <Input
+                            id="edit-name"
+                            value={editName}
+                            onChange={(e) => setEditName(e.target.value)}
+                            placeholder="Workflow name"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="edit-description">Description</Label>
+                          <Textarea
+                            id="edit-description"
+                            value={editDescription}
+                            onChange={(e) => setEditDescription(e.target.value)}
+                            placeholder="Optional description"
+                            rows={3}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="edit-status">Status</Label>
+                          <Dropdown
+                            open={editSelectOpen}
+                            onOpenChange={setEditSelectOpen}
+                            value={editIsActive ? "active" : "inactive"}
+                            onValueChange={(value) =>
+                              setEditIsActive(value === "active")
+                            }
+                            id="edit-status"
+                            options={[
+                              { value: "active", label: "Active" },
+                              { value: "inactive", label: "Inactive" },
+                            ]}
+                          />
+                        </div>
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="edit-status">Status</Label>
-                        <Select
-                          open={editSelectOpen}
-                          onOpenChange={setEditSelectOpen}
-                          value={editIsActive ? "active" : "inactive"}
-                          onValueChange={(value) =>
-                            setEditIsActive(value === "active")
-                          }
-                        >
-                          <SelectTrigger id="edit-status">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="active">Active</SelectItem>
-                            <SelectItem value="inactive">Inactive</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    <DialogFooter>
-                      <DialogCloseTrigger asChild>
-                        <Button variant="outline">Cancel</Button>
-                      </DialogCloseTrigger>
-                      <Button
-                        onClick={() => {
-                          updateWorkflow({
-                            input: {
-                              rowId: workflowId,
-                              patch: {
-                                name: editName,
-                                description: editDescription || null,
-                                isActive: editIsActive,
+                      <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+                        <DialogCloseTrigger asChild>
+                          <Button variant="outline">Cancel</Button>
+                        </DialogCloseTrigger>
+                        <Button
+                          onClick={() => {
+                            updateWorkflow({
+                              input: {
+                                rowId: workflowId,
+                                patch: {
+                                  name: editName,
+                                  description: editDescription || null,
+                                  isActive: editIsActive,
+                                },
                               },
-                            },
-                          });
-                          setShowEditDialog(false);
-                        }}
-                        disabled={!editName.trim()}
-                      >
-                        Save Changes
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </DialogPositioner>
+                            });
+                            setShowEditDialog(false);
+                          }}
+                          disabled={!editName.trim()}
+                        >
+                          Save Changes
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </DialogPositioner>
+                </DialogPortal>
               </DialogRoot>
               <span
                 className={`hidden shrink-0 rounded-full px-2 py-0.5 text-xs sm:inline ${
@@ -1706,7 +1690,7 @@ function WorkflowEditorPage() {
           )}
           <ThemeToggle />
           <Button
-            variant={snapToGrid ? "default" : "outline"}
+            variant={snapToGrid ? "solid" : "outline"}
             size="sm"
             onClick={() => setSnapToGrid(!snapToGrid)}
             className="hidden lg:flex"
@@ -1730,7 +1714,7 @@ function WorkflowEditorPage() {
             <span className="hidden lg:inline">Execute</span>
           </Button>
           <Button
-            variant={showRunsPanel ? "default" : "outline"}
+            variant={showRunsPanel ? "solid" : "outline"}
             size="sm"
             aria-label="View runs"
             className="hidden sm:flex"
@@ -1747,7 +1731,7 @@ function WorkflowEditorPage() {
           </Button>
           {/* Versions, Monitoring, Import, Export (visible at md+) */}
           <Button
-            variant={showVersionHistory ? "default" : "outline"}
+            variant={showVersionHistory ? "solid" : "outline"}
             size="sm"
             className="hidden md:flex"
             aria-label="Version history"
@@ -1763,7 +1747,7 @@ function WorkflowEditorPage() {
             <span className="hidden lg:inline">Versions</span>
           </Button>
           <Button
-            variant={showMonitoring ? "default" : "outline"}
+            variant={showMonitoring ? "solid" : "outline"}
             size="sm"
             className="hidden md:flex"
             aria-label="Monitoring"
@@ -1929,43 +1913,33 @@ function WorkflowEditorPage() {
           </Button>
 
           {isDestructiveAllowed ? (
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  disabled={isDeleting}
-                  className="hidden md:flex"
-                >
-                  {isDeleting ? (
-                    <Loader2 className="mr-1 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Trash2 className="mr-1 h-4 w-4" />
-                  )}
-                  Delete
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Delete workflow?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This will permanently delete "{workflow.name}" and all its
-                    run history. This action cannot be undone.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() =>
-                      deleteWorkflow({ input: { rowId: workflowId } })
-                    }
-                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  >
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            <>
+              <Button
+                variant="destructive"
+                size="sm"
+                disabled={isDeleting}
+                className="hidden md:flex"
+                onClick={() => setDeleteDialogOpen(true)}
+              >
+                {isDeleting ? (
+                  <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                ) : (
+                  <Trash2 className="mr-1 h-4 w-4" />
+                )}
+                Delete
+              </Button>
+              <ConfirmDialog
+                open={deleteDialogOpen}
+                onOpenChange={setDeleteDialogOpen}
+                title={`Delete workflow "${workflow.name}"?`}
+                description="This will permanently delete the workflow and all its run history. This action cannot be undone."
+                confirmLabel="Delete"
+                onConfirm={() => {
+                  setDeleteDialogOpen(false);
+                  deleteWorkflow({ input: { rowId: workflowId } });
+                }}
+              />
+            </>
           ) : (
             <Button
               variant="destructive"

@@ -14,6 +14,8 @@ import ReactFlow, {
 import type { Connection, Edge, Node, ReactFlowInstance } from "reactflow";
 import "reactflow/dist/style.css";
 
+import { Button } from "@omnidotdev/thornberry/button";
+
 import { SmartEdge } from "@/components/edges/SmartEdge";
 import { ActionNode } from "@/components/nodes/ActionNode";
 import { AgentNode } from "@/components/nodes/AgentNode";
@@ -84,7 +86,6 @@ import { WaitNode } from "@/components/nodes/WaitNode";
 import { WebhookResponseNode } from "@/components/nodes/WebhookResponseNode";
 import { ZipNode } from "@/components/nodes/ZipNode";
 import ThemeToggle from "@/components/ThemeToggle";
-import { Button } from "@/components/ui/button";
 import { NodeConfigSidebar } from "@/components/workflow/NodeConfigSidebar";
 import authClient from "@/lib/auth/authClient";
 import { NodeTypes } from "@/lib/schema";

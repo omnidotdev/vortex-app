@@ -1,16 +1,10 @@
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
+import { Textarea } from "@omnidotdev/thornberry/textarea";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import Dropdown from "@/components/ui/dropdown";
 import { JsonField } from "../fields/JsonField";
 
 import type { NodeConfigProps } from "./types";
@@ -100,23 +94,19 @@ export const PluginNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
           <div className="space-y-2">
             <Label htmlFor="memoryLimit">Memory</Label>
-            <Select
+            <Dropdown
               value={String((data.memoryLimit as number) || 128)}
               onValueChange={(value) =>
                 onChange("memoryLimit", Number.parseInt(value, 10))
               }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="64">64 MB (Light)</SelectItem>
-                <SelectItem value="128">128 MB (Default)</SelectItem>
-                <SelectItem value="256">256 MB (Medium)</SelectItem>
-                <SelectItem value="512">512 MB (Large)</SelectItem>
-                <SelectItem value="1024">1 GB (Heavy)</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "64", label: "64 MB (Light)" },
+                { value: "128", label: "128 MB (Default)" },
+                { value: "256", label: "256 MB (Medium)" },
+                { value: "512", label: "512 MB (Large)" },
+                { value: "1024", label: "1 GB (Heavy)" },
+              ]}
+            />
           </div>
         </div>
       )}

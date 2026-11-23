@@ -1,14 +1,9 @@
-import { Input } from "@/components/ui/input";
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
+import { Textarea } from "@omnidotdev/thornberry/textarea";
+
+import Dropdown from "@/components/ui/dropdown";
 import { JsonEditor } from "@/components/ui/json-editor";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 
 import type { NodeConfigProps } from "./types";
 
@@ -40,16 +35,15 @@ export const CollectNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
       <div className="space-y-2">
         <Label htmlFor="mode">Collection Mode</Label>
-        <Select value={mode} onValueChange={(val) => onChange("mode", val)}>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Events</SelectItem>
-            <SelectItem value="any">Any Event</SelectItem>
-            <SelectItem value="n_of_m">N of M</SelectItem>
-          </SelectContent>
-        </Select>
+        <Dropdown
+          value={mode}
+          onValueChange={(val) => onChange("mode", val)}
+          options={[
+            { value: "all", label: "All Events" },
+            { value: "any", label: "Any Event" },
+            { value: "n_of_m", label: "N of M" },
+          ]}
+        />
       </div>
 
       {mode === "n_of_m" && (

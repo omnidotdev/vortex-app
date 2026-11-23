@@ -1,3 +1,4 @@
+import { Button } from "@omnidotdev/thornberry/button";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   createFileRoute,
@@ -6,8 +7,6 @@ import {
 } from "@tanstack/react-router";
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-
-import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_public/oauth/callback")({
   component: OAuthCallback,

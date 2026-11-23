@@ -1,17 +1,7 @@
+import { Button } from "@omnidotdev/thornberry/button";
+import { ConfirmDialog } from "@omnidotdev/thornberry/confirm-dialog";
 import { Trash2 } from "lucide-react";
-
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 interface NodeConfigFooterProps {
   onDelete: () => void;
@@ -22,29 +12,29 @@ export const NodeConfigFooter = ({
   onDelete,
   nodeLabel = "this node",
 }: NodeConfigFooterProps) => {
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
   return (
     <div className="border-t p-4">
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button variant="destructive" className="w-full">
-            <Trash2 className="mr-2 h-4 w-4" />
-            Delete Node
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Node</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete "{nodeLabel}"? This action cannot
-              be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={onDelete}>Delete</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <Button
+        variant="destructive"
+        className="w-full"
+        onClick={() => setConfirmOpen(true)}
+      >
+        <Trash2 className="mr-2 h-4 w-4" />
+        Delete Node
+      </Button>
+      <ConfirmDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        title={`Delete node "${nodeLabel}"?`}
+        description="This action cannot be undone."
+        confirmLabel="Delete"
+        onConfirm={() => {
+          setConfirmOpen(false);
+          onDelete();
+        }}
+      />
     </div>
   );
 };

@@ -1,7 +1,7 @@
+import { Label } from "@omnidotdev/thornberry/label";
 import { useRef, useState } from "react";
 
 import { JsonEditor } from "@/components/ui/json-editor";
-import { Label } from "@/components/ui/label";
 import { VariablePicker } from "@/components/workflow/VariablePicker";
 
 import type { Node } from "reactflow";

@@ -1,12 +1,14 @@
+import { Portal } from "@ark-ui/react/portal";
+import { Button } from "@omnidotdev/thornberry/button";
+import {
+  PopoverContent,
+  PopoverPositioner,
+  PopoverRoot,
+  PopoverTrigger,
+} from "@omnidotdev/thornberry/popover";
 import { Braces, ChevronRight } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
 import type { Node } from "reactflow";
@@ -200,7 +202,11 @@ export function VariablePicker({
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <PopoverRoot
+      open={open}
+      onOpenChange={(details) => setOpen(details.open)}
+      positioning={{ placement: "bottom-end", gutter: 4 }}
+    >
       <PopoverTrigger asChild>
         <Button
           type="button"
@@ -212,72 +218,80 @@ export function VariablePicker({
           <Braces className="h-4 w-4" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-72 p-0">
-        <div className="border-b px-3 py-2">
-          <p className="font-medium text-sm">Insert from previous step</p>
-          <p className="text-muted-foreground text-xs">
-            Click a step to see available data
-          </p>
-        </div>
-        <div className="max-h-64 overflow-y-auto">
-          {availableNodes.map(({ node, stepNumber }) => {
-            const displayName = getNodeDisplayName(node);
-            const typeInfo = getNodeTypeInfo(node);
-            const outputs = getNodeOutputs(node);
-            const isExpanded = expandedNode === node.id;
+      <Portal>
+        <PopoverPositioner>
+          <PopoverContent className="w-72 p-0">
+            <div className="border-b px-3 py-2">
+              <p className="font-medium text-sm">Insert from previous step</p>
+              <p className="text-muted-foreground text-xs">
+                Click a step to see available data
+              </p>
+            </div>
+            <div className="max-h-64 overflow-y-auto">
+              {availableNodes.map(({ node, stepNumber }) => {
+                const displayName = getNodeDisplayName(node);
+                const typeInfo = getNodeTypeInfo(node);
+                const outputs = getNodeOutputs(node);
+                const isExpanded = expandedNode === node.id;
 
-            return (
-              <div key={node.id} className="border-b last:border-b-0">
-                <button
-                  type="button"
-                  className="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-accent"
-                  onClick={() => setExpandedNode(isExpanded ? null : node.id)}
-                >
-                  <span
-                    className={cn(
-                      "flex h-6 w-6 shrink-0 items-center justify-center rounded font-bold text-[10px] text-white",
-                      typeInfo.color,
-                    )}
-                  >
-                    {stepNumber}
-                  </span>
-                  <span className="flex-1 truncate text-sm">{displayName}</span>
-                  <ChevronRight
-                    className={cn(
-                      "h-4 w-4 text-muted-foreground transition-transform",
-                      isExpanded && "rotate-90",
-                    )}
-                  />
-                </button>
-
-                {isExpanded && (
-                  <div className="bg-muted/50 pb-1">
-                    {outputs.map((output) => (
-                      <button
-                        key={output.key}
-                        type="button"
-                        className="flex w-full items-center gap-2 px-3 py-1.5 pl-11 text-left hover:bg-accent"
-                        onClick={() =>
-                          handleSelectOutput(node, stepNumber, output)
-                        }
+                return (
+                  <div key={node.id} className="border-b last:border-b-0">
+                    <button
+                      type="button"
+                      className="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-accent"
+                      onClick={() =>
+                        setExpandedNode(isExpanded ? null : node.id)
+                      }
+                    >
+                      <span
+                        className={cn(
+                          "flex h-6 w-6 shrink-0 items-center justify-center rounded font-bold text-[10px] text-white",
+                          typeInfo.color,
+                        )}
                       >
-                        <div className="flex-1">
-                          <p className="text-sm">{output.label}</p>
-                          {output.description && (
-                            <p className="text-muted-foreground text-xs">
-                              {output.description}
-                            </p>
-                          )}
-                        </div>
-                      </button>
-                    ))}
+                        {stepNumber}
+                      </span>
+                      <span className="flex-1 truncate text-sm">
+                        {displayName}
+                      </span>
+                      <ChevronRight
+                        className={cn(
+                          "h-4 w-4 text-muted-foreground transition-transform",
+                          isExpanded && "rotate-90",
+                        )}
+                      />
+                    </button>
+
+                    {isExpanded && (
+                      <div className="bg-muted/50 pb-1">
+                        {outputs.map((output) => (
+                          <button
+                            key={output.key}
+                            type="button"
+                            className="flex w-full items-center gap-2 px-3 py-1.5 pl-11 text-left hover:bg-accent"
+                            onClick={() =>
+                              handleSelectOutput(node, stepNumber, output)
+                            }
+                          >
+                            <div className="flex-1">
+                              <p className="text-sm">{output.label}</p>
+                              {output.description && (
+                                <p className="text-muted-foreground text-xs">
+                                  {output.description}
+                                </p>
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </PopoverContent>
-    </Popover>
+                );
+              })}
+            </div>
+          </PopoverContent>
+        </PopoverPositioner>
+      </Portal>
+    </PopoverRoot>
   );
 }

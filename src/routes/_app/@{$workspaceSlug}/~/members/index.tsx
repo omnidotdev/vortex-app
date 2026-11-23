@@ -1,8 +1,8 @@
 import { gatekeeperOrgManageUrl } from "@omnidotdev/providers/react";
+import { buttonVariants } from "@omnidotdev/thornberry/button";
 import { createFileRoute } from "@tanstack/react-router";
 import { ExternalLink } from "lucide-react";
 
-import { buttonVariants } from "@/components/ui/button";
 import { ACCOUNT_URL } from "@/lib/config/env.config";
 
 export const Route = createFileRoute("/_app/@{$workspaceSlug}/~/members/")({
@@ -31,7 +31,7 @@ function MembersPage() {
           href={manageUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className={buttonVariants({ variant: "default" })}
+          className={buttonVariants({ variant: "solid" })}
         >
           Manage members in Omni
           <ExternalLink className="size-4" />

@@ -1,3 +1,6 @@
+import { Badge } from "@omnidotdev/thornberry/badge";
+import { Button } from "@omnidotdev/thornberry/button";
+import { Input } from "@omnidotdev/thornberry/input";
 import {
   Clock,
   Combine,
@@ -13,9 +16,6 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { SaveIndicator } from "./SaveIndicator";
 
 import type { SaveStatus } from "./hooks/useAutoSave";

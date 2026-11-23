@@ -1,24 +1,23 @@
-import { Check, Copy, Download } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
-
-import { Button } from "@/components/ui/button";
+import { Button } from "@omnidotdev/thornberry/button";
 import {
   DialogBackdrop,
   DialogCloseTrigger,
   DialogContent,
   DialogDescription,
-  DialogFooter,
-  DialogHeader,
+  DialogPortal,
   DialogPositioner,
   DialogRoot,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@omnidotdev/thornberry/dialog";
 import {
   TabsContent,
   TabsList,
   TabsRoot,
   TabsTrigger,
-} from "@/components/ui/tabs";
+} from "@omnidotdev/thornberry/tabs";
+import { Check, Copy, Download } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
+
 import dslToTypeScript from "@/lib/workflow/dslToTypeScript";
 import { reactFlowToDsl } from "@/lib/workflow/reactFlowToDsl";
 
@@ -111,65 +110,67 @@ function ExportWorkflowDialog({
 
   return (
     <DialogRoot open={open} onOpenChange={(e) => onOpenChange(e.open)}>
-      <DialogBackdrop />
-      <DialogPositioner>
-        <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Export Workflow</DialogTitle>
-            <DialogDescription>
-              Export your workflow definition
-            </DialogDescription>
-          </DialogHeader>
+      <DialogPortal>
+        <DialogBackdrop />
+        <DialogPositioner>
+          <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
+            <div className="flex flex-col gap-1.5">
+              <DialogTitle>Export Workflow</DialogTitle>
+              <DialogDescription>
+                Export your workflow definition
+              </DialogDescription>
+            </div>
 
-          <TabsRoot value={activeTab} onValueChange={handleTabChange}>
-            <TabsList>
-              <TabsTrigger value="json">JSON</TabsTrigger>
-              <TabsTrigger value="typescript">TypeScript</TabsTrigger>
-            </TabsList>
+            <TabsRoot value={activeTab} onValueChange={handleTabChange}>
+              <TabsList>
+                <TabsTrigger value="json">JSON</TabsTrigger>
+                <TabsTrigger value="typescript">TypeScript</TabsTrigger>
+              </TabsList>
 
-            <TabsContent value="json">
-              <pre className="max-h-[400px] overflow-y-auto rounded-md border bg-muted p-4 font-mono text-sm">
-                {jsonOutput}
-              </pre>
-            </TabsContent>
+              <TabsContent value="json">
+                <pre className="max-h-[400px] overflow-y-auto rounded-md border bg-muted p-4 font-mono text-sm">
+                  {jsonOutput}
+                </pre>
+              </TabsContent>
 
-            <TabsContent value="typescript">
-              <pre className="max-h-[400px] overflow-y-auto rounded-md border bg-muted p-4 font-mono text-sm">
-                {tsOutput}
-              </pre>
-            </TabsContent>
-          </TabsRoot>
+              <TabsContent value="typescript">
+                <pre className="max-h-[400px] overflow-y-auto rounded-md border bg-muted p-4 font-mono text-sm">
+                  {tsOutput}
+                </pre>
+              </TabsContent>
+            </TabsRoot>
 
-          <DialogFooter>
-            <Button variant="outline" size="sm" onClick={handleCopy}>
-              {copied ? (
-                <>
-                  <Check className="mr-2 h-4 w-4" />
-                  Copied!
-                </>
-              ) : (
-                <>
-                  <Copy className="mr-2 h-4 w-4" />
-                  Copy
-                </>
-              )}
-            </Button>
-
-            <Button variant="outline" size="sm" onClick={handleDownload}>
-              <Download className="mr-2 h-4 w-4" />
-              Download
-            </Button>
-
-            <DialogCloseTrigger asChild>
-              <Button variant="ghost" size="sm">
-                Close
+            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <Button variant="outline" size="sm" onClick={handleCopy}>
+                {copied ? (
+                  <>
+                    <Check className="mr-2 h-4 w-4" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="mr-2 h-4 w-4" />
+                    Copy
+                  </>
+                )}
               </Button>
-            </DialogCloseTrigger>
-          </DialogFooter>
 
-          <DialogCloseTrigger />
-        </DialogContent>
-      </DialogPositioner>
+              <Button variant="outline" size="sm" onClick={handleDownload}>
+                <Download className="mr-2 h-4 w-4" />
+                Download
+              </Button>
+
+              <DialogCloseTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  Close
+                </Button>
+              </DialogCloseTrigger>
+            </div>
+
+            <DialogCloseTrigger />
+          </DialogContent>
+        </DialogPositioner>
+      </DialogPortal>
     </DialogRoot>
   );
 }

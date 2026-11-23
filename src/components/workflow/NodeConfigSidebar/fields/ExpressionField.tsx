@@ -1,9 +1,9 @@
 import { EditorView, placeholder as placeholderExt } from "@codemirror/view";
 import { CodeEditor } from "@omnidotdev/thornberry/code-editor";
+import { Label } from "@omnidotdev/thornberry/label";
 import { githubDark, githubLight } from "@uiw/codemirror-theme-github";
 import { useEffect, useMemo, useState } from "react";
 
-import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 import type { Extension } from "@codemirror/state";

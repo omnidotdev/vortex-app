@@ -1,3 +1,6 @@
+import { Badge } from "@omnidotdev/thornberry/badge";
+import { Button } from "@omnidotdev/thornberry/button";
+import { Input } from "@omnidotdev/thornberry/input";
 import { ScrollArea } from "@omnidotdev/thornberry/scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
@@ -36,9 +39,6 @@ import {
 import { useMemo, useRef, useState } from "react";
 
 import IntegrationPreviewModal from "@/components/integrations/IntegrationPreviewModal";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   integrationDefinitionsOptions,
   integrationsOptions,
@@ -1414,7 +1414,7 @@ export function NodePicker({
         {/* Filter toggle */}
         <div className="mt-3 flex items-center gap-2">
           <Button
-            variant={showOnlyConnected ? "secondary" : "ghost"}
+            variant={showOnlyConnected ? "muted" : "ghost"}
             size="sm"
             onClick={() => setShowOnlyConnected(!showOnlyConnected)}
             className="h-7 text-xs"
@@ -1435,7 +1435,7 @@ export function NodePicker({
           {Object.entries(CATEGORIES).map(([key, { label, icon: Icon }]) => (
             <Button
               key={key}
-              variant={selectedCategory === key ? "secondary" : "ghost"}
+              variant={selectedCategory === key ? "muted" : "ghost"}
               size="sm"
               onClick={() => setSelectedCategory(key as CategoryKey)}
               className="h-7 gap-1.5 px-2 text-xs"
@@ -1444,7 +1444,7 @@ export function NodePicker({
               {label}
               {categoryCounts[key as CategoryKey] > 0 && (
                 <Badge
-                  variant={selectedCategory === key ? "default" : "secondary"}
+                  variant={selectedCategory === key ? "solid" : "secondary"}
                   className="ml-1 h-4 px-1 text-[10px]"
                 >
                   {categoryCounts[key as CategoryKey]}

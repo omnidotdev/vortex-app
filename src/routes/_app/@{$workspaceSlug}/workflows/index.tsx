@@ -1,3 +1,18 @@
+import { Button } from "@omnidotdev/thornberry/button";
+import { ConfirmDialog } from "@omnidotdev/thornberry/confirm-dialog";
+import {
+  DialogBackdrop,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogDescription,
+  DialogPortal,
+  DialogPositioner,
+  DialogRoot,
+  DialogTitle,
+} from "@omnidotdev/thornberry/dialog";
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
+import { Textarea } from "@omnidotdev/thornberry/textarea";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import {
   Link,
@@ -9,39 +24,7 @@ import { Loader2, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 import UsageBanner from "@/components/UsageBanner";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import {
-  DialogBackdrop,
-  DialogCloseTrigger,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogPositioner,
-  DialogRoot,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import Dropdown from "@/components/ui/dropdown";
 import {
   useDeleteWorkflowMutation,
   useUpdateWorkflowMutation,
@@ -86,6 +69,10 @@ function WorkflowsPage() {
   const { organization } = useRouteContext({ from: "/_app" });
   const isDestructiveAllowed = canPerformDestructiveAction(organization);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    rowId: string;
+    name: string;
+  } | null>(null);
   const [editingWorkflow, setEditingWorkflow] = useState<{
     rowId: string;
     name: string;
@@ -247,49 +234,25 @@ function WorkflowsPage() {
                         <Pencil className="h-4 w-4" />
                       </Button>
                       {isDestructiveAllowed ? (
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
-                              aria-label="Delete workflow"
-                              disabled={deletingId === workflow.rowId}
-                            >
-                              {deletingId === workflow.rowId ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              ) : (
-                                <Trash2 className="h-4 w-4" />
-                              )}
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Delete workflow?
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                This will permanently delete "{workflow.name}"
-                                and all its run history. This action cannot be
-                                undone.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => {
-                                  setDeletingId(workflow.rowId);
-                                  deleteWorkflow({
-                                    input: { rowId: workflow.rowId },
-                                  });
-                                }}
-                                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                              >
-                                Delete
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                          aria-label="Delete workflow"
+                          disabled={deletingId === workflow.rowId}
+                          onClick={() =>
+                            setDeleteTarget({
+                              rowId: workflow.rowId,
+                              name: workflow.name,
+                            })
+                          }
+                        >
+                          {deletingId === workflow.rowId ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="h-4 w-4" />
+                          )}
+                        </Button>
                       ) : (
                         <Button
                           variant="ghost"
@@ -311,6 +274,22 @@ function WorkflowsPage() {
         </div>
       )}
 
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => {
+          if (!open) setDeleteTarget(null);
+        }}
+        title={`Delete workflow "${deleteTarget?.name}"?`}
+        description="This will permanently delete the workflow and all its run history. This action cannot be undone."
+        confirmLabel="Delete"
+        onConfirm={() => {
+          if (!deleteTarget) return;
+          setDeletingId(deleteTarget.rowId);
+          deleteWorkflow({ input: { rowId: deleteTarget.rowId } });
+          setDeleteTarget(null);
+        }}
+      />
+
       {/* Edit Workflow Dialog */}
       <DialogRoot
         open={!!editingWorkflow}
@@ -318,95 +297,94 @@ function WorkflowsPage() {
           if (!e.open) setEditingWorkflow(null);
         }}
       >
-        <DialogBackdrop />
-        <DialogPositioner>
-          <DialogContent>
-            <DialogCloseTrigger />
-            <DialogHeader>
-              <DialogTitle>Edit Workflow</DialogTitle>
-              <DialogDescription>
-                Update the workflow name, description, and status.
-              </DialogDescription>
-            </DialogHeader>
-            {editingWorkflow && (
-              <div className="space-y-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-name">Name</Label>
-                  <Input
-                    id="edit-name"
-                    value={editingWorkflow.name}
-                    onChange={(e) =>
-                      setEditingWorkflow({
-                        ...editingWorkflow,
-                        name: e.target.value,
-                      })
-                    }
-                    placeholder="Workflow name"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-description">Description</Label>
-                  <Textarea
-                    id="edit-description"
-                    value={editingWorkflow.description}
-                    onChange={(e) =>
-                      setEditingWorkflow({
-                        ...editingWorkflow,
-                        description: e.target.value,
-                      })
-                    }
-                    placeholder="Optional description"
-                    rows={3}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="edit-status">Status</Label>
-                  <Select
-                    value={editingWorkflow.isActive ? "active" : "inactive"}
-                    onValueChange={(value) =>
-                      setEditingWorkflow({
-                        ...editingWorkflow,
-                        isActive: value === "active",
-                      })
-                    }
-                  >
-                    <SelectTrigger id="edit-status">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="inactive">Inactive</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+        <DialogPortal>
+          <DialogBackdrop />
+          <DialogPositioner>
+            <DialogContent>
+              <DialogCloseTrigger />
+              <div className="flex flex-col gap-1.5">
+                <DialogTitle>Edit Workflow</DialogTitle>
+                <DialogDescription>
+                  Update the workflow name, description, and status.
+                </DialogDescription>
               </div>
-            )}
-            <DialogFooter>
-              <DialogCloseTrigger asChild>
-                <Button variant="outline">Cancel</Button>
-              </DialogCloseTrigger>
-              <Button
-                onClick={() => {
-                  if (editingWorkflow) {
-                    updateWorkflow({
-                      input: {
-                        rowId: editingWorkflow.rowId,
-                        patch: {
-                          name: editingWorkflow.name,
-                          description: editingWorkflow.description || null,
-                          isActive: editingWorkflow.isActive,
+              {editingWorkflow && (
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-name">Name</Label>
+                    <Input
+                      id="edit-name"
+                      value={editingWorkflow.name}
+                      onChange={(e) =>
+                        setEditingWorkflow({
+                          ...editingWorkflow,
+                          name: e.target.value,
+                        })
+                      }
+                      placeholder="Workflow name"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-description">Description</Label>
+                    <Textarea
+                      id="edit-description"
+                      value={editingWorkflow.description}
+                      onChange={(e) =>
+                        setEditingWorkflow({
+                          ...editingWorkflow,
+                          description: e.target.value,
+                        })
+                      }
+                      placeholder="Optional description"
+                      rows={3}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-status">Status</Label>
+                    <Dropdown
+                      value={editingWorkflow.isActive ? "active" : "inactive"}
+                      onValueChange={(value) =>
+                        setEditingWorkflow({
+                          ...editingWorkflow,
+                          isActive: value === "active",
+                        })
+                      }
+                      id="edit-status"
+                      options={[
+                        { value: "active", label: "Active" },
+                        { value: "inactive", label: "Inactive" },
+                      ]}
+                    />
+                  </div>
+                </div>
+              )}
+              <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+                <DialogCloseTrigger asChild>
+                  <Button variant="outline">Cancel</Button>
+                </DialogCloseTrigger>
+                <Button
+                  onClick={() => {
+                    if (editingWorkflow) {
+                      updateWorkflow({
+                        input: {
+                          rowId: editingWorkflow.rowId,
+                          patch: {
+                            name: editingWorkflow.name,
+                            description: editingWorkflow.description || null,
+                            isActive: editingWorkflow.isActive,
+                          },
                         },
-                      },
-                    });
-                  }
-                }}
-                disabled={!editingWorkflow?.name.trim()}
-              >
-                Save Changes
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </DialogPositioner>
+                      });
+                    }
+                  }}
+                  disabled={!editingWorkflow?.name.trim()}
+                >
+                  Save Changes
+                </Button>
+              </div>
+            </DialogContent>
+          </DialogPositioner>
+        </DialogPortal>
       </DialogRoot>
     </div>
   );

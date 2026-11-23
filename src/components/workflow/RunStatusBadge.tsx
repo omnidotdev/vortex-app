@@ -1,4 +1,5 @@
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@omnidotdev/thornberry/badge";
+
 import { cn } from "@/lib/utils";
 
 type RunStatus = "pending" | "running" | "completed" | "failed" | "cancelled";

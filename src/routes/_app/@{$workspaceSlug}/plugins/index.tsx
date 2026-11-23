@@ -1,3 +1,6 @@
+import { Badge } from "@omnidotdev/thornberry/badge";
+import { Button } from "@omnidotdev/thornberry/button";
+import { Input } from "@omnidotdev/thornberry/input";
 import {
   useQuery,
   useQueryClient,
@@ -10,9 +13,6 @@ import { toast } from "sonner";
 
 import PluginCard from "@/components/plugins/PluginCard";
 import UploadPluginDialog from "@/components/plugins/UploadPluginDialog";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { API_BASE_URL, hasBilling } from "@/lib/config/env.config";
 import {
   DEFAULT_LIMITS,

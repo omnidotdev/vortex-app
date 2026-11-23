@@ -1,17 +1,11 @@
+import { Badge } from "@omnidotdev/thornberry/badge";
+import { Button } from "@omnidotdev/thornberry/button";
+import { Input } from "@omnidotdev/thornberry/input";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import Dropdown from "@/components/ui/dropdown";
 import eventSchemasOptions from "@/lib/options/eventSchemas.options";
 
 export const Route = createFileRoute("/_app/@{$workspaceSlug}/events/")({
@@ -99,40 +93,39 @@ function EventSchemasPage() {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full sm:max-w-xs"
         />
-        <Select value={sourceFilter} onValueChange={setSourceFilter}>
-          <SelectTrigger className="w-full sm:w-48">
-            <SelectValue placeholder="All sources" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All sources</SelectItem>
-            {sources.map((source) => (
-              <SelectItem key={source} value={source}>
-                {source}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select value={enforcementFilter} onValueChange={setEnforcementFilter}>
-          <SelectTrigger className="w-full sm:w-48">
-            <SelectValue placeholder="All enforcement" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All enforcement</SelectItem>
-            <SelectItem value="strict">Strict</SelectItem>
-            <SelectItem value="warn">Warn</SelectItem>
-            <SelectItem value="none">None</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={visibilityFilter} onValueChange={setVisibilityFilter}>
-          <SelectTrigger className="w-full sm:w-48">
-            <SelectValue placeholder="All visibility" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All visibility</SelectItem>
-            <SelectItem value="public">Public</SelectItem>
-            <SelectItem value="private">Private</SelectItem>
-          </SelectContent>
-        </Select>
+        <Dropdown
+          value={sourceFilter}
+          onValueChange={setSourceFilter}
+          className="w-full sm:w-48"
+          placeholder="All sources"
+          options={[
+            { value: "all", label: "All sources" },
+            ...sources.map((source) => ({ value: source, label: source })),
+          ]}
+        />
+        <Dropdown
+          value={enforcementFilter}
+          onValueChange={setEnforcementFilter}
+          className="w-full sm:w-48"
+          placeholder="All enforcement"
+          options={[
+            { value: "all", label: "All enforcement" },
+            { value: "strict", label: "Strict" },
+            { value: "warn", label: "Warn" },
+            { value: "none", label: "None" },
+          ]}
+        />
+        <Dropdown
+          value={visibilityFilter}
+          onValueChange={setVisibilityFilter}
+          className="w-full sm:w-48"
+          placeholder="All visibility"
+          options={[
+            { value: "all", label: "All visibility" },
+            { value: "public", label: "Public" },
+            { value: "private", label: "Private" },
+          ]}
+        />
       </div>
 
       {filteredSchemas.length === 0 ? (

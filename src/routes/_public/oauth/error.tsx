@@ -1,11 +1,10 @@
+import { Button } from "@omnidotdev/thornberry/button";
 import {
   createFileRoute,
   useNavigate,
   useSearch,
 } from "@tanstack/react-router";
 import { XCircle } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_public/oauth/error")({
   component: OAuthError,

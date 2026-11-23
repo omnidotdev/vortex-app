@@ -1,9 +1,9 @@
+import { Badge } from "@omnidotdev/thornberry/badge";
+import { Button } from "@omnidotdev/thornberry/button";
 import { Cable, Play, Settings, Trash2 } from "lucide-react";
 import { memo } from "react";
 import { Handle, Position } from "reactflow";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
   NODE_MIN_HEIGHT,

@@ -1,16 +1,10 @@
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
+import { Textarea } from "@omnidotdev/thornberry/textarea";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import Dropdown from "@/components/ui/dropdown";
 import { ExpressionField } from "../fields/ExpressionField";
 
 import type { NodeConfigProps } from "./types";
@@ -34,19 +28,15 @@ export const LoopNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
       <div className="space-y-2">
         <Label>Loop Type</Label>
-        <Select
+        <Dropdown
           value={loopType}
           onValueChange={(value) => onChange("loopType", value)}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="forEach">For Each Item</SelectItem>
-            <SelectItem value="while">While Condition</SelectItem>
-            <SelectItem value="times">Fixed Count</SelectItem>
-          </SelectContent>
-        </Select>
+          options={[
+            { value: "forEach", label: "For Each Item" },
+            { value: "while", label: "While Condition" },
+            { value: "times", label: "Fixed Count" },
+          ]}
+        />
       </div>
 
       {loopType === "forEach" && (

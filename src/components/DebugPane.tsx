@@ -1,9 +1,6 @@
+import { Badge } from "@omnidotdev/thornberry/badge";
+import { Button } from "@omnidotdev/thornberry/button";
 import { ScrollArea } from "@omnidotdev/thornberry/scroll-area";
-import { Bug, ChevronDown, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   SheetBackdrop,
   SheetCloseTrigger,
@@ -12,7 +9,10 @@ import {
   SheetRoot,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@omnidotdev/thornberry/sheet";
+import { Bug, ChevronDown, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+
 import { cn } from "@/lib/utils";
 
 interface DebugEntry {
@@ -84,8 +84,8 @@ function DebugPane() {
         </Button>
       </SheetTrigger>
 
-      <SheetBackdrop className="bg-background/60" />
-      <SheetPositioner side="bottom">
+      <SheetBackdrop className="fixed inset-0 z-50 bg-background/60 backdrop-blur-sm" />
+      <SheetPositioner>
         <SheetContent
           side="bottom"
           className="flex h-[50vh] max-h-[400px] w-full flex-col gap-0 p-0"

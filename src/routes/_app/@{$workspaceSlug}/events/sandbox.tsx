@@ -1,17 +1,11 @@
+import { Badge } from "@omnidotdev/thornberry/badge";
+import { Button } from "@omnidotdev/thornberry/button";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import Dropdown from "@/components/ui/dropdown";
 import { JsonEditor } from "@/components/ui/json-editor";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { usePublishEventMutation } from "@/lib/graphql/eventSchemaStubs";
 import eventSchemasOptions from "@/lib/options/eventSchemas.options";
 
@@ -192,18 +186,16 @@ function EventSandboxPage() {
             >
               Event Type
             </label>
-            <Select value={selectedType} onValueChange={handleTypeChange}>
-              <SelectTrigger id="event-type">
-                <SelectValue placeholder="Select an event type" />
-              </SelectTrigger>
-              <SelectContent>
-                {latestSchemas.map((schema) => (
-                  <SelectItem key={schema.name} value={schema.name}>
-                    {schema.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Dropdown
+              value={selectedType}
+              onValueChange={handleTypeChange}
+              id="event-type"
+              placeholder="Select an event type"
+              options={latestSchemas.map((schema) => ({
+                value: schema.name,
+                label: schema.name,
+              }))}
+            />
           </div>
 
           {selectedSchema && (

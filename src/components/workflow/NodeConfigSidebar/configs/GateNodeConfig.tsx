@@ -1,13 +1,8 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
+import { Textarea } from "@omnidotdev/thornberry/textarea";
+
+import Dropdown from "@/components/ui/dropdown";
 import { DurationField } from "../fields/DurationField";
 
 import type { NodeConfigProps } from "./types";
@@ -32,18 +27,14 @@ export const GateNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
       <div className="space-y-2">
         <Label>Gate Type</Label>
-        <Select
+        <Dropdown
           value={gateType}
           onValueChange={(value) => onChange("gateType", value)}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="approval">Wait for Approval</SelectItem>
-            <SelectItem value="signal">Wait for Signal</SelectItem>
-          </SelectContent>
-        </Select>
+          options={[
+            { value: "approval", label: "Wait for Approval" },
+            { value: "signal", label: "Wait for Signal" },
+          ]}
+        />
       </div>
 
       {gateType === "approval" && (
@@ -95,19 +86,15 @@ export const GateNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
       <div className="space-y-2">
         <Label>If Timeout Reached</Label>
-        <Select
+        <Dropdown
           value={(data.timeoutAction as string) || "reject"}
           onValueChange={(value) => onChange("timeoutAction", value)}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="approve">Automatically Approve</SelectItem>
-            <SelectItem value="reject">Automatically Reject</SelectItem>
-            <SelectItem value="fail">Fail the Workflow</SelectItem>
-          </SelectContent>
-        </Select>
+          options={[
+            { value: "approve", label: "Automatically Approve" },
+            { value: "reject", label: "Automatically Reject" },
+            { value: "fail", label: "Fail the Workflow" },
+          ]}
+        />
       </div>
     </>
   );

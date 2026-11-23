@@ -1,11 +1,11 @@
+import { Badge } from "@omnidotdev/thornberry/badge";
+import { Button } from "@omnidotdev/thornberry/button";
 import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, useParams } from "@tanstack/react-router";
 import { ArrowLeft, Loader2, Package, ShieldCheck, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { API_BASE_URL } from "@/lib/config/env.config";
 import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
 

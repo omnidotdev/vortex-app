@@ -1,3 +1,4 @@
+import { Button } from "@omnidotdev/thornberry/button";
 import { ScrollArea } from "@omnidotdev/thornberry/scroll-area";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -12,7 +13,6 @@ import {
 } from "lucide-react";
 import { useEffect, useRef } from "react";
 
-import { Button } from "@/components/ui/button";
 import { useWorkflowRunStream } from "@/lib/hooks/useWorkflowRunStream";
 import { RunStatusBadge } from "./RunStatusBadge";
 import { StepLogItem } from "./StepLogItem";

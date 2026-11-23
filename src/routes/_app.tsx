@@ -1,5 +1,15 @@
 import { accountUrl } from "@omnidotdev/providers/react";
+import { Button } from "@omnidotdev/thornberry/button";
 import { LogoLockup } from "@omnidotdev/thornberry/logo-lockup";
+import {
+  SheetBackdrop,
+  SheetCloseTrigger,
+  SheetContent,
+  SheetContext,
+  SheetPositioner,
+  SheetRoot,
+  SheetTrigger,
+} from "@omnidotdev/thornberry/sheet";
 import {
   Link,
   Outlet,
@@ -22,16 +32,6 @@ import {
 } from "lucide-react";
 import { RiDiscordLine as DiscordIcon } from "react-icons/ri";
 
-import { Button } from "@/components/ui/button";
-import {
-  SheetBackdrop,
-  SheetCloseTrigger,
-  SheetContent,
-  SheetContext,
-  SheetPositioner,
-  SheetRoot,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import signOut from "@/lib/auth/signOut";
 import app from "@/lib/config/app.config";
 import { ACCOUNT_URL } from "@/lib/config/env.config";
@@ -207,8 +207,8 @@ function MobileHeader() {
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetBackdrop />
-        <SheetPositioner side="right">
+        <SheetBackdrop className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm" />
+        <SheetPositioner>
           <SheetContent side="right" className="w-64 p-0">
             <SheetContext>
               {({ setOpen }) => (

@@ -1,3 +1,7 @@
+import { Button } from "@omnidotdev/thornberry/button";
+import { ConfirmDialog } from "@omnidotdev/thornberry/confirm-dialog";
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   Link,
@@ -17,20 +21,6 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   useDeleteIntegrationMutation,
   useUpdateIntegrationMutation,
@@ -438,40 +428,24 @@ function IntegrationDetailPage() {
                 undone.
               </p>
             </div>
-            <AlertDialog
-              open={deleteDialogOpen}
-              onOpenChange={(open: boolean) => setDeleteDialogOpen(open)}
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => setDeleteDialogOpen(true)}
             >
-              <AlertDialogTrigger asChild>
-                <Button variant="destructive" size="sm">
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  Disconnect
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Disconnect Integration?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This will remove &ldquo;{integration.name}&rdquo; from your
-                    workspace. Any workflows using this integration will stop
-                    working.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={handleDelete}
-                    disabled={isDeleting}
-                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  >
-                    {isDeleting && (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    )}
-                    Disconnect
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+              <Trash2 className="mr-2 h-4 w-4" />
+              Disconnect
+            </Button>
+            <ConfirmDialog
+              open={deleteDialogOpen}
+              onOpenChange={setDeleteDialogOpen}
+              title={`Disconnect "${integration.name}"?`}
+              description="This will remove the integration from your workspace. Any workflows using this integration will stop working."
+              confirmLabel="Disconnect"
+              pendingLabel="Disconnecting..."
+              isPending={isDeleting}
+              onConfirm={handleDelete}
+            />
           </div>
         </div>
       </section>
