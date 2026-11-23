@@ -1,4 +1,5 @@
 import { CommandPalette as CommandPaletteShell } from "@omnidotdev/thornberry/command-palette";
+import { ShortcutsDialog } from "@omnidotdev/thornberry/shortcuts-dialog";
 import {
   GLOBAL_HOTKEYS,
   hotkeyLabel,
@@ -8,14 +9,32 @@ import { useNavigate, useRouteContext } from "@tanstack/react-router";
 import {
   CreditCard,
   HomeIcon,
+  Keyboard,
   LayoutDashboard,
   MoonStar,
   Workflow,
 } from "lucide-react";
+import { useState } from "react";
 
 import { useTheme } from "@/providers/ThemeProvider";
 
 import type { CommandAction } from "@omnidotdev/thornberry/command-palette";
+
+/** Bindings of the workflow editor's own keydown handler */
+const WORKFLOW_EDITOR_SHORTCUTS = [
+  {
+    title: "Workflow editor",
+    shortcuts: [
+      { keys: "a", label: "Add a node" },
+      { keys: "mod+s", label: "Save the workflow" },
+      { keys: "mod+e", label: "Run the workflow" },
+      { keys: "mod+shift+e", label: "Export the workflow" },
+      { keys: "mod+i", label: "Import a workflow" },
+      { keys: "Delete", label: "Delete the selected node" },
+      { keys: "escape", label: "Close menus and dialogs" },
+    ],
+  },
+];
 
 /**
  * Global command palette (⌘/Ctrl+K). Mounted once at the app root so it works on
@@ -28,6 +47,8 @@ const CommandPalette = () => {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
   const { session } = useRouteContext({ strict: false });
+
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
 
   const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
 
@@ -82,10 +103,36 @@ const CommandPalette = () => {
       shortcut: hotkeyLabel(GLOBAL_HOTKEYS.toggleTheme),
       onSelect: toggleTheme,
     },
+    {
+      id: "keyboard-shortcuts",
+      label: "Keyboard shortcuts",
+      group: "Preferences",
+      icon: Keyboard,
+      keywords: ["hotkeys", "keys", "help"],
+      shortcut: hotkeyLabel(GLOBAL_HOTKEYS.showShortcuts),
+      onSelect: () => setShortcutsOpen(true),
+    },
   ];
 
   return (
-    <CommandPaletteShell commands={commands} placeholder="Search actions..." />
+    <>
+      <CommandPaletteShell
+        commands={commands}
+        placeholder="Search actions..."
+      />
+      {/* `?` opens it anywhere; the palette entry opens it too */}
+      <ShortcutsDialog
+        globals={[
+          "commandPalette",
+          "showShortcuts",
+          "toggleSidebar",
+          "toggleTheme",
+        ]}
+        open={shortcutsOpen}
+        onOpenChange={setShortcutsOpen}
+        groups={WORKFLOW_EDITOR_SHORTCUTS}
+      />
+    </>
   );
 };
 
