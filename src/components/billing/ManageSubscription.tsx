@@ -1,4 +1,5 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@omnidotdev/thornberry/button";
+
 import { manageSubscriptionUrl } from "@/lib/billing/hubLinks";
 import { ACCOUNT_URL, BASE_URL } from "@/lib/config/env.config";
 

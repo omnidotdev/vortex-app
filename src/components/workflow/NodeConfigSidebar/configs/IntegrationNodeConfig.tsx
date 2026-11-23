@@ -1,20 +1,14 @@
+import { Button } from "@omnidotdev/thornberry/button";
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
+import { Textarea } from "@omnidotdev/thornberry/textarea";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
 import { AlertCircle, ExternalLink, Loader2, Plug } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { JsonEditor } from "@/components/ui/json-editor";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { VariablePicker } from "@/components/workflow/VariablePicker";
 import { getIntegrationActions } from "@/lib/integrations/actions";
 import { integrationDefinitionOptions } from "@/lib/options/integrations.options";
@@ -154,26 +148,18 @@ export const IntegrationNodeConfig = ({
       {/* Action Selection */}
       <div className="space-y-2">
         <Label>Action</Label>
-        <Select
+        <OptionsSelect
+          // long descriptions wrap below the label instead of squeezing it
+          contentClassName="*:flex-wrap"
           value={operation}
           onValueChange={(v) => onChange("operation", v)}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select an action..." />
-          </SelectTrigger>
-          <SelectContent>
-            {commonActions.map((action) => (
-              <SelectItem key={action.value} value={action.value}>
-                <div className="flex flex-col">
-                  <span>{action.label}</span>
-                  <span className="text-muted-foreground text-xs">
-                    {action.description}
-                  </span>
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          placeholder="Select an action..."
+          options={commonActions.map((action) => ({
+            value: action.value,
+            label: action.label,
+            hint: action.description,
+          }))}
+        />
       </div>
 
       {/* Dynamic Inputs based on selected action */}
@@ -429,21 +415,17 @@ const ActionInputs = ({
           </div>
           <div className="space-y-2">
             <Label htmlFor="currency">Currency</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.currency as string) || "usd"}
               onValueChange={(v) => updateInput("currency", v)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="usd">USD</SelectItem>
-                <SelectItem value="eur">EUR</SelectItem>
-                <SelectItem value="gbp">GBP</SelectItem>
-                <SelectItem value="cad">CAD</SelectItem>
-                <SelectItem value="aud">AUD</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "usd", label: "USD" },
+                { value: "eur", label: "EUR" },
+                { value: "gbp", label: "GBP" },
+                { value: "cad", label: "CAD" },
+                { value: "aud", label: "AUD" },
+              ]}
+            />
           </div>
         </div>
       );
@@ -732,21 +714,12 @@ const ActionInputs = ({
         <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="model">Model</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.model as string) || ""}
               onValueChange={(v) => updateInput("model", v)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a model..." />
-              </SelectTrigger>
-              <SelectContent>
-                {models.map((m) => (
-                  <SelectItem key={m.value} value={m.value}>
-                    {m.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              placeholder="Select a model..."
+              options={models.map((m) => ({ value: m.value, label: m.label }))}
+            />
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
@@ -857,19 +830,15 @@ const ActionInputs = ({
           </div>
           <div className="space-y-2">
             <Label htmlFor="state">State (optional)</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.state as string) || "open"}
               onValueChange={(v) => updateInput("state", v)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="open">Open</SelectItem>
-                <SelectItem value="closed">Closed</SelectItem>
-                <SelectItem value="all">All</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "open", label: "Open" },
+                { value: "closed", label: "Closed" },
+                { value: "all", label: "All" },
+              ]}
+            />
           </div>
         </div>
       );
@@ -931,19 +900,15 @@ const ActionInputs = ({
           </div>
           <div className="space-y-2">
             <Label htmlFor="qos">QoS Level</Label>
-            <Select
+            <OptionsSelect
               value={String(inputs.qos ?? 0)}
               onValueChange={(v) => updateInput("qos", Number.parseInt(v, 10))}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="0">0 - At most once</SelectItem>
-                <SelectItem value="1">1 - At least once</SelectItem>
-                <SelectItem value="2">2 - Exactly once</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "0", label: "0 - At most once" },
+                { value: "1", label: "1 - At least once" },
+                { value: "2", label: "2 - Exactly once" },
+              ]}
+            />
           </div>
           {operation === "publish_retain" && (
             <p className="text-muted-foreground text-xs">
@@ -1142,21 +1107,18 @@ const ActionInputs = ({
           </div>
           <div className="space-y-2">
             <Label htmlFor="hvac_mode">HVAC Mode</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.hvac_mode as string) || ""}
               onValueChange={(v) => updateInput("hvac_mode", v)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select mode..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="off">Off</SelectItem>
-                <SelectItem value="heat">Heat</SelectItem>
-                <SelectItem value="cool">Cool</SelectItem>
-                <SelectItem value="heat_cool">Heat/Cool (Auto)</SelectItem>
-                <SelectItem value="fan_only">Fan Only</SelectItem>
-              </SelectContent>
-            </Select>
+              placeholder="Select mode..."
+              options={[
+                { value: "off", label: "Off" },
+                { value: "heat", label: "Heat" },
+                { value: "cool", label: "Cool" },
+                { value: "heat_cool", label: "Heat/Cool (Auto)" },
+                { value: "fan_only", label: "Fan Only" },
+              ]}
+            />
           </div>
         </div>
       );

@@ -1,8 +1,8 @@
+import { Badge } from "@omnidotdev/thornberry/badge";
 import { Bot, ImageIcon } from "lucide-react";
 import { memo } from "react";
 import { Position } from "reactflow";
 
-import { Badge } from "@/components/ui/badge";
 import { BaseNode, NodeCodeBlock, NodeInfoRow } from "./BaseNode";
 
 interface LLMNodeData {

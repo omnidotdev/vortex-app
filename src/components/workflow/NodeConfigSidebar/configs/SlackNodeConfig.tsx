@@ -1,13 +1,7 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
+import { Textarea } from "@omnidotdev/thornberry/textarea";
 
 import type { NodeConfigProps } from "./types";
 
@@ -56,18 +50,14 @@ export const SlackNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
         <div className="space-y-2">
           <Label htmlFor="messageType">Message Type</Label>
-          <Select
+          <OptionsSelect
             value={messageType}
             onValueChange={(value) => updateConfig("messageType", value)}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="simple">Simple Text</SelectItem>
-              <SelectItem value="blocks">Rich Message (Blocks)</SelectItem>
-            </SelectContent>
-          </Select>
+            options={[
+              { value: "simple", label: "Simple Text" },
+              { value: "blocks", label: "Rich Message (Blocks)" },
+            ]}
+          />
         </div>
 
         {messageType === "simple" ? (
@@ -127,20 +117,16 @@ export const SlackNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
             <div className="space-y-2">
               <Label htmlFor="color">Accent Color</Label>
-              <Select
+              <OptionsSelect
                 value={(config.color as string) || "none"}
                 onValueChange={(value) => updateConfig("color", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">None</SelectItem>
-                  <SelectItem value="good">Green (Success)</SelectItem>
-                  <SelectItem value="warning">Yellow (Warning)</SelectItem>
-                  <SelectItem value="danger">Red (Error)</SelectItem>
-                </SelectContent>
-              </Select>
+                options={[
+                  { value: "none", label: "None" },
+                  { value: "good", label: "Green (Success)" },
+                  { value: "warning", label: "Yellow (Warning)" },
+                  { value: "danger", label: "Red (Error)" },
+                ]}
+              />
             </div>
           </>
         )}

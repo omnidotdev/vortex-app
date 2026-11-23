@@ -1,13 +1,7 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
+import { Textarea } from "@omnidotdev/thornberry/textarea";
 
 import type { NodeConfigProps } from "./types";
 
@@ -39,19 +33,15 @@ export const StateWaitNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
       <div className="space-y-2">
         <Label htmlFor="condition">Condition</Label>
-        <Select
+        <OptionsSelect
           value={condition}
           onValueChange={(val) => onChange("condition", val)}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="exists">Exists</SelectItem>
-            <SelectItem value="equals">Equals</SelectItem>
-            <SelectItem value="changed">Changed</SelectItem>
-          </SelectContent>
-        </Select>
+          options={[
+            { value: "exists", label: "Exists" },
+            { value: "equals", label: "Equals" },
+            { value: "changed", label: "Changed" },
+          ]}
+        />
       </div>
 
       {condition === "equals" && (

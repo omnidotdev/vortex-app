@@ -1,9 +1,9 @@
+import { Badge } from "@omnidotdev/thornberry/badge";
+import { Button } from "@omnidotdev/thornberry/button";
 import { Trash2 } from "lucide-react";
 import { memo } from "react";
 import { Handle } from "reactflow";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 import type { LucideIcon } from "lucide-react";
@@ -1267,7 +1267,7 @@ interface BaseNodeProps {
   /** Optional badge text */
   badge?: string;
   /** Badge variant */
-  badgeVariant?: "default" | "outline" | "secondary" | "destructive";
+  badgeVariant?: "solid" | "outline" | "secondary" | "destructive";
   /** Whether node is selected */
   selected?: boolean;
   /** Handle configurations */

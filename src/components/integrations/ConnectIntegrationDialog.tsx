@@ -1,30 +1,29 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { ExternalLink, Eye, EyeOff, Loader2, Zap } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
-
 import {
   AccordionItem,
   AccordionItemContent,
   AccordionItemTrigger,
   AccordionRoot,
-} from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
+} from "@omnidotdev/thornberry/accordion";
+import { Button } from "@omnidotdev/thornberry/button";
 import {
   DialogBackdrop,
   DialogCloseTrigger,
   DialogContent,
   DialogDescription,
-  DialogFooter,
-  DialogHeader,
+  DialogPortal,
   DialogPositioner,
   DialogRoot,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+} from "@omnidotdev/thornberry/dialog";
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
+import { Textarea } from "@omnidotdev/thornberry/textarea";
+import { useQueryClient } from "@tanstack/react-query";
+import { ExternalLink, Eye, EyeOff, Loader2, Zap } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+
 import { JsonEditor } from "@/components/ui/json-editor";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { useCreateIntegrationMutation } from "@/generated/graphql";
 import { API_BASE_URL } from "@/lib/config/env.config";
 import { integrationsOptions } from "@/lib/options/integrations.options";
@@ -194,278 +193,282 @@ export function ConnectIntegrationDialog({
 
   return (
     <DialogRoot open onOpenChange={(e) => !e.open && onClose()}>
-      <DialogBackdrop />
-      <DialogPositioner>
-        <DialogContent className="flex max-h-[85vh] max-w-lg flex-col overflow-hidden">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              {definition.iconUrl && (
-                <img
-                  src={definition.iconUrl}
-                  alt=""
-                  className="h-6 w-6"
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                  }}
-                />
-              )}
-              Connect {definition.name}
-            </DialogTitle>
-            <DialogDescription>
-              {existingIntegrations.length > 0
-                ? `Add another ${definition.name} account or manage existing connections.`
-                : "Enter your credentials to connect this integration."}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogCloseTrigger />
+      <DialogPortal>
+        <DialogBackdrop />
+        <DialogPositioner>
+          <DialogContent className="flex max-h-[85vh] max-w-lg flex-col overflow-hidden">
+            <div className="flex flex-col gap-1.5">
+              <DialogTitle className="flex items-center gap-2">
+                {definition.iconUrl && (
+                  <img
+                    src={definition.iconUrl}
+                    alt=""
+                    className="h-6 w-6"
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                )}
+                Connect {definition.name}
+              </DialogTitle>
+              <DialogDescription>
+                {existingIntegrations.length > 0
+                  ? `Add another ${definition.name} account or manage existing connections.`
+                  : "Enter your credentials to connect this integration."}
+              </DialogDescription>
+            </div>
+            <DialogCloseTrigger />
 
-          <form
-            onSubmit={handleSubmit}
-            className="flex min-h-0 flex-1 flex-col overflow-hidden"
-          >
-            <div className="flex-1 space-y-4 overflow-y-auto px-1 pb-4">
-              {/* Existing Integrations Section */}
-              {existingIntegrations.length > 0 && (
-                <div className="space-y-2">
-                  <Label className="text-muted-foreground text-xs uppercase tracking-wide">
-                    Connected Accounts
-                  </Label>
+            <form
+              onSubmit={handleSubmit}
+              className="flex min-h-0 flex-1 flex-col overflow-hidden"
+            >
+              <div className="flex-1 space-y-4 overflow-y-auto px-1 pb-4">
+                {/* Existing Integrations Section */}
+                {existingIntegrations.length > 0 && (
                   <div className="space-y-2">
-                    {existingIntegrations.map((integration) => (
-                      <button
-                        key={integration.rowId}
-                        type="button"
-                        onClick={() => onConfigureExisting?.(integration)}
-                        className="flex w-full items-center justify-between rounded-md border p-3 text-left transition-colors hover:bg-accent"
-                      >
-                        <div className="flex items-center gap-3">
-                          {definition.iconUrl ? (
-                            <img
-                              src={definition.iconUrl}
-                              alt=""
-                              className="h-8 w-8 rounded bg-white p-1 dark:bg-slate-700"
-                            />
-                          ) : (
-                            <div className="flex h-8 w-8 items-center justify-center rounded bg-muted font-medium text-muted-foreground text-sm">
-                              {integration.name.charAt(0)}
-                            </div>
-                          )}
-                          <div>
-                            <p className="font-medium text-sm">
-                              {integration.name}
-                            </p>
-                            <p className="text-muted-foreground text-xs">
-                              {integration.isEnabled ? "Active" : "Inactive"}
-                            </p>
-                          </div>
-                        </div>
-                        <span className="text-muted-foreground text-xs">
-                          Configure →
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                  <div className="flex items-center gap-2 pt-2">
-                    <div className="h-px flex-1 bg-border" />
-                    <span className="text-muted-foreground text-xs">
-                      Add another account
-                    </span>
-                    <div className="h-px flex-1 bg-border" />
-                  </div>
-                </div>
-              )}
-
-              {/* OAuth Connect Section */}
-              {supportsOAuth && (
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between rounded-md border bg-muted/30 p-3">
-                    <div className="flex items-center gap-2">
-                      <Zap className="h-4 w-4 text-primary" />
-                      <span className="font-medium text-sm">Quick Connect</span>
-                    </div>
-                    <Button
-                      size="sm"
-                      onClick={() => {
-                        // Get provider ID from definition
-                        const provider = definition.rowId;
-                        const params = new URLSearchParams({
-                          organizationId,
-                          definitionId: definition.rowId,
-                          returnUrl: window.location.href,
-                        });
-                        window.location.href = `${API_BASE_URL}/api/v1/oauth/${provider}/authorize?${params}`;
-                      }}
-                    >
-                      Connect with OAuth
-                    </Button>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="h-px flex-1 bg-border" />
-                    <span className="text-muted-foreground text-xs">
-                      or enter credentials manually
-                    </span>
-                    <div className="h-px flex-1 bg-border" />
-                  </div>
-                </div>
-              )}
-
-              {/* Setup Instructions */}
-              {setupSteps && setupSteps.length > 0 && (
-                <AccordionRoot
-                  defaultValue={
-                    existingIntegrations.length === 0 ? ["instructions"] : []
-                  }
-                  collapsible
-                  className="rounded-md border"
-                >
-                  <AccordionItem value="instructions" className="border-none">
-                    <AccordionItemTrigger className="border-b bg-muted/50 px-3 py-3 hover:bg-muted">
-                      Setup Instructions
-                    </AccordionItemTrigger>
-                    <AccordionItemContent className="bg-background p-0">
-                      <ol className="ml-4 list-decimal space-y-1.5 p-3 text-muted-foreground text-sm">
-                        {setupSteps.map((step, i) => (
-                          <li key={`step-${i}`}>{step}</li>
-                        ))}
-                      </ol>
-                      {docsUrl && (
-                        <a
-                          href={docsUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex cursor-pointer items-center gap-1 px-3 pb-3 text-primary text-sm hover:underline"
+                    <Label className="text-muted-foreground text-xs uppercase tracking-wide">
+                      Connected Accounts
+                    </Label>
+                    <div className="space-y-2">
+                      {existingIntegrations.map((integration) => (
+                        <button
+                          key={integration.rowId}
+                          type="button"
+                          onClick={() => onConfigureExisting?.(integration)}
+                          className="flex w-full items-center justify-between rounded-md border p-3 text-left transition-colors hover:bg-accent"
                         >
-                          <ExternalLink className="h-3 w-3" />
-                          Open {definition.name} Developer Portal
-                        </a>
+                          <div className="flex items-center gap-3">
+                            {definition.iconUrl ? (
+                              <img
+                                src={definition.iconUrl}
+                                alt=""
+                                className="h-8 w-8 rounded bg-white p-1 dark:bg-slate-700"
+                              />
+                            ) : (
+                              <div className="flex h-8 w-8 items-center justify-center rounded bg-muted font-medium text-muted-foreground text-sm">
+                                {integration.name.charAt(0)}
+                              </div>
+                            )}
+                            <div>
+                              <p className="font-medium text-sm">
+                                {integration.name}
+                              </p>
+                              <p className="text-muted-foreground text-xs">
+                                {integration.isEnabled ? "Active" : "Inactive"}
+                              </p>
+                            </div>
+                          </div>
+                          <span className="text-muted-foreground text-xs">
+                            Configure →
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2 pt-2">
+                      <div className="h-px flex-1 bg-border" />
+                      <span className="text-muted-foreground text-xs">
+                        Add another account
+                      </span>
+                      <div className="h-px flex-1 bg-border" />
+                    </div>
+                  </div>
+                )}
+
+                {/* OAuth Connect Section */}
+                {supportsOAuth && (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between rounded-md border bg-muted/30 p-3">
+                      <div className="flex items-center gap-2">
+                        <Zap className="h-4 w-4 text-primary" />
+                        <span className="font-medium text-sm">
+                          Quick Connect
+                        </span>
+                      </div>
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          // Get provider ID from definition
+                          const provider = definition.rowId;
+                          const params = new URLSearchParams({
+                            organizationId,
+                            definitionId: definition.rowId,
+                            returnUrl: window.location.href,
+                          });
+                          window.location.href = `${API_BASE_URL}/api/v1/oauth/${provider}/authorize?${params}`;
+                        }}
+                      >
+                        Connect with OAuth
+                      </Button>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-px flex-1 bg-border" />
+                      <span className="text-muted-foreground text-xs">
+                        or enter credentials manually
+                      </span>
+                      <div className="h-px flex-1 bg-border" />
+                    </div>
+                  </div>
+                )}
+
+                {/* Setup Instructions */}
+                {setupSteps && setupSteps.length > 0 && (
+                  <AccordionRoot
+                    defaultValue={
+                      existingIntegrations.length === 0 ? ["instructions"] : []
+                    }
+                    collapsible
+                    className="rounded-md border"
+                  >
+                    <AccordionItem value="instructions" className="border-none">
+                      <AccordionItemTrigger className="border-b bg-muted/50 px-3 py-3 hover:bg-muted">
+                        Setup Instructions
+                      </AccordionItemTrigger>
+                      <AccordionItemContent className="bg-background p-0">
+                        <ol className="ml-4 list-decimal space-y-1.5 p-3 text-muted-foreground text-sm">
+                          {setupSteps.map((step, i) => (
+                            <li key={`step-${i}`}>{step}</li>
+                          ))}
+                        </ol>
+                        {docsUrl && (
+                          <a
+                            href={docsUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex cursor-pointer items-center gap-1 px-3 pb-3 text-primary text-sm hover:underline"
+                          >
+                            <ExternalLink className="h-3 w-3" />
+                            Open {definition.name} Developer Portal
+                          </a>
+                        )}
+                      </AccordionItemContent>
+                    </AccordionItem>
+                  </AccordionRoot>
+                )}
+
+                {/* Connection Name (optional, auto-fills) */}
+                <div className="space-y-2">
+                  <Label htmlFor="connectionName">Connection Name</Label>
+                  <Input
+                    id="connectionName"
+                    value={connectionName}
+                    onChange={(e) => setConnectionName(e.target.value)}
+                    placeholder={
+                      existingIntegrations.length > 0
+                        ? `${definition.name} (${existingIntegrations.length + 1})`
+                        : definition.name
+                    }
+                  />
+                  <p className="text-muted-foreground text-xs">
+                    Leave blank to use the default name
+                  </p>
+                </div>
+
+                {Object.entries(authFields).map(([fieldName, field]) => (
+                  <div key={fieldName} className="space-y-2">
+                    <Label htmlFor={fieldName}>
+                      {field.label}
+                      {field.required && (
+                        <span className="ml-1 text-destructive">*</span>
                       )}
-                    </AccordionItemContent>
-                  </AccordionItem>
-                </AccordionRoot>
-              )}
+                    </Label>
 
-              {/* Connection Name (optional, auto-fills) */}
-              <div className="space-y-2">
-                <Label htmlFor="connectionName">Connection Name</Label>
-                <Input
-                  id="connectionName"
-                  value={connectionName}
-                  onChange={(e) => setConnectionName(e.target.value)}
-                  placeholder={
-                    existingIntegrations.length > 0
-                      ? `${definition.name} (${existingIntegrations.length + 1})`
-                      : definition.name
-                  }
-                />
-                <p className="text-muted-foreground text-xs">
-                  Leave blank to use the default name
-                </p>
-              </div>
-
-              {Object.entries(authFields).map(([fieldName, field]) => (
-                <div key={fieldName} className="space-y-2">
-                  <Label htmlFor={fieldName}>
-                    {field.label}
-                    {field.required && (
-                      <span className="ml-1 text-destructive">*</span>
-                    )}
-                  </Label>
-
-                  {field.type === "json" ? (
-                    // The editor surfaces its own parse error inline; submission
-                    // is gated by the re-validation in handleSubmit
-                    <JsonEditor
-                      value={credentials[fieldName] || ""}
-                      onChange={(value) => {
-                        setCredentials((prev) => ({
-                          ...prev,
-                          [fieldName]: value,
-                        }));
-                      }}
-                      placeholder={field.placeholder}
-                      minHeight={140}
-                      maxHeight={240}
-                    />
-                  ) : field.type === "text" ? (
-                    <Textarea
-                      id={fieldName}
-                      value={credentials[fieldName] || ""}
-                      onChange={(e) => {
-                        setCredentials((prev) => ({
-                          ...prev,
-                          [fieldName]: e.target.value,
-                        }));
-                      }}
-                      placeholder={field.placeholder}
-                      required={field.required}
-                      rows={6}
-                      className="w-full font-mono text-sm"
-                    />
-                  ) : (
-                    <div className="relative w-full">
-                      <Input
-                        id={fieldName}
-                        type={
-                          field.secret && !showSecrets[fieldName]
-                            ? "password"
-                            : "text"
-                        }
+                    {field.type === "json" ? (
+                      // The editor surfaces its own parse error inline; submission
+                      // is gated by the re-validation in handleSubmit
+                      <JsonEditor
                         value={credentials[fieldName] || ""}
-                        onChange={(e) =>
+                        onChange={(value) => {
+                          setCredentials((prev) => ({
+                            ...prev,
+                            [fieldName]: value,
+                          }));
+                        }}
+                        placeholder={field.placeholder}
+                        minHeight={140}
+                        maxHeight={240}
+                      />
+                    ) : field.type === "text" ? (
+                      <Textarea
+                        id={fieldName}
+                        value={credentials[fieldName] || ""}
+                        onChange={(e) => {
                           setCredentials((prev) => ({
                             ...prev,
                             [fieldName]: e.target.value,
-                          }))
-                        }
+                          }));
+                        }}
                         placeholder={field.placeholder}
                         required={field.required}
-                        className={`w-full ${field.secret ? "pr-10" : ""}`}
+                        rows={6}
+                        className="w-full font-mono text-sm"
                       />
-                      {field.secret && (
-                        <button
-                          type="button"
-                          onClick={() => toggleShowSecret(fieldName)}
-                          className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                        >
-                          {showSecrets[fieldName] ? (
-                            <EyeOff className="h-4 w-4" />
-                          ) : (
-                            <Eye className="h-4 w-4" />
-                          )}
-                        </button>
-                      )}
-                    </div>
-                  )}
+                    ) : (
+                      <div className="relative w-full">
+                        <Input
+                          id={fieldName}
+                          type={
+                            field.secret && !showSecrets[fieldName]
+                              ? "password"
+                              : "text"
+                          }
+                          value={credentials[fieldName] || ""}
+                          onChange={(e) =>
+                            setCredentials((prev) => ({
+                              ...prev,
+                              [fieldName]: e.target.value,
+                            }))
+                          }
+                          placeholder={field.placeholder}
+                          required={field.required}
+                          className={`w-full ${field.secret ? "pr-10" : ""}`}
+                        />
+                        {field.secret && (
+                          <button
+                            type="button"
+                            onClick={() => toggleShowSecret(fieldName)}
+                            className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                          >
+                            {showSecrets[fieldName] ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                          </button>
+                        )}
+                      </div>
+                    )}
 
-                  {field.description && (
-                    <p className="text-muted-foreground text-xs">
-                      {field.description}
-                    </p>
-                  )}
-                </div>
-              ))}
+                    {field.description && (
+                      <p className="text-muted-foreground text-xs">
+                        {field.description}
+                      </p>
+                    )}
+                  </div>
+                ))}
 
-              {error && (
-                <div className="break-words rounded-md bg-destructive/10 p-3 text-destructive text-sm">
-                  {error}
-                </div>
-              )}
-            </div>
-
-            <DialogFooter className="shrink-0 pt-4">
-              <Button type="button" variant="outline" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {error && (
+                  <div className="break-words rounded-md bg-destructive/10 p-3 text-destructive text-sm">
+                    {error}
+                  </div>
                 )}
-                Connect
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </DialogPositioner>
+              </div>
+
+              <div className="flex shrink-0 flex-col-reverse gap-2 pt-4 sm:flex-row sm:justify-end">
+                <Button type="button" variant="outline" onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Connect
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </DialogPositioner>
+      </DialogPortal>
     </DialogRoot>
   );
 }

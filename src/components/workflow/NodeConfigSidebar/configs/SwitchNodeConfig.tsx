@@ -1,5 +1,6 @@
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@omnidotdev/thornberry/label";
+import { Textarea } from "@omnidotdev/thornberry/textarea";
+
 import { CasesEditor } from "../fields/CasesEditor";
 import { ExpressionField } from "../fields/ExpressionField";
 

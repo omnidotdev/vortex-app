@@ -1,15 +1,9 @@
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
+import { Textarea } from "@omnidotdev/thornberry/textarea";
 import { useCallback, useRef } from "react";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { VariablePicker } from "@/components/workflow/VariablePicker";
 
 import type { NodeConfigProps } from "./types";
@@ -182,22 +176,18 @@ export const DiscordNodeConfig = ({
 
             <div className="space-y-2">
               <Label htmlFor="embedColor">Color</Label>
-              <Select
+              <OptionsSelect
                 value={(config.embedColor as string) || "blue"}
                 onValueChange={(value) => updateConfig("embedColor", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="blue">Blue</SelectItem>
-                  <SelectItem value="green">Green (Success)</SelectItem>
-                  <SelectItem value="red">Red (Error)</SelectItem>
-                  <SelectItem value="yellow">Yellow (Warning)</SelectItem>
-                  <SelectItem value="purple">Purple</SelectItem>
-                  <SelectItem value="gray">Gray</SelectItem>
-                </SelectContent>
-              </Select>
+                options={[
+                  { value: "blue", label: "Blue" },
+                  { value: "green", label: "Green (Success)" },
+                  { value: "red", label: "Red (Error)" },
+                  { value: "yellow", label: "Yellow (Warning)" },
+                  { value: "purple", label: "Purple" },
+                  { value: "gray", label: "Gray" },
+                ]}
+              />
             </div>
 
             <div className="space-y-2">

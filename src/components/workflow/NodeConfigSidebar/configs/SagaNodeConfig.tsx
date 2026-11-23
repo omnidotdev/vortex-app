@@ -1,13 +1,8 @@
+import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
+import { Textarea } from "@omnidotdev/thornberry/textarea";
+
 import { JsonEditor } from "@/components/ui/json-editor";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 
 import type { NodeConfigProps } from "./types";
 
@@ -27,18 +22,14 @@ export const SagaNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
       <div className="space-y-2">
         <Label htmlFor="parallel">Execution Mode</Label>
-        <Select
+        <OptionsSelect
           value={data.parallel ? "parallel" : "sequential"}
           onValueChange={(val) => onChange("parallel", val === "parallel")}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="sequential">Sequential</SelectItem>
-            <SelectItem value="parallel">Parallel</SelectItem>
-          </SelectContent>
-        </Select>
+          options={[
+            { value: "sequential", label: "Sequential" },
+            { value: "parallel", label: "Parallel" },
+          ]}
+        />
       </div>
 
       <div className="space-y-2">

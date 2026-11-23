@@ -1,16 +1,10 @@
+import { Button } from "@omnidotdev/thornberry/button";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { diffLines } from "diff";
 import { useMemo, useState } from "react";
 
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import eventSchemasOptions from "@/lib/options/eventSchemas.options";
 
 export const Route = createFileRoute("/_app/@{$workspaceSlug}/events/diff")({
@@ -139,46 +133,37 @@ function EventSchemaDiffPage() {
 
       {/* Selectors */}
       <div className="mt-6 flex items-center gap-4">
-        <Select value={selectedName} onValueChange={handleNameChange}>
-          <SelectTrigger className="w-64">
-            <SelectValue placeholder="Select event type" />
-          </SelectTrigger>
-          <SelectContent>
-            {schemaNames.map((name) => (
-              <SelectItem key={name} value={name}>
-                {name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <OptionsSelect
+          value={selectedName}
+          onValueChange={handleNameChange}
+          className="w-64"
+          placeholder="Select event type"
+          options={schemaNames.map((name) => ({ value: name, label: name }))}
+        />
 
-        <Select value={versionA} onValueChange={setVersionA}>
-          <SelectTrigger className="w-32">
-            <SelectValue placeholder="Version A" />
-          </SelectTrigger>
-          <SelectContent>
-            {versions.map((v) => (
-              <SelectItem key={v.rowId} value={String(v.version)}>
-                v{v.version}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <OptionsSelect
+          value={versionA}
+          onValueChange={setVersionA}
+          className="w-32"
+          placeholder="Version A"
+          options={versions.map((v) => ({
+            value: String(v.version),
+            label: `v${v.version}`,
+          }))}
+        />
 
         <span className="text-muted-foreground">vs</span>
 
-        <Select value={versionB} onValueChange={setVersionB}>
-          <SelectTrigger className="w-32">
-            <SelectValue placeholder="Version B" />
-          </SelectTrigger>
-          <SelectContent>
-            {versions.map((v) => (
-              <SelectItem key={v.rowId} value={String(v.version)}>
-                v{v.version}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <OptionsSelect
+          value={versionB}
+          onValueChange={setVersionB}
+          className="w-32"
+          placeholder="Version B"
+          options={versions.map((v) => ({
+            value: String(v.version),
+            label: `v${v.version}`,
+          }))}
+        />
       </div>
 
       {schemaA && schemaB && (

@@ -1,3 +1,4 @@
+import { GLOBAL_HOTKEYS, useHotkeys } from "@omnidotdev/thornberry/use-hotkeys";
 import { createContext, useCallback, useState } from "react";
 
 import type { PropsWithChildren } from "react";
@@ -37,6 +38,9 @@ const SidebarProvider = ({
       return next;
     });
   }, []);
+
+  // App-wide sidebar shortcut; react-hotkeys-hook ignores form fields by default
+  useHotkeys(GLOBAL_HOTKEYS.toggleSidebar, toggle);
 
   const open = useCallback(() => {
     setIsOpen(true);

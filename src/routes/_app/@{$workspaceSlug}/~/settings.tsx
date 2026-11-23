@@ -1,3 +1,18 @@
+import { Badge } from "@omnidotdev/thornberry/badge";
+import { Button } from "@omnidotdev/thornberry/button";
+import {
+  DialogBackdrop,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogDescription,
+  DialogPortal,
+  DialogPositioner,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+} from "@omnidotdev/thornberry/dialog";
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
 import { useQuery } from "@tanstack/react-query";
 import {
   Link,
@@ -19,22 +34,6 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import ManageSubscription from "@/components/billing/ManageSubscription";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  DialogBackdrop,
-  DialogCloseTrigger,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogPositioner,
-  DialogRoot,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { canPerformDestructiveAction, deriveRole } from "@/lib/auth/roles";
 import { hasBilling } from "@/lib/config/env.config";
 import {
@@ -176,69 +175,71 @@ function NewKeyDialog({
 
   return (
     <DialogRoot open onOpenChange={({ open }) => !open && onClose()}>
-      <DialogBackdrop />
-      <DialogPositioner>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>API Key Created</DialogTitle>
-            <DialogDescription>
-              Copy this key now, it will not be shown again.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-3">
-            <p className="text-sm">
-              <span className="font-medium">Name:</span>{" "}
-              {result.name ?? "Unnamed key"}
-            </p>
-
-            <div>
-              <Label className="text-sm">Key</Label>
-              <div className="mt-1 flex gap-2">
-                <div className="relative flex-1">
-                  <Input
-                    readOnly
-                    type={revealed ? "text" : "password"}
-                    value={result.key}
-                    className="font-mono text-sm"
-                  />
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setRevealed((v) => !v)}
-                  aria-label={revealed ? "Hide key" : "Reveal key"}
-                >
-                  {revealed ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => copyToClipboard(result.key)}
-                  aria-label="Copy key"
-                >
-                  <Copy className="h-4 w-4" />
-                </Button>
-              </div>
+      <DialogPortal>
+        <DialogBackdrop />
+        <DialogPositioner>
+          <DialogContent>
+            <div className="flex flex-col gap-1.5">
+              <DialogTitle>API Key Created</DialogTitle>
+              <DialogDescription>
+                Copy this key now, it will not be shown again.
+              </DialogDescription>
             </div>
 
-            <p className="text-muted-foreground text-xs">
-              Store this key securely. You can use it to authenticate with the
-              Vortex API.
-            </p>
-          </div>
+            <div className="space-y-3">
+              <p className="text-sm">
+                <span className="font-medium">Name:</span>{" "}
+                {result.name ?? "Unnamed key"}
+              </p>
 
-          <DialogFooter>
-            <DialogCloseTrigger asChild>
-              <Button onClick={onClose}>Done</Button>
-            </DialogCloseTrigger>
-          </DialogFooter>
-        </DialogContent>
-      </DialogPositioner>
+              <div>
+                <Label className="text-sm">Key</Label>
+                <div className="mt-1 flex gap-2">
+                  <div className="relative flex-1">
+                    <Input
+                      readOnly
+                      type={revealed ? "text" : "password"}
+                      value={result.key}
+                      className="font-mono text-sm"
+                    />
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setRevealed((v) => !v)}
+                    aria-label={revealed ? "Hide key" : "Reveal key"}
+                  >
+                    {revealed ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => copyToClipboard(result.key)}
+                    aria-label="Copy key"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+
+              <p className="text-muted-foreground text-xs">
+                Store this key securely. You can use it to authenticate with the
+                Vortex API.
+              </p>
+            </div>
+
+            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <DialogCloseTrigger asChild>
+                <Button onClick={onClose}>Done</Button>
+              </DialogCloseTrigger>
+            </div>
+          </DialogContent>
+        </DialogPositioner>
+      </DialogPortal>
     </DialogRoot>
   );
 }
@@ -366,43 +367,46 @@ function ApiKeysSection({
               Create key
             </Button>
           </DialogTrigger>
-          <DialogBackdrop />
-          <DialogPositioner>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Create API Key</DialogTitle>
-                <DialogDescription>
-                  Give your key a descriptive name so you can identify it later.
-                </DialogDescription>
-              </DialogHeader>
+          <DialogPortal>
+            <DialogBackdrop />
+            <DialogPositioner>
+              <DialogContent>
+                <div className="flex flex-col gap-1.5">
+                  <DialogTitle>Create API Key</DialogTitle>
+                  <DialogDescription>
+                    Give your key a descriptive name so you can identify it
+                    later.
+                  </DialogDescription>
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="key-name">Name</Label>
-                <Input
-                  id="key-name"
-                  placeholder="e.g. Production key"
-                  value={newKeyName}
-                  onChange={(e) => setNewKeyName(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleCreate()}
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="key-name">Name</Label>
+                  <Input
+                    id="key-name"
+                    placeholder="e.g. Production key"
+                    value={newKeyName}
+                    onChange={(e) => setNewKeyName(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleCreate()}
+                  />
+                </div>
 
-              <DialogFooter>
-                <DialogCloseTrigger asChild>
-                  <Button variant="outline">Cancel</Button>
-                </DialogCloseTrigger>
-                <Button
-                  onClick={handleCreate}
-                  disabled={isCreating || !newKeyName.trim()}
-                >
-                  {isCreating ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : null}
-                  Create
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </DialogPositioner>
+                <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+                  <DialogCloseTrigger asChild>
+                    <Button variant="outline">Cancel</Button>
+                  </DialogCloseTrigger>
+                  <Button
+                    onClick={handleCreate}
+                    disabled={isCreating || !newKeyName.trim()}
+                  >
+                    {isCreating ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : null}
+                    Create
+                  </Button>
+                </div>
+              </DialogContent>
+            </DialogPositioner>
+          </DialogPortal>
         </DialogRoot>
       </div>
 

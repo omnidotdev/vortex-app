@@ -1,23 +1,22 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { Loader2, Upload } from "lucide-react";
-import { useRef, useState } from "react";
-import { toast } from "sonner";
-
-import { Button } from "@/components/ui/button";
+import { Button } from "@omnidotdev/thornberry/button";
 import {
   DialogBackdrop,
   DialogCloseTrigger,
   DialogContent,
   DialogDescription,
-  DialogFooter,
-  DialogHeader,
+  DialogPortal,
   DialogPositioner,
   DialogRoot,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+} from "@omnidotdev/thornberry/dialog";
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
+import { useQueryClient } from "@tanstack/react-query";
+import { Loader2, Upload } from "lucide-react";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
+
 import { JsonEditor } from "@/components/ui/json-editor";
-import { Label } from "@/components/ui/label";
 import { API_BASE_URL } from "@/lib/config/env.config";
 import getAuthHeaders from "@/lib/graphql/getAuthHeaders";
 import pluginsOptions from "@/lib/options/plugins.options";
@@ -163,141 +162,143 @@ function UploadPluginDialog({
 
   return (
     <DialogRoot open onOpenChange={(e) => !e.open && onClose()}>
-      <DialogBackdrop />
-      <DialogPositioner>
-        <DialogContent className="flex max-h-[85vh] max-w-lg flex-col overflow-hidden">
-          <DialogHeader>
-            <DialogTitle>Upload Plugin</DialogTitle>
-            <DialogDescription>
-              Upload a WebAssembly plugin to extend Vortex with custom workflow
-              steps.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogCloseTrigger />
-
-          <form
-            onSubmit={handleSubmit}
-            className="flex min-h-0 flex-1 flex-col overflow-hidden"
-          >
-            <div className="flex-1 space-y-4 overflow-y-auto px-1 pb-4">
-              {/* Drag-drop WASM file zone */}
-              <div className="space-y-2">
-                <Label>WASM File</Label>
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                  className={`flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 transition-colors ${
-                    isDragOver
-                      ? "border-primary bg-primary/5"
-                      : "border-border hover:border-primary/50 hover:bg-muted/30"
-                  }`}
-                >
-                  <Upload className="h-8 w-8 text-muted-foreground" />
-                  {wasmFile ? (
-                    <div className="text-center">
-                      <p className="font-medium text-sm">{wasmFile.name}</p>
-                      <p className="text-muted-foreground text-xs">
-                        {(wasmFile.size / 1024).toFixed(1)} KB
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="text-center">
-                      <p className="font-medium text-sm">
-                        Drop a .wasm file here or click to browse
-                      </p>
-                      <p className="text-muted-foreground text-xs">
-                        Only .wasm files are supported
-                      </p>
-                    </div>
-                  )}
-                </button>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".wasm"
-                  className="hidden"
-                  onChange={handleFileInputChange}
-                />
-              </div>
-
-              {/* Name */}
-              <div className="space-y-2">
-                <Label htmlFor="plugin-name">
-                  Name <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="plugin-name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="my-custom-step"
-                  required
-                />
-              </div>
-
-              {/* Version */}
-              <div className="space-y-2">
-                <Label htmlFor="plugin-version">
-                  Version <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="plugin-version"
-                  value={version}
-                  onChange={(e) => setVersion(e.target.value)}
-                  placeholder="1.0.0"
-                  required
-                />
-              </div>
-
-              {/* Description */}
-              <div className="space-y-2">
-                <Label htmlFor="plugin-description">Description</Label>
-                <Input
-                  id="plugin-description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="What this plugin does (optional)"
-                />
-              </div>
-
-              {/* Manifest JSON */}
-              <div className="space-y-2">
-                <Label htmlFor="plugin-manifest">Manifest JSON</Label>
-                <JsonEditor
-                  value={manifest}
-                  onChange={setManifest}
-                  placeholder={MANIFEST_PLACEHOLDER}
-                  minHeight={160}
-                  maxHeight={320}
-                />
-                <p className="text-muted-foreground text-xs">
-                  Optional JSON describing the plugin's steps and I/O schema
-                </p>
-              </div>
-
-              {error && (
-                <div className="break-words rounded-md bg-destructive/10 p-3 text-destructive text-sm">
-                  {error}
-                </div>
-              )}
+      <DialogPortal>
+        <DialogBackdrop />
+        <DialogPositioner>
+          <DialogContent className="flex max-h-[85vh] max-w-lg flex-col overflow-hidden">
+            <div className="flex flex-col gap-1.5">
+              <DialogTitle>Upload Plugin</DialogTitle>
+              <DialogDescription>
+                Upload a WebAssembly plugin to extend Vortex with custom
+                workflow steps.
+              </DialogDescription>
             </div>
+            <DialogCloseTrigger />
 
-            <DialogFooter className="shrink-0 pt-4">
-              <Button type="button" variant="outline" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <form
+              onSubmit={handleSubmit}
+              className="flex min-h-0 flex-1 flex-col overflow-hidden"
+            >
+              <div className="flex-1 space-y-4 overflow-y-auto px-1 pb-4">
+                {/* Drag-drop WASM file zone */}
+                <div className="space-y-2">
+                  <Label>WASM File</Label>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    className={`flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 transition-colors ${
+                      isDragOver
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:border-primary/50 hover:bg-muted/30"
+                    }`}
+                  >
+                    <Upload className="h-8 w-8 text-muted-foreground" />
+                    {wasmFile ? (
+                      <div className="text-center">
+                        <p className="font-medium text-sm">{wasmFile.name}</p>
+                        <p className="text-muted-foreground text-xs">
+                          {(wasmFile.size / 1024).toFixed(1)} KB
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="text-center">
+                        <p className="font-medium text-sm">
+                          Drop a .wasm file here or click to browse
+                        </p>
+                        <p className="text-muted-foreground text-xs">
+                          Only .wasm files are supported
+                        </p>
+                      </div>
+                    )}
+                  </button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".wasm"
+                    className="hidden"
+                    onChange={handleFileInputChange}
+                  />
+                </div>
+
+                {/* Name */}
+                <div className="space-y-2">
+                  <Label htmlFor="plugin-name">
+                    Name <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="plugin-name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="my-custom-step"
+                    required
+                  />
+                </div>
+
+                {/* Version */}
+                <div className="space-y-2">
+                  <Label htmlFor="plugin-version">
+                    Version <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="plugin-version"
+                    value={version}
+                    onChange={(e) => setVersion(e.target.value)}
+                    placeholder="1.0.0"
+                    required
+                  />
+                </div>
+
+                {/* Description */}
+                <div className="space-y-2">
+                  <Label htmlFor="plugin-description">Description</Label>
+                  <Input
+                    id="plugin-description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="What this plugin does (optional)"
+                  />
+                </div>
+
+                {/* Manifest JSON */}
+                <div className="space-y-2">
+                  <Label htmlFor="plugin-manifest">Manifest JSON</Label>
+                  <JsonEditor
+                    value={manifest}
+                    onChange={setManifest}
+                    placeholder={MANIFEST_PLACEHOLDER}
+                    minHeight={160}
+                    maxHeight={320}
+                  />
+                  <p className="text-muted-foreground text-xs">
+                    Optional JSON describing the plugin's steps and I/O schema
+                  </p>
+                </div>
+
+                {error && (
+                  <div className="break-words rounded-md bg-destructive/10 p-3 text-destructive text-sm">
+                    {error}
+                  </div>
                 )}
-                Upload
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </DialogPositioner>
+              </div>
+
+              <div className="flex shrink-0 flex-col-reverse gap-2 pt-4 sm:flex-row sm:justify-end">
+                <Button type="button" variant="outline" onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Upload
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </DialogPositioner>
+      </DialogPortal>
     </DialogRoot>
   );
 }

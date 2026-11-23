@@ -1,8 +1,8 @@
+import { Badge } from "@omnidotdev/thornberry/badge";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "@tanstack/react-router";
 import { AlertCircle, AlertTriangle, Loader2 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { StatsAccessError } from "@/lib/errors/statsAccess";
 import { errorsStatsOptions } from "@/lib/options/stats.options";
 import StatsAccessDenied from "./StatsAccessDenied";

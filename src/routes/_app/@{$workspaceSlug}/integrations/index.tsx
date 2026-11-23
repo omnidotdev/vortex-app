@@ -1,3 +1,5 @@
+import { Badge } from "@omnidotdev/thornberry/badge";
+import { Button } from "@omnidotdev/thornberry/button";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import {
@@ -15,8 +17,6 @@ import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 
 import { ConnectIntegrationDialog } from "@/components/integrations/ConnectIntegrationDialog";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   integrationDefinitionsOptions,
   integrationsOptions,

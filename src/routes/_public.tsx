@@ -1,4 +1,6 @@
 import { AppFooter } from "@omnidotdev/thornberry/app-footer";
+import { Badge } from "@omnidotdev/thornberry/badge";
+import { Button } from "@omnidotdev/thornberry/button";
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -6,8 +8,6 @@ import { LuLinkedin as LinkedinIcon } from "react-icons/lu";
 import { SiDiscord as DiscordIcon, SiX as XIcon } from "react-icons/si";
 
 import ThemeToggle from "@/components/ThemeToggle";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import authClient from "@/lib/auth/authClient";
 import signOut from "@/lib/auth/signOut";
 import app from "@/lib/config/app.config";

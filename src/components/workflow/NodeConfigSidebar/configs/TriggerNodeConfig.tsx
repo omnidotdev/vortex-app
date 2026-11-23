@@ -1,17 +1,10 @@
+import { Button } from "@omnidotdev/thornberry/button";
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
+import { Textarea } from "@omnidotdev/thornberry/textarea";
 import { Check, Copy } from "lucide-react";
 import { useEffect, useState } from "react";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 
 import type { NodeConfigProps } from "./types";
 
@@ -57,32 +50,28 @@ export const TriggerNodeConfig = ({
 
       <div className="space-y-2">
         <Label>Trigger Type</Label>
-        <Select
+        <OptionsSelect
           value={triggerType}
           onValueChange={(value) => onChange("triggerType", value)}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="manual">Manual</SelectItem>
-            <SelectItem value="webhook">Webhook</SelectItem>
-            <SelectItem value="cron">Scheduled (Cron)</SelectItem>
-            <SelectItem value="event">Event</SelectItem>
-            <SelectItem value="omni">Omni Event</SelectItem>
-            <SelectItem value="polling">HTTP Polling</SelectItem>
-            <SelectItem value="kafka">Kafka</SelectItem>
-            <SelectItem value="sqs">SQS</SelectItem>
-            <SelectItem value="s3">S3 Event</SelectItem>
-            <SelectItem value="cdc">CDC (Change Data Capture)</SelectItem>
-            <SelectItem value="mqtt">MQTT</SelectItem>
-            <SelectItem value="websocket">WebSocket</SelectItem>
-            <SelectItem value="redis">Redis Pub/Sub</SelectItem>
-            <SelectItem value="nats">NATS</SelectItem>
-            <SelectItem value="amqp">AMQP (RabbitMQ)</SelectItem>
-            <SelectItem value="grpc_stream">gRPC Stream</SelectItem>
-          </SelectContent>
-        </Select>
+          options={[
+            { value: "manual", label: "Manual" },
+            { value: "webhook", label: "Webhook" },
+            { value: "cron", label: "Scheduled (Cron)" },
+            { value: "event", label: "Event" },
+            { value: "omni", label: "Omni Event" },
+            { value: "polling", label: "HTTP Polling" },
+            { value: "kafka", label: "Kafka" },
+            { value: "sqs", label: "SQS" },
+            { value: "s3", label: "S3 Event" },
+            { value: "cdc", label: "CDC (Change Data Capture)" },
+            { value: "mqtt", label: "MQTT" },
+            { value: "websocket", label: "WebSocket" },
+            { value: "redis", label: "Redis Pub/Sub" },
+            { value: "nats", label: "NATS" },
+            { value: "amqp", label: "AMQP (RabbitMQ)" },
+            { value: "grpc_stream", label: "gRPC Stream" },
+          ]}
+        />
       </div>
 
       {triggerType === "webhook" && (
@@ -226,20 +215,16 @@ export const TriggerNodeConfig = ({
 
           <div className="space-y-2">
             <Label>Method</Label>
-            <Select
+            <OptionsSelect
               value={(config.method as string) || "GET"}
               onValueChange={(value) =>
                 onNestedChange("config", "method", value)
               }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="GET">GET</SelectItem>
-                <SelectItem value="POST">POST</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "GET", label: "GET" },
+                { value: "POST", label: "POST" },
+              ]}
+            />
           </div>
 
           <div className="space-y-2">
@@ -259,21 +244,17 @@ export const TriggerNodeConfig = ({
 
           <div className="space-y-2">
             <Label>Deduplication</Label>
-            <Select
+            <OptionsSelect
               value={(config.deduplication as string) || "hash"}
               onValueChange={(value) =>
                 onNestedChange("config", "deduplication", value)
               }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="hash">Content Hash</SelectItem>
-                <SelectItem value="field">Field Value</SelectItem>
-                <SelectItem value="none">None</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "hash", label: "Content Hash" },
+                { value: "field", label: "Field Value" },
+                { value: "none", label: "None" },
+              ]}
+            />
           </div>
 
           {(config.deduplication as string) === "field" && (
@@ -519,21 +500,17 @@ export const TriggerNodeConfig = ({
 
           <div className="space-y-2">
             <Label>QoS</Label>
-            <Select
+            <OptionsSelect
               value={String((config.qos as number) ?? 0)}
               onValueChange={(value) =>
                 onNestedChange("config", "qos", parseInt(value, 10))
               }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="0">0 - At most once</SelectItem>
-                <SelectItem value="1">1 - At least once</SelectItem>
-                <SelectItem value="2">2 - Exactly once</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "0", label: "0 - At most once" },
+                { value: "1", label: "1 - At least once" },
+                { value: "2", label: "2 - Exactly once" },
+              ]}
+            />
           </div>
         </div>
       )}

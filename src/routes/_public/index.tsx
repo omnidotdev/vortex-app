@@ -1,3 +1,4 @@
+import { Button } from "@omnidotdev/thornberry/button";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -12,7 +13,6 @@ import {
 } from "lucide-react";
 import { LuGithub as GithubIcon } from "react-icons/lu";
 
-import { Button } from "@/components/ui/button";
 import authClient from "@/lib/auth/authClient";
 import app from "@/lib/config/app.config";
 

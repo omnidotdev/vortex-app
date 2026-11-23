@@ -1,16 +1,10 @@
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
+import { Textarea } from "@omnidotdev/thornberry/textarea";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { VariablePicker } from "@/components/workflow/VariablePicker";
 import { JsonField } from "../fields/JsonField";
 import { DiscordNodeConfig } from "./DiscordNodeConfig";
@@ -409,7 +403,7 @@ const HttpNodeConfig = ({
 
       <div className="space-y-2">
         <Label>Method</Label>
-        <Select
+        <OptionsSelect
           value={method}
           onValueChange={(value) => {
             if (operation === "request") {
@@ -420,18 +414,14 @@ const HttpNodeConfig = ({
               updateInput("method", value);
             }
           }}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="GET">GET - Fetch data</SelectItem>
-            <SelectItem value="POST">POST - Send data</SelectItem>
-            <SelectItem value="PUT">PUT - Update/replace</SelectItem>
-            <SelectItem value="PATCH">PATCH - Partial update</SelectItem>
-            <SelectItem value="DELETE">DELETE - Remove</SelectItem>
-          </SelectContent>
-        </Select>
+          options={[
+            { value: "GET", label: "GET - Fetch data" },
+            { value: "POST", label: "POST - Send data" },
+            { value: "PUT", label: "PUT - Update/replace" },
+            { value: "PATCH", label: "PATCH - Partial update" },
+            { value: "DELETE", label: "DELETE - Remove" },
+          ]}
+        />
       </div>
 
       {showBody && (
@@ -530,35 +520,32 @@ const TransformNodeConfig = ({
 
       <div className="space-y-2">
         <Label>Transform Type</Label>
-        <Select
+        <OptionsSelect
           value={operation}
           onValueChange={(value) => {
             onChange("operation", value);
             onChange("inputs", {});
           }}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select transform" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="jsonPath">Extract Data (JSONPath)</SelectItem>
-            <SelectItem value="template">Build from Template</SelectItem>
-            <SelectItem value="map">Map Fields</SelectItem>
-            <SelectItem value="pick">Keep Fields</SelectItem>
-            <SelectItem value="omit">Remove Fields</SelectItem>
-            <SelectItem value="merge">Merge Objects</SelectItem>
-            <SelectItem value="split">Split into Batches</SelectItem>
-            <SelectItem value="filter">Filter Items</SelectItem>
-            <SelectItem value="set">Set Variable</SelectItem>
-            <SelectItem value="sort">Sort Items</SelectItem>
-            <SelectItem value="unique">Unique Items</SelectItem>
-            <SelectItem value="reduce">Reduce</SelectItem>
-            <SelectItem value="group">Group By</SelectItem>
-            <SelectItem value="flatten">Flatten</SelectItem>
-            <SelectItem value="chunk">Chunk Array</SelectItem>
-            <SelectItem value="zip">Zip Arrays</SelectItem>
-          </SelectContent>
-        </Select>
+          placeholder="Select transform"
+          options={[
+            { value: "jsonPath", label: "Extract Data (JSONPath)" },
+            { value: "template", label: "Build from Template" },
+            { value: "map", label: "Map Fields" },
+            { value: "pick", label: "Keep Fields" },
+            { value: "omit", label: "Remove Fields" },
+            { value: "merge", label: "Merge Objects" },
+            { value: "split", label: "Split into Batches" },
+            { value: "filter", label: "Filter Items" },
+            { value: "set", label: "Set Variable" },
+            { value: "sort", label: "Sort Items" },
+            { value: "unique", label: "Unique Items" },
+            { value: "reduce", label: "Reduce" },
+            { value: "group", label: "Group By" },
+            { value: "flatten", label: "Flatten" },
+            { value: "chunk", label: "Chunk Array" },
+            { value: "zip", label: "Zip Arrays" },
+          ]}
+        />
       </div>
 
       <TransformInputs
@@ -867,18 +854,14 @@ const TransformInputs = ({
           </div>
           <div className="space-y-2">
             <Label>Direction</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.direction as string) || "asc"}
               onValueChange={(value) => updateInput("direction", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="asc">Ascending</SelectItem>
-                <SelectItem value="desc">Descending</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "asc", label: "Ascending" },
+                { value: "desc", label: "Descending" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="outputVariable">Output Variable</Label>
@@ -1438,19 +1421,15 @@ const AiNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Style</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.style as string) || "brief"}
               onValueChange={(value) => updateInput("style", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="brief">Brief</SelectItem>
-                <SelectItem value="detailed">Detailed</SelectItem>
-                <SelectItem value="bullets">Bullet Points</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "brief", label: "Brief" },
+                { value: "detailed", label: "Detailed" },
+                { value: "bullets", label: "Bullet Points" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="outputVariable">Output Variable</Label>
@@ -1513,23 +1492,16 @@ const AiNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Provider</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.provider as string) || "synapse"}
               onValueChange={(value) =>
                 updateInput("provider", value === "synapse" ? "" : value)
               }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {AI_PROVIDERS.map((provider) => (
-                  <SelectItem key={provider.value} value={provider.value}>
-                    {provider.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              options={AI_PROVIDERS.map((provider) => ({
+                value: provider.value,
+                label: provider.label,
+              }))}
+            />
             <p className="text-muted-foreground text-xs">
               {(inputs.provider as string) && inputs.provider !== "synapse"
                 ? "Uses this provider's key from your workspace integrations"
@@ -1699,20 +1671,16 @@ const AiNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Task</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.task as string) || "describe"}
               onValueChange={(value) => updateInput("task", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="describe">Describe</SelectItem>
-                <SelectItem value="ocr">OCR (Extract Text)</SelectItem>
-                <SelectItem value="detect">Detect Objects</SelectItem>
-                <SelectItem value="classify">Classify</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "describe", label: "Describe" },
+                { value: "ocr", label: "OCR (Extract Text)" },
+                { value: "detect", label: "Detect Objects" },
+                { value: "classify", label: "Classify" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="prompt">Prompt</Label>
@@ -1749,22 +1717,14 @@ const AiNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Task</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.task as string) || "transcribe"}
               onValueChange={(value) => updateInput("task", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="transcribe">
-                  Transcribe (Speech to Text)
-                </SelectItem>
-                <SelectItem value="synthesize">
-                  Synthesize (Text to Speech)
-                </SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "transcribe", label: "Transcribe (Speech to Text)" },
+                { value: "synthesize", label: "Synthesize (Text to Speech)" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="input">Input</Label>
@@ -1816,23 +1776,16 @@ const AiNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Provider</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.provider as string) || "synapse"}
               onValueChange={(value) =>
                 updateInput("provider", value === "synapse" ? "" : value)
               }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {AI_PROVIDERS.map((provider) => (
-                  <SelectItem key={provider.value} value={provider.value}>
-                    {provider.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              options={AI_PROVIDERS.map((provider) => ({
+                value: provider.value,
+                label: provider.label,
+              }))}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="connectionId">Connection ID</Label>
@@ -1857,19 +1810,15 @@ const AiNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.operation as string) || "complete"}
               onValueChange={(value) => updateInput("operation", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="complete">Completion</SelectItem>
-                <SelectItem value="chat">Chat</SelectItem>
-                <SelectItem value="embed">Embed</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "complete", label: "Completion" },
+                { value: "chat", label: "Chat" },
+                { value: "embed", label: "Embed" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="messagesOrPrompt">Messages / Prompt</Label>
@@ -1953,21 +1902,18 @@ const AiNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Provider</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.provider as string) || ""}
               onValueChange={(value) => updateInput("provider", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select provider" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="pinecone">Pinecone</SelectItem>
-                <SelectItem value="qdrant">Qdrant</SelectItem>
-                <SelectItem value="weaviate">Weaviate</SelectItem>
-                <SelectItem value="pgvector">pgvector</SelectItem>
-                <SelectItem value="custom">Custom</SelectItem>
-              </SelectContent>
-            </Select>
+              placeholder="Select provider"
+              options={[
+                { value: "pinecone", label: "Pinecone" },
+                { value: "qdrant", label: "Qdrant" },
+                { value: "weaviate", label: "Weaviate" },
+                { value: "pgvector", label: "pgvector" },
+                { value: "custom", label: "Custom" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="indexName">Index Name</Label>
@@ -2058,20 +2004,16 @@ const DeveloperNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Level</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.level as string) || "info"}
               onValueChange={(value) => updateInput("level", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="debug">Debug</SelectItem>
-                <SelectItem value="info">Info</SelectItem>
-                <SelectItem value="warn">Warning</SelectItem>
-                <SelectItem value="error">Error</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "debug", label: "Debug" },
+                { value: "info", label: "Info" },
+                { value: "warn", label: "Warning" },
+                { value: "error", label: "Error" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="message">Message</Label>
@@ -2153,19 +2095,15 @@ const DeveloperNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Unit</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.unit as string) || "seconds"}
               onValueChange={(value) => updateInput("unit", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ms">Milliseconds</SelectItem>
-                <SelectItem value="seconds">Seconds</SelectItem>
-                <SelectItem value="minutes">Minutes</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "ms", label: "Milliseconds" },
+                { value: "seconds", label: "Seconds" },
+                { value: "minutes", label: "Minutes" },
+              ]}
+            />
           </div>
         </>
       )}
@@ -2221,20 +2159,16 @@ const DeveloperNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Format</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.format as string) || "json"}
               onValueChange={(value) => updateInput("format", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="json">JSON</SelectItem>
-                <SelectItem value="xml">XML</SelectItem>
-                <SelectItem value="csv">CSV</SelectItem>
-                <SelectItem value="yaml">YAML</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "json", label: "JSON" },
+                { value: "xml", label: "XML" },
+                { value: "csv", label: "CSV" },
+                { value: "yaml", label: "YAML" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="outputVariable">Output Variable</Label>
@@ -2295,21 +2229,17 @@ const DeveloperNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Type</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.type as string) || "date"}
               onValueChange={(value) => updateInput("type", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="date">Date</SelectItem>
-                <SelectItem value="number">Number</SelectItem>
-                <SelectItem value="currency">Currency</SelectItem>
-                <SelectItem value="percentage">Percentage</SelectItem>
-                <SelectItem value="bytes">Bytes</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "date", label: "Date" },
+                { value: "number", label: "Number" },
+                { value: "currency", label: "Currency" },
+                { value: "percentage", label: "Percentage" },
+                { value: "bytes", label: "Bytes" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="locale">Locale</Label>
@@ -2357,35 +2287,27 @@ const DeveloperNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Algorithm</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.algorithm as string) || "sha256"}
               onValueChange={(value) => updateInput("algorithm", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="md5">MD5</SelectItem>
-                <SelectItem value="sha1">SHA-1</SelectItem>
-                <SelectItem value="sha256">SHA-256</SelectItem>
-                <SelectItem value="sha512">SHA-512</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "md5", label: "MD5" },
+                { value: "sha1", label: "SHA-1" },
+                { value: "sha256", label: "SHA-256" },
+                { value: "sha512", label: "SHA-512" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label>Encoding</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.encoding as string) || "hex"}
               onValueChange={(value) => updateInput("encoding", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="hex">Hex</SelectItem>
-                <SelectItem value="base64">Base64</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "hex", label: "Hex" },
+                { value: "base64", label: "Base64" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="outputVariable">Output Variable</Label>
@@ -2446,19 +2368,15 @@ const DeveloperNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Backoff</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.backoff as string) || "exponential"}
               onValueChange={(value) => updateInput("backoff", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="fixed">Fixed</SelectItem>
-                <SelectItem value="linear">Linear</SelectItem>
-                <SelectItem value="exponential">Exponential</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "fixed", label: "Fixed" },
+                { value: "linear", label: "Linear" },
+                { value: "exponential", label: "Exponential" },
+              ]}
+            />
           </div>
         </>
       )}
@@ -2494,19 +2412,15 @@ const DeveloperNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>On Timeout</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.onTimeout as string) || "error"}
               onValueChange={(value) => updateInput("onTimeout", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="error">Throw Error</SelectItem>
-                <SelectItem value="continue">Continue</SelectItem>
-                <SelectItem value="fallback">Fallback</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "error", label: "Throw Error" },
+                { value: "continue", label: "Continue" },
+                { value: "fallback", label: "Fallback" },
+              ]}
+            />
           </div>
         </>
       )}
@@ -2515,19 +2429,15 @@ const DeveloperNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Resume On</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.resumeOn as string) || "webhook"}
               onValueChange={(value) => updateInput("resumeOn", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="webhook">Webhook</SelectItem>
-                <SelectItem value="event">Event</SelectItem>
-                <SelectItem value="timeout">Timeout</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "webhook", label: "Webhook" },
+                { value: "event", label: "Event" },
+                { value: "timeout", label: "Timeout" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="eventName">Event Name</Label>
@@ -2599,22 +2509,18 @@ const DeveloperNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Mode</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.mode as string) || "collect"}
               onValueChange={(value) => updateInput("mode", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="collect">Collect</SelectItem>
-                <SelectItem value="merge">Merge</SelectItem>
-                <SelectItem value="concat">Concat</SelectItem>
-                <SelectItem value="sum">Sum</SelectItem>
-                <SelectItem value="first">First</SelectItem>
-                <SelectItem value="last">Last</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "collect", label: "Collect" },
+                { value: "merge", label: "Merge" },
+                { value: "concat", label: "Concat" },
+                { value: "sum", label: "Sum" },
+                { value: "first", label: "First" },
+                { value: "last", label: "Last" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="source">Source</Label>
@@ -2653,20 +2559,16 @@ const DeveloperNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.operation as string) || "get"}
               onValueChange={(value) => updateInput("operation", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="get">Get</SelectItem>
-                <SelectItem value="set">Set</SelectItem>
-                <SelectItem value="delete">Delete</SelectItem>
-                <SelectItem value="getOrSet">Get or Set</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "get", label: "Get" },
+                { value: "set", label: "Set" },
+                { value: "delete", label: "Delete" },
+                { value: "getOrSet", label: "Get or Set" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="key">Key</Label>
@@ -2772,18 +2674,14 @@ const SecurityNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Algorithm</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.algorithm as string) || "AES-GCM"}
               onValueChange={(value) => updateInput("algorithm", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="AES-GCM">AES-GCM</SelectItem>
-                <SelectItem value="AES-CBC">AES-CBC</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "AES-GCM", label: "AES-GCM" },
+                { value: "AES-CBC", label: "AES-CBC" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="outputVariable">Output Variable</Label>
@@ -2822,18 +2720,14 @@ const SecurityNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Algorithm</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.algorithm as string) || "AES-GCM"}
               onValueChange={(value) => updateInput("algorithm", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="AES-GCM">AES-GCM</SelectItem>
-                <SelectItem value="AES-CBC">AES-CBC</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "AES-GCM", label: "AES-GCM" },
+                { value: "AES-CBC", label: "AES-CBC" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="outputVariable">Output Variable</Label>
@@ -2870,34 +2764,26 @@ const SecurityNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Algorithm</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.algorithm as string) || "SHA-256"}
               onValueChange={(value) => updateInput("algorithm", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="SHA-256">SHA-256</SelectItem>
-                <SelectItem value="SHA-384">SHA-384</SelectItem>
-                <SelectItem value="SHA-512">SHA-512</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "SHA-256", label: "SHA-256" },
+                { value: "SHA-384", label: "SHA-384" },
+                { value: "SHA-512", label: "SHA-512" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label>Encoding</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.encoding as string) || "hex"}
               onValueChange={(value) => updateInput("encoding", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="hex">Hex</SelectItem>
-                <SelectItem value="base64">Base64</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "hex", label: "Hex" },
+                { value: "base64", label: "Base64" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="outputVariable">Output Variable</Label>
@@ -2915,19 +2801,15 @@ const SecurityNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.operation as string) || "create"}
               onValueChange={(value) => updateInput("operation", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="create">Create</SelectItem>
-                <SelectItem value="verify">Verify</SelectItem>
-                <SelectItem value="decode">Decode</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "create", label: "Create" },
+                { value: "verify", label: "Verify" },
+                { value: "decode", label: "Decode" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="input">Input</Label>
@@ -2958,21 +2840,17 @@ const SecurityNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Algorithm</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.algorithm as string) || "HS256"}
               onValueChange={(value) => updateInput("algorithm", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="HS256">HS256</SelectItem>
-                <SelectItem value="HS384">HS384</SelectItem>
-                <SelectItem value="HS512">HS512</SelectItem>
-                <SelectItem value="RS256">RS256</SelectItem>
-                <SelectItem value="RS512">RS512</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "HS256", label: "HS256" },
+                { value: "HS384", label: "HS384" },
+                { value: "HS512", label: "HS512" },
+                { value: "RS256", label: "RS256" },
+                { value: "RS512", label: "RS512" },
+              ]}
+            />
           </div>
           {(inputs.operation as string) === "create" && (
             <div className="space-y-2">
@@ -3004,21 +2882,18 @@ const SecurityNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Provider</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.provider as string) || ""}
               onValueChange={(value) => updateInput("provider", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select provider" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="stripe">Stripe</SelectItem>
-                <SelectItem value="github">GitHub</SelectItem>
-                <SelectItem value="shopify">Shopify</SelectItem>
-                <SelectItem value="slack">Slack</SelectItem>
-                <SelectItem value="custom">Custom (HMAC)</SelectItem>
-              </SelectContent>
-            </Select>
+              placeholder="Select provider"
+              options={[
+                { value: "stripe", label: "Stripe" },
+                { value: "github", label: "GitHub" },
+                { value: "shopify", label: "Shopify" },
+                { value: "slack", label: "Slack" },
+                { value: "custom", label: "Custom (HMAC)" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="payload">Payload</Label>
@@ -3138,18 +3013,14 @@ const StorageNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Content Type</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.contentType as string) || "text"}
               onValueChange={(value) => updateInput("contentType", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="text">Plain Text</SelectItem>
-                <SelectItem value="html">HTML</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "text", label: "Plain Text" },
+                { value: "html", label: "HTML" },
+              ]}
+            />
           </div>
         </>
       )}
@@ -3158,36 +3029,28 @@ const StorageNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.operation as string) || "read"}
               onValueChange={(value) => updateInput("operation", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="read">Read</SelectItem>
-                <SelectItem value="write">Write</SelectItem>
-                <SelectItem value="delete">Delete</SelectItem>
-                <SelectItem value="list">List</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "read", label: "Read" },
+                { value: "write", label: "Write" },
+                { value: "delete", label: "Delete" },
+                { value: "list", label: "List" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label>Provider</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.provider as string) || "local"}
               onValueChange={(value) => updateInput("provider", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="local">Local</SelectItem>
-                <SelectItem value="s3">Amazon S3</SelectItem>
-                <SelectItem value="gcs">Google Cloud Storage</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "local", label: "Local" },
+                { value: "s3", label: "Amazon S3" },
+                { value: "gcs", label: "Google Cloud Storage" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="path">Path</Label>
@@ -3226,35 +3089,28 @@ const StorageNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.operation as string) || "push"}
               onValueChange={(value) => updateInput("operation", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="push">Push</SelectItem>
-                <SelectItem value="pull">Pull</SelectItem>
-                <SelectItem value="peek">Peek</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "push", label: "Push" },
+                { value: "pull", label: "Pull" },
+                { value: "peek", label: "Peek" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label>Provider</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.provider as string) || ""}
               onValueChange={(value) => updateInput("provider", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select provider" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="valkey">Valkey</SelectItem>
-                <SelectItem value="sqs">Amazon SQS</SelectItem>
-                <SelectItem value="rabbitmq">RabbitMQ</SelectItem>
-              </SelectContent>
-            </Select>
+              placeholder="Select provider"
+              options={[
+                { value: "valkey", label: "Valkey" },
+                { value: "sqs", label: "Amazon SQS" },
+                { value: "rabbitmq", label: "RabbitMQ" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="queueName">Queue Name</Label>
@@ -3305,20 +3161,16 @@ const StorageNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.operation as string) || "query"}
               onValueChange={(value) => updateInput("operation", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="query">Query</SelectItem>
-                <SelectItem value="insert">Insert</SelectItem>
-                <SelectItem value="update">Update</SelectItem>
-                <SelectItem value="delete">Delete</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "query", label: "Query" },
+                { value: "insert", label: "Insert" },
+                { value: "update", label: "Update" },
+                { value: "delete", label: "Delete" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="query">Query</Label>
@@ -3378,19 +3230,15 @@ const IntegrationBuiltinNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.operation as string) || "read"}
               onValueChange={(value) => updateInput("operation", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="read">Read</SelectItem>
-                <SelectItem value="write">Write</SelectItem>
-                <SelectItem value="append">Append</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "read", label: "Read" },
+                { value: "write", label: "Write" },
+                { value: "append", label: "Append" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="path">Path</Label>
@@ -3438,20 +3286,16 @@ const IntegrationBuiltinNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.operation as string) || "read"}
               onValueChange={(value) => updateInput("operation", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="read">Read</SelectItem>
-                <SelectItem value="write">Write</SelectItem>
-                <SelectItem value="append">Append</SelectItem>
-                <SelectItem value="clear">Clear</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "read", label: "Read" },
+                { value: "write", label: "Write" },
+                { value: "append", label: "Append" },
+                { value: "clear", label: "Clear" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="spreadsheetId">Spreadsheet ID</Label>
@@ -3502,19 +3346,15 @@ const IntegrationBuiltinNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.operation as string) || "parse"}
               onValueChange={(value) => updateInput("operation", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="create">Create</SelectItem>
-                <SelectItem value="parse">Parse</SelectItem>
-                <SelectItem value="merge">Merge</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "create", label: "Create" },
+                { value: "parse", label: "Parse" },
+                { value: "merge", label: "Merge" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="input">Input</Label>
@@ -3602,20 +3442,16 @@ const HttpExtendedConfig = ({
           />
           <div className="space-y-2">
             <Label>Content Type</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.contentType as string) || "application/json"}
               onValueChange={(value) => updateInput("contentType", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="application/json">JSON</SelectItem>
-                <SelectItem value="text/plain">Plain Text</SelectItem>
-                <SelectItem value="text/html">HTML</SelectItem>
-                <SelectItem value="application/xml">XML</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "application/json", label: "JSON" },
+                { value: "text/plain", label: "Plain Text" },
+                { value: "text/html", label: "HTML" },
+                { value: "application/xml", label: "XML" },
+              ]}
+            />
           </div>
         </>
       )}
@@ -3624,19 +3460,15 @@ const HttpExtendedConfig = ({
         <>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.operation as string) || "check"}
               onValueChange={(value) => updateInput("operation", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="check">Check</SelectItem>
-                <SelectItem value="consume">Consume</SelectItem>
-                <SelectItem value="reset">Reset</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "check", label: "Check" },
+                { value: "consume", label: "Consume" },
+                { value: "reset", label: "Reset" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="key">Key</Label>
@@ -3684,19 +3516,15 @@ const HttpExtendedConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Algorithm</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.algorithm as string) || "sliding-window"}
               onValueChange={(value) => updateInput("algorithm", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="sliding-window">Sliding Window</SelectItem>
-                <SelectItem value="fixed-window">Fixed Window</SelectItem>
-                <SelectItem value="token-bucket">Token Bucket</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "sliding-window", label: "Sliding Window" },
+                { value: "fixed-window", label: "Fixed Window" },
+                { value: "token-bucket", label: "Token Bucket" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="outputVariable">Output Variable</Label>
@@ -3738,19 +3566,15 @@ const FlowPrimitivesConfig = ({
         <>
           <div className="space-y-2">
             <Label>Status</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.status as string) || "success"}
               onValueChange={(value) => updateInput("status", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="success">Success</SelectItem>
-                <SelectItem value="failure">Failure</SelectItem>
-                <SelectItem value="cancelled">Cancelled</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "success", label: "Success" },
+                { value: "failure", label: "Failure" },
+                { value: "cancelled", label: "Cancelled" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="reason">Reason</Label>
@@ -3816,18 +3640,14 @@ const FlowPrimitivesConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Strategy</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.strategy as string) || "last"}
               onValueChange={(value) => updateInput("strategy", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="first">First (use first trigger)</SelectItem>
-                <SelectItem value="last">Last (use last trigger)</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "first", label: "First (use first trigger)" },
+                { value: "last", label: "Last (use last trigger)" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="outputVariable">Output Variable</Label>
@@ -3904,21 +3724,15 @@ const FlowPrimitivesConfig = ({
           </div>
           <div className="space-y-2">
             <Label>On Outside Window</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.onOutside as string) || "skip"}
               onValueChange={(value) => updateInput("onOutside", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="skip">Skip (do nothing)</SelectItem>
-                <SelectItem value="queue">
-                  Queue (run when window opens)
-                </SelectItem>
-                <SelectItem value="fail">Fail (throw error)</SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "skip", label: "Skip (do nothing)" },
+                { value: "queue", label: "Queue (run when window opens)" },
+                { value: "fail", label: "Fail (throw error)" },
+              ]}
+            />
           </div>
         </>
       )}
@@ -4025,20 +3839,17 @@ const DataPrimitivesConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Strategy</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.strategy as string) || "hash"}
               onValueChange={(value) => updateInput("strategy", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="hash">Hash (fast, less precise)</SelectItem>
-                <SelectItem value="deep_equal">
-                  Deep Equal (thorough comparison)
-                </SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "hash", label: "Hash (fast, less precise)" },
+                {
+                  value: "deep_equal",
+                  label: "Deep Equal (thorough comparison)",
+                },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="outputVariable">Output Variable</Label>
@@ -4161,25 +3972,22 @@ const AiPrimitivesConfig = ({
               const rule = rules[idx] || { type: "contains", value: "" };
               return (
                 <div key={`condition-${idx}`} className="flex gap-2">
-                  <Select
+                  <OptionsSelect
                     value={rule.type}
                     onValueChange={(value) => {
                       const newRules = [...rules];
                       newRules[idx] = { ...rule, type: value };
                       updateInput("rules", newRules);
                     }}
-                  >
-                    <SelectTrigger className="w-40">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="regex">Regex</SelectItem>
-                      <SelectItem value="contains">Contains</SelectItem>
-                      <SelectItem value="not_contains">Not Contains</SelectItem>
-                      <SelectItem value="max_length">Max Length</SelectItem>
-                      <SelectItem value="json_schema">JSON Schema</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    className="w-40"
+                    options={[
+                      { value: "regex", label: "Regex" },
+                      { value: "contains", label: "Contains" },
+                      { value: "not_contains", label: "Not Contains" },
+                      { value: "max_length", label: "Max Length" },
+                      { value: "json_schema", label: "JSON Schema" },
+                    ]}
+                  />
                   <Input
                     value={rule.value}
                     onChange={(e) => {
@@ -4212,23 +4020,15 @@ const AiPrimitivesConfig = ({
           </div>
           <div className="space-y-2">
             <Label>On Fail</Label>
-            <Select
+            <OptionsSelect
               value={(inputs.onFail as string) || "block"}
               onValueChange={(value) => updateInput("onFail", value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="block">Block (stop workflow)</SelectItem>
-                <SelectItem value="warn">
-                  Warn (continue with warning)
-                </SelectItem>
-                <SelectItem value="sanitize">
-                  Sanitize (clean output)
-                </SelectItem>
-              </SelectContent>
-            </Select>
+              options={[
+                { value: "block", label: "Block (stop workflow)" },
+                { value: "warn", label: "Warn (continue with warning)" },
+                { value: "sanitize", label: "Sanitize (clean output)" },
+              ]}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="outputVariable">Output Variable</Label>

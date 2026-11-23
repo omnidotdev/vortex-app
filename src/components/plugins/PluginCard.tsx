@@ -1,8 +1,7 @@
+import { Badge } from "@omnidotdev/thornberry/badge";
+import { Button } from "@omnidotdev/thornberry/button";
 import { Link } from "@tanstack/react-router";
 import { Loader2, ShieldCheck } from "lucide-react";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 
 import type { PluginsQuery } from "@/generated/graphql";
 

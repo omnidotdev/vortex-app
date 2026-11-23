@@ -1,10 +1,10 @@
+import { Button } from "@omnidotdev/thornberry/button";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { Cable, GitBranch } from "lucide-react";
 import { useMemo } from "react";
 
 import UsageCounter from "@/components/UsageCounter";
-import { Button } from "@/components/ui/button";
 import { hasBilling } from "@/lib/config/env.config";
 import {
   DEFAULT_LIMITS,

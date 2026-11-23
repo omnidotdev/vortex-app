@@ -1,3 +1,6 @@
+import { Badge } from "@omnidotdev/thornberry/badge";
+import { Button } from "@omnidotdev/thornberry/button";
+import { ConfirmDialog } from "@omnidotdev/thornberry/confirm-dialog";
 import { ScrollArea } from "@omnidotdev/thornberry/scroll-area";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
@@ -13,18 +16,6 @@ import {
 } from "lucide-react";
 import { useCallback, useState } from "react";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import VersionDiff from "@/components/workflow/VersionDiff";
 import { useWorkflowQuery } from "@/generated/graphql";
 import { API_BASE_URL } from "@/lib/config/env.config";
@@ -422,7 +413,7 @@ function VersionHistory({
       </ScrollArea>
 
       {/* Restore confirmation dialog */}
-      <AlertDialog
+      <ConfirmDialog
         open={!!restoreTarget}
         onOpenChange={(open) => {
           if (!open) {
@@ -430,32 +421,15 @@ function VersionHistory({
             setRestoreError(null);
           }
         }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              Restore version {restoreTarget?.version}?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              This will create a new version with the definition from version{" "}
-              {restoreTarget?.version}. Your current workflow will be updated to
-              match.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-
-          {restoreError && (
-            <p className="text-destructive text-sm">{restoreError}</p>
-          )}
-
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isRestoring}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleRestore} disabled={isRestoring}>
-              {isRestoring && <Loader2 className="mr-1 h-4 w-4 animate-spin" />}
-              Restore
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        title={`Restore version ${restoreTarget?.version}?`}
+        description={`This will create a new version with the definition from version ${restoreTarget?.version}. Your current workflow will be updated to match.`}
+        confirmLabel="Restore"
+        pendingLabel="Restoring..."
+        confirmVariant="solid"
+        isPending={isRestoring}
+        error={restoreError}
+        onConfirm={handleRestore}
+      />
     </div>
   );
 }

@@ -1,8 +1,7 @@
+import { Button } from "@omnidotdev/thornberry/button";
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
 import { Plus, Trash2 } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 interface SwitchCase {
   value: string;

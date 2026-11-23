@@ -1,12 +1,6 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Input } from "@omnidotdev/thornberry/input";
+import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 
 type DurationUnit = "seconds" | "minutes" | "hours" | "days";
 
@@ -37,20 +31,16 @@ export const DurationField = ({
           }
           min={1}
         />
-        <Select
+        <OptionsSelect
           value={unit || "minutes"}
           onValueChange={(v) => onUnitChange(v as DurationUnit)}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="seconds">Seconds</SelectItem>
-            <SelectItem value="minutes">Minutes</SelectItem>
-            <SelectItem value="hours">Hours</SelectItem>
-            <SelectItem value="days">Days</SelectItem>
-          </SelectContent>
-        </Select>
+          options={[
+            { value: "seconds", label: "Seconds" },
+            { value: "minutes", label: "Minutes" },
+            { value: "hours", label: "Hours" },
+            { value: "days", label: "Days" },
+          ]}
+        />
       </div>
     </div>
   );
