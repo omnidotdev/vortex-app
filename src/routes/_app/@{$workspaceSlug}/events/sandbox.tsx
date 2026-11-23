@@ -15,7 +15,7 @@ import {
 import { usePublishEventMutation } from "@/lib/graphql/eventSchemaStubs";
 import eventSchemasOptions from "@/lib/options/eventSchemas.options";
 
-import type { PublishEventPayload } from "@/generated/graphql";
+import type { PublishEventMutation } from "@/generated/graphql";
 
 export const Route = createFileRoute("/_app/@{$workspaceSlug}/events/sandbox")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -90,7 +90,8 @@ function EventSandboxPage() {
     }
     return "{}";
   });
-  const [result, setResult] = useState<PublishEventPayload | null>(null);
+  const [result, setResult] =
+    useState<PublishEventMutation["publishEvent"]>(null);
   const [error, setError] = useState<string | null>(null);
 
   const selectedSchema = latestSchemas.find((s) => s.name === selectedType);
