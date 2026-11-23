@@ -74,6 +74,7 @@ import {
   MenuSeparator,
   MenuTrigger,
 } from "@omnidotdev/thornberry/menu";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { Textarea } from "@omnidotdev/thornberry/textarea";
 
 import { AddNodeButton } from "@/components/AddNodeButton";
@@ -149,7 +150,6 @@ import { WaitNode } from "@/components/nodes/WaitNode";
 import { WebhookResponseNode } from "@/components/nodes/WebhookResponseNode";
 import { ZipNode } from "@/components/nodes/ZipNode";
 import ThemeToggle from "@/components/ThemeToggle";
-import Dropdown from "@/components/ui/dropdown";
 import ExportWorkflowDialog from "@/components/workflow/ExportWorkflowDialog";
 import ImportWorkflowDialog from "@/components/workflow/ImportWorkflowDialog";
 import { NodeConfigSidebar } from "@/components/workflow/NodeConfigSidebar";
@@ -1619,7 +1619,7 @@ function WorkflowEditorPage() {
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="edit-status">Status</Label>
-                          <Dropdown
+                          <OptionsSelect
                             open={editSelectOpen}
                             onOpenChange={setEditSelectOpen}
                             value={editIsActive ? "active" : "inactive"}

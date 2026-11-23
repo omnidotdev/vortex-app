@@ -1,8 +1,7 @@
 import { Input } from "@omnidotdev/thornberry/input";
 import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { Textarea } from "@omnidotdev/thornberry/textarea";
-
-import Dropdown from "@/components/ui/dropdown";
 
 import type { NodeConfigProps } from "./types";
 
@@ -51,7 +50,7 @@ export const SlackNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
         <div className="space-y-2">
           <Label htmlFor="messageType">Message Type</Label>
-          <Dropdown
+          <OptionsSelect
             value={messageType}
             onValueChange={(value) => updateConfig("messageType", value)}
             options={[
@@ -118,7 +117,7 @@ export const SlackNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
             <div className="space-y-2">
               <Label htmlFor="color">Accent Color</Label>
-              <Dropdown
+              <OptionsSelect
                 value={(config.color as string) || "none"}
                 onValueChange={(value) => updateConfig("color", value)}
                 options={[

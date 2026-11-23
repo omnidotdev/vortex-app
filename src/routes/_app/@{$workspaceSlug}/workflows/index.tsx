@@ -12,6 +12,7 @@ import {
 } from "@omnidotdev/thornberry/dialog";
 import { Input } from "@omnidotdev/thornberry/input";
 import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { Textarea } from "@omnidotdev/thornberry/textarea";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import {
@@ -24,7 +25,6 @@ import { Loader2, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 import UsageBanner from "@/components/UsageBanner";
-import Dropdown from "@/components/ui/dropdown";
 import {
   useDeleteWorkflowMutation,
   useUpdateWorkflowMutation,
@@ -341,7 +341,7 @@ function WorkflowsPage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="edit-status">Status</Label>
-                    <Dropdown
+                    <OptionsSelect
                       value={editingWorkflow.isActive ? "active" : "inactive"}
                       onValueChange={(value) =>
                         setEditingWorkflow({

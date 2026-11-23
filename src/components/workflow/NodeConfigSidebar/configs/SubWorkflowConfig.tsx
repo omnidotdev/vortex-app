@@ -1,12 +1,12 @@
 import { Input } from "@omnidotdev/thornberry/input";
 import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { Textarea } from "@omnidotdev/thornberry/textarea";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouteContext } from "@tanstack/react-router";
 import { ChevronDown, ChevronRight, ExternalLink, Loader2 } from "lucide-react";
 import { useState } from "react";
 
-import Dropdown from "@/components/ui/dropdown";
 import workflowsOptions from "@/lib/options/workflows.options";
 import { DurationField } from "../fields/DurationField";
 import { JsonField } from "../fields/JsonField";
@@ -83,14 +83,16 @@ export const SubWorkflowConfig = ({
             No other workflows found. Create another workflow first.
           </div>
         ) : (
-          <Dropdown
+          <OptionsSelect
+            // long descriptions wrap below the label instead of squeezing it
+            contentClassName="*:flex-wrap"
             value={workflowId}
             onValueChange={(value) => onChange("workflowId", value)}
             placeholder="Select a workflow..."
             options={availableWorkflows.map((workflow) => ({
               value: workflow.rowId,
               label: workflow.name,
-              hint: workflow.description,
+              hint: workflow.description ?? undefined,
             }))}
           />
         )}
@@ -174,7 +176,9 @@ export const SubWorkflowConfig = ({
         <div className="space-y-4 pt-2">
           <div className="space-y-2">
             <Label>On Error</Label>
-            <Dropdown
+            <OptionsSelect
+              // long descriptions wrap below the label instead of squeezing it
+              contentClassName="*:flex-wrap"
               value={onError}
               onValueChange={(value) => onChange("onError", value)}
               options={[

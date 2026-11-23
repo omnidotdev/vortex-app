@@ -1,11 +1,11 @@
 import { Badge } from "@omnidotdev/thornberry/badge";
 import { Button } from "@omnidotdev/thornberry/button";
 import { Input } from "@omnidotdev/thornberry/input";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 
-import Dropdown from "@/components/ui/dropdown";
 import eventSchemasOptions from "@/lib/options/eventSchemas.options";
 
 export const Route = createFileRoute("/_app/@{$workspaceSlug}/events/")({
@@ -93,7 +93,7 @@ function EventSchemasPage() {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full sm:max-w-xs"
         />
-        <Dropdown
+        <OptionsSelect
           value={sourceFilter}
           onValueChange={setSourceFilter}
           className="w-full sm:w-48"
@@ -103,7 +103,7 @@ function EventSchemasPage() {
             ...sources.map((source) => ({ value: source, label: source })),
           ]}
         />
-        <Dropdown
+        <OptionsSelect
           value={enforcementFilter}
           onValueChange={setEnforcementFilter}
           className="w-full sm:w-48"
@@ -115,7 +115,7 @@ function EventSchemasPage() {
             { value: "none", label: "None" },
           ]}
         />
-        <Dropdown
+        <OptionsSelect
           value={visibilityFilter}
           onValueChange={setVisibilityFilter}
           className="w-full sm:w-48"

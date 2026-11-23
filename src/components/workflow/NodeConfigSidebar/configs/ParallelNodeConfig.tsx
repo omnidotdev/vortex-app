@@ -1,7 +1,6 @@
 import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { Textarea } from "@omnidotdev/thornberry/textarea";
-
-import Dropdown from "@/components/ui/dropdown";
 
 import type { NodeConfigProps } from "./types";
 
@@ -21,7 +20,7 @@ export const ParallelNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
       <div className="space-y-2">
         <Label>Wait For</Label>
-        <Dropdown
+        <OptionsSelect
           value={String(data.waitFor || "all")}
           onValueChange={(value) =>
             onChange(

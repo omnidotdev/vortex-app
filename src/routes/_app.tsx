@@ -207,7 +207,7 @@ function MobileHeader() {
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetBackdrop className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm" />
+        <SheetBackdrop />
         <SheetPositioner>
           <SheetContent side="right" className="w-64 p-0">
             <SheetContext>

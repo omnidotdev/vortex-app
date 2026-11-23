@@ -1,10 +1,10 @@
 import { Input } from "@omnidotdev/thornberry/input";
 import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { Textarea } from "@omnidotdev/thornberry/textarea";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 
-import Dropdown from "@/components/ui/dropdown";
 import { VariablePicker } from "@/components/workflow/VariablePicker";
 import { JsonField } from "../fields/JsonField";
 import { DiscordNodeConfig } from "./DiscordNodeConfig";
@@ -403,7 +403,7 @@ const HttpNodeConfig = ({
 
       <div className="space-y-2">
         <Label>Method</Label>
-        <Dropdown
+        <OptionsSelect
           value={method}
           onValueChange={(value) => {
             if (operation === "request") {
@@ -520,7 +520,7 @@ const TransformNodeConfig = ({
 
       <div className="space-y-2">
         <Label>Transform Type</Label>
-        <Dropdown
+        <OptionsSelect
           value={operation}
           onValueChange={(value) => {
             onChange("operation", value);
@@ -854,7 +854,7 @@ const TransformInputs = ({
           </div>
           <div className="space-y-2">
             <Label>Direction</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.direction as string) || "asc"}
               onValueChange={(value) => updateInput("direction", value)}
               options={[
@@ -1421,7 +1421,7 @@ const AiNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Style</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.style as string) || "brief"}
               onValueChange={(value) => updateInput("style", value)}
               options={[
@@ -1492,7 +1492,7 @@ const AiNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Provider</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.provider as string) || "synapse"}
               onValueChange={(value) =>
                 updateInput("provider", value === "synapse" ? "" : value)
@@ -1671,7 +1671,7 @@ const AiNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Task</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.task as string) || "describe"}
               onValueChange={(value) => updateInput("task", value)}
               options={[
@@ -1717,7 +1717,7 @@ const AiNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Task</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.task as string) || "transcribe"}
               onValueChange={(value) => updateInput("task", value)}
               options={[
@@ -1776,7 +1776,7 @@ const AiNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Provider</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.provider as string) || "synapse"}
               onValueChange={(value) =>
                 updateInput("provider", value === "synapse" ? "" : value)
@@ -1810,7 +1810,7 @@ const AiNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.operation as string) || "complete"}
               onValueChange={(value) => updateInput("operation", value)}
               options={[
@@ -1902,7 +1902,7 @@ const AiNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Provider</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.provider as string) || ""}
               onValueChange={(value) => updateInput("provider", value)}
               placeholder="Select provider"
@@ -2004,7 +2004,7 @@ const DeveloperNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Level</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.level as string) || "info"}
               onValueChange={(value) => updateInput("level", value)}
               options={[
@@ -2095,7 +2095,7 @@ const DeveloperNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Unit</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.unit as string) || "seconds"}
               onValueChange={(value) => updateInput("unit", value)}
               options={[
@@ -2159,7 +2159,7 @@ const DeveloperNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Format</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.format as string) || "json"}
               onValueChange={(value) => updateInput("format", value)}
               options={[
@@ -2229,7 +2229,7 @@ const DeveloperNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Type</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.type as string) || "date"}
               onValueChange={(value) => updateInput("type", value)}
               options={[
@@ -2287,7 +2287,7 @@ const DeveloperNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Algorithm</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.algorithm as string) || "sha256"}
               onValueChange={(value) => updateInput("algorithm", value)}
               options={[
@@ -2300,7 +2300,7 @@ const DeveloperNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Encoding</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.encoding as string) || "hex"}
               onValueChange={(value) => updateInput("encoding", value)}
               options={[
@@ -2368,7 +2368,7 @@ const DeveloperNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Backoff</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.backoff as string) || "exponential"}
               onValueChange={(value) => updateInput("backoff", value)}
               options={[
@@ -2412,7 +2412,7 @@ const DeveloperNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>On Timeout</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.onTimeout as string) || "error"}
               onValueChange={(value) => updateInput("onTimeout", value)}
               options={[
@@ -2429,7 +2429,7 @@ const DeveloperNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Resume On</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.resumeOn as string) || "webhook"}
               onValueChange={(value) => updateInput("resumeOn", value)}
               options={[
@@ -2509,7 +2509,7 @@ const DeveloperNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Mode</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.mode as string) || "collect"}
               onValueChange={(value) => updateInput("mode", value)}
               options={[
@@ -2559,7 +2559,7 @@ const DeveloperNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.operation as string) || "get"}
               onValueChange={(value) => updateInput("operation", value)}
               options={[
@@ -2674,7 +2674,7 @@ const SecurityNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Algorithm</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.algorithm as string) || "AES-GCM"}
               onValueChange={(value) => updateInput("algorithm", value)}
               options={[
@@ -2720,7 +2720,7 @@ const SecurityNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Algorithm</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.algorithm as string) || "AES-GCM"}
               onValueChange={(value) => updateInput("algorithm", value)}
               options={[
@@ -2764,7 +2764,7 @@ const SecurityNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Algorithm</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.algorithm as string) || "SHA-256"}
               onValueChange={(value) => updateInput("algorithm", value)}
               options={[
@@ -2776,7 +2776,7 @@ const SecurityNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Encoding</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.encoding as string) || "hex"}
               onValueChange={(value) => updateInput("encoding", value)}
               options={[
@@ -2801,7 +2801,7 @@ const SecurityNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.operation as string) || "create"}
               onValueChange={(value) => updateInput("operation", value)}
               options={[
@@ -2840,7 +2840,7 @@ const SecurityNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Algorithm</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.algorithm as string) || "HS256"}
               onValueChange={(value) => updateInput("algorithm", value)}
               options={[
@@ -2882,7 +2882,7 @@ const SecurityNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Provider</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.provider as string) || ""}
               onValueChange={(value) => updateInput("provider", value)}
               placeholder="Select provider"
@@ -3013,7 +3013,7 @@ const StorageNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Content Type</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.contentType as string) || "text"}
               onValueChange={(value) => updateInput("contentType", value)}
               options={[
@@ -3029,7 +3029,7 @@ const StorageNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.operation as string) || "read"}
               onValueChange={(value) => updateInput("operation", value)}
               options={[
@@ -3042,7 +3042,7 @@ const StorageNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Provider</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.provider as string) || "local"}
               onValueChange={(value) => updateInput("provider", value)}
               options={[
@@ -3089,7 +3089,7 @@ const StorageNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.operation as string) || "push"}
               onValueChange={(value) => updateInput("operation", value)}
               options={[
@@ -3101,7 +3101,7 @@ const StorageNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Provider</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.provider as string) || ""}
               onValueChange={(value) => updateInput("provider", value)}
               placeholder="Select provider"
@@ -3161,7 +3161,7 @@ const StorageNodeConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.operation as string) || "query"}
               onValueChange={(value) => updateInput("operation", value)}
               options={[
@@ -3230,7 +3230,7 @@ const IntegrationBuiltinNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.operation as string) || "read"}
               onValueChange={(value) => updateInput("operation", value)}
               options={[
@@ -3286,7 +3286,7 @@ const IntegrationBuiltinNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.operation as string) || "read"}
               onValueChange={(value) => updateInput("operation", value)}
               options={[
@@ -3346,7 +3346,7 @@ const IntegrationBuiltinNodeConfig = ({
         <>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.operation as string) || "parse"}
               onValueChange={(value) => updateInput("operation", value)}
               options={[
@@ -3442,7 +3442,7 @@ const HttpExtendedConfig = ({
           />
           <div className="space-y-2">
             <Label>Content Type</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.contentType as string) || "application/json"}
               onValueChange={(value) => updateInput("contentType", value)}
               options={[
@@ -3460,7 +3460,7 @@ const HttpExtendedConfig = ({
         <>
           <div className="space-y-2">
             <Label>Operation</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.operation as string) || "check"}
               onValueChange={(value) => updateInput("operation", value)}
               options={[
@@ -3516,7 +3516,7 @@ const HttpExtendedConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Algorithm</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.algorithm as string) || "sliding-window"}
               onValueChange={(value) => updateInput("algorithm", value)}
               options={[
@@ -3566,7 +3566,7 @@ const FlowPrimitivesConfig = ({
         <>
           <div className="space-y-2">
             <Label>Status</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.status as string) || "success"}
               onValueChange={(value) => updateInput("status", value)}
               options={[
@@ -3640,7 +3640,7 @@ const FlowPrimitivesConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Strategy</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.strategy as string) || "last"}
               onValueChange={(value) => updateInput("strategy", value)}
               options={[
@@ -3724,7 +3724,7 @@ const FlowPrimitivesConfig = ({
           </div>
           <div className="space-y-2">
             <Label>On Outside Window</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.onOutside as string) || "skip"}
               onValueChange={(value) => updateInput("onOutside", value)}
               options={[
@@ -3839,7 +3839,7 @@ const DataPrimitivesConfig = ({
           </div>
           <div className="space-y-2">
             <Label>Strategy</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.strategy as string) || "hash"}
               onValueChange={(value) => updateInput("strategy", value)}
               options={[
@@ -3972,7 +3972,7 @@ const AiPrimitivesConfig = ({
               const rule = rules[idx] || { type: "contains", value: "" };
               return (
                 <div key={`condition-${idx}`} className="flex gap-2">
-                  <Dropdown
+                  <OptionsSelect
                     value={rule.type}
                     onValueChange={(value) => {
                       const newRules = [...rules];
@@ -4020,7 +4020,7 @@ const AiPrimitivesConfig = ({
           </div>
           <div className="space-y-2">
             <Label>On Fail</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.onFail as string) || "block"}
               onValueChange={(value) => updateInput("onFail", value)}
               options={[

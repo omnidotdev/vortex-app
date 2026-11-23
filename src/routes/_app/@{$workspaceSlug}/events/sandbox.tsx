@@ -1,10 +1,10 @@
 import { Badge } from "@omnidotdev/thornberry/badge";
 import { Button } from "@omnidotdev/thornberry/button";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 
-import Dropdown from "@/components/ui/dropdown";
 import { JsonEditor } from "@/components/ui/json-editor";
 import { usePublishEventMutation } from "@/lib/graphql/eventSchemaStubs";
 import eventSchemasOptions from "@/lib/options/eventSchemas.options";
@@ -186,7 +186,7 @@ function EventSandboxPage() {
             >
               Event Type
             </label>
-            <Dropdown
+            <OptionsSelect
               value={selectedType}
               onValueChange={handleTypeChange}
               id="event-type"

@@ -1,8 +1,8 @@
 import { Input } from "@omnidotdev/thornberry/input";
 import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { Textarea } from "@omnidotdev/thornberry/textarea";
 
-import Dropdown from "@/components/ui/dropdown";
 import { DurationField } from "../fields/DurationField";
 
 import type { NodeConfigProps } from "./types";
@@ -27,7 +27,7 @@ export const GateNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
       <div className="space-y-2">
         <Label>Gate Type</Label>
-        <Dropdown
+        <OptionsSelect
           value={gateType}
           onValueChange={(value) => onChange("gateType", value)}
           options={[
@@ -86,7 +86,7 @@ export const GateNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
       <div className="space-y-2">
         <Label>If Timeout Reached</Label>
-        <Dropdown
+        <OptionsSelect
           value={(data.timeoutAction as string) || "reject"}
           onValueChange={(value) => onChange("timeoutAction", value)}
           options={[

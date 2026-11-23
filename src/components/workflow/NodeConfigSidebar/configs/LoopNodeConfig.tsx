@@ -1,10 +1,10 @@
 import { Input } from "@omnidotdev/thornberry/input";
 import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { Textarea } from "@omnidotdev/thornberry/textarea";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-import Dropdown from "@/components/ui/dropdown";
 import { ExpressionField } from "../fields/ExpressionField";
 
 import type { NodeConfigProps } from "./types";
@@ -28,7 +28,7 @@ export const LoopNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
       <div className="space-y-2">
         <Label>Loop Type</Label>
-        <Dropdown
+        <OptionsSelect
           value={loopType}
           onValueChange={(value) => onChange("loopType", value)}
           options={[

@@ -1,13 +1,13 @@
 import { Button } from "@omnidotdev/thornberry/button";
 import { Input } from "@omnidotdev/thornberry/input";
 import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { Textarea } from "@omnidotdev/thornberry/textarea";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
 import { AlertCircle, ExternalLink, Loader2, Plug } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import Dropdown from "@/components/ui/dropdown";
 import { JsonEditor } from "@/components/ui/json-editor";
 import { VariablePicker } from "@/components/workflow/VariablePicker";
 import { getIntegrationActions } from "@/lib/integrations/actions";
@@ -148,7 +148,9 @@ export const IntegrationNodeConfig = ({
       {/* Action Selection */}
       <div className="space-y-2">
         <Label>Action</Label>
-        <Dropdown
+        <OptionsSelect
+          // long descriptions wrap below the label instead of squeezing it
+          contentClassName="*:flex-wrap"
           value={operation}
           onValueChange={(v) => onChange("operation", v)}
           placeholder="Select an action..."
@@ -413,7 +415,7 @@ const ActionInputs = ({
           </div>
           <div className="space-y-2">
             <Label htmlFor="currency">Currency</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.currency as string) || "usd"}
               onValueChange={(v) => updateInput("currency", v)}
               options={[
@@ -712,7 +714,7 @@ const ActionInputs = ({
         <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="model">Model</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.model as string) || ""}
               onValueChange={(v) => updateInput("model", v)}
               placeholder="Select a model..."
@@ -828,7 +830,7 @@ const ActionInputs = ({
           </div>
           <div className="space-y-2">
             <Label htmlFor="state">State (optional)</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.state as string) || "open"}
               onValueChange={(v) => updateInput("state", v)}
               options={[
@@ -898,7 +900,7 @@ const ActionInputs = ({
           </div>
           <div className="space-y-2">
             <Label htmlFor="qos">QoS Level</Label>
-            <Dropdown
+            <OptionsSelect
               value={String(inputs.qos ?? 0)}
               onValueChange={(v) => updateInput("qos", Number.parseInt(v, 10))}
               options={[
@@ -1105,7 +1107,7 @@ const ActionInputs = ({
           </div>
           <div className="space-y-2">
             <Label htmlFor="hvac_mode">HVAC Mode</Label>
-            <Dropdown
+            <OptionsSelect
               value={(inputs.hvac_mode as string) || ""}
               onValueChange={(v) => updateInput("hvac_mode", v)}
               placeholder="Select mode..."

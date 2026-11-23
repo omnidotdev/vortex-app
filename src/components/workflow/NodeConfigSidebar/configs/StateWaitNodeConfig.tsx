@@ -1,8 +1,7 @@
 import { Input } from "@omnidotdev/thornberry/input";
 import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { Textarea } from "@omnidotdev/thornberry/textarea";
-
-import Dropdown from "@/components/ui/dropdown";
 
 import type { NodeConfigProps } from "./types";
 
@@ -34,7 +33,7 @@ export const StateWaitNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
       <div className="space-y-2">
         <Label htmlFor="condition">Condition</Label>
-        <Dropdown
+        <OptionsSelect
           value={condition}
           onValueChange={(val) => onChange("condition", val)}
           options={[

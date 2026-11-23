@@ -1,10 +1,10 @@
 import { Button } from "@omnidotdev/thornberry/button";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { diffLines } from "diff";
 import { useMemo, useState } from "react";
 
-import Dropdown from "@/components/ui/dropdown";
 import eventSchemasOptions from "@/lib/options/eventSchemas.options";
 
 export const Route = createFileRoute("/_app/@{$workspaceSlug}/events/diff")({
@@ -133,7 +133,7 @@ function EventSchemaDiffPage() {
 
       {/* Selectors */}
       <div className="mt-6 flex items-center gap-4">
-        <Dropdown
+        <OptionsSelect
           value={selectedName}
           onValueChange={handleNameChange}
           className="w-64"
@@ -141,7 +141,7 @@ function EventSchemaDiffPage() {
           options={schemaNames.map((name) => ({ value: name, label: name }))}
         />
 
-        <Dropdown
+        <OptionsSelect
           value={versionA}
           onValueChange={setVersionA}
           className="w-32"
@@ -154,7 +154,7 @@ function EventSchemaDiffPage() {
 
         <span className="text-muted-foreground">vs</span>
 
-        <Dropdown
+        <OptionsSelect
           value={versionB}
           onValueChange={setVersionB}
           className="w-32"

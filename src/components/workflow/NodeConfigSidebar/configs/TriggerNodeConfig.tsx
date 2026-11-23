@@ -1,11 +1,10 @@
 import { Button } from "@omnidotdev/thornberry/button";
 import { Input } from "@omnidotdev/thornberry/input";
 import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { Textarea } from "@omnidotdev/thornberry/textarea";
 import { Check, Copy } from "lucide-react";
 import { useEffect, useState } from "react";
-
-import Dropdown from "@/components/ui/dropdown";
 
 import type { NodeConfigProps } from "./types";
 
@@ -51,7 +50,7 @@ export const TriggerNodeConfig = ({
 
       <div className="space-y-2">
         <Label>Trigger Type</Label>
-        <Dropdown
+        <OptionsSelect
           value={triggerType}
           onValueChange={(value) => onChange("triggerType", value)}
           options={[
@@ -216,7 +215,7 @@ export const TriggerNodeConfig = ({
 
           <div className="space-y-2">
             <Label>Method</Label>
-            <Dropdown
+            <OptionsSelect
               value={(config.method as string) || "GET"}
               onValueChange={(value) =>
                 onNestedChange("config", "method", value)
@@ -245,7 +244,7 @@ export const TriggerNodeConfig = ({
 
           <div className="space-y-2">
             <Label>Deduplication</Label>
-            <Dropdown
+            <OptionsSelect
               value={(config.deduplication as string) || "hash"}
               onValueChange={(value) =>
                 onNestedChange("config", "deduplication", value)
@@ -501,7 +500,7 @@ export const TriggerNodeConfig = ({
 
           <div className="space-y-2">
             <Label>QoS</Label>
-            <Dropdown
+            <OptionsSelect
               value={String((config.qos as number) ?? 0)}
               onValueChange={(value) =>
                 onNestedChange("config", "qos", parseInt(value, 10))

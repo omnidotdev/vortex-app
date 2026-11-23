@@ -1,8 +1,8 @@
 import { Input } from "@omnidotdev/thornberry/input";
 import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { Textarea } from "@omnidotdev/thornberry/textarea";
 
-import Dropdown from "@/components/ui/dropdown";
 import { JsonEditor } from "@/components/ui/json-editor";
 
 import type { NodeConfigProps } from "./types";
@@ -35,7 +35,7 @@ export const CollectNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
       <div className="space-y-2">
         <Label htmlFor="mode">Collection Mode</Label>
-        <Dropdown
+        <OptionsSelect
           value={mode}
           onValueChange={(val) => onChange("mode", val)}
           options={[

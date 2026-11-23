@@ -84,7 +84,7 @@ function DebugPane() {
         </Button>
       </SheetTrigger>
 
-      <SheetBackdrop className="fixed inset-0 z-50 bg-background/60 backdrop-blur-sm" />
+      <SheetBackdrop />
       <SheetPositioner>
         <SheetContent
           side="bottom"

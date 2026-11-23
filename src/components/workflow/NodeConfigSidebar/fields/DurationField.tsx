@@ -1,7 +1,6 @@
 import { Input } from "@omnidotdev/thornberry/input";
 import { Label } from "@omnidotdev/thornberry/label";
-
-import Dropdown from "@/components/ui/dropdown";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 
 type DurationUnit = "seconds" | "minutes" | "hours" | "days";
 
@@ -32,7 +31,7 @@ export const DurationField = ({
           }
           min={1}
         />
-        <Dropdown
+        <OptionsSelect
           value={unit || "minutes"}
           onValueChange={(v) => onUnitChange(v as DurationUnit)}
           options={[

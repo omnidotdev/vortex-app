@@ -1,10 +1,10 @@
 import { Input } from "@omnidotdev/thornberry/input";
 import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { Textarea } from "@omnidotdev/thornberry/textarea";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-import Dropdown from "@/components/ui/dropdown";
 import { JsonField } from "../fields/JsonField";
 
 import type { NodeConfigProps } from "./types";
@@ -94,7 +94,7 @@ export const PluginNodeConfig = ({ data, onChange }: NodeConfigProps) => {
 
           <div className="space-y-2">
             <Label htmlFor="memoryLimit">Memory</Label>
-            <Dropdown
+            <OptionsSelect
               value={String((data.memoryLimit as number) || 128)}
               onValueChange={(value) =>
                 onChange("memoryLimit", Number.parseInt(value, 10))

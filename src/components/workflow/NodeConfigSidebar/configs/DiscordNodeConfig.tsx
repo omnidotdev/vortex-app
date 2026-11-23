@@ -1,9 +1,9 @@
 import { Input } from "@omnidotdev/thornberry/input";
 import { Label } from "@omnidotdev/thornberry/label";
+import { OptionsSelect } from "@omnidotdev/thornberry/select";
 import { Textarea } from "@omnidotdev/thornberry/textarea";
 import { useCallback, useRef } from "react";
 
-import Dropdown from "@/components/ui/dropdown";
 import { VariablePicker } from "@/components/workflow/VariablePicker";
 
 import type { NodeConfigProps } from "./types";
@@ -176,7 +176,7 @@ export const DiscordNodeConfig = ({
 
             <div className="space-y-2">
               <Label htmlFor="embedColor">Color</Label>
-              <Dropdown
+              <OptionsSelect
                 value={(config.embedColor as string) || "blue"}
                 onValueChange={(value) => updateConfig("embedColor", value)}
                 options={[
