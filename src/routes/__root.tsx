@@ -25,7 +25,7 @@ import { getTheme } from "@/server/functions/theme";
 
 import type { QueryClient } from "@tanstack/react-query";
 import type { ReactNode } from "react";
-import type { GetAuthSession } from "@/lib/auth/getAuth";
+import type { ClientSession } from "@/lib/auth/clientSession";
 import type { Theme } from "@/providers/ThemeProvider";
 
 /**
@@ -64,7 +64,7 @@ const fetchSessionAndMaintenanceMode = createServerFn({
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
-  session: GetAuthSession | null;
+  session: ClientSession | null;
   authDegraded: boolean;
   isMaintenanceMode: boolean;
 }>()({
