@@ -58,3 +58,13 @@ Object.defineProperty(globalThis, "HTMLTextAreaElement", {
 Object.defineProperty(globalThis, "HTMLSelectElement", {
   value: dom.window.HTMLSelectElement,
 });
+
+// jsdom has no ResizeObserver; floating menus observe their anchor's size
+class ResizeObserverStub {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+Object.defineProperty(globalThis, "ResizeObserver", {
+  value: ResizeObserverStub,
+});

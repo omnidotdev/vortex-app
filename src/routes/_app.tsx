@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { RiDiscordLine as DiscordIcon } from "react-icons/ri";
 
+import WorkspaceSwitcher from "@/components/layout/WorkspaceSwitcher";
 import { Button } from "@/components/ui/button";
 import {
   SheetBackdrop,
@@ -182,7 +183,7 @@ function AuthenticatedLayout() {
  * Mobile header with sidebar trigger for smaller viewports.
  */
 function MobileHeader() {
-  const { session, organization } = Route.useRouteContext();
+  const { session } = Route.useRouteContext();
   const params = useParams({ strict: false });
   const workspaceSlug = (params as { workspaceSlug?: string }).workspaceSlug;
 
@@ -252,9 +253,9 @@ function MobileHeader() {
                     {workspaceSlug && (
                       <>
                         <div className="pt-4 pb-2">
-                          <p className="px-3 font-medium text-muted-foreground text-xs uppercase">
-                            {organization?.name || workspaceSlug}
-                          </p>
+                          <WorkspaceSwitcher
+                            onNavigate={() => setOpen(false)}
+                          />
                         </div>
                         <Link
                           to="/@{$workspaceSlug}"
@@ -443,7 +444,7 @@ function MobileHeader() {
  * Application sidebar for authenticated users.
  */
 function AppSidebar() {
-  const { session, organization } = Route.useRouteContext();
+  const { session } = Route.useRouteContext();
   const params = useParams({ strict: false });
   const workspaceSlug = (params as { workspaceSlug?: string }).workspaceSlug;
 
@@ -480,9 +481,7 @@ function AppSidebar() {
           {workspaceSlug && (
             <>
               <div className="pt-4 pb-2">
-                <p className="px-3 font-medium text-muted-foreground text-xs uppercase">
-                  {organization?.name || workspaceSlug}
-                </p>
+                <WorkspaceSwitcher />
               </div>
               <Link
                 to="/@{$workspaceSlug}"
