@@ -48,6 +48,8 @@ const WorkspaceSwitcher = ({ onNavigate }: Props) => {
     session?: ClientSession | null;
   };
   const workspaces = session?.organizations ?? [];
+  // The manage link opens the hub as the account Vortex is signed in as
+  const loginHint = session?.user?.identityProviderId;
 
   if (!workspaceSlug || !workspaces.length) return null;
 
@@ -70,7 +72,7 @@ const WorkspaceSwitcher = ({ onNavigate }: Props) => {
   };
 
   // Empty when the account hub is not configured, which hides the manage link
-  const manageUrl = workspacesUrl(ACCOUNT_URL) || undefined;
+  const manageUrl = workspacesUrl(ACCOUNT_URL, { loginHint }) || undefined;
 
   return (
     <SharedWorkspaceSwitcher

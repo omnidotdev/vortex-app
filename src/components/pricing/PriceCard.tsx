@@ -28,6 +28,7 @@ import {
   MenuTrigger,
 } from "@/components/ui/menu";
 import signIn from "@/lib/auth/signIn";
+import useHubLoginHint from "@/lib/auth/useHubLoginHint";
 import { upgradePlanUrl } from "@/lib/billing/hubLinks";
 import { ACCOUNT_URL, BASE_URL, hasBilling } from "@/lib/config/env.config";
 import capitalizeFirstLetter from "@/lib/util/capitalizeFirstLetter";
@@ -91,6 +92,9 @@ export const PriceCard = ({ price, orgSubscriptions = {} }: Props) => {
 
   const interval = price.recurring?.interval === "year" ? "year" : "month";
 
+  // Hub links open the hub as the account Vortex is signed in as
+  const loginHint = useHubLoginHint();
+
   // The account hub's confirm step for this plan, for a workspace or (none
   // given) letting the hub ask. Empty when no account hub is configured
   const planUrl = (workspaceSlug?: string) =>
@@ -98,6 +102,7 @@ export const PriceCard = ({ price, orgSubscriptions = {} }: Props) => {
       plan: tier,
       interval,
       workspaceSlug,
+      loginHint,
     });
 
   // Handle workspace selection from dropdown. A new workspace is created on
@@ -105,7 +110,7 @@ export const PriceCard = ({ price, orgSubscriptions = {} }: Props) => {
   const handleWorkspaceSelect = (workspaceId: string) => {
     const href =
       workspaceId === "create-new"
-        ? workspacesUrl(ACCOUNT_URL)
+        ? workspacesUrl(ACCOUNT_URL, { loginHint })
         : planUrl(allOrgs.find((org) => org.id === workspaceId)?.slug);
 
     if (href) window.location.assign(href);

@@ -54,6 +54,22 @@ describe("upgradePlanUrl", () => {
     });
   });
 
+  test("opens the hub as the signed-in account", () => {
+    expect(
+      params(
+        upgradePlanUrl(HUB, VORTEX, {
+          plan: "pro",
+          interval: "month",
+          workspaceSlug: "acme",
+          loginHint: "user-123",
+        }),
+      ),
+    ).toHaveProperty("login_hint", "user-123");
+    expect(
+      params(upgradePlanUrl(HUB, VORTEX, { plan: "pro", interval: "month" })),
+    ).not.toHaveProperty("login_hint");
+  });
+
   test("is empty when no account hub is configured", () => {
     expect(
       upgradePlanUrl(undefined, VORTEX, { plan: "pro", interval: "month" }),
@@ -72,6 +88,15 @@ describe("manageSubscriptionUrl", () => {
       manage: "1",
       return: `${VORTEX}/@acme/~/settings`,
     });
+  });
+
+  test("opens the hub as the signed-in account", () => {
+    expect(
+      params(manageSubscriptionUrl(HUB, VORTEX, "acme", "user-123")),
+    ).toHaveProperty("login_hint", "user-123");
+    expect(
+      params(manageSubscriptionUrl(HUB, VORTEX, "acme")),
+    ).not.toHaveProperty("login_hint");
   });
 
   test("is empty when no account hub is configured", () => {
