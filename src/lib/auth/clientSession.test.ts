@@ -48,6 +48,7 @@ describe("toClientSession", () => {
         email: "ada@example.com",
         image: null,
         rowId: "row_1",
+        identityProviderId: "idp_1",
       },
       accessToken: "at_live",
       organizations: [],

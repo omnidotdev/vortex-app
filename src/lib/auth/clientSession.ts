@@ -12,6 +12,8 @@ export type ClientSession = {
     email: string;
     image?: string | null;
     rowId?: string;
+    /** The identity provider subject, which account hub links carry as a login hint */
+    identityProviderId?: string | null;
   };
   accessToken?: string;
   organizations: OrganizationClaim[];
@@ -32,6 +34,7 @@ export const toClientSession = (
       email: session.user.email,
       image: session.user.image,
       rowId: session.user.rowId,
+      identityProviderId: session.user.identityProviderId ?? null,
     },
     accessToken: session.accessToken,
     organizations: session.organizations,

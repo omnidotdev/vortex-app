@@ -410,7 +410,9 @@ function MobileHeader() {
                     </div>
                     {ACCOUNT_URL && (
                       <a
-                        href={accountUrl(ACCOUNT_URL)}
+                        href={accountUrl(ACCOUNT_URL, {
+                          loginHint: session?.user?.identityProviderId,
+                        })}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="mt-3 flex w-full items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent hover:text-foreground"
@@ -627,7 +629,9 @@ function AppSidebar() {
           </div>
           {ACCOUNT_URL && (
             <a
-              href={accountUrl(ACCOUNT_URL)}
+              href={accountUrl(ACCOUNT_URL, {
+                loginHint: session?.user?.identityProviderId,
+              })}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-3 flex w-full items-center gap-2 rounded-md px-3 py-2 text-muted-foreground text-sm hover:bg-accent hover:text-foreground"

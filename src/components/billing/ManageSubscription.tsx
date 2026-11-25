@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import useHubLoginHint from "@/lib/auth/useHubLoginHint";
 import { manageSubscriptionUrl } from "@/lib/billing/hubLinks";
 import { ACCOUNT_URL, BASE_URL } from "@/lib/config/env.config";
 
@@ -13,7 +14,15 @@ interface Props {
  * workspace's settings page. Hidden when no account hub is configured
  */
 const ManageSubscription = ({ workspaceSlug }: Props) => {
-  const href = manageSubscriptionUrl(ACCOUNT_URL, BASE_URL, workspaceSlug);
+  // The hub opens as the account Vortex is signed in as
+  const loginHint = useHubLoginHint();
+
+  const href = manageSubscriptionUrl(
+    ACCOUNT_URL,
+    BASE_URL,
+    workspaceSlug,
+    loginHint,
+  );
 
   if (!href) return null;
 

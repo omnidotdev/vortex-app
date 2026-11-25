@@ -7,8 +7,9 @@ import type { HubPlanInterval } from "@omnidotdev/providers/react";
  * product sells plans. Vortex shows its own pricing, but its plan and Manage
  * billing actions link to the hub, which confirms the plan (names and prices
  * from Aether), runs checkout or the billing portal, and returns here. Each
- * helper is empty when no account hub is configured, so the action is hidden
- * rather than dead
+ * link carries the signed-in account's subject as `loginHint`, so the hub
+ * opens as the same account. Each helper is empty when no account hub is
+ * configured, so the action is hidden rather than dead
  */
 
 const PRODUCT = "vortex";
@@ -55,7 +56,14 @@ export const upgradePlanUrl = (
     plan,
     interval,
     workspaceSlug,
-  }: { plan: string; interval: HubPlanInterval; workspaceSlug?: string },
+    loginHint,
+  }: {
+    plan: string;
+    interval: HubPlanInterval;
+    workspaceSlug?: string;
+    /** The signed-in account's subject */
+    loginHint?: string | null;
+  },
 ): string =>
   hubPlanUrl(accountBaseUrl, {
     product: PRODUCT,
@@ -65,6 +73,7 @@ export const upgradePlanUrl = (
     returnUrl: workspaceSlug
       ? workspaceSettingsUrl(baseUrl, workspaceSlug)
       : pricingUrl(baseUrl),
+    loginHint,
   });
 
 /**
@@ -72,14 +81,18 @@ export const upgradePlanUrl = (
  * invoices) on the account hub, returning to the workspace's settings page
  * @param accountBaseUrl - Account hub base URL
  * @param baseUrl - Vortex's base URL, for the return
+ * @param workspaceSlug - Workspace whose plan to manage
+ * @param loginHint - The signed-in account's subject
  */
 export const manageSubscriptionUrl = (
   accountBaseUrl: string | undefined,
   baseUrl: string | undefined,
   workspaceSlug: string,
+  loginHint?: string | null,
 ): string =>
   hubManageUrl(accountBaseUrl, {
     product: PRODUCT,
     workspace: workspaceSlug,
     returnUrl: workspaceSettingsUrl(baseUrl, workspaceSlug),
+    loginHint,
   });
