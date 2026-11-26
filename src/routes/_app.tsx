@@ -1,4 +1,4 @@
-import { accountUrl } from "@omnidotdev/providers/react";
+import { accountUrl, useIdentitySync } from "@omnidotdev/providers/react";
 import { LogoLockup } from "@omnidotdev/thornberry/logo-lockup";
 import {
   Link,
@@ -33,6 +33,7 @@ import {
   SheetRoot,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { followSignOut, followSwitch } from "@/lib/auth/followIdentity";
 import signOut from "@/lib/auth/signOut";
 import app from "@/lib/config/app.config";
 import { ACCOUNT_URL } from "@/lib/config/env.config";
@@ -141,6 +142,16 @@ export const Route = createFileRoute("/_app")({
 
 function AuthenticatedLayout() {
   const loaderData = Route.useLoaderData();
+  const { session, authBaseUrl } = Route.useRouteContext();
+
+  // Stay signed in as the same account as Omni: follow a switch or sign-out
+  // made in another app
+  useIdentitySync({
+    authBaseUrl,
+    subject: session?.user?.identityProviderId,
+    onSignedOut: followSignOut,
+    onSwitched: followSwitch,
+  });
 
   // Hide AppSidebar when in workflow editor (it has its own sidebar)
   const matches = useMatches();

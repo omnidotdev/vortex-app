@@ -36,6 +36,9 @@ const loadSession = async (forceRefreshOrgs = false) => {
     session: toClientSession(session),
     organizations: session?.organizations ?? [],
     authDegraded: isSessionDegraded(session),
+    // Identity provider base URL, so the browser can check its Omni session
+    // (the client bundle carries no build-time auth config)
+    authBaseUrl: SERVER_AUTH_BASE_URL,
   };
 };
 
