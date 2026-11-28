@@ -26,7 +26,7 @@ import { JsonEditor } from "@/components/ui/json-editor";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateIntegrationMutation } from "@/generated/graphql";
-import { API_BASE_URL } from "@/lib/config/env.config";
+import { getOAuthAuthorizationUrl } from "@/lib/integrations/oauthConnect";
 import { integrationsOptions } from "@/lib/options/integrations.options";
 
 import type {
@@ -96,6 +96,32 @@ export function ConnectIntegrationDialog({
     .supportsOauth;
 
   const isSubmitting = createIntegration.isPending;
+
+  const [isStartingOAuth, setIsStartingOAuth] = useState(false);
+
+  /**
+   * Fetch the provider URL with the session in the Authorization header (a
+   * page navigation cannot carry it), then navigate to the provider
+   */
+  const handleOAuthConnect = async () => {
+    setError(null);
+    setIsStartingOAuth(true);
+    try {
+      window.location.href = await getOAuthAuthorizationUrl({
+        // The definition row id doubles as the OAuth provider id
+        provider: definition.rowId,
+        organizationId,
+        definitionId: definition.rowId,
+        // The API only accepts a relative return path
+        returnUrl: `${window.location.pathname}${window.location.search}`,
+      });
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Could not start the connection",
+      );
+      setIsStartingOAuth(false);
+    }
+  };
 
   const validateJson = (value: string): string | null => {
     if (!value.trim()) return null;
@@ -285,17 +311,12 @@ export function ConnectIntegrationDialog({
                     </div>
                     <Button
                       size="sm"
-                      onClick={() => {
-                        // Get provider ID from definition
-                        const provider = definition.rowId;
-                        const params = new URLSearchParams({
-                          organizationId,
-                          definitionId: definition.rowId,
-                          returnUrl: window.location.href,
-                        });
-                        window.location.href = `${API_BASE_URL}/api/v1/oauth/${provider}/authorize?${params}`;
-                      }}
+                      disabled={isStartingOAuth}
+                      onClick={handleOAuthConnect}
                     >
+                      {isStartingOAuth && (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      )}
                       Connect with OAuth
                     </Button>
                   </div>
