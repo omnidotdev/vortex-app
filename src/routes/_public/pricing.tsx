@@ -25,29 +25,6 @@ import { getSubscription } from "@/server/functions/subscriptions";
 
 import type { Price, Subscription } from "@/lib/providers/billing";
 
-// Enterprise tier placeholder for display (no price - contact sales)
-const ENTERPRISE_PRICE: Price = {
-  id: "enterprise",
-  active: true,
-  currency: "usd",
-  unit_amount: null,
-  recurring: null,
-  metadata: { tier: "enterprise" },
-  product: {
-    id: "enterprise-product",
-    name: "Enterprise",
-    description: "For large organizations",
-    marketing_features: [
-      { name: "Unlimited everything" },
-      { name: "Custom SLAs" },
-      { name: "Dedicated support engineer" },
-      { name: "Self-hosted deployment" },
-      { name: "SOC 2 compliance" },
-      { name: "Data residency controls" },
-    ],
-  },
-};
-
 const faqItems = [
   {
     question: "Can I cancel at any time?",
@@ -83,8 +60,11 @@ const searchSchema = z.object({
   tier: z
     .string()
     .transform((v) => TIER_ALIASES[v] ?? v)
-    .pipe(z.enum(["free", "pro", "team", "enterprise"]))
-    .optional(),
+    .pipe(z.enum(["free", "pro", "team"]))
+    .optional()
+    // Ignore tiers the catalog does not sell (e.g. old enterprise links)
+    // rather than failing the page
+    .catch(undefined),
 });
 
 export const Route = createFileRoute("/_public/pricing")({
@@ -174,8 +154,8 @@ function DefaultPricing() {
 
 /**
  * Render a "Contact us for pricing" CTA when Aether is unreachable and
- * we have no live pricing data. Free and Enterprise tiers are still shown
- * since they are not Stripe-priced.
+ * we have no live pricing data. The Free tier is still shown since it is not
+ * Stripe-priced.
  */
 function ContactForPricingCard() {
   return (
@@ -298,11 +278,6 @@ function SaaSPricing() {
                     />
                   ))
                 )}
-
-                <PriceCard
-                  price={ENTERPRISE_PRICE}
-                  orgSubscriptions={orgSubscriptions}
-                />
               </TabsContent>
             ))}
           </div>
